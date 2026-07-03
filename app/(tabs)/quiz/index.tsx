@@ -1,16 +1,110 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useWords } from '../../../src/lib/words';
+import { useHighScore } from '../../../src/lib/quizScores';
+import { QUIZ_LENGTH } from '../../../src/lib/quiz';
+import { colors, radii, spacing } from '../../../src/lib/theme';
 
-export default function QuizScreen() {
+export default function QuizIntroScreen() {
+  const router = useRouter();
+  const { words, loading } = useWords();
+  const { highScore, signedIn } = useHighScore();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Quiz</Text>
-      <Text style={styles.body}>Coming soon.</Text>
+      <Text style={styles.emoji}>🎯</Text>
+      <Text style={styles.title}>How bona is your Polari?</Text>
+      <Text style={styles.body}>
+        {QUIZ_LENGTH} questions. Pick the right meaning for each word.
+      </Text>
+
+      {signedIn && highScore !== null ? (
+        <View style={styles.scoreCard}>
+          <Text style={styles.scoreLabel}>Your best</Text>
+          <Text style={styles.scoreValue}>
+            {highScore}/{QUIZ_LENGTH}
+          </Text>
+        </View>
+      ) : null}
+      {!signedIn ? (
+        <Text style={styles.hint}>Sign in to save your high score.</Text>
+      ) : null}
+
+      <Pressable
+        style={({ pressed }) => [styles.startButton, pressed && styles.startPressed]}
+        onPress={() => router.push('/quiz/play')}
+        disabled={loading || words.length < 4}
+      >
+        <Text style={styles.startText}>{loading ? 'Loading…' : 'Start quiz'}</Text>
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
-  title: { fontSize: 20, fontWeight: '600' },
-  body: { fontSize: 14, opacity: 0.6 },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.xl,
+    gap: spacing.sm,
+  },
+  emoji: {
+    fontSize: 48,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: colors.text,
+    textAlign: 'center',
+  },
+  body: {
+    fontSize: 15,
+    color: colors.textMuted,
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  scoreCard: {
+    marginTop: spacing.md,
+    backgroundColor: colors.accentSoft,
+    borderRadius: radii.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    alignItems: 'center',
+  },
+  scoreLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.accent,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+  },
+  scoreValue: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: colors.accent,
+  },
+  hint: {
+    marginTop: spacing.md,
+    fontSize: 13,
+    color: colors.textMuted,
+  },
+  startButton: {
+    marginTop: spacing.lg,
+    backgroundColor: colors.primary,
+    borderRadius: radii.lg,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+    minWidth: 200,
+    alignItems: 'center',
+  },
+  startPressed: {
+    opacity: 0.8,
+  },
+  startText: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: '700',
+  },
 });
