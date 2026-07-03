@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -7,14 +7,27 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useWords } from '../../src/lib/words';
 import { wordOfTheDay } from '../../src/lib/wordOfTheDay';
 import { WordDetailCard } from '../../src/components/WordDetailCard';
+import { useAuth } from '../../src/lib/auth';
+import { useStreaks } from '../../src/lib/streaks';
 import { colors, radii, spacing } from '../../src/lib/theme';
 
 export default function TodayScreen() {
+  const router = useRouter();
+  const { session } = useAuth();
+  const { stats, recordEngagement } = useStreaks();
   const { words, loading, error, refetch } = useWords();
   const word = useMemo(() => wordOfTheDay(words), [words]);
+
+  // Viewing today's word is what keeps a streak alive
+  useEffect(() => {
+    if (session && word) {
+      recordEngagement();
+    }
+  }, [session, word, recordEngagement]);
 
   const dateLabel = useMemo(
     () =>
@@ -47,8 +60,17 @@ export default function TodayScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.date}>{dateLabel}</Text>
-      <Text style={styles.heading}>Today's Polari</Text>
+      <View style={styles.headerRow}>
+        <View>
+          <Text style={styles.date}>{dateLabel}</Text>
+          <Text style={styles.heading}>Today's Polari</Text>
+        </View>
+        <Pressable style={styles.streakChip} onPress={() => router.push('/profile')}>
+          <Text style={styles.streakText}>
+            {session ? `🔥 ${stats?.current_streak ?? 0}` : '🔥 Start a streak'}
+          </Text>
+        </Pressable>
+      </View>
       <WordDetailCard word={word} style={styles.card} />
     </ScrollView>
   );
@@ -70,6 +92,12 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     backgroundColor: colors.background,
   },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginBottom: spacing.md,
+  },
   date: {
     fontSize: 13,
     fontWeight: '600',
@@ -82,7 +110,18 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.text,
     marginTop: spacing.xs,
-    marginBottom: spacing.md,
+  },
+  streakChip: {
+    backgroundColor: colors.accentSoft,
+    borderRadius: radii.lg,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs + 2,
+    marginTop: spacing.xs,
+  },
+  streakText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: colors.accent,
   },
   card: {
     marginBottom: spacing.lg,

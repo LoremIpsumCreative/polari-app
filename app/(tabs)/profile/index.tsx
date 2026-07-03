@@ -1,16 +1,153 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useAuth } from '../../../src/lib/auth';
+import { useStreaks } from '../../../src/lib/streaks';
+import { colors, radii, spacing } from '../../../src/lib/theme';
 
-export default function ProfileScreen() {
+function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
-      <Text style={styles.body}>Coming soon.</Text>
+    <View style={styles.statCard}>
+      <Text style={styles.statValue}>{value}</Text>
+      <Text style={styles.statLabel}>{label}</Text>
     </View>
   );
 }
 
+export default function ProfileScreen() {
+  const router = useRouter();
+  const { session, signOut } = useAuth();
+  const { stats } = useStreaks();
+
+  if (!session) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.emptyTitle}>Your Polari journey</Text>
+        <Text style={styles.emptyBody}>
+          Sign in to track streaks, save favourites, and record quiz high scores.
+        </Text>
+        <Pressable style={styles.primaryButton} onPress={() => router.push('/sign-in')}>
+          <Text style={styles.primaryButtonText}>Sign in</Text>
+        </Pressable>
+        <Pressable onPress={() => router.push('/sign-up')}>
+          <Text style={styles.link}>
+            New here? <Text style={styles.linkStrong}>Create an account</Text>
+          </Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Text style={styles.email}>{session.user.email}</Text>
+
+      <View style={styles.statsRow}>
+        <StatCard label="Current streak" value={`${stats?.current_streak ?? 0}🔥`} />
+        <StatCard label="Longest streak" value={stats?.longest_streak ?? 0} />
+        <StatCard label="Words learned" value={stats?.words_learned_count ?? 0} />
+      </View>
+
+      <Pressable
+        style={({ pressed }) => [styles.signOutButton, pressed && styles.signOutPressed]}
+        onPress={signOut}
+      >
+        <Text style={styles.signOutText}>Sign out</Text>
+      </Pressable>
+    </ScrollView>
+  );
+}
+
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
-  title: { fontSize: 20, fontWeight: '600' },
-  body: { fontSize: 14, opacity: 0.6 },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  content: {
+    padding: spacing.md,
+    gap: spacing.md,
+  },
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    padding: spacing.xl,
+    backgroundColor: colors.background,
+  },
+  email: {
+    fontSize: 15,
+    color: colors.textMuted,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: spacing.md,
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  statValue: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: colors.textMuted,
+    textAlign: 'center',
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  emptyBody: {
+    fontSize: 14,
+    color: colors.textMuted,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  primaryButton: {
+    marginTop: spacing.md,
+    backgroundColor: colors.primary,
+    borderRadius: radii.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+  },
+  primaryButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  link: {
+    marginTop: spacing.sm,
+    color: colors.textMuted,
+    fontSize: 14,
+  },
+  linkStrong: {
+    color: colors.primary,
+    fontWeight: '600',
+  },
+  signOutButton: {
+    marginTop: spacing.lg,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    paddingVertical: spacing.sm + 2,
+    alignItems: 'center',
+  },
+  signOutPressed: {
+    backgroundColor: colors.primarySoft,
+  },
+  signOutText: {
+    color: colors.danger,
+    fontWeight: '600',
+    fontSize: 15,
+  },
 });

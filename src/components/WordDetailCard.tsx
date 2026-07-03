@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import type { Word } from '../types/database';
 import { colors, radii, spacing } from '../lib/theme';
+import { FavouriteButton } from './FavouriteButton';
 
 type Props = {
   word: Word;
@@ -32,6 +33,7 @@ export function WordDetailCard({ word, style }: Props) {
         {word.part_of_speech ? (
           <Text style={styles.partOfSpeech}>{word.part_of_speech}</Text>
         ) : null}
+        <FavouriteButton wordId={word.id} />
       </View>
 
       <Text style={styles.term}>{word.term}</Text>

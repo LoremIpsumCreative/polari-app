@@ -39,6 +39,8 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     storage,
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: false,
+    // Web only: lets password-recovery email links (tokens in the URL fragment)
+    // establish their temporary session on /reset-password.
+    detectSessionInUrl: Platform.OS === 'web',
   },
 });
