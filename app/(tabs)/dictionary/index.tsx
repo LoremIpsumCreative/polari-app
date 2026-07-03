@@ -1,16 +1,232 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+import { useRouter } from 'expo-router';
+import { useWords } from '../../../src/lib/words';
+import { colors, radii, spacing } from '../../../src/lib/theme';
+import type { Word } from '../../../src/types/database';
+
+type Filter = 'all' | 'word' | 'phrase';
+
+const FILTERS: { value: Filter; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'word', label: 'Words' },
+  { value: 'phrase', label: 'Phrases' },
+];
+
+function WordRow({ word, onPress }: { word: Word; onPress: () => void }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+    >
+      <View style={styles.rowText}>
+        <Text style={styles.rowTerm}>{word.term}</Text>
+        <Text style={styles.rowDefinition} numberOfLines={1}>
+          {word.definition}
+        </Text>
+      </View>
+      <Text style={styles.rowChevron}>›</Text>
+    </Pressable>
+  );
+}
 
 export default function DictionaryScreen() {
+  const router = useRouter();
+  const { words, loading, error, refetch } = useWords();
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState<Filter>('all');
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return words.filter((w) => {
+      if (filter !== 'all' && w.entry_type !== filter) return false;
+      if (!q) return true;
+      return (w.search_text ?? `${w.term} ${w.definition}`.toLowerCase()).includes(q);
+    });
+  }, [words, query, filter]);
+
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator color={colors.primary} size="large" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.errorText}>Couldn't load the dictionary.</Text>
+        <Pressable style={styles.retryButton} onPress={refetch}>
+          <Text style={styles.retryText}>Try again</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Dictionary</Text>
-      <Text style={styles.body}>Coming soon.</Text>
+      <TextInput
+        style={styles.search}
+        placeholder="Search Polari…"
+        placeholderTextColor={colors.textMuted}
+        value={query}
+        onChangeText={setQuery}
+        autoCapitalize="none"
+        autoCorrect={false}
+        clearButtonMode="while-editing"
+      />
+      <View style={styles.filterRow}>
+        {FILTERS.map((f) => (
+          <Pressable
+            key={f.value}
+            style={[styles.filterChip, filter === f.value && styles.filterChipActive]}
+            onPress={() => setFilter(f.value)}
+          >
+            <Text
+              style={[styles.filterChipText, filter === f.value && styles.filterChipTextActive]}
+            >
+              {f.label}
+            </Text>
+          </Pressable>
+        ))}
+        <Text style={styles.resultCount}>
+          {filtered.length} {filtered.length === 1 ? 'entry' : 'entries'}
+        </Text>
+      </View>
+      <FlashList
+        data={filtered}
+        renderItem={({ item }) => (
+          <WordRow word={item} onPress={() => router.push(`/dictionary/${item.slug}`)} />
+        )}
+        keyExtractor={(item) => item.slug}
+        contentContainerStyle={styles.listContent}
+        ListEmptyComponent={
+          <View style={styles.center}>
+            <Text style={styles.emptyText}>No matches for “{query.trim()}”.</Text>
+          </View>
+        }
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
-  title: { fontSize: 20, fontWeight: '600' },
-  body: { fontSize: 14, opacity: 0.6 },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.md,
+    padding: spacing.lg,
+  },
+  search: {
+    margin: spacing.md,
+    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 2,
+    backgroundColor: colors.surface,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    fontSize: 16,
+    color: colors.text,
+  },
+  filterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.sm,
+  },
+  filterChip: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs + 2,
+    borderRadius: radii.lg,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  filterChipActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  filterChipText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.textMuted,
+  },
+  filterChipTextActive: {
+    color: '#fff',
+  },
+  resultCount: {
+    marginLeft: 'auto',
+    fontSize: 12,
+    color: colors.textMuted,
+  },
+  listContent: {
+    paddingHorizontal: spacing.md,
+    paddingBottom: spacing.lg,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 4,
+    marginBottom: spacing.sm,
+  },
+  rowPressed: {
+    backgroundColor: colors.primarySoft,
+  },
+  rowText: {
+    flex: 1,
+    gap: 2,
+  },
+  rowTerm: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  rowDefinition: {
+    fontSize: 13,
+    color: colors.textMuted,
+  },
+  rowChevron: {
+    fontSize: 22,
+    color: colors.textMuted,
+    marginLeft: spacing.sm,
+  },
+  errorText: {
+    fontSize: 16,
+    color: colors.danger,
+  },
+  retryButton: {
+    backgroundColor: colors.primary,
+    borderRadius: radii.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+  },
+  retryText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  emptyText: {
+    fontSize: 15,
+    color: colors.textMuted,
+  },
 });
