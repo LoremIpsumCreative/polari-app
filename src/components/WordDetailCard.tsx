@@ -1,7 +1,9 @@
-import { StyleSheet, Text, View, type ViewStyle } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import type { Word } from '../types/database';
 import { colors, radii, spacing } from '../lib/theme';
 import { FavouriteButton } from './FavouriteButton';
+import { ShareWordModal } from './ShareWordModal';
 
 type Props = {
   word: Word;
@@ -24,6 +26,8 @@ function Section({ label, children }: { label: string; children: string }) {
 }
 
 export function WordDetailCard({ word, style }: Props) {
+  const [shareVisible, setShareVisible] = useState(false);
+
   return (
     <View style={[styles.card, style]}>
       <View style={styles.badgeRow}>
@@ -33,8 +37,19 @@ export function WordDetailCard({ word, style }: Props) {
         {word.part_of_speech ? (
           <Text style={styles.partOfSpeech}>{word.part_of_speech}</Text>
         ) : null}
-        <FavouriteButton wordId={word.id} />
+        <View style={styles.actions}>
+          <Pressable
+            onPress={() => setShareVisible(true)}
+            style={({ pressed }) => [styles.shareButton, pressed && styles.shareButtonPressed]}
+            accessibilityRole="button"
+            accessibilityLabel="Share this word"
+          >
+            <Text style={styles.shareIcon}>↗</Text>
+          </Pressable>
+          <FavouriteButton wordId={word.id} />
+        </View>
       </View>
+      <ShareWordModal word={word} visible={shareVisible} onClose={() => setShareVisible(false)} />
 
       <Text style={styles.term}>{word.term}</Text>
       {word.pronunciation ? (
@@ -79,6 +94,24 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     fontSize: 13,
     fontStyle: 'italic',
+  },
+  actions: {
+    marginLeft: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+  shareButton: {
+    padding: spacing.xs,
+    borderRadius: radii.sm,
+  },
+  shareButtonPressed: {
+    backgroundColor: colors.primarySoft,
+  },
+  shareIcon: {
+    fontSize: 20,
+    color: colors.textMuted,
+    fontWeight: '600',
   },
   term: {
     color: colors.text,

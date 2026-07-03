@@ -35,7 +35,6 @@ export function FavouriteButton({ wordId }: { wordId: string }) {
 
 const styles = StyleSheet.create({
   button: {
-    marginLeft: 'auto',
     padding: spacing.xs,
     borderRadius: radii.sm,
   },
