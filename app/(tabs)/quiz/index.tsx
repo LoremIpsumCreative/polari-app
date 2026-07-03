@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { useWords } from '../../../src/lib/words';
 import { useHighScore } from '../../../src/lib/quizScores';
 import { QUIZ_LENGTH } from '../../../src/lib/quiz';
-import { colors, radii, spacing } from '../../../src/lib/theme';
+import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 export default function QuizIntroScreen() {
   const router = useRouter();
@@ -51,15 +51,17 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   emoji: {
+    fontFamily: fonts.regular,
     fontSize: 48,
   },
   title: {
     fontSize: 24,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.text,
     textAlign: 'center',
   },
   body: {
+    fontFamily: fonts.regular,
     fontSize: 15,
     color: colors.textMuted,
     textAlign: 'center',
@@ -75,18 +77,19 @@ const styles = StyleSheet.create({
   },
   scoreLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     color: colors.accent,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
   scoreValue: {
     fontSize: 24,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.accent,
   },
   hint: {
     marginTop: spacing.md,
+    fontFamily: fonts.regular,
     fontSize: 13,
     color: colors.textMuted,
   },
@@ -105,6 +108,6 @@ const styles = StyleSheet.create({
   startText: {
     color: '#fff',
     fontSize: 17,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
   },
 });

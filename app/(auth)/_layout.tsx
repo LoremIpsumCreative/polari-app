@@ -1,8 +1,9 @@
 import { Stack } from 'expo-router';
+import { headerOptions } from '../../src/lib/theme';
 
 export default function AuthLayout() {
   return (
-    <Stack>
+    <Stack screenOptions={headerOptions}>
       <Stack.Screen name="sign-in" options={{ title: 'Sign in' }} />
       <Stack.Screen name="sign-up" options={{ title: 'Create account' }} />
       <Stack.Screen name="forgot-password" options={{ title: 'Reset password' }} />

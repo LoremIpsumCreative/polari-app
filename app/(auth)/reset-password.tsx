@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { supabase } from '../../src/lib/supabase';
 import { useAuth } from '../../src/lib/auth';
 import { FormError, FormScreen, LabeledInput, PrimaryButton } from '../../src/components/form';
-import { colors } from '../../src/lib/theme';
+import { colors, fonts } from '../../src/lib/theme';
 
 // Landing screen for the password-recovery email link. The link signs the user
 // in with a temporary recovery session (picked up from the URL on web), after
@@ -62,6 +62,7 @@ export default function ResetPasswordScreen() {
 
 const styles = StyleSheet.create({
   bodyText: {
+    fontFamily: fonts.regular,
     fontSize: 16,
     lineHeight: 24,
     color: colors.text,

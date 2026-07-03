@@ -12,16 +12,25 @@ import {
   IconUser,
   type IconProps,
 } from '@tabler/icons-react-native';
-import { colors, spacing } from '../lib/theme';
+import { colors, fonts } from '../lib/theme';
 
 const BUBBLE_SIZE = 56;
-// How far the bubble (and active icon) float above the bar's top edge
-const BUBBLE_LIFT = BUBBLE_SIZE / 2;
 // The ring around the bubble, painted in the screens' background colour so the
 // bubble reads as "cut out" of the bar, like the reference animation
 const BUBBLE_RING = 6;
 const ICON_SIZE = 26;
-const BAR_CONTENT_HEIGHT = 62;
+const LABEL_HEIGHT = 16;
+const ICON_LABEL_GAP = 4;
+// Taller bar = the requested extra breathing room below the icons; the
+// icon+label column is centred in this full height.
+const BAR_CONTENT_HEIGHT = 84;
+
+// Where the icon's centre rests inside the bar (column is vertically centred)
+const ICON_REST_CENTER =
+  (BAR_CONTENT_HEIGHT - (ICON_SIZE + ICON_LABEL_GAP + LABEL_HEIGHT)) / 2 + ICON_SIZE / 2;
+// The bubble's centre sits exactly on the bar's top edge (y = 0), so lifting
+// the icon by its resting depth lands it dead-centre in the bubble.
+const ICON_LIFT = ICON_REST_CENTER;
 
 const TAB_ICONS: Record<string, React.ComponentType<IconProps>> = {
   index: IconSparkles,
@@ -67,7 +76,7 @@ function TabItem({
             {
               translateY: lift.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0, -(BUBBLE_LIFT + spacing.sm)],
+                outputRange: [0, -ICON_LIFT],
               }),
             },
             {
@@ -103,7 +112,7 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
 
   return (
     <View
-      style={[styles.bar, { paddingBottom: insets.bottom, height: BAR_CONTENT_HEIGHT + insets.bottom }]}
+      style={[styles.bar, { paddingBottom: insets.bottom }]}
       onLayout={(e) => setBarWidth(e.nativeEvent.layout.width)}
     >
       {tabWidth > 0 ? (
@@ -147,8 +156,6 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
 const styles = StyleSheet.create({
   bar: {
     backgroundColor: colors.surface,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
   },
   tabs: {
     flexDirection: 'row',
@@ -158,11 +165,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 2,
+    gap: ICON_LABEL_GAP,
   },
   label: {
+    fontFamily: fonts.semibold,
     fontSize: 11,
-    fontWeight: '600',
+    height: LABEL_HEIGHT,
+    lineHeight: LABEL_HEIGHT,
     color: colors.textMuted,
   },
   labelActive: {
@@ -170,7 +179,7 @@ const styles = StyleSheet.create({
   },
   bubble: {
     position: 'absolute',
-    top: -(BUBBLE_LIFT + BUBBLE_RING),
+    top: -(BUBBLE_SIZE / 2 + BUBBLE_RING),
     left: 0,
     width: BUBBLE_SIZE + BUBBLE_RING * 2,
     height: BUBBLE_SIZE + BUBBLE_RING * 2,
@@ -178,7 +187,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: BUBBLE_RING,
     borderColor: colors.background,
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
     pointerEvents: 'none',
   },
 });

@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { useWords } from '../../../src/lib/words';
 import { WordDetailCard } from '../../../src/components/WordDetailCard';
-import { colors, spacing } from '../../../src/lib/theme';
+import { colors, spacing, fonts } from '../../../src/lib/theme';
 
 export default function WordDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   missingText: {
+    fontFamily: fonts.regular,
     fontSize: 15,
     color: colors.textMuted,
   },

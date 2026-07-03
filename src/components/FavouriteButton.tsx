@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../lib/auth';
 import { useFavourites } from '../lib/favourites';
-import { colors, radii, spacing } from '../lib/theme';
+import { colors, radii, spacing, fonts } from '../lib/theme';
 
 export function FavouriteButton({ wordId }: { wordId: string }) {
   const router = useRouter();
@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primarySoft,
   },
   heart: {
+    fontFamily: fonts.regular,
     fontSize: 24,
     color: colors.textMuted,
   },

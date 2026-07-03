@@ -11,7 +11,7 @@ import Constants from 'expo-constants';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { FormError, PrimaryButton } from '../../../src/components/form';
-import { colors, radii, spacing } from '../../../src/lib/theme';
+import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 const CATEGORIES = [
   { value: 'bug', label: '🐛 Bug' },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     color: colors.textMuted,
     marginTop: spacing.sm,
   },
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   chipText: {
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     color: colors.textMuted,
   },
   chipTextActive: {
@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     padding: spacing.md,
+    fontFamily: fonts.regular,
     fontSize: 15,
     color: colors.text,
     minHeight: 120,
@@ -183,18 +184,21 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm + 2,
+    fontFamily: fonts.regular,
     fontSize: 15,
     color: colors.text,
   },
   sentEmoji: {
+    fontFamily: fonts.regular,
     fontSize: 48,
   },
   sentTitle: {
     fontSize: 22,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   sentBody: {
+    fontFamily: fonts.regular,
     fontSize: 15,
     color: colors.textMuted,
   },
@@ -203,7 +207,7 @@ const styles = StyleSheet.create({
   },
   againText: {
     color: colors.primary,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     fontSize: 15,
   },
 });

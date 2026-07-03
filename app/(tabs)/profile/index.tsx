@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { useStreaks } from '../../../src/lib/streaks';
-import { colors, radii, spacing } from '../../../src/lib/theme';
+import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   email: {
+    fontFamily: fonts.regular,
     fontSize: 15,
     color: colors.textMuted,
   },
@@ -149,20 +150,22 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 22,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   statLabel: {
+    fontFamily: fonts.regular,
     fontSize: 12,
     color: colors.textMuted,
     textAlign: 'center',
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.text,
   },
   emptyBody: {
+    fontFamily: fonts.regular,
     fontSize: 14,
     color: colors.textMuted,
     textAlign: 'center',
@@ -177,16 +180,17 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     color: '#fff',
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   link: {
     marginTop: spacing.sm,
     color: colors.textMuted,
+    fontFamily: fonts.regular,
     fontSize: 14,
   },
   linkStrong: {
     color: colors.primary,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   rowButton: {
     borderRadius: radii.md,
@@ -201,7 +205,7 @@ const styles = StyleSheet.create({
   },
   rowButtonText: {
     color: colors.text,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     fontSize: 15,
   },
   signOutButton: {
@@ -227,16 +231,18 @@ const styles = StyleSheet.create({
   },
   deleteText: {
     color: colors.danger,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     fontSize: 15,
   },
   cancelDelete: {
     color: colors.textMuted,
+    fontFamily: fonts.regular,
     fontSize: 13,
     textAlign: 'center',
   },
   deleteError: {
     color: colors.danger,
+    fontFamily: fonts.regular,
     fontSize: 13,
     textAlign: 'center',
   },
@@ -245,7 +251,7 @@ const styles = StyleSheet.create({
   },
   signOutText: {
     color: colors.danger,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     fontSize: 15,
   },
 });

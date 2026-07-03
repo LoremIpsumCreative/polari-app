@@ -13,7 +13,7 @@ import { wordOfTheDay } from '../../src/lib/wordOfTheDay';
 import { WordDetailCard } from '../../src/components/WordDetailCard';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
-import { colors, radii, spacing } from '../../src/lib/theme';
+import { colors, radii, spacing, fonts } from '../../src/lib/theme';
 
 export default function TodayScreen() {
   const router = useRouter();
@@ -100,14 +100,14 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     color: colors.accent,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
   heading: {
     fontSize: 24,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.text,
     marginTop: spacing.xs,
   },
@@ -120,13 +120,14 @@ const styles = StyleSheet.create({
   },
   streakText: {
     fontSize: 14,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.accent,
   },
   card: {
     marginBottom: spacing.lg,
   },
   errorText: {
+    fontFamily: fonts.regular,
     fontSize: 16,
     color: colors.danger,
   },
@@ -138,6 +139,6 @@ const styles = StyleSheet.create({
   },
   retryText: {
     color: '#fff',
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
 });

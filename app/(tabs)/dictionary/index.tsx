@@ -10,7 +10,7 @@ import {
 import { FlashList } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
 import { useWords } from '../../../src/lib/words';
-import { colors, radii, spacing } from '../../../src/lib/theme';
+import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import type { Word } from '../../../src/types/database';
 
 type Filter = 'all' | 'word' | 'phrase';
@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.md,
     borderWidth: 1,
     borderColor: colors.border,
+    fontFamily: fonts.regular,
     fontSize: 16,
     color: colors.text,
   },
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
   },
   filterChipText: {
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     color: colors.textMuted,
   },
   filterChipTextActive: {
@@ -172,6 +173,7 @@ const styles = StyleSheet.create({
   },
   resultCount: {
     marginLeft: 'auto',
+    fontFamily: fonts.regular,
     fontSize: 12,
     color: colors.textMuted,
   },
@@ -199,19 +201,22 @@ const styles = StyleSheet.create({
   },
   rowTerm: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     color: colors.text,
   },
   rowDefinition: {
+    fontFamily: fonts.regular,
     fontSize: 13,
     color: colors.textMuted,
   },
   rowChevron: {
+    fontFamily: fonts.regular,
     fontSize: 22,
     color: colors.textMuted,
     marginLeft: spacing.sm,
   },
   errorText: {
+    fontFamily: fonts.regular,
     fontSize: 16,
     color: colors.danger,
   },
@@ -223,9 +228,10 @@ const styles = StyleSheet.create({
   },
   retryText: {
     color: '#fff',
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   emptyText: {
+    fontFamily: fonts.regular,
     fontSize: 15,
     color: colors.textMuted,
   },

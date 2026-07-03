@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import type { Word } from '../types/database';
-import { colors, radii, spacing } from '../lib/theme';
+import { colors, radii, spacing, fonts } from '../lib/theme';
 import { FavouriteButton } from './FavouriteButton';
+import { PrideStripe } from './PrideStripe';
 import { ShareWordModal } from './ShareWordModal';
 
 type Props = {
@@ -56,6 +57,8 @@ export function WordDetailCard({ word, style }: Props) {
         <Text style={styles.pronunciation}>/{word.pronunciation}/</Text>
       ) : null}
 
+      <PrideStripe style={styles.prideRule} />
+
       <Text style={styles.definition}>{word.definition}</Text>
 
       {word.example ? <Section label="Example">{word.example}</Section> : null}
@@ -88,12 +91,12 @@ const styles = StyleSheet.create({
   badgeText: {
     color: colors.primary,
     fontSize: 12,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   partOfSpeech: {
     color: colors.textMuted,
     fontSize: 13,
-    fontStyle: 'italic',
+    fontFamily: fonts.italic,
   },
   actions: {
     marginLeft: 'auto',
@@ -111,19 +114,25 @@ const styles = StyleSheet.create({
   shareIcon: {
     fontSize: 20,
     color: colors.textMuted,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   term: {
     color: colors.text,
     fontSize: 32,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
   },
   pronunciation: {
     color: colors.textMuted,
+    fontFamily: fonts.regular,
     fontSize: 16,
+  },
+  prideRule: {
+    width: 48,
+    marginTop: spacing.xs,
   },
   definition: {
     color: colors.text,
+    fontFamily: fonts.regular,
     fontSize: 17,
     lineHeight: 24,
     marginTop: spacing.xs,
@@ -135,12 +144,13 @@ const styles = StyleSheet.create({
   sectionLabel: {
     color: colors.accent,
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
   sectionBody: {
     color: colors.text,
+    fontFamily: fonts.regular,
     fontSize: 15,
     lineHeight: 22,
   },

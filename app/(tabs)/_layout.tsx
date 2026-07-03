@@ -1,10 +1,11 @@
 import { Tabs } from 'expo-router';
+import { headerOptions } from '../../src/lib/theme';
 import { AnimatedTabBar } from '../../src/components/AnimatedTabBar';
 
 export default function TabsLayout() {
   return (
     <Tabs
-      screenOptions={{ headerShown: true }}
+      screenOptions={{ headerShown: true, ...headerOptions }}
       tabBar={(props) => <AnimatedTabBar {...props} />}
     >
       <Tabs.Screen name="index" options={{ title: 'Today' }} />

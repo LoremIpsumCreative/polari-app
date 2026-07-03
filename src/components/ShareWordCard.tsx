@@ -1,6 +1,8 @@
 import { forwardRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import type { Word } from '../types/database';
+import { fonts } from '../lib/theme';
+import { PrideStripe } from './PrideStripe';
 
 // The visual card that gets snapshotted and shared as an image.
 // Fixed 4:5 portrait ratio (1080x1350 at capture scale) — the format
@@ -33,7 +35,7 @@ export const ShareWordCard = forwardRef<View, { word: Word }>(function ShareWord
         {word.pronunciation ? (
           <Text style={styles.pronunciation}>/{word.pronunciation}/</Text>
         ) : null}
-        <View style={styles.rule} />
+        <PrideStripe height={4} style={styles.rule} />
         <Text style={styles.definition} numberOfLines={4}>
           {word.definition}
         </Text>
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
   kicker: {
     color: card.gold,
     fontSize: 12,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     textTransform: 'uppercase',
     letterSpacing: 1.6,
   },
@@ -72,35 +74,33 @@ const styles = StyleSheet.create({
   term: {
     color: card.cream,
     fontSize: 44,
-    fontWeight: '800',
+    fontFamily: fonts.extrabold,
     lineHeight: 50,
   },
   pronunciation: {
     color: card.lilac,
+    fontFamily: fonts.regular,
     fontSize: 18,
   },
   rule: {
     width: 48,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: card.gold,
     marginVertical: 6,
   },
   definition: {
     color: card.cream,
     fontSize: 20,
     lineHeight: 28,
-    fontWeight: '500',
+    fontFamily: fonts.semibold,
   },
   example: {
     color: card.lilac,
     fontSize: 15,
     lineHeight: 22,
-    fontStyle: 'italic',
+    fontFamily: fonts.italic,
   },
   footer: {
     color: card.lilac,
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
 });

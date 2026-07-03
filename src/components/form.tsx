@@ -8,7 +8,7 @@ import {
   View,
   type TextInputProps,
 } from 'react-native';
-import { colors, radii, spacing } from '../lib/theme';
+import { colors, radii, spacing, fonts } from '../lib/theme';
 
 export function LabeledInput({
   label,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.text,
     marginBottom: spacing.sm,
   },
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     color: colors.textMuted,
   },
   input: {
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm + 2,
+    fontFamily: fonts.regular,
     fontSize: 16,
     color: colors.text,
   },
@@ -113,10 +114,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   error: {
     color: colors.danger,
+    fontFamily: fonts.regular,
     fontSize: 14,
   },
 });

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useHighScore } from '../../../src/lib/quizScores';
-import { colors, radii, spacing } from '../../../src/lib/theme';
+import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 export default function QuizResultsScreen() {
   const router = useRouter();
@@ -82,27 +82,28 @@ const styles = StyleSheet.create({
   },
   headline: {
     fontSize: 26,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.text,
     textAlign: 'center',
   },
   score: {
     fontSize: 56,
-    fontWeight: '800',
+    fontFamily: fonts.extrabold,
     color: colors.primary,
   },
   newBest: {
     fontSize: 16,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.accent,
   },
   signInHint: {
+    fontFamily: fonts.regular,
     fontSize: 14,
     color: colors.textMuted,
   },
   signInLink: {
     color: colors.primary,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   buttons: {
     marginTop: spacing.xl,
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
   primaryText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
   },
   secondaryButton: {
     borderRadius: radii.md,
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
   secondaryText: {
     color: colors.text,
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   pressed: {
     opacity: 0.8,

@@ -3,7 +3,7 @@ import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Word } from '../types/database';
 import { ShareWordCard } from './ShareWordCard';
 import { shareWordCard } from '../lib/share';
-import { colors, radii, spacing } from '../lib/theme';
+import { colors, radii, spacing, fonts } from '../lib/theme';
 
 type Props = {
   word: Word;
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   shareText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
   },
   closeButton: {
     borderRadius: radii.md,
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   closeText: {
     color: colors.text,
     fontSize: 15,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   pressed: {
     opacity: 0.8,

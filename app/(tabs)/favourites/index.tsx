@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '../../../src/lib/auth';
 import { useFavourites } from '../../../src/lib/favourites';
 import { useWords } from '../../../src/lib/words';
-import { colors, radii, spacing } from '../../../src/lib/theme';
+import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 export default function FavouritesScreen() {
   const router = useRouter();
@@ -83,11 +83,12 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.text,
     textAlign: 'center',
   },
   emptyBody: {
+    fontFamily: fonts.regular,
     fontSize: 14,
     color: colors.textMuted,
     textAlign: 'center',
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   listContent: {
     padding: spacing.md,
@@ -127,14 +128,16 @@ const styles = StyleSheet.create({
   },
   rowTerm: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
     color: colors.text,
   },
   rowDefinition: {
+    fontFamily: fonts.regular,
     fontSize: 13,
     color: colors.textMuted,
   },
   rowHeart: {
+    fontFamily: fonts.regular,
     fontSize: 18,
     color: colors.danger,
     marginLeft: spacing.sm,

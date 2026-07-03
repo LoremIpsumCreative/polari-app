@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { supabase } from '../../src/lib/supabase';
 import { FormError, FormScreen, LabeledInput, PrimaryButton } from '../../src/components/form';
-import { colors } from '../../src/lib/theme';
+import { colors, fonts } from '../../src/lib/theme';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
@@ -56,6 +56,7 @@ export default function ForgotPasswordScreen() {
 
 const styles = StyleSheet.create({
   confirmText: {
+    fontFamily: fonts.regular,
     fontSize: 16,
     lineHeight: 24,
     color: colors.text,

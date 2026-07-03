@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { supabase } from '../../src/lib/supabase';
 import { FormError, FormScreen, LabeledInput, PrimaryButton } from '../../src/components/form';
-import { colors, spacing } from '../../src/lib/theme';
+import { colors, spacing, fonts } from '../../src/lib/theme';
 
 export default function SignUpScreen() {
   const router = useRouter();
@@ -96,14 +96,16 @@ const styles = StyleSheet.create({
   },
   link: {
     color: colors.textMuted,
+    fontFamily: fonts.regular,
     fontSize: 14,
     textAlign: 'center',
   },
   linkStrong: {
     color: colors.primary,
-    fontWeight: '600',
+    fontFamily: fonts.semibold,
   },
   confirmText: {
+    fontFamily: fonts.regular,
     fontSize: 16,
     lineHeight: 24,
     color: colors.text,
