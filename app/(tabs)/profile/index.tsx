@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { useStreaks } from '../../../src/lib/streaks';
+import { SpaceHost } from '../../../src/components/illustrations/SpaceHost';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
@@ -45,6 +46,7 @@ export default function ProfileScreen() {
   if (!session) {
     return (
       <View style={styles.center}>
+        <SpaceHost width={200} />
         <Text style={styles.emptyTitle}>Your Polari journey</Text>
         <Text style={styles.emptyBody}>
           Sign in to track streaks, save favourites, and record quiz high scores.
@@ -174,7 +176,7 @@ const styles = StyleSheet.create({
   primaryButton: {
     marginTop: spacing.md,
     backgroundColor: colors.primary,
-    borderRadius: radii.md,
+    borderRadius: radii.pill,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
   },
@@ -227,7 +229,7 @@ const styles = StyleSheet.create({
   },
   deleteButtonArmed: {
     borderColor: colors.danger,
-    backgroundColor: '#FEF2F2',
+    backgroundColor: colors.blushSoft,
   },
   deleteText: {
     color: colors.danger,

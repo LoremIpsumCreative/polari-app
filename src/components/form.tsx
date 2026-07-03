@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: colors.primary,
-    borderRadius: radii.md,
+    borderRadius: radii.pill,
     paddingVertical: spacing.sm + 4,
     alignItems: 'center',
     marginTop: spacing.sm,

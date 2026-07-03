@@ -2,7 +2,6 @@ import { forwardRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import type { Word } from '../types/database';
 import { fonts } from '../lib/theme';
-import { PrideStripe } from './PrideStripe';
 
 // The visual card that gets snapshotted and shared as an image.
 // Fixed 4:5 portrait ratio (1080x1350 at capture scale) — the format
@@ -12,12 +11,12 @@ export const CARD_HEIGHT = 425;
 
 // Deliberately its own palette (not theme.ts): the card is a branded artefact
 // that should look identical regardless of any future in-app dark mode.
+// Atomic-lounge poster: charcoal ink card, cream type, mustard + blush accents.
 const card = {
-  background: '#3B0764',
-  surface: '#4C1D95',
-  cream: '#FAF7F2',
-  gold: '#F59E0B',
-  lilac: '#C4B5FD',
+  background: '#2B211E',
+  cream: '#FAF3E7',
+  gold: '#DE9A26',
+  blush: '#E98F7F',
 };
 
 export const ShareWordCard = forwardRef<View, { word: Word }>(function ShareWordCard(
@@ -35,7 +34,7 @@ export const ShareWordCard = forwardRef<View, { word: Word }>(function ShareWord
         {word.pronunciation ? (
           <Text style={styles.pronunciation}>/{word.pronunciation}/</Text>
         ) : null}
-        <PrideStripe height={4} style={styles.rule} />
+        <View style={styles.rule} />
         <Text style={styles.definition} numberOfLines={4}>
           {word.definition}
         </Text>
@@ -78,12 +77,15 @@ const styles = StyleSheet.create({
     lineHeight: 50,
   },
   pronunciation: {
-    color: card.lilac,
+    color: card.blush,
     fontFamily: fonts.regular,
     fontSize: 18,
   },
   rule: {
     width: 48,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: card.gold,
     marginVertical: 6,
   },
   definition: {
@@ -93,13 +95,13 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semibold,
   },
   example: {
-    color: card.lilac,
+    color: card.blush,
     fontSize: 15,
     lineHeight: 22,
     fontFamily: fonts.italic,
   },
   footer: {
-    color: card.lilac,
+    color: card.blush,
     fontSize: 13,
     fontFamily: fonts.semibold,
   },

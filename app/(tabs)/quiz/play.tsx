@@ -3,7 +3,6 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useWords } from '../../../src/lib/words';
 import { generateQuiz } from '../../../src/lib/quiz';
-import { PrideStripe } from '../../../src/components/PrideStripe';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 export default function QuizPlayScreen() {
@@ -56,9 +55,7 @@ export default function QuizPlayScreen() {
             styles.progressFill,
             { width: `${((questionIndex + (answered ? 1 : 0)) / questions.length) * 100}%` },
           ]}
-        >
-          <PrideStripe height={10} style={styles.progressStripe} />
-        </View>
+        />
       </View>
       <Text style={styles.counter}>
         Question {questionIndex + 1} of {questions.length}
@@ -143,10 +140,7 @@ const styles = StyleSheet.create({
   progressFill: {
     height: '100%',
     borderRadius: 5,
-    overflow: 'hidden',
-  },
-  progressStripe: {
-    flex: 1,
+    backgroundColor: colors.accent,
   },
   counter: {
     marginTop: spacing.sm,
@@ -185,12 +179,12 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   optionCorrect: {
-    borderColor: '#16A34A',
-    backgroundColor: '#F0FDF4',
+    borderColor: colors.teal,
+    backgroundColor: colors.tealSoft,
   },
   optionWrong: {
     borderColor: colors.danger,
-    backgroundColor: '#FEF2F2',
+    backgroundColor: colors.blushSoft,
   },
   optionText: {
     fontFamily: fonts.regular,
@@ -199,7 +193,7 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
   optionTextCorrect: {
-    color: '#166534',
+    color: colors.teal,
     fontFamily: fonts.semibold,
   },
   optionTextWrong: {
@@ -217,7 +211,7 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     backgroundColor: colors.primary,
-    borderRadius: radii.md,
+    borderRadius: radii.pill,
     paddingVertical: spacing.sm + 4,
     alignItems: 'center',
   },

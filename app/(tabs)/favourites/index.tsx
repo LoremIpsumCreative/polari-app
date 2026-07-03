@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '../../../src/lib/auth';
 import { useFavourites } from '../../../src/lib/favourites';
 import { useWords } from '../../../src/lib/words';
+import { SpaceHost } from '../../../src/components/illustrations/SpaceHost';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 export default function FavouritesScreen() {
@@ -21,6 +22,7 @@ export default function FavouritesScreen() {
   if (!session) {
     return (
       <View style={styles.center}>
+        <SpaceHost width={200} />
         <Text style={styles.emptyTitle}>Save your favourite Polari</Text>
         <Text style={styles.emptyBody}>
           Sign in to favourite words and find them again here.
@@ -35,6 +37,7 @@ export default function FavouritesScreen() {
   if (favouriteWords.length === 0) {
     return (
       <View style={styles.center}>
+        <SpaceHost width={200} />
         <Text style={styles.emptyTitle}>Nothing here yet</Text>
         <Text style={styles.emptyBody}>
           Tap the ♡ on any word in the Dictionary or on today's word to save it.
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop: spacing.md,
     backgroundColor: colors.primary,
-    borderRadius: radii.md,
+    borderRadius: radii.pill,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
   },

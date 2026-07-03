@@ -3,7 +3,6 @@ import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import type { Word } from '../types/database';
 import { colors, radii, spacing, fonts } from '../lib/theme';
 import { FavouriteButton } from './FavouriteButton';
-import { PrideStripe } from './PrideStripe';
 import { ShareWordModal } from './ShareWordModal';
 
 type Props = {
@@ -56,8 +55,6 @@ export function WordDetailCard({ word, style }: Props) {
       {word.pronunciation ? (
         <Text style={styles.pronunciation}>/{word.pronunciation}/</Text>
       ) : null}
-
-      <PrideStripe style={styles.prideRule} />
 
       <Text style={styles.definition}>{word.definition}</Text>
 
@@ -125,10 +122,6 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     fontFamily: fonts.regular,
     fontSize: 16,
-  },
-  prideRule: {
-    width: 48,
-    marginTop: spacing.xs,
   },
   definition: {
     color: colors.text,

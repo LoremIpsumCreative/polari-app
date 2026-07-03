@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { useWords } from '../../../src/lib/words';
 import { useHighScore } from '../../../src/lib/quizScores';
 import { QUIZ_LENGTH } from '../../../src/lib/quiz';
+import { LoungeDiva } from '../../../src/components/illustrations/LoungeDiva';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 export default function QuizIntroScreen() {
@@ -12,7 +13,7 @@ export default function QuizIntroScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.emoji}>🎯</Text>
+      <LoungeDiva width={210} />
       <Text style={styles.title}>How bona is your Polari?</Text>
       <Text style={styles.body}>
         {QUIZ_LENGTH} questions. Pick the right meaning for each word.
@@ -49,10 +50,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: spacing.xl,
     gap: spacing.sm,
-  },
-  emoji: {
-    fontFamily: fonts.regular,
-    fontSize: 48,
   },
   title: {
     fontSize: 24,
@@ -96,7 +93,7 @@ const styles = StyleSheet.create({
   startButton: {
     marginTop: spacing.lg,
     backgroundColor: colors.primary,
-    borderRadius: radii.lg,
+    borderRadius: radii.pill,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
     minWidth: 200,
