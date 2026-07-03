@@ -1,0 +1,209 @@
+import { useState } from 'react';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import Constants from 'expo-constants';
+import { supabase } from '../../../src/lib/supabase';
+import { useAuth } from '../../../src/lib/auth';
+import { FormError, PrimaryButton } from '../../../src/components/form';
+import { colors, radii, spacing } from '../../../src/lib/theme';
+
+const CATEGORIES = [
+  { value: 'bug', label: '🐛 Bug' },
+  { value: 'word', label: '📖 Word suggestion' },
+  { value: 'general', label: '💬 General' },
+] as const;
+
+type Category = (typeof CATEGORIES)[number]['value'];
+
+export default function FeedbackScreen() {
+  const { session } = useAuth();
+  const [category, setCategory] = useState<Category>('general');
+  const [message, setMessage] = useState('');
+  const [contactEmail, setContactEmail] = useState(session?.user.email ?? '');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  async function handleSubmit() {
+    setError(null);
+    setLoading(true);
+    const { error: insertError } = await supabase.from('feedback').insert({
+      user_id: session?.user.id ?? null,
+      category,
+      message: message.trim(),
+      contact_email: contactEmail.trim() || null,
+      app_version: Constants.expoConfig?.version ?? null,
+    });
+    setLoading(false);
+    if (insertError) {
+      setError(insertError.message);
+    } else {
+      setSent(true);
+    }
+  }
+
+  if (sent) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.sentEmoji}>💌</Text>
+        <Text style={styles.sentTitle}>Thanks, ducky!</Text>
+        <Text style={styles.sentBody}>Your feedback is on its way to us.</Text>
+        <Pressable
+          style={styles.againButton}
+          onPress={() => {
+            setMessage('');
+            setSent(false);
+          }}
+        >
+          <Text style={styles.againText}>Send another</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <Text style={styles.label}>What's it about?</Text>
+      <View style={styles.chips}>
+        {CATEGORIES.map((c) => (
+          <Pressable
+            key={c.value}
+            style={[styles.chip, category === c.value && styles.chipActive]}
+            onPress={() => setCategory(c.value)}
+          >
+            <Text style={[styles.chipText, category === c.value && styles.chipTextActive]}>
+              {c.label}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+
+      <Text style={styles.label}>Your feedback</Text>
+      <TextInput
+        style={styles.messageInput}
+        value={message}
+        onChangeText={setMessage}
+        placeholder="Tell us what's bona and what's naff…"
+        placeholderTextColor={colors.textMuted}
+        multiline
+        numberOfLines={6}
+        textAlignVertical="top"
+      />
+
+      <Text style={styles.label}>Contact email (optional)</Text>
+      <TextInput
+        style={styles.emailInput}
+        value={contactEmail}
+        onChangeText={setContactEmail}
+        placeholder="you@example.com"
+        placeholderTextColor={colors.textMuted}
+        autoCapitalize="none"
+        keyboardType="email-address"
+      />
+
+      <FormError message={error} />
+      <PrimaryButton
+        title="Send feedback"
+        onPress={handleSubmit}
+        loading={loading}
+        disabled={!message.trim()}
+      />
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  content: {
+    padding: spacing.md,
+    gap: spacing.sm,
+  },
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    padding: spacing.xl,
+    backgroundColor: colors.background,
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.textMuted,
+    marginTop: spacing.sm,
+  },
+  chips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  chip: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs + 2,
+    borderRadius: radii.lg,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  chipActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  chipText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.textMuted,
+  },
+  chipTextActive: {
+    color: '#fff',
+  },
+  messageInput: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: spacing.md,
+    fontSize: 15,
+    color: colors.text,
+    minHeight: 120,
+  },
+  emailInput: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 2,
+    fontSize: 15,
+    color: colors.text,
+  },
+  sentEmoji: {
+    fontSize: 48,
+  },
+  sentTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  sentBody: {
+    fontSize: 15,
+    color: colors.textMuted,
+  },
+  againButton: {
+    marginTop: spacing.md,
+  },
+  againText: {
+    color: colors.primary,
+    fontWeight: '600',
+    fontSize: 15,
+  },
+});

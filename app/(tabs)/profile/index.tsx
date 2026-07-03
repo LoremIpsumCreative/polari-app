@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { useStreaks } from '../../../src/lib/streaks';
 import { colors, radii, spacing } from '../../../src/lib/theme';
@@ -17,6 +19,28 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { session, signOut } = useAuth();
   const { stats } = useStreaks();
+  // Two-step confirm (RN Alert is a no-op on web, so an inline confirm state
+  // works everywhere)
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  async function handleDeleteAccount() {
+    if (!confirmingDelete) {
+      setConfirmingDelete(true);
+      return;
+    }
+    setDeleting(true);
+    setDeleteError(null);
+    const { error } = await supabase.functions.invoke('delete-account');
+    if (error) {
+      setDeleting(false);
+      setDeleteError('Could not delete your account. Please try again.');
+      return;
+    }
+    // Server-side user is gone; clear the local session
+    await signOut();
+  }
 
   if (!session) {
     return (
@@ -48,11 +72,42 @@ export default function ProfileScreen() {
       </View>
 
       <Pressable
+        style={({ pressed }) => [styles.rowButton, pressed && styles.rowPressed]}
+        onPress={() => router.push('/profile/feedback')}
+      >
+        <Text style={styles.rowButtonText}>💌 Send feedback</Text>
+      </Pressable>
+
+      <Pressable
         style={({ pressed }) => [styles.signOutButton, pressed && styles.signOutPressed]}
         onPress={signOut}
       >
         <Text style={styles.signOutText}>Sign out</Text>
       </Pressable>
+
+      <Pressable
+        style={({ pressed }) => [
+          styles.deleteButton,
+          confirmingDelete && styles.deleteButtonArmed,
+          pressed && styles.signOutPressed,
+        ]}
+        onPress={handleDeleteAccount}
+        disabled={deleting}
+      >
+        <Text style={styles.deleteText}>
+          {deleting
+            ? 'Deleting…'
+            : confirmingDelete
+              ? 'Tap again to permanently delete'
+              : 'Delete account'}
+        </Text>
+      </Pressable>
+      {confirmingDelete && !deleting ? (
+        <Pressable onPress={() => setConfirmingDelete(false)}>
+          <Text style={styles.cancelDelete}>Never mind, keep my account</Text>
+        </Pressable>
+      ) : null}
+      {deleteError ? <Text style={styles.deleteError}>{deleteError}</Text> : null}
     </ScrollView>
   );
 }
@@ -133,6 +188,22 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: '600',
   },
+  rowButton: {
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    paddingVertical: spacing.sm + 2,
+    alignItems: 'center',
+  },
+  rowPressed: {
+    backgroundColor: colors.primarySoft,
+  },
+  rowButtonText: {
+    color: colors.text,
+    fontWeight: '600',
+    fontSize: 15,
+  },
   signOutButton: {
     marginTop: spacing.lg,
     borderRadius: radii.md,
@@ -141,6 +212,33 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     paddingVertical: spacing.sm + 2,
     alignItems: 'center',
+  },
+  deleteButton: {
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    paddingVertical: spacing.sm + 2,
+    alignItems: 'center',
+  },
+  deleteButtonArmed: {
+    borderColor: colors.danger,
+    backgroundColor: '#FEF2F2',
+  },
+  deleteText: {
+    color: colors.danger,
+    fontWeight: '600',
+    fontSize: 15,
+  },
+  cancelDelete: {
+    color: colors.textMuted,
+    fontSize: 13,
+    textAlign: 'center',
+  },
+  deleteError: {
+    color: colors.danger,
+    fontSize: 13,
+    textAlign: 'center',
   },
   signOutPressed: {
     backgroundColor: colors.primarySoft,
