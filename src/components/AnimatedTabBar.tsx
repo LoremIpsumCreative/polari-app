@@ -7,9 +7,12 @@ import type { BottomTabBarProps } from 'expo-router/build/react-navigation/botto
 import {
   IconBook2,
   IconHeart,
+  IconLayoutDashboard,
+  IconPhoto,
+  IconSettings,
   IconSparkles,
   IconTargetArrow,
-  IconUser,
+  IconTrophy,
   type IconProps,
 } from '@tabler/icons-react-native';
 import { colors, fonts } from '../lib/theme';
@@ -32,16 +35,40 @@ const ICON_REST_CENTER =
 // the icon by its resting depth lands it dead-centre in the bubble.
 const ICON_LIFT = ICON_REST_CENTER;
 
+// Dashboard satellite fan
+const SATELLITE_SIZE = 48;
+const SATELLITE_ICON_SIZE = 22;
+const FAN_RADIUS = 86;
+// Fan arc over the bubble: left, top, right
+const FAN_ANGLES_DEG = [145, 90, 35];
+
 const TAB_ICONS: Record<string, React.ComponentType<IconProps>> = {
   index: IconSparkles,
   dictionary: IconBook2,
   quiz: IconTargetArrow,
-  favourites: IconHeart,
-  profile: IconUser,
+  favourites: IconLayoutDashboard,
+  profile: IconSettings,
 };
+
+type Satellite = {
+  key: string;
+  label: string;
+  Icon: React.ComponentType<IconProps>;
+  disabled: boolean;
+};
+
+const DASHBOARD_SATELLITES: Satellite[] = [
+  { key: 'favourites', label: 'Favourites', Icon: IconHeart, disabled: false },
+  { key: 'achievements', label: 'Achievements', Icon: IconTrophy, disabled: true },
+  { key: 'gallery', label: 'Gallery', Icon: IconPhoto, disabled: true },
+];
 
 // RN-web only supports the JS animation driver
 const useNative = Platform.OS !== 'web';
+
+function isDashboardRoute(routeName: string): boolean {
+  return routeName.replace(/\/index$/, '') === 'favourites';
+}
 
 function TabItem({
   label,
@@ -92,6 +119,81 @@ function TabItem({
   );
 }
 
+function SatelliteFan({
+  progress,
+  centerX,
+  open,
+  onSelect,
+}: {
+  progress: Animated.Value;
+  centerX: number;
+  open: boolean;
+  onSelect: (key: string) => void;
+}) {
+  return (
+    <>
+      {DASHBOARD_SATELLITES.map((sat, i) => {
+        const angle = (FAN_ANGLES_DEG[i] * Math.PI) / 180;
+        const dx = Math.cos(angle) * FAN_RADIUS;
+        const dy = -Math.sin(angle) * FAN_RADIUS;
+        return (
+          <Animated.View
+            key={sat.key}
+            style={[
+              styles.satellite,
+              {
+                left: centerX - SATELLITE_SIZE / 2,
+                // While folded away the satellites are invisible but would
+                // otherwise still swallow taps meant for the tab bar
+                pointerEvents: open ? 'auto' : 'none',
+                opacity: progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, sat.disabled ? 0.45 : 1],
+                }),
+                transform: [
+                  {
+                    translateX: progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, dx],
+                    }),
+                  },
+                  {
+                    translateY: progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, dy],
+                    }),
+                  },
+                  { scale: progress.interpolate({ inputRange: [0, 1], outputRange: [0.3, 1] }) },
+                ],
+              },
+            ]}
+          >
+            <Pressable
+              style={({ pressed }) => [
+                styles.satelliteButton,
+                pressed && !sat.disabled && styles.satellitePressed,
+              ]}
+              onPress={() => onSelect(sat.key)}
+              disabled={sat.disabled}
+              accessibilityRole="button"
+              accessibilityLabel={sat.label}
+              accessibilityState={{ disabled: sat.disabled }}
+            >
+              <sat.Icon
+                size={SATELLITE_ICON_SIZE}
+                color={sat.disabled ? colors.textMuted : colors.primary}
+              />
+            </Pressable>
+            <Text style={styles.satelliteLabel} numberOfLines={1}>
+              {sat.label}
+            </Text>
+          </Animated.View>
+        );
+      })}
+    </>
+  );
+}
+
 export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const [barWidth, setBarWidth] = useState(0);
@@ -99,6 +201,11 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
   const tabWidth = tabCount > 0 ? barWidth / tabCount : 0;
 
   const bubbleX = useRef(new Animated.Value(0)).current;
+  const fanProgress = useRef(new Animated.Value(0)).current;
+  const [fanOpen, setFanOpen] = useState(false);
+
+  const dashboardIndex = state.routes.findIndex((r) => isDashboardRoute(r.name));
+  const dashboardActive = state.index === dashboardIndex;
 
   useEffect(() => {
     if (tabWidth === 0) return;
@@ -110,6 +217,26 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
     }).start();
   }, [state.index, tabWidth, bubbleX]);
 
+  // Leaving the dashboard tab always folds the fan away
+  useEffect(() => {
+    if (!dashboardActive && fanOpen) setFanOpen(false);
+  }, [dashboardActive, fanOpen]);
+
+  useEffect(() => {
+    Animated.spring(fanProgress, {
+      toValue: fanOpen ? 1 : 0,
+      useNativeDriver: useNative,
+      friction: 8,
+      tension: 70,
+    }).start();
+  }, [fanOpen, fanProgress]);
+
+  function handleSatelliteSelect(key: string) {
+    // Favourites is the only live satellite; the dashboard route already
+    // shows the favourites screen, so selecting it just folds the fan.
+    if (key === 'favourites') setFanOpen(false);
+  }
+
   return (
     <View
       style={[styles.bar, { paddingBottom: insets.bottom }]}
@@ -118,6 +245,15 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
       {tabWidth > 0 ? (
         <Animated.View
           style={[styles.bubble, { transform: [{ translateX: bubbleX }] }]}
+        />
+      ) : null}
+
+      {tabWidth > 0 && dashboardIndex >= 0 ? (
+        <SatelliteFan
+          progress={fanProgress}
+          centerX={dashboardIndex * tabWidth + tabWidth / 2}
+          open={fanOpen}
+          onSelect={handleSatelliteSelect}
         />
       ) : null}
 
@@ -133,7 +269,20 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
               target: route.key,
               canPreventDefault: true,
             });
-            if (!active && !event.defaultPrevented) {
+            if (event.defaultPrevented) return;
+
+            if (isDashboardRoute(route.name)) {
+              if (active) {
+                setFanOpen((open) => !open);
+              } else {
+                navigation.navigate(route.name, route.params);
+                setFanOpen(true);
+              }
+              return;
+            }
+
+            setFanOpen(false);
+            if (!active) {
               navigation.navigate(route.name, route.params);
             }
           }
@@ -188,5 +337,33 @@ const styles = StyleSheet.create({
     borderWidth: BUBBLE_RING,
     borderColor: colors.background,
     pointerEvents: 'none',
+  },
+  satellite: {
+    position: 'absolute',
+    top: -SATELLITE_SIZE / 2,
+    alignItems: 'center',
+    // Wider than the circle so labels like "Achievements" don't truncate;
+    // the circle stays centred within it.
+    width: SATELLITE_SIZE + 44,
+    marginLeft: -22,
+  },
+  satelliteButton: {
+    width: SATELLITE_SIZE,
+    height: SATELLITE_SIZE,
+    borderRadius: SATELLITE_SIZE / 2,
+    backgroundColor: colors.surface,
+    borderWidth: 4,
+    borderColor: colors.background,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  satellitePressed: {
+    backgroundColor: colors.primarySoft,
+  },
+  satelliteLabel: {
+    marginTop: 2,
+    fontFamily: fonts.semibold,
+    fontSize: 10,
+    color: colors.text,
   },
 });

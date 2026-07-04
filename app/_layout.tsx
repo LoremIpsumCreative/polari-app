@@ -52,15 +52,12 @@ const styles = StyleSheet.create({
   gutter: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.background,
   },
   phoneFrame: {
     flex: 1,
     width: '100%',
     maxWidth: PHONE_MAX_WIDTH,
     backgroundColor: colors.background,
-    borderLeftWidth: StyleSheet.hairlineWidth,
-    borderRightWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.border,
   },
 });

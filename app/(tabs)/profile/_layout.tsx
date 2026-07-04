@@ -4,7 +4,7 @@ import { headerOptions } from '../../../src/lib/theme';
 export default function ProfileLayout() {
   return (
     <Stack screenOptions={headerOptions}>
-      <Stack.Screen name="index" options={{ title: 'Profile' }} />
+      <Stack.Screen name="index" options={{ title: 'Settings' }} />
       <Stack.Screen name="feedback" options={{ title: 'Feedback' }} />
     </Stack>
   );
