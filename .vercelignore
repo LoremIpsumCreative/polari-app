@@ -1,0 +1,14 @@
+# Keep the Vercel upload small. We deploy the prebuilt `dist/` as a static site,
+# so none of the source, native, or tooling files are needed on Vercel.
+node_modules
+.expo
+.git
+ios
+android
+app
+src
+assets
+scripts
+supabase
+.env*
+*.tsbuildinfo
