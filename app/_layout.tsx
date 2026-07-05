@@ -6,19 +6,15 @@ import { WordsProvider } from '../src/lib/words';
 import { FavouritesProvider } from '../src/lib/favourites';
 import { StreaksProvider } from '../src/lib/streaks';
 import { colors } from '../src/lib/theme';
+// Resolves to fontAssets.web.ts (woff2) on web and fontAssets.ts (otf) on native.
+import { fontAssets } from '../src/lib/fontAssets';
 
 // On web, cap the app at a smartphone-sized column so wide browser windows
 // don't stretch the layout. Native devices are already phone-sized.
 const PHONE_MAX_WIDTH = 430;
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
-    'Digitale-Regular': require('../assets/fonts/Digitale-Regular.woff2'),
-    'Digitale-Italic': require('../assets/fonts/Digitale-Italic.woff2'),
-    'Digitale-Semibold': require('../assets/fonts/Digitale-Semibold.woff2'),
-    'Digitale-Bold': require('../assets/fonts/Digitale-Bold.woff2'),
-    'Digitale-Extrabold': require('../assets/fonts/Digitale-Extrabold.woff2'),
-  });
+  const [fontsLoaded] = useFonts(fontAssets);
 
   if (!fontsLoaded) return null;
 
