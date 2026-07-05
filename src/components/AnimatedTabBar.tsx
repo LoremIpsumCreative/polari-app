@@ -9,10 +9,10 @@ import {
   IconHeart,
   IconLayoutDashboard,
   IconPhoto,
-  IconSettings,
   IconSparkles,
   IconTargetArrow,
   IconTrophy,
+  IconUserCircle,
   type IconProps,
 } from '@tabler/icons-react-native';
 import { colors, fonts } from '../lib/theme';
@@ -47,8 +47,12 @@ const TAB_ICONS: Record<string, React.ComponentType<IconProps>> = {
   dictionary: IconBook2,
   quiz: IconTargetArrow,
   favourites: IconLayoutDashboard,
-  profile: IconSettings,
+  profile: IconUserCircle,
 };
+
+// The bubble's cut-out ring must match whatever backdrop sits behind it,
+// which is the active screen's background (the quiz stage is dark).
+const DARK_STAGE_ROUTES = new Set(['quiz']);
 
 type Satellite = {
   key: string;
@@ -112,7 +116,7 @@ function TabItem({
           ],
         }}
       >
-        <Icon size={ICON_SIZE} color={active ? colors.onPrimary : 'rgba(255, 255, 255, 0.75)'} />
+        <Icon size={ICON_SIZE} color={active ? colors.primary : colors.textFaint} />
       </Animated.View>
       <Text style={[styles.label, active && styles.labelActive]}>{label}</Text>
     </Pressable>
@@ -181,7 +185,7 @@ function SatelliteFan({
             >
               <sat.Icon
                 size={SATELLITE_ICON_SIZE}
-                color={sat.disabled ? 'rgba(255, 255, 255, 0.6)' : colors.onPrimary}
+                color={sat.disabled ? colors.textFaint : colors.primary}
               />
             </Pressable>
             <Text style={styles.satelliteLabel} numberOfLines={1}>
@@ -206,6 +210,9 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
 
   const dashboardIndex = state.routes.findIndex((r) => isDashboardRoute(r.name));
   const dashboardActive = state.index === dashboardIndex;
+
+  const activeRouteName = state.routes[state.index]?.name.replace(/\/index$/, '') ?? '';
+  const ringColor = DARK_STAGE_ROUTES.has(activeRouteName) ? colors.dark : colors.background;
 
   useEffect(() => {
     if (tabWidth === 0) return;
@@ -244,7 +251,10 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
     >
       {tabWidth > 0 ? (
         <Animated.View
-          style={[styles.bubble, { transform: [{ translateX: bubbleX }] }]}
+          style={[
+            styles.bubble,
+            { borderColor: ringColor, transform: [{ translateX: bubbleX }] },
+          ]}
         />
       ) : null}
 
@@ -304,7 +314,7 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
 
 const styles = StyleSheet.create({
   bar: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.surface,
   },
   tabs: {
     flexDirection: 'row',
@@ -321,10 +331,10 @@ const styles = StyleSheet.create({
     fontSize: 11,
     height: LABEL_HEIGHT,
     lineHeight: LABEL_HEIGHT,
-    color: 'rgba(255, 255, 255, 0.75)',
+    color: colors.textFaint,
   },
   labelActive: {
-    color: colors.onPrimary,
+    color: colors.primary,
   },
   bubble: {
     position: 'absolute',
@@ -333,9 +343,8 @@ const styles = StyleSheet.create({
     width: BUBBLE_SIZE + BUBBLE_RING * 2,
     height: BUBBLE_SIZE + BUBBLE_RING * 2,
     borderRadius: (BUBBLE_SIZE + BUBBLE_RING * 2) / 2,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.surface,
     borderWidth: BUBBLE_RING,
-    borderColor: colors.background,
     pointerEvents: 'none',
   },
   satellite: {
@@ -351,7 +360,7 @@ const styles = StyleSheet.create({
     width: SATELLITE_SIZE,
     height: SATELLITE_SIZE,
     borderRadius: SATELLITE_SIZE / 2,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.surface,
     borderWidth: 4,
     borderColor: colors.background,
     alignItems: 'center',

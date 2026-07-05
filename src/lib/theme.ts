@@ -14,6 +14,8 @@ export const colors = {
   blush: '#E98F7F',
   blushSoft: '#FADFD8',
   text: '#1B1B1B',
+  dark: '#1B1B1B', // dark stage backdrop (quiz intro, navbar)
+  spotlight: '#F0ECE3', // cream spotlight ellipse on the quiz stage
   textMuted: '#646464',
   textFaint: '#7F7F7F',
   border: 'rgba(27, 27, 27, 0.12)',
