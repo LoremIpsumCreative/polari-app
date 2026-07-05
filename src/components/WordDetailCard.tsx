@@ -64,7 +64,7 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
             accessibilityLabel="Share this word"
             hitSlop={10}
           >
-            <IconSend size={22} color={colors.text} />
+            <IconSend size={22} color={colors.textFaint} />
           </Pressable>
           <FavouriteButton wordId={word.id} />
         </View>

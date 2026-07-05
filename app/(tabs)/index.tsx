@@ -10,10 +10,15 @@ import {
   Text,
   View,
 } from 'react-native';
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react-native';
+import {
+  IconArrowsMaximize,
+  IconChevronLeft,
+  IconChevronRight,
+} from '@tabler/icons-react-native';
 import { useWords } from '../../src/lib/words';
 import { daysSinceEpoch, wordOfTheDay } from '../../src/lib/wordOfTheDay';
 import { characterArtFor } from '../../src/lib/characterArt';
+import { CharacterFullScreen } from '../../src/components/CharacterFullScreen';
 import { WordDetailCard } from '../../src/components/WordDetailCard';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
@@ -29,6 +34,7 @@ export default function TodayScreen() {
   // 0 = today, 1 = yesterday, … capped at the app's epoch so "previous"
   // never wraps into future words nobody has seen yet.
   const [dayOffset, setDayOffset] = useState(0);
+  const [artFullScreen, setArtFullScreen] = useState(false);
   const maxOffset = Math.max(0, daysSinceEpoch(new Date()));
 
   const viewedDate = useMemo(() => {
@@ -104,23 +110,45 @@ export default function TodayScreen() {
           month: 'long',
         });
 
-  return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      {...panResponder.panHandlers}
-    >
-      <Animated.View style={{ transform: [{ translateX: transition }] }}>
-        <Image
-          source={characterArtFor(word.slug)}
-          style={styles.hero}
-          resizeMode="contain"
-          accessibilityLabel={`Illustration for ${word.term}`}
-        />
-        <WordDetailCard word={word} compact style={styles.card} />
-      </Animated.View>
+  const art = characterArtFor(word.slug);
 
-      <View style={styles.pagerRow}>
+  return (
+    <View style={styles.screen}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        {...panResponder.panHandlers}
+      >
+        <Animated.View style={{ transform: [{ translateX: transition }] }}>
+          <Image
+            source={art}
+            style={styles.hero}
+            resizeMode="contain"
+            accessibilityLabel={`Illustration for ${word.term}`}
+          />
+          <WordDetailCard word={word} compact style={styles.card} />
+        </Animated.View>
+      </ScrollView>
+
+      <Pressable
+        onPress={() => setArtFullScreen(true)}
+        style={({ pressed }) => [styles.fullScreenButton, pressed && styles.pagerPressed]}
+        accessibilityRole="button"
+        accessibilityLabel="View character full screen"
+        hitSlop={10}
+      >
+        <IconArrowsMaximize size={22} color={colors.textFaint} />
+      </Pressable>
+      <CharacterFullScreen
+        source={art}
+        visible={artFullScreen}
+        onClose={() => setArtFullScreen(false)}
+        label={`Illustration for ${word.term}`}
+      />
+
+      {/* Floating day selector: pinned above the navbar so long cards
+          scroll beneath it instead of pushing it off screen */}
+      <View style={styles.pagerPill}>
         <Pressable
           onPress={goBackADay}
           disabled={dayOffset >= maxOffset}
@@ -131,7 +159,7 @@ export default function TodayScreen() {
           hitSlop={12}
         >
           <IconChevronLeft
-            size={30}
+            size={26}
             color={dayOffset >= maxOffset ? colors.border : colors.text}
           />
         </Pressable>
@@ -145,21 +173,25 @@ export default function TodayScreen() {
           accessibilityState={{ disabled: dayOffset === 0 }}
           hitSlop={12}
         >
-          <IconChevronRight size={30} color={dayOffset === 0 ? colors.border : colors.text} />
+          <IconChevronRight size={26} color={dayOffset === 0 ? colors.border : colors.text} />
         </Pressable>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
     backgroundColor: colors.background,
   },
+  container: {
+    flex: 1,
+  },
   content: {
     padding: spacing.md,
-    paddingBottom: spacing.xl + 56,
+    // Clear the floating day-selector pill and the navbar bubble
+    paddingBottom: spacing.xl + 96,
   },
   center: {
     flex: 1,
@@ -178,12 +210,27 @@ const styles = StyleSheet.create({
   card: {
     marginHorizontal: spacing.xs,
   },
-  pagerRow: {
+  pagerPill: {
+    position: 'absolute',
+    bottom: spacing.md,
+    alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: spacing.xl + 8,
-    marginTop: spacing.lg,
+    gap: spacing.md,
+    minWidth: 240,
+    backgroundColor: colors.surface,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  fullScreenButton: {
+    position: 'absolute',
+    top: spacing.md + spacing.xs,
+    right: spacing.md + spacing.xs,
+    padding: spacing.xs,
   },
   pagerButton: {
     padding: spacing.xs,

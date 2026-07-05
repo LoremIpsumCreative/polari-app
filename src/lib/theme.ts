@@ -2,7 +2,7 @@
 // near-white canvas, vivid blue brand (#2253DA) for the navbar/actions,
 // soft blue chip fills, inset grey rows on white cards. Type is Digitale.
 export const colors = {
-  background: '#FAFAFA',
+  background: '#EAEAEA',
   surface: '#FFFFFF',
   inset: '#FAFAFA', // recessed rows inside white cards (Figma definition/example rows)
   primary: '#2253DA',

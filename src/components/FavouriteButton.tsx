@@ -31,7 +31,7 @@ export function FavouriteButton({ wordId }: { wordId: string }) {
       {favourited ? (
         <IconHeartFilled size={22} color={colors.heart} />
       ) : (
-        <IconHeart size={22} color={colors.heart} />
+        <IconHeart size={22} color={colors.textFaint} />
       )}
     </Pressable>
   );
