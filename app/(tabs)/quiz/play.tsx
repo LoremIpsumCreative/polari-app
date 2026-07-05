@@ -202,6 +202,9 @@ const styles = StyleSheet.create({
   footer: {
     gap: spacing.sm,
     paddingTop: spacing.sm,
+    // Keep the Continue button clear of the tab bar's floating bubble,
+    // which pokes ~40px above the bar over the Quiz tab
+    paddingBottom: 44,
   },
   feedback: {
     fontFamily: fonts.regular,

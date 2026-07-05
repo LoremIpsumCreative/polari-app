@@ -1,43 +1,80 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Animated,
+  Image,
+  PanResponder,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react-native';
 import { useWords } from '../../src/lib/words';
-import { wordOfTheDay } from '../../src/lib/wordOfTheDay';
+import { daysSinceEpoch, wordOfTheDay } from '../../src/lib/wordOfTheDay';
+import { characterArtFor } from '../../src/lib/characterArt';
 import { WordDetailCard } from '../../src/components/WordDetailCard';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
-import { colors, radii, spacing, fonts } from '../../src/lib/theme';
+import { colors, spacing } from '../../src/lib/theme';
+
+const SWIPE_THRESHOLD = 48;
 
 export default function TodayScreen() {
-  const router = useRouter();
   const { session } = useAuth();
-  const { stats, recordEngagement } = useStreaks();
+  const { recordEngagement } = useStreaks();
   const { words, loading, error, refetch } = useWords();
-  const word = useMemo(() => wordOfTheDay(words), [words]);
 
-  // Viewing today's word is what keeps a streak alive
+  // 0 = today, 1 = yesterday, … capped at the app's epoch so "previous"
+  // never wraps into future words nobody has seen yet.
+  const [dayOffset, setDayOffset] = useState(0);
+  const maxOffset = Math.max(0, daysSinceEpoch(new Date()));
+
+  const viewedDate = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - dayOffset);
+    return d;
+  }, [dayOffset]);
+
+  const word = useMemo(() => wordOfTheDay(words, viewedDate), [words, viewedDate]);
+
+  // Viewing the Today screen is what keeps a streak alive (any day's word)
   useEffect(() => {
     if (session && word) {
       recordEngagement();
     }
   }, [session, word, recordEngagement]);
 
-  const dateLabel = useMemo(
-    () =>
-      new Date().toLocaleDateString(undefined, {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-      }),
-    []
-  );
+  // Slide-and-fade whenever the displayed day changes
+  const transition = useRef(new Animated.Value(0)).current;
+  const lastOffset = useRef(dayOffset);
+  useEffect(() => {
+    if (lastOffset.current === dayOffset) return;
+    const towardPast = dayOffset > lastOffset.current;
+    lastOffset.current = dayOffset;
+    transition.setValue(towardPast ? -24 : 24);
+    Animated.spring(transition, {
+      toValue: 0,
+      useNativeDriver: false,
+      friction: 8,
+      tension: 80,
+    }).start();
+  }, [dayOffset, transition]);
+
+  const goBackADay = () => setDayOffset((o) => Math.min(maxOffset, o + 1));
+  const goForwardADay = () => setDayOffset((o) => Math.max(0, o - 1));
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_evt, gesture) =>
+        Math.abs(gesture.dx) > 16 && Math.abs(gesture.dx) > Math.abs(gesture.dy) * 1.5,
+      onPanResponderRelease: (_evt, gesture) => {
+        if (gesture.dx > SWIPE_THRESHOLD) goBackADay();
+        else if (gesture.dx < -SWIPE_THRESHOLD) goForwardADay();
+      },
+    })
+  ).current;
 
   if (loading) {
     return (
@@ -58,20 +95,59 @@ export default function TodayScreen() {
     );
   }
 
+  const dateLabel =
+    dayOffset === 0
+      ? 'Today'
+      : viewedDate.toLocaleDateString(undefined, {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+        });
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.headerRow}>
-        <View>
-          <Text style={styles.date}>{dateLabel}</Text>
-          <Text style={styles.heading}>Today's Polari</Text>
-        </View>
-        <Pressable style={styles.streakChip} onPress={() => router.push('/profile')}>
-          <Text style={styles.streakText}>
-            {session ? `🔥 ${stats?.current_streak ?? 0}` : '🔥 Start a streak'}
-          </Text>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      {...panResponder.panHandlers}
+    >
+      <Animated.View style={{ transform: [{ translateX: transition }] }}>
+        <Image
+          source={characterArtFor(word.slug)}
+          style={styles.hero}
+          resizeMode="contain"
+          accessibilityLabel={`Illustration for ${word.term}`}
+        />
+        <WordDetailCard word={word} compact style={styles.card} />
+      </Animated.View>
+
+      <View style={styles.pagerRow}>
+        <Pressable
+          onPress={goBackADay}
+          disabled={dayOffset >= maxOffset}
+          style={({ pressed }) => [styles.pagerButton, pressed && styles.pagerPressed]}
+          accessibilityRole="button"
+          accessibilityLabel="Previous word of the day"
+          accessibilityState={{ disabled: dayOffset >= maxOffset }}
+          hitSlop={12}
+        >
+          <IconChevronLeft
+            size={30}
+            color={dayOffset >= maxOffset ? colors.border : colors.text}
+          />
+        </Pressable>
+        <Text style={styles.dateLabel}>{dateLabel}</Text>
+        <Pressable
+          onPress={goForwardADay}
+          disabled={dayOffset === 0}
+          style={({ pressed }) => [styles.pagerButton, pressed && styles.pagerPressed]}
+          accessibilityRole="button"
+          accessibilityLabel="Next word of the day"
+          accessibilityState={{ disabled: dayOffset === 0 }}
+          hitSlop={12}
+        >
+          <IconChevronRight size={30} color={dayOffset === 0 ? colors.border : colors.text} />
         </Pressable>
       </View>
-      <WordDetailCard word={word} style={styles.card} />
     </ScrollView>
   );
 }
@@ -83,6 +159,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: spacing.md,
+    paddingBottom: spacing.xl + 56,
   },
   center: {
     flex: 1,
@@ -92,53 +169,47 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     backgroundColor: colors.background,
   },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
+  hero: {
+    width: '100%',
+    height: 280,
+    marginTop: spacing.md,
     marginBottom: spacing.md,
   },
-  date: {
-    fontSize: 13,
-    fontFamily: fonts.semibold,
-    color: colors.accent,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-  },
-  heading: {
-    fontSize: 24,
-    fontFamily: fonts.bold,
-    color: colors.text,
-    marginTop: spacing.xs,
-  },
-  streakChip: {
-    backgroundColor: colors.accentSoft,
-    borderRadius: radii.lg,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs + 2,
-    marginTop: spacing.xs,
-  },
-  streakText: {
-    fontSize: 14,
-    fontFamily: fonts.bold,
-    color: colors.accent,
-  },
   card: {
-    marginBottom: spacing.lg,
+    marginHorizontal: spacing.xs,
+  },
+  pagerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.xl + 8,
+    marginTop: spacing.lg,
+  },
+  pagerButton: {
+    padding: spacing.xs,
+  },
+  pagerPressed: {
+    opacity: 0.6,
+  },
+  dateLabel: {
+    fontFamily: 'Digitale-Semibold',
+    fontSize: 13,
+    color: colors.textFaint,
+    letterSpacing: 0.3,
   },
   errorText: {
-    fontFamily: fonts.regular,
+    fontFamily: 'Digitale-Regular',
     fontSize: 16,
     color: colors.danger,
   },
   retryButton: {
     backgroundColor: colors.primary,
-    borderRadius: radii.pill,
+    borderRadius: 999,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
   },
   retryText: {
-    color: '#fff',
-    fontFamily: fonts.semibold,
+    color: colors.onPrimary,
+    fontFamily: 'Digitale-Semibold',
   },
 });

@@ -112,7 +112,7 @@ function TabItem({
           ],
         }}
       >
-        <Icon size={ICON_SIZE} color={active ? colors.primary : colors.textMuted} />
+        <Icon size={ICON_SIZE} color={active ? colors.onPrimary : 'rgba(255, 255, 255, 0.75)'} />
       </Animated.View>
       <Text style={[styles.label, active && styles.labelActive]}>{label}</Text>
     </Pressable>
@@ -181,7 +181,7 @@ function SatelliteFan({
             >
               <sat.Icon
                 size={SATELLITE_ICON_SIZE}
-                color={sat.disabled ? colors.textMuted : colors.primary}
+                color={sat.disabled ? 'rgba(255, 255, 255, 0.6)' : colors.onPrimary}
               />
             </Pressable>
             <Text style={styles.satelliteLabel} numberOfLines={1}>
@@ -304,7 +304,7 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
 
 const styles = StyleSheet.create({
   bar: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.primary,
   },
   tabs: {
     flexDirection: 'row',
@@ -321,10 +321,10 @@ const styles = StyleSheet.create({
     fontSize: 11,
     height: LABEL_HEIGHT,
     lineHeight: LABEL_HEIGHT,
-    color: colors.textMuted,
+    color: 'rgba(255, 255, 255, 0.75)',
   },
   labelActive: {
-    color: colors.primary,
+    color: colors.onPrimary,
   },
   bubble: {
     position: 'absolute',
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     width: BUBBLE_SIZE + BUBBLE_RING * 2,
     height: BUBBLE_SIZE + BUBBLE_RING * 2,
     borderRadius: (BUBBLE_SIZE + BUBBLE_RING * 2) / 2,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.primary,
     borderWidth: BUBBLE_RING,
     borderColor: colors.background,
     pointerEvents: 'none',
@@ -351,14 +351,14 @@ const styles = StyleSheet.create({
     width: SATELLITE_SIZE,
     height: SATELLITE_SIZE,
     borderRadius: SATELLITE_SIZE / 2,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.primary,
     borderWidth: 4,
     borderColor: colors.background,
     alignItems: 'center',
     justifyContent: 'center',
   },
   satellitePressed: {
-    backgroundColor: colors.primarySoft,
+    opacity: 0.85,
   },
   satelliteLabel: {
     marginTop: 2,

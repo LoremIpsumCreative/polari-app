@@ -1,8 +1,9 @@
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import { IconHeart, IconHeartFilled } from '@tabler/icons-react-native';
 import { useAuth } from '../lib/auth';
 import { useFavourites } from '../lib/favourites';
-import { colors, radii, spacing, fonts } from '../lib/theme';
+import { colors, radii, spacing } from '../lib/theme';
 
 export function FavouriteButton({ wordId }: { wordId: string }) {
   const router = useRouter();
@@ -25,10 +26,13 @@ export function FavouriteButton({ wordId }: { wordId: string }) {
       style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
       accessibilityRole="button"
       accessibilityLabel={favourited ? 'Remove from favourites' : 'Add to favourites'}
+      hitSlop={10}
     >
-      <Text style={[styles.heart, favourited && styles.heartActive]}>
-        {favourited ? '♥' : '♡'}
-      </Text>
+      {favourited ? (
+        <IconHeartFilled size={22} color={colors.heart} />
+      ) : (
+        <IconHeart size={22} color={colors.heart} />
+      )}
     </Pressable>
   );
 }
@@ -39,14 +43,6 @@ const styles = StyleSheet.create({
     borderRadius: radii.sm,
   },
   buttonPressed: {
-    backgroundColor: colors.primarySoft,
-  },
-  heart: {
-    fontFamily: fonts.regular,
-    fontSize: 24,
-    color: colors.textMuted,
-  },
-  heartActive: {
-    color: colors.danger,
+    opacity: 0.6,
   },
 });

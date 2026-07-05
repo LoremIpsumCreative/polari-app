@@ -8,7 +8,7 @@ export default function TabsLayout() {
       screenOptions={{ headerShown: true, ...headerOptions }}
       tabBar={(props) => <AnimatedTabBar {...props} />}
     >
-      <Tabs.Screen name="index" options={{ title: 'Today' }} />
+      <Tabs.Screen name="index" options={{ title: 'Today', headerShown: false }} />
       <Tabs.Screen name="dictionary" options={{ title: 'Dictionary', headerShown: false }} />
       <Tabs.Screen name="favourites" options={{ title: 'Dashboard' }} />
       <Tabs.Screen name="quiz" options={{ title: 'Quiz', headerShown: false }} />

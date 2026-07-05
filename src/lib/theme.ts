@@ -1,21 +1,25 @@
-// Central design tokens — "atomic lounge": 1950s retro-modern illustration
-// palette (cream paper, charcoal ink, mustard/teal/blush) with the clean,
-// card-based layout language of the nobank reference. Type is Digitale.
+// Central design tokens — matches the Figma "Polari" design (node 572-276):
+// near-white canvas, vivid blue brand (#2253DA) for the navbar/actions,
+// soft blue chip fills, inset grey rows on white cards. Type is Digitale.
 export const colors = {
-  background: '#FAF3E7', // cream paper
+  background: '#FAFAFA',
   surface: '#FFFFFF',
-  primary: '#2B211E', // charcoal ink — buttons, active states (nobank-style pills)
-  primarySoft: '#F1E6D4',
-  accent: '#DE9A26', // mustard
-  accentSoft: '#FAEDD2',
+  inset: '#FAFAFA', // recessed rows inside white cards (Figma definition/example rows)
+  primary: '#2253DA',
+  primarySoft: '#F0F1FF',
+  accent: '#2253DA',
+  accentSoft: '#F0F1FF',
   teal: '#27958A',
-  tealSoft: '#DDEfEB',
-  blush: '#E98F7F', // dusty pink
+  tealSoft: '#DDEFEB',
+  blush: '#E98F7F',
   blushSoft: '#FADFD8',
-  text: '#2B211E',
-  textMuted: 'rgba(43, 33, 30, 0.62)',
-  border: 'rgba(43, 33, 30, 0.14)',
-  danger: '#C7402D', // retro poster red
+  text: '#1B1B1B',
+  textMuted: '#646464',
+  textFaint: '#7F7F7F',
+  border: 'rgba(27, 27, 27, 0.12)',
+  danger: '#ED3241',
+  heart: '#ED3241',
+  onPrimary: '#FFFFFF',
 };
 
 export const fonts = {
@@ -26,7 +30,7 @@ export const fonts = {
   extrabold: 'Digitale-Extrabold',
 };
 
-// Shared navigator header styling (flat, paper-coloured, Digitale)
+// Shared navigator header styling (flat, canvas-coloured, Digitale)
 export const headerOptions = {
   headerStyle: { backgroundColor: colors.background },
   headerShadowVisible: false,
