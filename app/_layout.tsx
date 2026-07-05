@@ -13,11 +13,11 @@ const PHONE_MAX_WIDTH = 430;
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
-    'Digitale-Regular': require('../assets/fonts/Digitale-Regular.otf'),
-    'Digitale-Italic': require('../assets/fonts/Digitale-Italic.otf'),
-    'Digitale-Semibold': require('../assets/fonts/Digitale-Semibold.otf'),
-    'Digitale-Bold': require('../assets/fonts/Digitale-Bold.otf'),
-    'Digitale-Extrabold': require('../assets/fonts/Digitale-Extrabold.otf'),
+    'Digitale-Regular': require('../assets/fonts/Digitale-Regular.woff2'),
+    'Digitale-Italic': require('../assets/fonts/Digitale-Italic.woff2'),
+    'Digitale-Semibold': require('../assets/fonts/Digitale-Semibold.woff2'),
+    'Digitale-Bold': require('../assets/fonts/Digitale-Bold.woff2'),
+    'Digitale-Extrabold': require('../assets/fonts/Digitale-Extrabold.woff2'),
   });
 
   if (!fontsLoaded) return null;

@@ -1,14 +1,9 @@
-# Keep the Vercel upload small. We deploy the prebuilt `dist/` as a static site,
-# so none of the source, native, or tooling files are needed on Vercel.
-node_modules
-.expo
-.git
-ios
-android
-app
-src
-assets
-scripts
-supabase
-.env*
-*.tsbuildinfo
+# We deploy the prebuilt static site only. Ignore everything at the repo root,
+# then re-include the built output and this deploy's config.
+#
+# NOTE: do NOT list bare names like "assets" here — .vercelignore matches at any
+# depth, so "assets" would also match dist/assets and drop every bundled image
+# and font. The whitelist below avoids that class of bug entirely.
+/*
+!dist
+!vercel.json
