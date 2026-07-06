@@ -2,6 +2,11 @@ import { Platform, type View } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import type { Word } from '../types/database';
+import { CARD_WIDTH, CARD_HEIGHT } from '../components/ShareWordCard';
+
+// Upscale the card to a social-friendly width, preserving its 9:16 aspect ratio.
+const OUT_WIDTH = 1080;
+const OUT_HEIGHT = Math.round((OUT_WIDTH * CARD_HEIGHT) / CARD_WIDTH);
 
 function shareText(word: Word): string {
   const pron = word.pronunciation ? ` (${word.pronunciation})` : '';
@@ -17,8 +22,8 @@ export async function shareWordCard(cardRef: React.RefObject<View | null>, word:
       format: 'png',
       quality: 1,
       // Upscale the 340pt-wide card to social-friendly 1080px output
-      width: 1080,
-      height: 1350,
+      width: OUT_WIDTH,
+      height: OUT_HEIGHT,
     });
     await Sharing.shareAsync(uri, {
       mimeType: 'image/png',
@@ -33,8 +38,8 @@ export async function shareWordCard(cardRef: React.RefObject<View | null>, word:
       format: 'png',
       quality: 1,
       result: 'data-uri',
-      width: 1080,
-      height: 1350,
+      width: OUT_WIDTH,
+      height: OUT_HEIGHT,
     });
 
     const blob = await (await fetch(dataUri)).blob();

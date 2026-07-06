@@ -1,7 +1,14 @@
 import { useRef, useState } from 'react';
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import type { Word } from '../types/database';
-import { ShareWordCard } from './ShareWordCard';
+import { ShareWordCard, CARD_WIDTH, CARD_HEIGHT } from './ShareWordCard';
 import { shareWordCard } from '../lib/share';
 import { colors, radii, spacing, fonts } from '../lib/theme';
 
@@ -14,6 +21,11 @@ type Props = {
 export function ShareWordModal({ word, visible, onClose }: Props) {
   const cardRef = useRef<View>(null);
   const [sharing, setSharing] = useState(false);
+  const { height: winH } = useWindowDimensions();
+  // Fit the full 9:16 card between the top inset and the action buttons. The
+  // captured PNG is unaffected — view-shot snapshots the card's own 340×604
+  // layout, not this scaled-down preview.
+  const scale = Math.min(1, (winH - 260) / CARD_HEIGHT);
 
   async function handleShare() {
     setSharing(true);
@@ -28,7 +40,11 @@ export function ShareWordModal({ word, visible, onClose }: Props) {
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.backdrop}>
         <View style={styles.sheet}>
-          <ShareWordCard ref={cardRef} word={word} />
+          <View style={{ width: CARD_WIDTH * scale, height: CARD_HEIGHT * scale }}>
+            <View style={{ transform: [{ scale }], transformOrigin: 'top left' }}>
+              <ShareWordCard ref={cardRef} word={word} />
+            </View>
+          </View>
           <View style={styles.buttons}>
             <Pressable
               style={({ pressed }) => [styles.shareButton, pressed && styles.pressed]}
