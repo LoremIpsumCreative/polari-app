@@ -6,6 +6,7 @@ export default function DictionaryLayout() {
     <Stack screenOptions={headerOptions}>
       <Stack.Screen name="index" options={{ title: 'Dictionary' }} />
       <Stack.Screen name="[slug]" options={{ title: 'Word' }} />
+      <Stack.Screen name="collection/[slug]" options={{ title: 'Collection' }} />
     </Stack>
   );
 }

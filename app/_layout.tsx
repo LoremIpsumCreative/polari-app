@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { AuthProvider } from '../src/lib/auth';
 import { WordsProvider } from '../src/lib/words';
+import { CollectionsProvider } from '../src/lib/collections';
 import { FavouritesProvider } from '../src/lib/favourites';
 import { StreaksProvider } from '../src/lib/streaks';
 import { colors } from '../src/lib/theme';
@@ -28,6 +29,7 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <WordsProvider>
+        <CollectionsProvider>
         <FavouritesProvider>
           <StreaksProvider>
             {Platform.OS === 'web' ? (
@@ -39,6 +41,7 @@ export default function RootLayout() {
             )}
           </StreaksProvider>
         </FavouritesProvider>
+        </CollectionsProvider>
       </WordsProvider>
     </AuthProvider>
   );
