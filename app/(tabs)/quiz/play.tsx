@@ -1,8 +1,15 @@
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useWords } from '../../../src/lib/words';
-import { generateQuiz } from '../../../src/lib/quiz';
+import { generateQuiz, isTypedAnswerCorrect } from '../../../src/lib/quiz';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 export default function QuizPlayScreen() {
@@ -13,6 +20,8 @@ export default function QuizPlayScreen() {
 
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [typedAnswer, setTypedAnswer] = useState('');
+  const [typedResult, setTypedResult] = useState<'correct' | 'wrong' | null>(null);
   const [score, setScore] = useState(0);
 
   if (questions.length === 0) {
@@ -24,15 +33,26 @@ export default function QuizPlayScreen() {
   }
 
   const question = questions[questionIndex];
-  const answered = selectedIndex !== null;
+  const isTyped = question.kind === 'typed';
+  const answered = isTyped ? typedResult !== null : selectedIndex !== null;
   const isLast = questionIndex === questions.length - 1;
+  const wasCorrect = isTyped
+    ? typedResult === 'correct'
+    : question.kind !== 'typed' && selectedIndex === question.correctIndex;
 
   function handleSelect(index: number) {
-    if (answered) return;
+    if (answered || question.kind === 'typed') return;
     setSelectedIndex(index);
     if (index === question.correctIndex) {
       setScore((s) => s + 1);
     }
+  }
+
+  function handleTypedSubmit() {
+    if (answered || question.kind !== 'typed' || !typedAnswer.trim()) return;
+    const correct = isTypedAnswerCorrect(question.word, typedAnswer);
+    setTypedResult(correct ? 'correct' : 'wrong');
+    if (correct) setScore((s) => s + 1);
   }
 
   function handleContinue() {
@@ -44,8 +64,26 @@ export default function QuizPlayScreen() {
     } else {
       setQuestionIndex((i) => i + 1);
       setSelectedIndex(null);
+      setTypedAnswer('');
+      setTypedResult(null);
     }
   }
+
+  const prompt =
+    question.kind === 'meaning' ? (
+      <Text style={styles.prompt}>
+        What does <Text style={styles.promptTerm}>“{question.word.term}”</Text> mean?
+      </Text>
+    ) : question.kind === 'reverse' ? (
+      <Text style={styles.prompt}>
+        Which word means <Text style={styles.promptTerm}>“{question.word.definition}”</Text>?
+      </Text>
+    ) : (
+      <Text style={styles.prompt}>
+        Type the Polari for{' '}
+        <Text style={styles.promptTerm}>“{question.word.definition}”</Text>
+      </Text>
+    );
 
   return (
     <View style={styles.container}>
@@ -59,48 +97,83 @@ export default function QuizPlayScreen() {
       </View>
       <Text style={styles.counter}>
         Question {questionIndex + 1} of {questions.length}
+        {isTyped ? '  ·  type your answer' : ''}
       </Text>
 
-      <Text style={styles.prompt}>
-        What does <Text style={styles.promptTerm}>“{question.word.term}”</Text> mean?
-      </Text>
+      {prompt}
 
-      <ScrollView style={styles.options} contentContainerStyle={styles.optionsContent}>
-        {question.options.map((option, index) => {
-          const isCorrect = index === question.correctIndex;
-          const isSelected = index === selectedIndex;
-          return (
+      {question.kind === 'typed' ? (
+        <View style={styles.typedWrap}>
+          <TextInput
+            style={[
+              styles.typedInput,
+              typedResult === 'correct' && styles.typedInputCorrect,
+              typedResult === 'wrong' && styles.typedInputWrong,
+            ]}
+            placeholder="Your answer…"
+            placeholderTextColor={colors.textMuted}
+            value={typedAnswer}
+            onChangeText={setTypedAnswer}
+            editable={!answered}
+            autoCapitalize="none"
+            autoCorrect={false}
+            onSubmitEditing={handleTypedSubmit}
+            returnKeyType="done"
+          />
+          {!answered ? (
             <Pressable
-              key={index}
-              onPress={() => handleSelect(index)}
-              disabled={answered}
               style={({ pressed }) => [
-                styles.option,
-                pressed && !answered && styles.optionPressed,
-                answered && isCorrect && styles.optionCorrect,
-                answered && isSelected && !isCorrect && styles.optionWrong,
+                styles.submitButton,
+                !typedAnswer.trim() && styles.submitDisabled,
+                pressed && styles.continuePressed,
               ]}
+              onPress={handleTypedSubmit}
+              disabled={!typedAnswer.trim()}
             >
-              <Text
-                style={[
-                  styles.optionText,
-                  answered && isCorrect && styles.optionTextCorrect,
-                  answered && isSelected && !isCorrect && styles.optionTextWrong,
+              <Text style={styles.continueText}>Check</Text>
+            </Pressable>
+          ) : null}
+        </View>
+      ) : (
+        <ScrollView style={styles.options} contentContainerStyle={styles.optionsContent}>
+          {question.options.map((option, index) => {
+            const isCorrect = index === question.correctIndex;
+            const isSelected = index === selectedIndex;
+            return (
+              <Pressable
+                key={index}
+                onPress={() => handleSelect(index)}
+                disabled={answered}
+                style={({ pressed }) => [
+                  styles.option,
+                  pressed && !answered && styles.optionPressed,
+                  answered && isCorrect && styles.optionCorrect,
+                  answered && isSelected && !isCorrect && styles.optionWrong,
                 ]}
               >
-                {option}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
+                <Text
+                  style={[
+                    styles.optionText,
+                    answered && isCorrect && styles.optionTextCorrect,
+                    answered && isSelected && !isCorrect && styles.optionTextWrong,
+                  ]}
+                >
+                  {option}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+      )}
 
       {answered ? (
         <View style={styles.footer}>
           <Text style={styles.feedback}>
-            {selectedIndex === question.correctIndex
+            {wasCorrect
               ? 'Bona! That’s right.'
-              : `Not quite — it means “${question.word.definition}”.`}
+              : question.kind === 'reverse' || question.kind === 'typed'
+                ? `Not quite — it’s “${question.word.term}”.`
+                : `Not quite — it means “${question.word.definition}”.`}
           </Text>
           <Pressable
             style={({ pressed }) => [styles.continueButton, pressed && styles.continuePressed]}
@@ -159,6 +232,39 @@ const styles = StyleSheet.create({
   },
   promptTerm: {
     color: colors.primary,
+  },
+  typedWrap: {
+    marginTop: spacing.lg,
+    gap: spacing.sm,
+    flex: 1,
+  },
+  typedInput: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.md,
+    borderWidth: 2,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 4,
+    fontFamily: fonts.regular,
+    fontSize: 17,
+    color: colors.text,
+  },
+  typedInputCorrect: {
+    borderColor: colors.teal,
+    backgroundColor: colors.tealSoft,
+  },
+  typedInputWrong: {
+    borderColor: colors.danger,
+    backgroundColor: colors.blushSoft,
+  },
+  submitButton: {
+    backgroundColor: colors.primary,
+    borderRadius: radii.pill,
+    paddingVertical: spacing.sm + 4,
+    alignItems: 'center',
+  },
+  submitDisabled: {
+    opacity: 0.4,
   },
   options: {
     marginTop: spacing.md,
