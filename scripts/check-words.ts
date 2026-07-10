@@ -102,7 +102,7 @@ function renderChangesFile(diff: Diff): string {
 }
 
 async function main() {
-  const current = await fetchSheetWords();
+  const { words: current, culturalFields } = await fetchSheetWords();
   let snapshot = readSnapshot();
 
   // First run with no snapshot: establish a baseline from the current sheet and
@@ -116,7 +116,7 @@ async function main() {
     );
   }
 
-  const diff = diffWords(snapshot, current);
+  const diff = diffWords(snapshot, current, culturalFields);
   writeFileSync(CHANGES_PATH, renderChangesFile(diff));
 
   if (!diff.hasChanges) {

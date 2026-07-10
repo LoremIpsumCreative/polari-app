@@ -36,9 +36,9 @@ async function main() {
     auth: { persistSession: false },
   });
 
-  const current = await fetchSheetWords();
+  const { words: current, culturalFields } = await fetchSheetWords();
   const snapshot = readSnapshot() ?? ({} as WordMap);
-  const diff = diffWords(snapshot, current);
+  const diff = diffWords(snapshot, current, culturalFields);
 
   if (!diff.hasChanges) {
     console.log('No pending changes — nothing to apply.');
@@ -59,18 +59,30 @@ async function main() {
   const existingSortOrderBySlug = new Map(existing.map((w) => [w.slug, w.sort_order]));
   let nextSortOrder = existing.reduce((max, w) => Math.max(max, w.sort_order), -1) + 1;
 
-  const rows = Object.entries(current).map(([slug, c]) => ({
-    slug,
-    sort_order: existingSortOrderBySlug.get(slug) ?? nextSortOrder++,
-    term: c.term,
-    entry_type: c.entry_type,
-    part_of_speech: c.part_of_speech,
-    pronunciation: c.pronunciation,
-    definition: c.definition,
-    origin: c.origin,
-    example: c.example,
-    notes_variants: c.notes_variants,
-  }));
+  const rows = Object.entries(current).map(([slug, c]) => {
+    const row: Record<string, unknown> = {
+      slug,
+      sort_order: existingSortOrderBySlug.get(slug) ?? nextSortOrder++,
+      term: c.term,
+      entry_type: c.entry_type,
+      part_of_speech: c.part_of_speech,
+      pronunciation: c.pronunciation,
+      definition: c.definition,
+      origin: c.origin,
+      example: c.example,
+      notes_variants: c.notes_variants,
+    };
+    // Cultural fields ride along only when their sheet column exists, so absent
+    // columns never blank out DB-seeded drafts.
+    for (const f of culturalFields) {
+      if (f === 'related_slugs') {
+        row.related_slugs = c.related_slugs ? c.related_slugs.split(',') : null;
+      } else {
+        row[f] = c[f] ?? null;
+      }
+    }
+    return row;
+  });
 
   const { error: upsertError } = await supabase.from('words').upsert(rows, { onConflict: 'slug' });
   if (upsertError) throw upsertError;
