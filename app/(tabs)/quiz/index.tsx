@@ -11,6 +11,7 @@ import {
 import { useFocusEffect, useRouter } from 'expo-router';
 import Svg, { Ellipse } from 'react-native-svg';
 import { useWords } from '../../../src/lib/words';
+import { useProgress } from '../../../src/lib/progress';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 const quizmasterArt = require('../../../assets/quiz/quizmaster.png');
@@ -28,6 +29,7 @@ const EASE_OUT = Easing.out(Easing.cubic);
 export default function QuizIntroScreen() {
   const router = useRouter();
   const { words, loading } = useWords();
+  const { dueWordIds } = useProgress();
   const { width } = useWindowDimensions();
 
   // Stage geometry: spotlight ellipse sized to the screen like the Figma frame
@@ -211,6 +213,18 @@ export default function QuizIntroScreen() {
         >
           <Text style={styles.startText}>{loading ? 'Loading…' : 'Start quiz'}</Text>
         </Pressable>
+        {dueWordIds.length > 0 ? (
+          <Pressable
+            style={({ pressed }) => [styles.reviewButton, pressed && styles.startPressed]}
+            onPress={() => router.push('/quiz/play?mode=review')}
+            accessibilityRole="button"
+            accessibilityLabel={`Review ${dueWordIds.length} words due for practice`}
+          >
+            <Text style={styles.reviewText}>
+              Review {dueWordIds.length} due {dueWordIds.length === 1 ? 'word' : 'words'}
+            </Text>
+          </Pressable>
+        ) : null}
       </Animated.View>
     </Pressable>
   );
@@ -281,6 +295,21 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md - 2,
     minWidth: 200,
     alignItems: 'center',
+  },
+  reviewButton: {
+    marginTop: 10,
+    borderRadius: 999,
+    borderWidth: 1.5,
+    borderColor: "rgba(250, 243, 231, 0.5)",
+    paddingHorizontal: 28,
+    paddingVertical: 10,
+    minWidth: 200,
+    alignItems: "center",
+  },
+  reviewText: {
+    color: "#FAF3E7",
+    fontSize: 14,
+    fontFamily: fonts.semibold,
   },
   startPressed: {
     opacity: 0.85,

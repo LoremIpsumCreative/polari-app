@@ -6,6 +6,7 @@ import { WordsProvider } from '../src/lib/words';
 import { CollectionsProvider } from '../src/lib/collections';
 import { FavouritesProvider } from '../src/lib/favourites';
 import { StreaksProvider } from '../src/lib/streaks';
+import { ProgressProvider } from '../src/lib/progress';
 import { colors } from '../src/lib/theme';
 // Resolves to fontAssets.web.ts (woff2) on web and fontAssets.ts (otf) on native.
 import { fontAssets } from '../src/lib/fontAssets';
@@ -32,6 +33,7 @@ export default function RootLayout() {
         <CollectionsProvider>
         <FavouritesProvider>
           <StreaksProvider>
+            <ProgressProvider>
             {Platform.OS === 'web' ? (
               <View style={styles.gutter}>
                 <View style={styles.phoneFrame}>{app}</View>
@@ -39,6 +41,7 @@ export default function RootLayout() {
             ) : (
               app
             )}
+          </ProgressProvider>
           </StreaksProvider>
         </FavouritesProvider>
         </CollectionsProvider>

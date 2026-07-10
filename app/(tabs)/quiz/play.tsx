@@ -7,16 +7,30 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useWords } from '../../../src/lib/words';
-import { generateQuiz, isTypedAnswerCorrect } from '../../../src/lib/quiz';
+import { useProgress } from '../../../src/lib/progress';
+import { generateQuiz, isTypedAnswerCorrect, QUIZ_LENGTH } from '../../../src/lib/quiz';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 export default function QuizPlayScreen() {
   const router = useRouter();
+  const { mode } = useLocalSearchParams<{ mode?: string }>();
   const { words } = useWords();
-  // Generate once per mount; "Play again" remounts via router.replace
-  const questions = useMemo(() => generateQuiz(words), [words]);
+  const { dueWordIds, recordAnswer } = useProgress();
+  // Generate once per mount; "Play again" remounts via router.replace.
+  // Review mode asks only words the SRS says are due (full list stays the
+  // distractor pool); freezing the due list at mount keeps the round stable
+  // while answers update progress underneath it.
+  const questions = useMemo(() => {
+    if (mode === 'review') {
+      const due = new Set(dueWordIds.slice(0, QUIZ_LENGTH));
+      const dueWords = words.filter((w) => due.has(w.id));
+      return generateQuiz(words, QUIZ_LENGTH, dueWords);
+    }
+    return generateQuiz(words);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [words, mode]);
 
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -43,9 +57,9 @@ export default function QuizPlayScreen() {
   function handleSelect(index: number) {
     if (answered || question.kind === 'typed') return;
     setSelectedIndex(index);
-    if (index === question.correctIndex) {
-      setScore((s) => s + 1);
-    }
+    const correct = index === question.correctIndex;
+    if (correct) setScore((s) => s + 1);
+    recordAnswer(question.word.id, correct); // feeds the SRS review queue
   }
 
   function handleTypedSubmit() {
@@ -53,6 +67,7 @@ export default function QuizPlayScreen() {
     const correct = isTypedAnswerCorrect(question.word, typedAnswer);
     setTypedResult(correct ? 'correct' : 'wrong');
     if (correct) setScore((s) => s + 1);
+    recordAnswer(question.word.id, correct);
   }
 
   function handleContinue() {

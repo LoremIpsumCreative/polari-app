@@ -78,8 +78,15 @@ function buildReverse(word: Word, pool: Word[]): QuizQuestion {
 // definitions/terms from other words, so options read plausibly. Words with
 // duplicate definitions (e.g. two terms for "drink") are excluded from each
 // other's option sets to avoid two "correct" answers appearing at once.
-export function generateQuiz(words: Word[], length: number = QUIZ_LENGTH): QuizQuestion[] {
-  const questionWords = shuffle(words).slice(0, Math.min(length, words.length));
+// `from` narrows which words get asked (e.g. the SRS due queue) while `words`
+// stays the full pool so distractors remain varied.
+export function generateQuiz(
+  words: Word[],
+  length: number = QUIZ_LENGTH,
+  from?: Word[]
+): QuizQuestion[] {
+  const source = from && from.length > 0 ? from : words;
+  const questionWords = shuffle(source).slice(0, Math.min(length, source.length));
 
   return questionWords.map((word, i) => {
     if (i < Math.min(MEANING_COUNT, questionWords.length)) return buildMeaning(word, words);
