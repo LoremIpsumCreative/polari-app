@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import { IconBook2, IconQuote } from '@tabler/icons-react-native';
 import type { Word } from '../types/database';
 import { fonts } from '../lib/theme';
-import { characterArtFor } from '../lib/characterArt';
+import { useCharacterArt } from '../lib/remoteArt';
 
 // The visual card that gets snapshotted and shared as an image, rebuilt to match
 // the Figma "Polari · Word of the day" share design (nodes 678-66 / 685-92 / 685-168):
@@ -84,7 +84,8 @@ export const ShareWordCard = forwardRef<View, Props>(function ShareWordCard(
   ref
 ) {
   const c = accentForWord(word);
-  const art = characterArtFor(word.slug);
+  const { artFor } = useCharacterArt();
+  const art = artFor(word.slug);
 
   return (
     <View ref={ref} style={styles.card} collapsable={false}>

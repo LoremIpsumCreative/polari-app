@@ -3,7 +3,7 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { IconArrowsMaximize } from '@tabler/icons-react-native';
 import { useWords } from '../../../src/lib/words';
-import { characterArtFor } from '../../../src/lib/characterArt';
+import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../../src/components/CharacterFullScreen';
 import { WordDetailCard } from '../../../src/components/WordDetailCard';
 import { colors, spacing, fonts } from '../../../src/lib/theme';
@@ -11,6 +11,7 @@ import { colors, spacing, fonts } from '../../../src/lib/theme';
 export default function WordDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const { bySlug, loading } = useWords();
+  const { artFor } = useCharacterArt();
   const word = slug ? bySlug.get(slug) : undefined;
   const [artFullScreen, setArtFullScreen] = useState(false);
 
@@ -22,7 +23,7 @@ export default function WordDetailScreen() {
           {word ? (
             <>
               <Image
-                source={characterArtFor(word.slug)}
+                source={artFor(word.slug)}
                 style={styles.hero}
                 resizeMode="contain"
                 accessibilityLabel={`Illustration for ${word.term}`}
@@ -50,7 +51,7 @@ export default function WordDetailScreen() {
         {word ? (
           <>
             <CharacterFullScreen
-              source={characterArtFor(word.slug)}
+              source={artFor(word.slug)}
               visible={artFullScreen}
               onClose={() => setArtFullScreen(false)}
               label={`Illustration for ${word.term}`}

@@ -1,11 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import {
-  CHARACTER_SLUGS,
-  COMING_SOON_ART,
-  characterArtFor,
-} from '../../../src/lib/characterArt';
+import { COMING_SOON_ART } from '../../../src/lib/characterArt';
+import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../../src/components/CharacterFullScreen';
 import { useWords } from '../../../src/lib/words';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
@@ -16,6 +13,7 @@ import type { ImageSourcePropType } from 'react-native';
 export default function GalleryScreen() {
   const router = useRouter();
   const { bySlug, words } = useWords();
+  const { artFor, castSlugs } = useCharacterArt();
   const [fullScreen, setFullScreen] = useState<{
     source: ImageSourcePropType;
     label: string;
@@ -23,12 +21,14 @@ export default function GalleryScreen() {
 
   const cast = useMemo(
     () =>
-      CHARACTER_SLUGS.map((slug) => ({
-        slug,
-        term: bySlug.get(slug)?.term ?? slug,
-        art: characterArtFor(slug),
-      })).sort((a, b) => a.term.localeCompare(b.term)),
-    [bySlug]
+      castSlugs
+        .map((slug) => ({
+          slug,
+          term: bySlug.get(slug)?.term ?? slug,
+          art: artFor(slug),
+        }))
+        .sort((a, b) => a.term.localeCompare(b.term)),
+    [bySlug, castSlugs, artFor]
   );
   const comingSoon = Math.max(0, words.length - cast.length);
 

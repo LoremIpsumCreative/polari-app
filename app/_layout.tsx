@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import { AuthProvider } from '../src/lib/auth';
 import { WordsProvider } from '../src/lib/words';
 import { CollectionsProvider } from '../src/lib/collections';
+import { RemoteArtProvider } from '../src/lib/remoteArt';
 import { FavouritesProvider } from '../src/lib/favourites';
 import { StreaksProvider } from '../src/lib/streaks';
 import { ProgressProvider } from '../src/lib/progress';
@@ -30,6 +31,7 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <WordsProvider>
+        <RemoteArtProvider>
         <CollectionsProvider>
         <FavouritesProvider>
           <StreaksProvider>
@@ -45,6 +47,7 @@ export default function RootLayout() {
           </StreaksProvider>
         </FavouritesProvider>
         </CollectionsProvider>
+        </RemoteArtProvider>
       </WordsProvider>
     </AuthProvider>
   );

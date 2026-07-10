@@ -17,7 +17,7 @@ import {
 } from '@tabler/icons-react-native';
 import { useWords } from '../../src/lib/words';
 import { daysSinceEpoch, wordOfTheDay } from '../../src/lib/wordOfTheDay';
-import { characterArtFor } from '../../src/lib/characterArt';
+import { useCharacterArt } from '../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../src/components/CharacterFullScreen';
 import { WordDetailCard } from '../../src/components/WordDetailCard';
 import { useAuth } from '../../src/lib/auth';
@@ -30,6 +30,7 @@ export default function TodayScreen() {
   const { session } = useAuth();
   const { recordEngagement, celebration, dismissCelebration } = useStreaks();
   const { words, loading, error, refetch } = useWords();
+  const { artFor } = useCharacterArt();
 
   // 0 = today, 1 = yesterday, … capped at the app's epoch so "previous"
   // never wraps into future words nobody has seen yet.
@@ -117,7 +118,7 @@ export default function TodayScreen() {
           month: 'long',
         });
 
-  const art = characterArtFor(word.slug);
+  const art = artFor(word.slug);
 
   return (
     <View style={styles.screen}>

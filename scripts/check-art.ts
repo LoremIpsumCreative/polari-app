@@ -1,0 +1,138 @@
+// Detect character-artwork changes in the Supabase "characters" storage bucket
+// and record them in art-changes.md.
+//
+//   npm run art:check   — report added / updated / removed art (exit 1 on changes)
+//   npm run art:ack     — acknowledge: advance the snapshot and reset the log
+//
+// Unlike dictionary edits, art goes live the moment it's uploaded (the app loads
+// straight from the bucket), so there is no "apply" step — this is a review log,
+// not a pending batch. The scheduled GitHub Action runs check + ack together so
+// every art drop lands as one commit you get notified about.
+//
+// Also flags orphans: files whose name matches no word slug (usually a typo —
+// e.g. antique-hq.png instead of antique-hp.png).
+
+import { config } from 'dotenv';
+config({ path: '.env.local' });
+
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const SNAPSHOT_PATH = join(HERE, 'art-snapshot.json');
+const CHANGES_PATH = join(HERE, '..', 'art-changes.md');
+
+// These are the app's public client constants (baked into every web bundle),
+// so they're safe as fallbacks for CI where .env.local doesn't exist.
+const SUPABASE_URL =
+  process.env.EXPO_PUBLIC_SUPABASE_URL ?? 'https://vduqjfwjfdwzrosztrkk.supabase.co';
+const ANON_KEY =
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ??
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkdXFqZndqZmR3enJvc3p0cmtrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwMTk2MjAsImV4cCI6MjA5ODU5NTYyMH0.2oSHu_MpAo5mcz0H7IV3AZS4raxcbsfJoKnfo39RJUI';
+
+type ArtObject = { size: number; updated_at: string };
+type ArtMap = Record<string, ArtObject>;
+
+async function listBucket(): Promise<ArtMap> {
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/characters`, {
+    method: 'POST',
+    headers: {
+      apikey: ANON_KEY,
+      Authorization: `Bearer ${ANON_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ prefix: '', limit: 1000 }),
+  });
+  if (!res.ok) throw new Error(`Bucket list failed: ${res.status}`);
+  const objects = (await res.json()) as {
+    name: string;
+    updated_at: string;
+    metadata: { size: number } | null;
+  }[];
+  const map: ArtMap = {};
+  for (const o of objects) {
+    if (!o.name.endsWith('.png')) continue;
+    map[o.name] = { size: o.metadata?.size ?? 0, updated_at: o.updated_at };
+  }
+  return map;
+}
+
+async function fetchWordSlugs(): Promise<Set<string>> {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/words?select=slug`, {
+    headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` },
+  });
+  if (!res.ok) throw new Error(`Words fetch failed: ${res.status}`);
+  return new Set(((await res.json()) as { slug: string }[]).map((w) => w.slug));
+}
+
+function readSnapshot(): ArtMap {
+  return existsSync(SNAPSHOT_PATH) ? JSON.parse(readFileSync(SNAPSHOT_PATH, 'utf8')) : {};
+}
+
+function writeSnapshot(map: ArtMap) {
+  const sorted: ArtMap = {};
+  for (const k of Object.keys(map).sort()) sorted[k] = map[k];
+  writeFileSync(SNAPSHOT_PATH, JSON.stringify(sorted, null, 2) + '\n');
+}
+
+async function main() {
+  const ack = process.argv.includes('--ack');
+  const [current, slugs] = await Promise.all([listBucket(), fetchWordSlugs()]);
+  const before = readSnapshot();
+
+  const added = Object.keys(current).filter((n) => !before[n]).sort();
+  const updated = Object.keys(current)
+    .filter((n) => before[n] && (before[n].size !== current[n].size || before[n].updated_at !== current[n].updated_at))
+    .sort();
+  const removed = Object.keys(before).filter((n) => !current[n]).sort();
+  const orphans = Object.keys(current)
+    .filter((n) => !slugs.has(n.replace(/\.png$/, '')))
+    .sort();
+  const hasChanges = added.length + updated.length + removed.length > 0;
+
+  const out: string[] = ['# Character art changes', ''];
+  out.push('_Bucket state vs `scripts/art-snapshot.json`. Art is live the moment it is');
+  out.push('uploaded — this file is the review log, refreshed by `npm run art:check`._', '');
+  if (!hasChanges) {
+    out.push('**No art changes since the last acknowledged snapshot. ✅**', '');
+  } else {
+    out.push(
+      `**Summary:** ${added.length} added · ${updated.length} updated · ${removed.length} removed`,
+      ''
+    );
+    if (added.length) out.push('## ➕ Added', '', ...added.map((n) => `- ${n}`), '');
+    if (updated.length) out.push('## ✏️ Updated', '', ...updated.map((n) => `- ${n}`), '');
+    if (removed.length)
+      out.push('## ❌ Removed', '', '_The app falls back to bundled or coming-soon art._', '', ...removed.map((n) => `- ${n}`), '');
+  }
+  if (orphans.length) {
+    out.push('## ⚠️ No matching word', '');
+    out.push('_These files match no word slug, so no entry shows them — likely a typo:_', '');
+    out.push(...orphans.map((n) => `- ${n}`), '');
+  }
+  writeFileSync(CHANGES_PATH, out.join('\n') + '\n');
+
+  if (ack || !hasChanges) {
+    if (hasChanges) writeSnapshot(current);
+    if (!existsSync(SNAPSHOT_PATH)) writeSnapshot(current);
+    console.log(
+      hasChanges
+        ? `Acknowledged: ${added.length} added, ${updated.length} updated, ${removed.length} removed.`
+        : 'No art changes.'
+    );
+    if (orphans.length) console.log(`⚠️ ${orphans.length} file(s) match no word slug — see art-changes.md`);
+    process.exit(0);
+  }
+
+  console.log(
+    `Art changes: ${added.length} added, ${updated.length} updated, ${removed.length} removed. See art-changes.md`
+  );
+  if (orphans.length) console.log(`⚠️ ${orphans.length} file(s) match no word slug`);
+  process.exit(1);
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(2);
+});
