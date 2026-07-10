@@ -25,3 +25,6 @@ export function characterArtFor(slug: string): ImageSourcePropType {
 export function hasCharacterArt(slug: string): boolean {
   return slug in CHARACTER_ART;
 }
+
+// Every word slug with its own finished character, for the Gallery grid.
+export const CHARACTER_SLUGS: string[] = Object.keys(CHARACTER_ART);

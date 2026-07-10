@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 // Type-only deep import: expo-router 57 vendors react-navigation's bottom-tabs
 // and doesn't re-export its types from the package root.
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs/types';
@@ -63,8 +64,8 @@ type Satellite = {
 
 const DASHBOARD_SATELLITES: Satellite[] = [
   { key: 'favourites', label: 'Favourites', Icon: IconHeart, disabled: false },
-  { key: 'achievements', label: 'Achievements', Icon: IconTrophy, disabled: true },
-  { key: 'gallery', label: 'Gallery', Icon: IconPhoto, disabled: true },
+  { key: 'achievements', label: 'Achievements', Icon: IconTrophy, disabled: false },
+  { key: 'gallery', label: 'Gallery', Icon: IconPhoto, disabled: false },
 ];
 
 // RN-web only supports the JS animation driver
@@ -253,9 +254,11 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
   }, [fanOpen, fanProgress]);
 
   function handleSatelliteSelect(key: string) {
-    // Favourites is the only live satellite; the dashboard route already
-    // shows the favourites screen, so selecting it just folds the fan.
-    if (key === 'favourites') setFanOpen(false);
+    setFanOpen(false);
+    // The dashboard route already shows the favourites screen; the other
+    // satellites push their screens within the dashboard stack.
+    if (key === 'achievements') router.push('/favourites/achievements');
+    else if (key === 'gallery') router.push('/favourites/gallery');
   }
 
   return (
