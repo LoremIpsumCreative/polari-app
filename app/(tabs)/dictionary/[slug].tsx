@@ -27,6 +27,15 @@ export default function WordDetailScreen() {
                 resizeMode="contain"
                 accessibilityLabel={`Illustration for ${word.term}`}
               />
+              <Pressable
+                onPress={() => setArtFullScreen(true)}
+                style={({ pressed }) => [styles.fullScreenButton, pressed && styles.pressed]}
+                accessibilityRole="button"
+                accessibilityLabel="View character full screen"
+                hitSlop={10}
+              >
+                <IconArrowsMaximize size={22} color={colors.textFaint} />
+              </Pressable>
               <WordDetailCard word={word} />
             </>
           ) : (
@@ -40,15 +49,6 @@ export default function WordDetailScreen() {
 
         {word ? (
           <>
-            <Pressable
-              onPress={() => setArtFullScreen(true)}
-              style={({ pressed }) => [styles.fullScreenButton, pressed && styles.pressed]}
-              accessibilityRole="button"
-              accessibilityLabel="View character full screen"
-              hitSlop={10}
-            >
-              <IconArrowsMaximize size={22} color={colors.textFaint} />
-            </Pressable>
             <CharacterFullScreen
               source={characterArtFor(word.slug)}
               visible={artFullScreen}
@@ -81,8 +81,8 @@ const styles = StyleSheet.create({
   },
   fullScreenButton: {
     position: 'absolute',
-    top: spacing.md + spacing.xs,
-    right: spacing.md + spacing.xs,
+    top: spacing.xs,
+    right: spacing.xs,
     padding: spacing.xs,
   },
   pressed: {

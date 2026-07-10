@@ -3,8 +3,8 @@ import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import { useRouter } from 'expo-router';
 import {
   IconBook2,
-  IconHistory,
   IconInfoCircle,
+  IconLink,
   IconNotes,
   IconQuote,
   IconSend,
@@ -20,18 +20,19 @@ import { ShareWordModal } from './ShareWordModal';
 type Props = {
   word: Word;
   style?: ViewStyle;
-  // Today shows the compact Figma card (definition + example only);
-  // the dictionary detail keeps origin, notes and the cultural layer too.
+  // The dictionary detail additionally shows the notes/variants row; the Today
+  // card matches the Figma frame exactly (definition, in use, origin, culture,
+  // modern usage, related).
   compact?: boolean;
 };
 
-// How alive a word is today — a small, honest signal that Polari is a living
-// inheritance, not just an archive.
-const USAGE: Record<UsageStatus, { label: string; fg: string; bg: string }> = {
-  current: { label: 'Still heard', fg: colors.teal, bg: colors.tealSoft },
-  rare: { label: 'Now rare', fg: colors.blush, bg: colors.blushSoft },
-  historical: { label: 'Of its era', fg: colors.textMuted, bg: colors.inset },
-};
+// Modern-usage segmented display, per Figma 1039:104: all three options shown,
+// the word's status highlighted.
+const USAGE_OPTIONS: { value: UsageStatus; label: string }[] = [
+  { value: 'current', label: 'Common' },
+  { value: 'rare', label: 'Rare' },
+  { value: 'historical', label: 'Historical' },
+];
 
 // The source sheet marks emphasis with *asterisks* (e.g. "From Italian *buono*");
 // we don't render markdown, so strip them rather than show them raw.
@@ -39,22 +40,30 @@ function stripEmphasis(text: string): string {
   return text.replace(/\*([^*]+)\*/g, '$1');
 }
 
-// Recessed grey row with a small leading icon, per the Figma definition/example rows
-function InsetRow({
+// Labelled fieldset row per the Figma card: recessed grey row with a hairline
+// border and a tiny uppercase label sitting on the border (white patch).
+function FieldRow({
+  label,
   Icon,
   children,
   italic = false,
 }: {
+  label: string;
   Icon: ComponentType<IconProps>;
   children: string;
   italic?: boolean;
 }) {
   return (
-    <View style={styles.insetRow}>
-      <Icon size={16} color={colors.textFaint} />
-      <Text style={[styles.insetText, italic && styles.insetTextItalic]}>
-        {stripEmphasis(children)}
-      </Text>
+    <View style={styles.fieldWrap}>
+      <View style={styles.fieldRow}>
+        <Icon size={14} color={colors.text} />
+        <Text style={[styles.fieldText, italic && styles.fieldTextItalic]}>
+          {stripEmphasis(children)}
+        </Text>
+      </View>
+      <View style={styles.fieldLabelPatch}>
+        <Text style={styles.fieldLabel}>{label}</Text>
+      </View>
     </View>
   );
 }
@@ -63,7 +72,7 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
   const [shareVisible, setShareVisible] = useState(false);
   const router = useRouter();
   const { bySlug } = useWords();
-  const usage = word.usage_status ? USAGE[word.usage_status as UsageStatus] : null;
+  const usage = (word.usage_status ?? null) as UsageStatus | null;
   const related = (word.related_slugs ?? [])
     .map((s) => bySlug.get(s))
     .filter((w): w is Word => !!w);
@@ -74,9 +83,9 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
         <View style={styles.badge}>
           <Text style={styles.badgeText}>{word.entry_type === 'phrase' ? 'Phrase' : 'Word'}</Text>
         </View>
-        {usage ? (
-          <View style={[styles.usageChip, { backgroundColor: usage.bg }]}>
-            <Text style={[styles.usageText, { color: usage.fg }]}>{usage.label}</Text>
+        {word.part_of_speech ? (
+          <View style={styles.posChip}>
+            <Text style={styles.posText}>{word.part_of_speech}</Text>
           </View>
         ) : null}
         <View style={styles.actions}>
@@ -95,43 +104,70 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
       <ShareWordModal word={word} visible={shareVisible} onClose={() => setShareVisible(false)} />
 
       <Text style={styles.term}>{word.term}</Text>
-      <View style={styles.metaBlock}>
-        {word.pronunciation ? <Text style={styles.meta}>/{word.pronunciation}/</Text> : null}
-        {word.part_of_speech ? <Text style={styles.meta}>{word.part_of_speech}</Text> : null}
+      {word.pronunciation ? <Text style={styles.pron}>/{word.pronunciation}/</Text> : null}
+
+      <View style={styles.fields}>
+        <FieldRow label="definition" Icon={IconBook2}>
+          {word.definition}
+        </FieldRow>
+        {word.example ? (
+          <FieldRow label="in use" Icon={IconQuote} italic>
+            {word.example}
+          </FieldRow>
+        ) : null}
+        {word.origin ? (
+          <FieldRow label="origin" Icon={IconWorld}>
+            {word.origin}
+          </FieldRow>
+        ) : null}
+        {word.cultural_context ? (
+          <FieldRow label="culture" Icon={IconWorld}>
+            {word.cultural_context}
+          </FieldRow>
+        ) : null}
+        {!compact && word.notes_variants ? (
+          <FieldRow label="notes" Icon={IconNotes}>
+            {word.notes_variants}
+          </FieldRow>
+        ) : null}
       </View>
 
-      <InsetRow Icon={IconBook2}>{word.definition}</InsetRow>
-      {word.example ? (
-        <InsetRow Icon={IconQuote} italic>
-          {word.example}
-        </InsetRow>
-      ) : null}
-      {!compact && word.origin ? <InsetRow Icon={IconWorld}>{word.origin}</InsetRow> : null}
-      {!compact && word.notes_variants ? (
-        <InsetRow Icon={IconNotes}>{word.notes_variants}</InsetRow>
-      ) : null}
-
-      {!compact && word.cultural_context ? (
-        <View style={styles.contextBlock}>
-          <View style={styles.contextHeader}>
-            <IconHistory size={15} color={colors.primary} />
-            <Text style={styles.contextTitle}>Where it lived</Text>
-          </View>
-          <Text style={styles.contextText}>{stripEmphasis(word.cultural_context)}</Text>
-        </View>
-      ) : null}
-
-      {!compact && word.sensitivity_note ? (
+      {word.sensitivity_note ? (
         <View style={styles.sensitiveRow}>
           <IconInfoCircle size={15} color={colors.textFaint} />
           <Text style={styles.sensitiveText}>{stripEmphasis(word.sensitivity_note)}</Text>
         </View>
       ) : null}
 
-      {!compact && related.length ? (
+      {usage ? (
+        <View style={styles.usageWrap}>
+          <View style={styles.usagePill}>
+            {USAGE_OPTIONS.map((opt) => (
+              <View
+                key={opt.value}
+                style={[styles.usageOption, usage === opt.value && styles.usageOptionActive]}
+              >
+                <Text
+                  style={[
+                    styles.usageOptionText,
+                    usage === opt.value && styles.usageOptionTextActive,
+                  ]}
+                >
+                  {opt.label}
+                </Text>
+              </View>
+            ))}
+          </View>
+          <View style={styles.usageLabelPatch}>
+            <Text style={styles.fieldLabel}>modern usage</Text>
+          </View>
+        </View>
+      ) : null}
+
+      {related.length ? (
         <View style={styles.relatedWrap}>
-          <Text style={styles.relatedLabel}>Related</Text>
-          <View style={styles.relatedChips}>
+          <View style={styles.relatedRow}>
+            <IconLink size={14} color={colors.text} />
             {related.map((r) => (
               <Pressable
                 key={r.slug}
@@ -144,6 +180,9 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
               </Pressable>
             ))}
           </View>
+          <View style={styles.relatedLabelPatch}>
+            <Text style={styles.fieldLabel}>related</Text>
+          </View>
         </View>
       ) : null}
     </View>
@@ -153,29 +192,42 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.lg,
-    gap: spacing.sm,
+    borderRadius: 20,
+    paddingHorizontal: 17,
+    paddingTop: spacing.md + 4,
+    paddingBottom: spacing.md,
   },
   badgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
+    gap: spacing.sm - 2,
+    marginBottom: 34,
   },
   badge: {
     backgroundColor: colors.primarySoft,
     borderWidth: 1,
     borderColor: colors.primary,
     borderRadius: radii.pill,
-    paddingHorizontal: spacing.md - 4,
-    paddingVertical: 3,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
   badgeText: {
     color: colors.primary,
-    fontSize: 11,
+    fontSize: 10,
+    fontFamily: fonts.bold,
+    letterSpacing: 0.3,
+  },
+  posChip: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.chipGrey,
+    borderRadius: radii.pill,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  posText: {
+    color: colors.chipGrey,
+    fontSize: 10,
     fontFamily: fonts.bold,
     letterSpacing: 0.3,
   },
@@ -196,77 +248,67 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 34,
     fontFamily: fonts.semibold,
+    lineHeight: 34,
   },
-  metaBlock: {
-    gap: spacing.xs,
-    marginBottom: spacing.sm,
-  },
-  meta: {
-    color: colors.textFaint,
+  pron: {
+    color: '#121212',
     fontFamily: fonts.semibold,
-    fontSize: 13,
+    fontSize: 12,
     letterSpacing: 0.3,
+    marginTop: 10,
+    marginBottom: 6,
   },
-  insetRow: {
+  fields: {
+    marginTop: spacing.md + 4,
+    gap: 18,
+  },
+  fieldWrap: {
+    position: 'relative',
+  },
+  fieldRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.md - 2,
+    gap: 14,
     backgroundColor: colors.inset,
-    borderRadius: radii.sm,
-    paddingHorizontal: spacing.md - 6,
-    paddingVertical: spacing.md - 4,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.chipGrey,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 14,
+    minHeight: 52,
   },
-  insetText: {
+  fieldText: {
     flex: 1,
-    color: colors.textMuted,
+    color: '#121212',
     fontFamily: fonts.regular,
-    fontSize: 13,
-    lineHeight: 18,
+    fontSize: 12,
+    lineHeight: 15,
     letterSpacing: 0.3,
   },
-  insetTextItalic: {
+  fieldTextItalic: {
     fontFamily: fonts.italic,
   },
-  usageChip: {
-    borderRadius: radii.pill,
-    paddingHorizontal: spacing.sm + 2,
-    paddingVertical: 3,
+  fieldLabelPatch: {
+    position: 'absolute',
+    top: -5,
+    left: 7,
+    backgroundColor: colors.surface,
+    paddingHorizontal: 2,
   },
-  usageText: {
-    fontSize: 11,
-    fontFamily: fonts.bold,
-    letterSpacing: 0.3,
-  },
-  contextBlock: {
-    backgroundColor: colors.primarySoft,
-    borderRadius: radii.sm,
-    padding: spacing.md - 4,
-    gap: spacing.xs + 2,
-    marginTop: spacing.xs,
-  },
-  contextHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs + 2,
-  },
-  contextTitle: {
-    color: colors.primary,
-    fontFamily: fonts.bold,
-    fontSize: 12,
+  fieldLabel: {
+    color: colors.chipGrey,
+    fontFamily: fonts.extrabold,
+    fontSize: 7,
     letterSpacing: 0.4,
     textTransform: 'uppercase',
-  },
-  contextText: {
-    color: colors.textMuted,
-    fontFamily: fonts.regular,
-    fontSize: 13.5,
-    lineHeight: 19,
+    lineHeight: 8,
   },
   sensitiveRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: spacing.sm,
     paddingHorizontal: spacing.sm,
+    marginTop: spacing.sm + 4,
   },
   sensitiveText: {
     flex: 1,
@@ -275,34 +317,86 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 17,
   },
-  relatedWrap: {
-    gap: spacing.xs + 2,
-    marginTop: spacing.xs,
+  usageWrap: {
+    position: 'relative',
+    alignSelf: 'center',
+    marginTop: 20,
   },
-  relatedLabel: {
-    color: colors.textFaint,
-    fontFamily: fonts.semibold,
-    fontSize: 11,
-    letterSpacing: 0.5,
-    textTransform: 'uppercase',
-  },
-  relatedChips: {
+  usagePill: {
     flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    borderWidth: 1,
+    borderColor: colors.chipGrey,
+    borderRadius: radii.pill,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+  },
+  usageOption: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  usageOptionActive: {
+    backgroundColor: colors.primarySoft,
+    borderColor: colors.primary,
+  },
+  usageOptionText: {
+    color: '#AAAAAA',
+    fontFamily: fonts.bold,
+    fontSize: 10,
+    letterSpacing: 0.3,
+    lineHeight: 11,
+  },
+  usageOptionTextActive: {
+    color: colors.primary,
+  },
+  usageLabelPatch: {
+    position: 'absolute',
+    top: -4,
+    alignSelf: 'center',
+    backgroundColor: colors.surface,
+    paddingHorizontal: 2,
+  },
+  relatedWrap: {
+    position: 'relative',
+    marginTop: 22,
+  },
+  relatedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     flexWrap: 'wrap',
-    gap: spacing.sm,
+    gap: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 14,
+    minHeight: 52,
+    borderRadius: 8,
+    backgroundColor: colors.surface,
+  },
+  relatedLabelPatch: {
+    position: 'absolute',
+    top: -5,
+    left: 8,
+    backgroundColor: colors.surface,
+    paddingHorizontal: 2,
   },
   relatedChip: {
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.relatedSoft,
+    borderWidth: 1,
+    borderColor: colors.related,
     borderRadius: radii.pill,
-    paddingHorizontal: spacing.md - 4,
-    paddingVertical: spacing.xs + 1,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
   relatedChipPressed: {
     opacity: 0.6,
   },
   relatedChipText: {
-    color: colors.primary,
-    fontFamily: fonts.semibold,
-    fontSize: 13,
+    color: colors.related,
+    fontFamily: fonts.bold,
+    fontSize: 10,
+    letterSpacing: 0.3,
   },
 });

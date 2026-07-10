@@ -126,19 +126,25 @@ export default function TodayScreen() {
             resizeMode="contain"
             accessibilityLabel={`Illustration for ${word.term}`}
           />
-          <WordDetailCard word={word} compact style={styles.card} />
+          <Pressable
+            onPress={() => setArtFullScreen(true)}
+            style={({ pressed }) => [styles.fullScreenButton, pressed && styles.pagerPressed]}
+            accessibilityRole="button"
+            accessibilityLabel="View character full screen"
+            hitSlop={10}
+          >
+            <IconArrowsMaximize size={22} color={colors.textFaint} />
+          </Pressable>
+          {/* Card-stack effect per Figma 1042-205: two card edges peek out on
+              the left, suggesting the deck of previous days you can swipe to. */}
+          <View style={styles.deck}>
+            <View style={[styles.deckCard, styles.deckCardBack]} />
+            <View style={[styles.deckCard, styles.deckCardMid]} />
+            <WordDetailCard word={word} compact />
+          </View>
         </Animated.View>
       </ScrollView>
 
-      <Pressable
-        onPress={() => setArtFullScreen(true)}
-        style={({ pressed }) => [styles.fullScreenButton, pressed && styles.pagerPressed]}
-        accessibilityRole="button"
-        accessibilityLabel="View character full screen"
-        hitSlop={10}
-      >
-        <IconArrowsMaximize size={22} color={colors.textFaint} />
-      </Pressable>
       <CharacterFullScreen
         source={art}
         visible={artFullScreen}
@@ -159,8 +165,8 @@ export default function TodayScreen() {
           hitSlop={12}
         >
           <IconChevronLeft
-            size={26}
-            color={dayOffset >= maxOffset ? colors.border : colors.text}
+            size={20}
+            color={dayOffset >= maxOffset ? '#D9D9D9' : colors.text}
           />
         </Pressable>
         <Text style={styles.dateLabel}>{dateLabel}</Text>
@@ -173,7 +179,7 @@ export default function TodayScreen() {
           accessibilityState={{ disabled: dayOffset === 0 }}
           hitSlop={12}
         >
-          <IconChevronRight size={26} color={dayOffset === 0 ? colors.border : colors.text} />
+          <IconChevronRight size={20} color={dayOffset === 0 ? '#D9D9D9' : colors.text} />
         </Pressable>
       </View>
     </View>
@@ -202,13 +208,32 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   hero: {
-    width: '100%',
-    height: 280,
-    marginTop: spacing.md,
-    marginBottom: spacing.md,
+    width: 200,
+    height: 267,
+    alignSelf: 'center',
+    marginTop: spacing.md + 8,
+    marginBottom: 13,
   },
-  card: {
-    marginHorizontal: spacing.xs,
+  deck: {
+    position: 'relative',
+  },
+  deckCard: {
+    position: 'absolute',
+    width: 60,
+    backgroundColor: colors.surface,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(170, 170, 170, 0.4)',
+  },
+  deckCardMid: {
+    left: -10,
+    top: 38,
+    bottom: 7,
+  },
+  deckCardBack: {
+    left: -14,
+    top: 78,
+    bottom: 47,
   },
   pagerPill: {
     position: 'absolute',
@@ -217,19 +242,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: spacing.md,
-    minWidth: 240,
+    width: 259,
+    height: 44,
     backgroundColor: colors.surface,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: colors.border,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    borderColor: 'rgba(170, 170, 170, 0.5)',
+    paddingHorizontal: 10,
   },
   fullScreenButton: {
     position: 'absolute',
-    top: spacing.md + spacing.xs,
-    right: spacing.md + spacing.xs,
+    top: spacing.xs,
+    right: spacing.xs,
     padding: spacing.xs,
   },
   pagerButton: {

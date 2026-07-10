@@ -30,14 +30,18 @@ type SheetRow = {
   // Optional cultural columns — the sync only touches these DB fields once the
   // corresponding column exists in the sheet, so DB-seeded drafts survive until
   // the sheet takes ownership.
-  'Cultural Context'?: string;
+  Culture?: string;
+  'Cultural Context'?: string; // legacy alias for Culture
   Usage?: string;
   'Sensitivity Note'?: string;
   Related?: string;
 };
 
-// Sheet header -> DB field for the optional cultural layer.
+// Sheet header -> DB field for the optional cultural layer. "Culture" is the
+// canonical header (per the Figma card's CULTURE row); "Cultural Context" is
+// kept as an alias so either header works.
 export const CULTURAL_COLUMNS = {
+  Culture: 'cultural_context',
   'Cultural Context': 'cultural_context',
   Usage: 'usage_status',
   'Sensitivity Note': 'sensitivity_note',
@@ -101,7 +105,7 @@ export function clean(value: string | undefined): string | null {
 function normaliseUsage(value: string | null): string | null {
   if (!value) return null;
   const v = value.toLowerCase();
-  if (v.includes('current') || v.includes('still')) return 'current';
+  if (v.includes('current') || v.includes('still') || v.includes('common')) return 'current';
   if (v.includes('rare')) return 'rare';
   if (v.includes('historical') || v.includes('era')) return 'historical';
   return null;
@@ -133,9 +137,14 @@ export async function fetchSheetWords(): Promise<SheetFetch> {
   if (errors.length) throw new Error(`CSV parse errors: ${JSON.stringify(errors)}`);
 
   const headers = new Set(meta.fields ?? []);
-  const culturalFields = (Object.keys(CULTURAL_COLUMNS) as (keyof typeof CULTURAL_COLUMNS)[])
-    .filter((col) => headers.has(col))
-    .map((col) => CULTURAL_COLUMNS[col]);
+  // De-dupe because Culture and Cultural Context both map to cultural_context.
+  const culturalFields = [
+    ...new Set(
+      (Object.keys(CULTURAL_COLUMNS) as (keyof typeof CULTURAL_COLUMNS)[])
+        .filter((col) => headers.has(col))
+        .map((col) => CULTURAL_COLUMNS[col])
+    ),
+  ];
 
   const seenSlugs = new Set<string>();
   const map: WordMap = {};
@@ -160,7 +169,7 @@ export async function fetchSheetWords(): Promise<SheetFetch> {
         notes_variants: clean(row['Notes/Variants']),
       };
       if (culturalFields.includes('cultural_context'))
-        content.cultural_context = clean(row['Cultural Context']);
+        content.cultural_context = clean(row.Culture ?? row['Cultural Context']);
       if (culturalFields.includes('usage_status'))
         content.usage_status = normaliseUsage(clean(row.Usage));
       if (culturalFields.includes('sensitivity_note'))

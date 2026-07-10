@@ -1,14 +1,18 @@
-// Central design tokens — matches the Figma "Polari" design (node 572-276):
-// near-white canvas, vivid blue brand (#2253DA) for the navbar/actions,
-// soft blue chip fills, inset grey rows on white cards. Type is Digitale.
+// Central design tokens — matches the Figma "Polari" design (latest frame
+// 1042-205): near-white canvas, brand blue --blue-polari (#143AD9) for the
+// navbar/actions, soft blue chip fills, labelled grey fieldset rows on white
+// cards. Type is Digitale.
 export const colors = {
   background: '#EAEAEA',
   surface: '#FFFFFF',
   inset: '#FAFAFA', // recessed rows inside white cards (Figma definition/example rows)
-  primary: '#2253DA',
+  primary: '#143AD9',
   primarySoft: '#F0F1FF',
-  accent: '#2253DA',
+  accent: '#143AD9',
   accentSoft: '#F0F1FF',
+  related: '#2898BD', // related-word chips (Figma 1042:186)
+  relatedSoft: '#E7F9FF',
+  chipGrey: '#888888', // part-of-speech chip + fieldset row borders/labels
   teal: '#27958A',
   tealSoft: '#DDEFEB',
   blush: '#E98F7F',
