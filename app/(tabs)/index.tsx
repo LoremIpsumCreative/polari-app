@@ -93,7 +93,7 @@ export default function TodayScreen() {
   if (error || !word) {
     return (
       <View style={styles.center}>
-        <Text style={styles.errorText}>Couldn't load today's word.</Text>
+        <Text style={styles.errorText}>Nanti luck — today's word wouldn't load.</Text>
         <Pressable style={styles.retryButton} onPress={refetch}>
           <Text style={styles.retryText}>Try again</Text>
         </Pressable>

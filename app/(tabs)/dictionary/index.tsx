@@ -104,7 +104,7 @@ export default function DictionaryScreen() {
   if (error) {
     return (
       <View style={styles.center}>
-        <Text style={styles.errorText}>Couldn't load the dictionary.</Text>
+        <Text style={styles.errorText}>Nanti luck — the dictionary wouldn't load.</Text>
         <Pressable style={styles.retryButton} onPress={refetch}>
           <Text style={styles.retryText}>Try again</Text>
         </Pressable>
@@ -152,7 +152,7 @@ export default function DictionaryScreen() {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.center}>
-            <Text style={styles.emptyText}>No matches for “{query.trim()}”.</Text>
+            <Text style={styles.emptyText}>Nanti matches for “{query.trim()}”, ducky.</Text>
           </View>
         }
       />

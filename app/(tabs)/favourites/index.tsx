@@ -38,9 +38,9 @@ export default function FavouritesScreen() {
     return (
       <View style={styles.center}>
         <SpaceHost width={200} />
-        <Text style={styles.emptyTitle}>Nothing here yet</Text>
+        <Text style={styles.emptyTitle}>Nanti favourites yet</Text>
         <Text style={styles.emptyBody}>
-          Tap the ♡ on any word in the Dictionary or on today's word to save it.
+          Vada the Dictionary and tap the ♡ on any word that takes your fancy.
         </Text>
       </View>
     );
