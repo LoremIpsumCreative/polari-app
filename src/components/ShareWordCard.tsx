@@ -1,18 +1,20 @@
 import { forwardRef } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { IconBook2, IconQuote, IconWorld } from '@tabler/icons-react-native';
 import type { Word } from '../types/database';
 import { fonts } from '../lib/theme';
 import { useCharacterArt } from '../lib/remoteArt';
 
 // The visual card that gets snapshotted and shared as an image — a pixel match
-// of the Figma "Share Card" v4 (node 1058-1546): black story backdrop, the
-// ornate baroque Polari frame, and content set directly on the frame's grey
-// field — date pill, lede, the term in the word's character accent, its
-// illustration, typographic sections (Definition / In Use / Origin / History)
-// with navy labels, and a download CTA + QR footer.
+// of the Figma "Share Card" (node 1058-1546): black story backdrop, the ornate
+// baroque Polari frame, and on its grey field a date pill nestled in the arch,
+// "The Polari word of the day is:", the term in ink, a part-of-speech chip •
+// pronunciation row, the illustration, then the app's labelled fieldset rows
+// (definition / in use / origin / culture) in a white box, and an underlined
+// download CTA + QR footer.
 //
 // Built at the Figma stage's native 566x1007 so measurements transfer verbatim
-// (frame art 545x968 at 10,20); colours sampled from the v4 export.
+// (frame art 545x968 at 10,20); colours sampled from the design exports.
 export const CARD_WIDTH = 566;
 export const CARD_HEIGHT = 1007;
 
@@ -21,27 +23,6 @@ const qrArt = require('../../assets/share/qr-polari.png');
 
 const INK = '#121212';
 const FIELD = '#EAEAEA';
-const LABEL_NAVY = '#083C7C';
-
-// Term colour keyed to each character's palette (sampled from the art); words
-// without their own character fall back to ink, which matches the monochrome
-// coming-soon easel.
-const ACCENT_BY_SLUG: Record<string, string> = {
-  abdabs: '#7A5C94',
-  'antique-hp': '#27958A',
-  aspro: '#B4574A',
-  auntie: '#5F6E3E',
-  'barkey-barkie-barky': '#27958A',
-  beak: '#B4574A',
-  'blaz-queen': '#B4574A',
-  bull: '#143AD9',
-  butch: '#B4574A',
-  'charpering-omee': '#143AD9',
-  'glossy-glossies': '#143AD9',
-  queen: '#B4574A',
-  trade: '#B4574A',
-  'vada-varda': '#143AD9',
-};
 
 function stripEmphasis(text: string): string {
   return text.replace(/\*([^*]+)\*/g, '$1');
@@ -56,11 +37,28 @@ function formatDate(date: Date): string {
   }).format(date);
 }
 
-function Section({ label, children }: { label: string; children: string }) {
+function FieldRow({
+  label,
+  Icon,
+  children,
+  italic = false,
+}: {
+  label: string;
+  Icon: typeof IconBook2;
+  children: string;
+  italic?: boolean;
+}) {
   return (
-    <View style={styles.section}>
-      <Text style={styles.sectionLabel}>{label}</Text>
-      <Text style={styles.sectionBody}>{stripEmphasis(children)}</Text>
+    <View>
+      <View style={styles.fieldRow}>
+        <Icon size={15} color={INK} />
+        <Text style={[styles.fieldText, italic && styles.fieldTextItalic]}>
+          {stripEmphasis(children)}
+        </Text>
+      </View>
+      <View style={styles.fieldLabelPatch}>
+        <Text style={styles.fieldLabel}>{label}</Text>
+      </View>
     </View>
   );
 }
@@ -72,21 +70,23 @@ export const ShareWordCard = forwardRef<View, Props>(function ShareWordCard(
   ref
 ) {
   const { artFor } = useCharacterArt();
-  const accent = ACCENT_BY_SLUG[word.slug] ?? INK;
 
   return (
     <View ref={ref} style={styles.stage} collapsable={false}>
       {/* Grey field under the frame art; the painted frame masks its edges */}
       <View style={styles.field} />
 
-      <Text style={styles.lede}>Polari word of the day:</Text>
-      <Text style={[styles.term, { color: accent }]}>{word.term}</Text>
-      {word.pronunciation ? <Text style={styles.pron}>/{word.pronunciation}/</Text> : null}
-      {word.part_of_speech ? (
-        <View style={styles.posChip}>
-          <Text style={styles.posText}>{word.part_of_speech}</Text>
-        </View>
-      ) : null}
+      <Text style={styles.lede}>The Polari word of the day is:</Text>
+      <Text style={styles.term}>{word.term}</Text>
+      <View style={styles.metaRow}>
+        {word.part_of_speech ? (
+          <View style={styles.posChip}>
+            <Text style={styles.posText}>{word.part_of_speech}</Text>
+          </View>
+        ) : null}
+        {word.part_of_speech && word.pronunciation ? <Text style={styles.metaDot}>•</Text> : null}
+        {word.pronunciation ? <Text style={styles.pron}>/{word.pronunciation}/</Text> : null}
+      </View>
 
       <Image
         source={artFor(word.slug)}
@@ -95,11 +95,25 @@ export const ShareWordCard = forwardRef<View, Props>(function ShareWordCard(
         accessibilityLabel={`Illustration for ${word.term}`}
       />
 
-      <View style={styles.sections}>
-        <Section label="Definition">{word.definition}</Section>
-        {word.example ? <Section label="In Use">{word.example}</Section> : null}
-        {word.origin ? <Section label="Origin">{word.origin}</Section> : null}
-        {word.cultural_context ? <Section label="History">{word.cultural_context}</Section> : null}
+      <View style={styles.detailBox}>
+        <FieldRow label="definition" Icon={IconBook2}>
+          {word.definition}
+        </FieldRow>
+        {word.example ? (
+          <FieldRow label="in use" Icon={IconQuote} italic>
+            {word.example}
+          </FieldRow>
+        ) : null}
+        {word.origin ? (
+          <FieldRow label="origin" Icon={IconWorld}>
+            {word.origin}
+          </FieldRow>
+        ) : null}
+        {word.cultural_context ? (
+          <FieldRow label="culture" Icon={IconWorld}>
+            {word.cultural_context}
+          </FieldRow>
+        ) : null}
       </View>
 
       <View style={styles.footer}>
@@ -165,7 +179,7 @@ const styles = StyleSheet.create({
   },
   lede: {
     position: 'absolute',
-    top: 172,
+    top: 176,
     left: 0,
     right: 0,
     textAlign: 'center',
@@ -184,23 +198,31 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 42,
     lineHeight: 44,
+    color: INK,
   },
-  pron: {
+  metaRow: {
     position: 'absolute',
-    top: 256,
+    top: 258,
     left: 0,
     right: 0,
-    textAlign: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5,
+  },
+  metaDot: {
     fontFamily: fonts.semibold,
-    fontSize: 16,
-    lineHeight: 17,
+    fontSize: 14,
+    color: INK,
+  },
+  pron: {
+    fontFamily: fonts.semibold,
+    fontSize: 12,
+    lineHeight: 13,
     letterSpacing: 0.3,
     color: INK,
   },
   posChip: {
-    position: 'absolute',
-    top: 282,
-    alignSelf: 'center',
     borderWidth: 1,
     borderColor: '#7F7F7F',
     borderRadius: 999,
@@ -222,34 +244,59 @@ const styles = StyleSheet.create({
     width: 236,
     height: 226,
   },
-  sections: {
+  detailBox: {
     position: 'absolute',
-    top: 556,
-    left: 94,
-    right: 94,
+    top: 528,
+    alignSelf: 'center',
+    width: 387,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: 'rgba(170, 170, 170, 0.5)',
+    borderRadius: 14,
+    padding: 18,
     gap: 18,
   },
-  section: {
-    gap: 5,
+  fieldRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    minHeight: 52,
+    backgroundColor: '#FAFAFA',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#C9C9C9',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
-  sectionLabel: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
-    lineHeight: 13,
-    letterSpacing: 0.3,
-    color: LABEL_NAVY,
-    textTransform: 'capitalize',
-  },
-  sectionBody: {
+  fieldText: {
+    flex: 1,
     fontFamily: fonts.regular,
-    fontSize: 13,
-    lineHeight: 16,
-    letterSpacing: 0.2,
+    fontSize: 12,
+    lineHeight: 15,
+    letterSpacing: 0.3,
     color: INK,
+  },
+  fieldTextItalic: {
+    fontFamily: fonts.italic,
+  },
+  fieldLabelPatch: {
+    position: 'absolute',
+    top: -4,
+    left: 7,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 2,
+  },
+  fieldLabel: {
+    fontFamily: fonts.extrabold,
+    fontSize: 7,
+    lineHeight: 8,
+    letterSpacing: 0.4,
+    textTransform: 'uppercase',
+    color: '#888888',
   },
   footer: {
     position: 'absolute',
-    top: 826,
+    top: 838,
     left: 94,
     right: 94,
     flexDirection: 'row',
@@ -267,7 +314,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 15,
     letterSpacing: 0.3,
-    color: '#222222',
+    color: '#143AD9',
+    textDecorationLine: 'underline',
   },
   footerSub: {
     textAlign: 'center',

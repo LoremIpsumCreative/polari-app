@@ -143,13 +143,7 @@ export default function TodayScreen() {
           >
             <IconArrowsMaximize size={22} color={colors.textFaint} />
           </Pressable>
-          {/* Card-stack effect per Figma 1042-205: two card edges peek out on
-              the left, suggesting the deck of previous days you can swipe to. */}
-          <View style={styles.deck}>
-            <View style={[styles.deckCard, styles.deckCardBack]} />
-            <View style={[styles.deckCard, styles.deckCardMid]} />
-            <WordDetailCard word={word} compact />
-          </View>
+          <WordDetailCard word={word} compact />
         </Animated.View>
       </ScrollView>
 
@@ -239,29 +233,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: spacing.md + 8,
     marginBottom: 13,
-  },
-  deck: {
-    position: 'relative',
-  },
-  deckCard: {
-    position: 'absolute',
-    width: 60,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(170, 170, 170, 0.5)',
-  },
-  // Colours/radii sampled from the Figma assets (Rectangle 9 / Rectangle 4)
-  deckCardMid: {
-    left: -10,
-    top: 38,
-    bottom: 7,
-    backgroundColor: '#DBDBE2',
-    borderRadius: 12,
-  },
-  deckCardBack: {
-    left: -14,
-    top: 78,
-    bottom: 47,
-    backgroundColor: '#ADADB5',
   },
   milestoneBanner: {
     position: 'absolute',

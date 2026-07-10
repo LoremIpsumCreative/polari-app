@@ -141,7 +141,8 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
 
       {usage ? (
         <View style={styles.usageWrap}>
-          <View style={styles.usagePill}>
+          <Text style={styles.usageLabel}>modern usage</Text>
+          <View style={styles.usageRow}>
             {USAGE_OPTIONS.map((opt) => (
               <View
                 key={opt.value}
@@ -157,9 +158,6 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
                 </Text>
               </View>
             ))}
-          </View>
-          <View style={styles.usageLabelPatch}>
-            <Text style={styles.fieldLabel}>modern usage</Text>
           </View>
         </View>
       ) : null}
@@ -319,20 +317,25 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 17,
   },
+  // Borderless per the updated Figma frame: a fieldset-style label above a
+  // plain row of options, left-aligned with the field rows.
   usageWrap: {
-    position: 'relative',
-    alignSelf: 'center',
     marginTop: 20,
+    gap: 8,
   },
-  usagePill: {
+  usageLabel: {
+    paddingLeft: 9,
+    color: colors.chipGrey,
+    fontFamily: fonts.extrabold,
+    fontSize: 7,
+    letterSpacing: 0.4,
+    textTransform: 'uppercase',
+    lineHeight: 8,
+  },
+  usageRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    borderWidth: 1,
-    borderColor: colors.chipGrey,
-    borderRadius: radii.pill,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
   },
   usageOption: {
     paddingHorizontal: 16,
@@ -354,13 +357,6 @@ const styles = StyleSheet.create({
   },
   usageOptionTextActive: {
     color: colors.primary,
-  },
-  usageLabelPatch: {
-    position: 'absolute',
-    top: -4,
-    alignSelf: 'center',
-    backgroundColor: colors.surface,
-    paddingHorizontal: 2,
   },
   relatedWrap: {
     position: 'relative',
