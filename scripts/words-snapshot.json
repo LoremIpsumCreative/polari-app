@@ -9,6 +9,16 @@
     "example": "\"Just thinking about it gives me the screaming abdabs.\"",
     "notes_variants": "Alt: habdabs"
   },
+  "ac-dc": {
+    "term": "AC/DC",
+    "entry_type": "word",
+    "part_of_speech": "Adjective",
+    "pronunciation": "ay-see-DEE-see",
+    "definition": "Bisexual; a couple",
+    "origin": "From electrical slang for dual current",
+    "example": null,
+    "notes_variants": null
+  },
   "acting-dickey": {
     "term": "Acting dickey",
     "entry_type": "phrase",
@@ -139,6 +149,16 @@
     "example": "\"Aunt nell to me, dear, I've got the dolliest gossip.\"",
     "notes_variants": "\"Aunt nelly fake\" = earring"
   },
+  "aunt-nelly-fakes": {
+    "term": "Aunt nelly fakes",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "ant NEL-ee fayks",
+    "definition": "Earrings",
+    "origin": "From \"aunt nells\" (ears) + \"fakes\" (made things)",
+    "example": null,
+    "notes_variants": null
+  },
   "auntie": {
     "term": "Auntie",
     "entry_type": "word",
@@ -159,22 +179,22 @@
     "example": null,
     "notes_variants": "Alt: bagadga"
   },
-  "baloney-balonie-balony": {
-    "term": "Baloney / balonie / balony",
+  "baloney": {
+    "term": "Baloney",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "buh-LOH-nee",
-    "definition": "Nonsense, rubbish",
+    "definition": "Nonsense, rubbish (also spelled: balonie, balony)",
     "origin": "American slang, possibly from \"bologna\" (the sausage)",
     "example": "\"That's a load of baloney, dear.\"",
     "notes_variants": null
   },
-  "barkey-barkie-barky": {
-    "term": "Barkey / barkie / barky",
+  "barkey": {
+    "term": "Barkey",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "BAR-kee",
-    "definition": "A sailor; also a ship/boat",
+    "definition": "A sailor; also a ship/boat (also spelled: barkie, barky)",
     "origin": "Possibly from Italian *barca* (\"boat\") or \"bark\" (a sailing vessel)",
     "example": "\"He's been a barkey on the cross-Channel ferries for years.\"",
     "notes_variants": null
@@ -209,12 +229,12 @@
     "example": "\"Vada the basket on him.\"",
     "notes_variants": null
   },
-  "bat-bats-batts": {
-    "term": "Bat / bats / batts",
+  "bat": {
+    "term": "Bat",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "bat",
-    "definition": "A shoe, usually plural \"batts\"",
+    "definition": "A shoe, usually plural \"batts\" (also spelled: bats, batts)",
     "origin": "Possibly from British Cant \"bats\" (shoddy boots)",
     "example": "\"Get your batts on, we're off out.\"",
     "notes_variants": "Also (v.) to dance on stage"
@@ -279,12 +299,22 @@
     "example": null,
     "notes_variants": "Many variants: bianc, beyonek, beyong, bionk"
   },
-  "beverada-bevois-bevie": {
-    "term": "Beverada / bevois / bevie",
+  "betty-bracelets": {
+    "term": "Betty Bracelets",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "BET-ee BRAYS-lets",
+    "definition": "The police",
+    "origin": "Camp personification; \"bracelets\" = handcuffs",
+    "example": "\"Scarper — Betty Bracelets!\"",
+    "notes_variants": null
+  },
+  "beverada": {
+    "term": "Beverada",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "be-VOY",
-    "definition": "A drink",
+    "definition": "A drink (also spelled: bevois, bevie)",
     "origin": "Variant of bevvy",
     "example": null,
     "notes_variants": null
@@ -329,6 +359,26 @@
     "example": "\"Enough of your billingsgate, dear.\"",
     "notes_variants": null
   },
+  "billy-doo": {
+    "term": "Billy doo",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "BIL-ee doo",
+    "definition": "A love letter",
+    "origin": "From French *billet doux*",
+    "example": null,
+    "notes_variants": null
+  },
+  "bimbo": {
+    "term": "Bimbo",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "BIM-boh",
+    "definition": "A dupe, a sucker",
+    "origin": "From Italian *bimbo* (child)",
+    "example": null,
+    "notes_variants": null
+  },
   "bimph": {
     "term": "Bimph",
     "entry_type": "word",
@@ -347,6 +397,16 @@
     "definition": "Spectacles",
     "origin": "English slang",
     "example": "\"Where are my bins? I can't see a thing.\"",
+    "notes_variants": null
+  },
+  "bitaine": {
+    "term": "Bitaine",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "bih-TAYN",
+    "definition": "A sex worker",
+    "origin": "From French *putain*",
+    "example": null,
     "notes_variants": null
   },
   "bitch": {
@@ -389,13 +449,23 @@
     "example": null,
     "notes_variants": null
   },
-  "blow-blowjob": {
-    "term": "Blow / blowjob",
+  "blow": {
+    "term": "Blow",
     "entry_type": "word",
     "part_of_speech": "Verb, Noun",
     "pronunciation": "bloh",
-    "definition": "To give oral sex",
+    "definition": "To give oral sex (also spelled: blowjob)",
     "origin": "English slang",
+    "example": null,
+    "notes_variants": null
+  },
+  "blue": {
+    "term": "Blue",
+    "entry_type": "word",
+    "part_of_speech": "Adjective",
+    "pronunciation": "bloo",
+    "definition": "Homosexual",
+    "origin": "Code word; also \"so\"",
     "example": null,
     "notes_variants": null
   },
@@ -469,6 +539,16 @@
     "example": "\"Bona nochy, ducky, see you tomorrow.\"",
     "notes_variants": null
   },
+  "bonaroo": {
+    "term": "Bonaroo",
+    "entry_type": "word",
+    "part_of_speech": "Adjective",
+    "pronunciation": "boh-nah-ROO",
+    "definition": "Wonderful, excellent",
+    "origin": "From \"bona\" (good)",
+    "example": null,
+    "notes_variants": null
+  },
   "bones-the": {
     "term": "Bones (the)",
     "entry_type": "phrase",
@@ -519,6 +599,16 @@
     "example": null,
     "notes_variants": null
   },
+  "bungery": {
+    "term": "Bungery",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "BUNG-er-ee",
+    "definition": "A pub",
+    "origin": "From \"bung\" (publican, old slang)",
+    "example": null,
+    "notes_variants": null
+  },
   "butch": {
     "term": "Butch",
     "entry_type": "word",
@@ -539,12 +629,12 @@
     "example": "\"Let's get a buvare before the show.\"",
     "notes_variants": "Variants: beware, bevare, bivare"
   },
-  "cabouche-caboosh": {
-    "term": "Cabouche / caboosh",
+  "cabouche": {
+    "term": "Cabouche",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "kuh-BOOSH",
-    "definition": "A car",
+    "definition": "A car (also spelled: caboosh)",
     "origin": "From \"caboose,\" originally a ship's kitchen",
     "example": "\"Park the cabouche round the back.\"",
     "notes_variants": null
@@ -589,12 +679,22 @@
     "example": "\"He came in giving it the full camp.\"",
     "notes_variants": null
   },
-  "capella-capello": {
-    "term": "Capella / capello",
+  "camp-name": {
+    "term": "Camp name",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "kamp naym",
+    "definition": "An opposite-sex name given to a Polari speaker",
+    "origin": "Gay subculture practice",
+    "example": null,
+    "notes_variants": null
+  },
+  "capella": {
+    "term": "Capella",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "kuh-PEL-uh",
-    "definition": "A hat, a cap",
+    "definition": "A hat, a cap (also spelled: capello)",
     "origin": "From Italian *cappello* / Sabir *capello*",
     "example": "\"Bona capella, dear, where'd you get it?\"",
     "notes_variants": "Variants: kapella, capolla, capelli"
@@ -629,35 +729,45 @@
     "example": null,
     "notes_variants": "\"Medza caroon\" = half-crown"
   },
-  "carsey-khazi-karzy": {
-    "term": "Carsey / khazi / karzy",
+  "carsey": {
+    "term": "Carsey",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "KAR-zee",
-    "definition": "1. A house. 2. A toilet (the most common surviving meaning). 3. A brothel",
+    "definition": "1. A house. 2. A toilet (the most common surviving meaning). 3. A brothel (also spelled: khazi, karzy)",
     "origin": "From Italian *casa* / Sabir *casa*",
     "example": "\"Where's the carsey round here?\"",
     "notes_variants": "Survives in British slang as \"khazi\""
   },
-  "cartso-cartzo": {
-    "term": "Cartso / cartzo",
+  "cartso": {
+    "term": "Cartso",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "KART-zoh",
-    "definition": "A penis",
+    "definition": "A penis (also spelled: cartzo)",
     "origin": "From Italian *cazzo* (vulgar)",
     "example": null,
     "notes_variants": "\"Kerterver cartzo\" = venereal disease"
   },
-  "catever-kerterver": {
-    "term": "Catever / kerterver",
+  "catever": {
+    "term": "Catever",
     "entry_type": "word",
     "part_of_speech": "Adjective",
     "pronunciation": "KAT-ev-uh",
-    "definition": "Bad",
+    "definition": "Bad (also spelled: kerterver)",
     "origin": "From Italian *cattivo* / Sabir *cativo*",
     "example": "\"That's a right catever wig.\"",
     "notes_variants": "Many variants: caterver, cativa, cottiva"
+  },
+  "cats": {
+    "term": "Cats",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "kats",
+    "definition": "Trousers",
+    "origin": "Unclear",
+    "example": null,
+    "notes_variants": null
   },
   "chant": {
     "term": "Chant",
@@ -709,12 +819,12 @@
     "example": null,
     "notes_variants": null
   },
-  "chavvy-chavy": {
-    "term": "Chavvy / chavy",
+  "chavvy": {
+    "term": "Chavvy",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "CHAV-ee",
-    "definition": "A child",
+    "definition": "A child (also spelled: chavy)",
     "origin": "From Romani *chavvi*",
     "example": "\"Look at that little chavvy, bless.\"",
     "notes_variants": null
@@ -749,15 +859,25 @@
     "example": null,
     "notes_variants": null
   },
-  "chovie-chovey": {
-    "term": "Chovie / chovey",
+  "chovie": {
+    "term": "Chovie",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "CHOH-vee",
-    "definition": "A shop",
+    "definition": "A shop (also spelled: chovey)",
     "origin": "Unclear",
     "example": null,
     "notes_variants": "\"Crocus chovey\" = pharmacy"
+  },
+  "clevie": {
+    "term": "Clevie",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "KLEV-ee",
+    "definition": "A vagina",
+    "origin": "Unclear",
+    "example": null,
+    "notes_variants": null
   },
   "clobber": {
     "term": "Clobber",
@@ -809,6 +929,16 @@
     "example": "\"He's off cottaging again.\"",
     "notes_variants": "\"Cottaging\" = looking for/having sex there"
   },
+  "cottaging": {
+    "term": "Cottaging",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "KOT-ij-ing",
+    "definition": "Seeking sexual encounters in public lavatories",
+    "origin": "From \"cottage\" (public lavatory)",
+    "example": null,
+    "notes_variants": null
+  },
   "cove": {
     "term": "Cove",
     "entry_type": "word",
@@ -859,12 +989,12 @@
     "example": "\"He's a sound cull, that one.\"",
     "notes_variants": null
   },
-  "dacha-daiture": {
-    "term": "Dacha / daiture",
+  "dacha": {
+    "term": "Dacha",
     "entry_type": "word",
     "part_of_speech": "Number",
     "pronunciation": "DAY-chuh",
-    "definition": "Ten",
+    "definition": "Ten (also spelled: daiture)",
     "origin": "From It./Sabir *dieci* (\"ten\")",
     "example": null,
     "notes_variants": "Building block for multiples, e.g. \"setter daiture\" = 70"
@@ -879,6 +1009,16 @@
     "example": null,
     "notes_variants": null
   },
+  "dally": {
+    "term": "Dally",
+    "entry_type": "word",
+    "part_of_speech": "Adjective",
+    "pronunciation": "DAL-ee",
+    "definition": "Sweet, kind",
+    "origin": "Variant of \"dolly\"",
+    "example": null,
+    "notes_variants": null
+  },
   "dander": {
     "term": "Dander",
     "entry_type": "word",
@@ -889,22 +1029,22 @@
     "example": "\"He's got his dander up.\"",
     "notes_variants": null
   },
-  "darkey-darkie": {
-    "term": "Darkey / darkie",
+  "darkey": {
+    "term": "Darkey",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "DAR-kee",
-    "definition": "Night-time, night",
+    "definition": "Night-time, night (also spelled: darkie)",
     "origin": "Play on \"dark\"",
     "example": null,
     "notes_variants": null
   },
-  "deaner-denar-dener": {
-    "term": "Deaner / denar / dener",
+  "deaner": {
+    "term": "Deaner",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "DEE-nuh",
-    "definition": "A shilling; money in general",
+    "definition": "A shilling; money in general (also spelled: denar, dener)",
     "origin": "From Italian *denaro* (\"money\")",
     "example": null,
     "notes_variants": "Many variants: denare, denari"
@@ -928,6 +1068,16 @@
     "origin": "From English \"diddle\" (walk unsteadily)",
     "example": null,
     "notes_variants": "\"Diddle cove\" = barman; \"diddle ken\" = bar"
+  },
+  "dilly-boy": {
+    "term": "Dilly boy",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "DIL-ee boy",
+    "definition": "A male sex worker, esp. around Piccadilly",
+    "origin": "From \"the Dilly\" (Piccadilly Circus)",
+    "example": null,
+    "notes_variants": null
   },
   "dilly-the": {
     "term": "Dilly, the",
@@ -959,6 +1109,16 @@
     "example": "\"What a dish he is.\"",
     "notes_variants": "\"Dish the dirt\" = to gossip"
   },
+  "dizzy": {
+    "term": "Dizzy",
+    "entry_type": "word",
+    "part_of_speech": "Adjective",
+    "pronunciation": "DIZ-ee",
+    "definition": "Silly, scatterbrained",
+    "origin": "English slang adopted into camp speech",
+    "example": null,
+    "notes_variants": null
+  },
   "do-the-rights": {
     "term": "Do the rights",
     "entry_type": "phrase",
@@ -989,12 +1149,12 @@
     "example": "\"What a dolly little number.\"",
     "notes_variants": "Comparative \"dollier\""
   },
-  "dona-donah": {
-    "term": "Dona / donah",
+  "dona": {
+    "term": "Dona",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "DON-uh",
-    "definition": "A woman",
+    "definition": "A woman (also spelled: donah)",
     "origin": "From Italian *donna* / Sabir *dona*",
     "example": null,
     "notes_variants": "Many spellings: donner, doner, donna"
@@ -1018,6 +1178,16 @@
     "origin": "From It./Sabir *due* (\"two\")",
     "example": null,
     "notes_variants": "Variant: deuce"
+  },
+  "doss": {
+    "term": "Doss",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "doss",
+    "definition": "A bed",
+    "origin": "From cant \"doss\" (sleep)",
+    "example": null,
+    "notes_variants": null
   },
   "dowry": {
     "term": "Dowry",
@@ -1059,6 +1229,16 @@
     "example": null,
     "notes_variants": "\"Dry\" alone = right (direction)"
   },
+  "duchess": {
+    "term": "Duchess",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "DUCH-ess",
+    "definition": "A rich or grand gay man",
+    "origin": "Camp aristocratic metaphor",
+    "example": null,
+    "notes_variants": null
+  },
   "ducky": {
     "term": "Ducky",
     "entry_type": "word",
@@ -1076,6 +1256,16 @@
     "pronunciation": "dyk",
     "definition": "A lesbian",
     "origin": "English slang",
+    "example": null,
+    "notes_variants": null
+  },
+  "ecaf": {
+    "term": "Ecaf",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "EE-kaf",
+    "definition": "Face",
+    "origin": "Backslang: \"face\" reversed; shortened to \"eek\"",
     "example": null,
     "notes_variants": null
   },
@@ -1116,6 +1306,16 @@
     "pronunciation": "EE-mag",
     "definition": "Game",
     "origin": "Backslang for \"game\"",
+    "example": null,
+    "notes_variants": null
+  },
+  "ends": {
+    "term": "Ends",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "endz",
+    "definition": "Hair",
+    "origin": "Unclear",
     "example": null,
     "notes_variants": null
   },
@@ -1199,6 +1399,16 @@
     "example": "\"Vada — absolutely fantabulosa!\"",
     "notes_variants": null
   },
+  "farting-crackers": {
+    "term": "Farting crackers",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "FAR-ting KRAK-erz",
+    "definition": "Trousers",
+    "origin": "Canting slang",
+    "example": null,
+    "notes_variants": null
+  },
   "fatcha": {
     "term": "Fatcha",
     "entry_type": "word",
@@ -1209,15 +1419,25 @@
     "example": null,
     "notes_variants": null
   },
-  "feele-feely-fellia": {
-    "term": "Feele / feely / fellia",
+  "feele": {
+    "term": "Feele",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "FEE-lee",
-    "definition": "A child, young person",
+    "definition": "A child, young person (also spelled: feely, fellia)",
     "origin": "Possibly from Italian *figlia*/*figlio* (daughter/son)",
     "example": "\"He's a bit of a feely, isn't he.\"",
     "notes_variants": "\"Filiome\" = young man"
+  },
+  "feele-omi": {
+    "term": "Feele omi",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "FEE-lee OH-mee",
+    "definition": "A young man",
+    "origin": "From \"feele\" (young) + \"omi\" (man)",
+    "example": null,
+    "notes_variants": null
   },
   "femme": {
     "term": "Femme",
@@ -1409,12 +1629,12 @@
     "example": "\"What a gildy little number.\"",
     "notes_variants": null
   },
-  "gilly-gillies": {
-    "term": "Gilly / gillies",
+  "gilly": {
+    "term": "Gilly",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "GIL-ee",
-    "definition": "A lady; women, especially in an audience",
+    "definition": "A lady; women, especially in an audience (also spelled: gillies)",
     "origin": "Unclear",
     "example": null,
     "notes_variants": null
@@ -1429,12 +1649,12 @@
     "example": "\"Nobbing the glazes\" = collecting money from onlookers at a window",
     "notes_variants": null
   },
-  "glossy-glossies": {
-    "term": "Glossy / glossies",
+  "glossy": {
+    "term": "Glossy",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "GLOS-ee",
-    "definition": "A magazine",
+    "definition": "A magazine (also spelled: glossies)",
     "origin": "From the glossy paper magazines are printed on",
     "example": "\"Pick me up a glossy from the bodega.\"",
     "notes_variants": null
@@ -1469,22 +1689,22 @@
     "example": "\"Don't worry, I've got your number, dear.\"",
     "notes_variants": "Only attested in 2nd person"
   },
-  "groin-groinage": {
-    "term": "Groin / groinage",
+  "groin": {
+    "term": "Groin",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "groyn",
-    "definition": "A ring; jewellery in general",
+    "definition": "A ring; jewellery in general (also spelled: groinage)",
     "origin": "Possibly from Irish *fáinne*",
     "example": null,
     "notes_variants": null
   },
-  "hambag-handbag": {
-    "term": "Hambag / handbag",
+  "hambag": {
+    "term": "Hambag",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "HAM-bag",
-    "definition": "Money; also a gift/present",
+    "definition": "Money; also a gift/present (also spelled: handbag)",
     "origin": "Likely from money kept in handbags",
     "example": null,
     "notes_variants": null
@@ -1526,6 +1746,26 @@
     "pronunciation": "HET-ee",
     "definition": "Heterosexual",
     "origin": "Shortening of \"heterosexual\"",
+    "example": null,
+    "notes_variants": null
+  },
+  "hilda-handcuffs": {
+    "term": "Hilda Handcuffs",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "HIL-da HAND-kufs",
+    "definition": "The police",
+    "origin": "Camp personification",
+    "example": null,
+    "notes_variants": null
+  },
+  "hoofer": {
+    "term": "Hoofer",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "HOO-fer",
+    "definition": "A dancer",
+    "origin": "Theatrical slang",
     "example": null,
     "notes_variants": null
   },
@@ -1689,15 +1929,25 @@
     "example": null,
     "notes_variants": null
   },
-  "lallie-s-lally": {
-    "term": "Lallie(s) / lally",
+  "lallie": {
+    "term": "Lallie",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "LAL-ee",
-    "definition": "Leg(s)",
+    "definition": "Leg(s) (also spelled: lally)",
     "origin": "Unclear",
     "example": "\"Get your lallies moving, we're late.\"",
     "notes_variants": "Variants: lyle, lall"
+  },
+  "lallie-tappers": {
+    "term": "Lallie tappers",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "LAL-ee TAP-erz",
+    "definition": "Feet",
+    "origin": "From \"lallies\" (legs)",
+    "example": null,
+    "notes_variants": null
   },
   "lamor": {
     "term": "Lamor",
@@ -1779,14 +2029,24 @@
     "example": null,
     "notes_variants": null
   },
-  "lillies-lily-law": {
-    "term": "Lillies / Lily Law",
+  "lillies": {
+    "term": "Lillies",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "LIL-ee",
-    "definition": "The police",
+    "definition": "The police (also spelled: Lily Law)",
     "origin": "From the name \"Lily\"",
     "example": "\"Watch out, Lily Law's about.\"",
+    "notes_variants": null
+  },
+  "lills": {
+    "term": "Lills",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "lilz",
+    "definition": "Hands",
+    "origin": "Unclear",
+    "example": null,
     "notes_variants": null
   },
   "lingo": {
@@ -1849,12 +2109,12 @@
     "example": "\"Mais oui, darling, naturally.\"",
     "notes_variants": null
   },
-  "mangaree-manjaree-mungaree": {
-    "term": "Mangaree / manjaree / mungaree",
+  "mangaree": {
+    "term": "Mangaree",
     "entry_type": "word",
     "part_of_speech": "Noun, Verb",
     "pronunciation": "man-juh-REE",
-    "definition": "Food; to eat",
+    "definition": "Food; to eat (also spelled: manjaree, mungaree)",
     "origin": "From Italian *mangiare* / Sabir *mangiaria*",
     "example": "\"Time for some mangaree.\"",
     "notes_variants": "Many spellings: munjare, mungarly"
@@ -1886,6 +2146,16 @@
     "pronunciation": "muh-REE-uh",
     "definition": "Sperm",
     "origin": "Possibly euphemistic from the name",
+    "example": null,
+    "notes_variants": null
+  },
+  "martinis": {
+    "term": "Martinis",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "mar-TEE-neez",
+    "definition": "Hands",
+    "origin": "From Italian *mani*?",
     "example": null,
     "notes_variants": null
   },
@@ -1937,6 +2207,16 @@
     "definition": "Crazy, nutty, mental",
     "origin": "From Yiddish משוגען (*meshug'n*, \"crazy\")",
     "example": "\"He's gone proper meshigener.\"",
+    "notes_variants": null
+  },
+  "metzas": {
+    "term": "Metzas",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "MET-saz",
+    "definition": "Money",
+    "origin": "From Italian *mezzi* (means)",
+    "example": null,
     "notes_variants": null
   },
   "mince": {
@@ -1999,16 +2279,6 @@
     "example": "\"What's your moniker, then?\"",
     "notes_variants": null
   },
-  "montrel": {
-    "term": "Montrel",
-    "entry_type": "word",
-    "part_of_speech": "Noun",
-    "pronunciation": "MON-trel",
-    "definition": "A clock, watch",
-    "origin": "From French *montre* (\"watch\")",
-    "example": null,
-    "notes_variants": null
-  },
   "mother": {
     "term": "Mother",
     "entry_type": "word",
@@ -2019,12 +2289,12 @@
     "example": null,
     "notes_variants": null
   },
-  "multi-multy": {
-    "term": "Multi / multy",
+  "multi": {
+    "term": "Multi",
     "entry_type": "word",
     "part_of_speech": "Adverb, Quantifier",
     "pronunciation": "MUL-tee",
-    "definition": "Very, much, a lot",
+    "definition": "Very, much, a lot (also spelled: multy)",
     "origin": "From It./Sabir *molto* (\"very\")",
     "example": "\"That's multi naff, dear.\"",
     "notes_variants": null
@@ -2059,14 +2329,34 @@
     "example": "\"His new clobber is dead naff.\"",
     "notes_variants": null
   },
-  "nanti-nantee": {
-    "term": "Nanti / nantee",
+  "nana": {
+    "term": "Nana",
+    "entry_type": "word",
+    "part_of_speech": "Adjective",
+    "pronunciation": "NAH-nah",
+    "definition": "Awful",
+    "origin": "Unclear",
+    "example": null,
+    "notes_variants": null
+  },
+  "nanti": {
+    "term": "Nanti",
     "entry_type": "word",
     "part_of_speech": "Negative",
     "pronunciation": "NAN-tee",
-    "definition": "A general negator: no, none, nothing, don't",
+    "definition": "A general negator: no, none, nothing, don't (also spelled: nantee)",
     "origin": "From Sabir *nantee*, ultimately Italian *niente* (\"nothing\")",
     "example": "\"Nanti polari!\" — don't talk!",
+    "notes_variants": null
+  },
+  "national-handbag": {
+    "term": "National handbag",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "NASH-un-al HAND-bag",
+    "definition": "The dole, welfare",
+    "origin": "From \"handbag\" (money)",
+    "example": null,
     "notes_variants": null
   },
   "nelly": {
@@ -2149,6 +2439,16 @@
     "example": "\"Stop ogling and say hello.\"",
     "notes_variants": "\"Ogle riders\" = eyebrows/eyelashes"
   },
+  "ogle-fakes": {
+    "term": "Ogle fakes",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "OH-gul fayks",
+    "definition": "Spectacles",
+    "origin": "From \"ogles\" (eyes) + \"fakes\"",
+    "example": null,
+    "notes_variants": null
+  },
   "ois": {
     "term": "-Ois",
     "entry_type": "word",
@@ -2159,33 +2459,53 @@
     "example": "\"Nanteois\" = none; \"bevois\" = drink",
     "notes_variants": null
   },
-  "omi-omee": {
-    "term": "Omi / omee",
+  "omi": {
+    "term": "Omi",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "OH-mee",
-    "definition": "A man",
+    "definition": "A man (also spelled: omee)",
     "origin": "Possibly from Italian *uomo* (\"man\")",
     "example": "\"Vada the bona omi over there.\"",
     "notes_variants": "Variants: omee, omey, homie"
   },
-  "omi-palone-omee-palone-hp": {
-    "term": "Omi-palone / omee-palone (HP)",
+  "omi-palone": {
+    "term": "Omi-palone",
     "entry_type": "phrase",
     "part_of_speech": "Noun",
     "pronunciation": "OH-mee puh-LOHN",
-    "definition": "An effeminate or gay man",
+    "definition": "An effeminate or gay man (also spelled: omee-palone (HP))",
     "origin": "Literally \"man-woman\" — see omi + palone",
     "example": null,
     "notes_variants": "Abbreviated HP"
   },
-  "oney-una": {
-    "term": "Oney / una",
+  "oney": {
+    "term": "Oney",
     "entry_type": "word",
     "part_of_speech": "Number",
     "pronunciation": "OH-nee",
-    "definition": "One",
+    "definition": "One (also spelled: una)",
     "origin": "From It./Sabir *una* (\"one\")",
+    "example": null,
+    "notes_variants": null
+  },
+  "onk": {
+    "term": "Onk",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "onk",
+    "definition": "A nose",
+    "origin": "From \"conk\"",
+    "example": null,
+    "notes_variants": null
+  },
+  "orbs": {
+    "term": "Orbs",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "orbz",
+    "definition": "Eyes",
+    "origin": "English poetic slang",
     "example": null,
     "notes_variants": null
   },
@@ -2209,6 +2529,16 @@
     "example": null,
     "notes_variants": null
   },
+  "oven": {
+    "term": "Oven",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "UV-en",
+    "definition": "A mouth",
+    "origin": "Bodily metaphor",
+    "example": "\"Nanti pots in the cupboard\" — no teeth.",
+    "notes_variants": null
+  },
   "oyster": {
     "term": "Oyster",
     "entry_type": "word",
@@ -2217,6 +2547,16 @@
     "definition": "A mouth",
     "origin": "Unclear",
     "example": "\"Turn my oyster up\" = make me smile",
+    "notes_variants": null
+  },
+  "palare-pipe": {
+    "term": "Palare pipe",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "pa-LAR-ee pype",
+    "definition": "A telephone",
+    "origin": "From \"palare\" (talk) + pipe",
+    "example": null,
     "notes_variants": null
   },
   "palaver": {
@@ -2229,6 +2569,26 @@
     "example": "\"What's all this palaver about?\"",
     "notes_variants": null
   },
+  "palliass": {
+    "term": "Palliass",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "PAL-ee-ass",
+    "definition": "A back",
+    "origin": "From French *paillasse* (straw mattress)",
+    "example": null,
+    "notes_variants": null
+  },
+  "palone": {
+    "term": "Palone",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "puh-LOHN",
+    "definition": "A woman (also spelled: polone, polony)",
+    "origin": "Disputed — possibly from 17th-c. \"blowen\" (prostitute) or Italian *pollone*",
+    "example": "\"She's a dolly palone.\"",
+    "notes_variants": "Many spellings: paloney, polonee"
+  },
   "palone-omi": {
     "term": "Palone-omi",
     "entry_type": "phrase",
@@ -2239,32 +2599,22 @@
     "example": null,
     "notes_variants": null
   },
-  "palone-polone-polony": {
-    "term": "Palone / polone / polony",
-    "entry_type": "word",
-    "part_of_speech": "Noun",
-    "pronunciation": "puh-LOHN",
-    "definition": "A woman",
-    "origin": "Disputed — possibly from 17th-c. \"blowen\" (prostitute) or Italian *pollone*",
-    "example": "\"She's a dolly palone.\"",
-    "notes_variants": "Many spellings: paloney, polonee"
-  },
-  "pannam-pannum": {
-    "term": "Pannam / pannum",
+  "pannam": {
+    "term": "Pannam",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "PAN-um",
-    "definition": "Bread",
+    "definition": "Bread (also spelled: pannum)",
     "origin": "From It./Sabir *pane* (\"bread\")",
     "example": null,
     "notes_variants": null
   },
-  "park-parker": {
-    "term": "Park / parker",
+  "park": {
+    "term": "Park",
     "entry_type": "word",
     "part_of_speech": "Verb",
     "pronunciation": "PAR-kuh",
-    "definition": "To give, to pay",
+    "definition": "To give, to pay (also spelled: parker)",
     "origin": "From Italian *pagare* (\"to pay\")",
     "example": "\"Parker the measures, dear.\"",
     "notes_variants": null
@@ -2289,12 +2639,12 @@
     "example": null,
     "notes_variants": null
   },
-  "pogey-pogy": {
-    "term": "Pogey / pogy",
+  "pogey": {
+    "term": "Pogey",
     "entry_type": "word",
     "part_of_speech": "Adjective",
     "pronunciation": "POH-gee",
-    "definition": "Little, small",
+    "definition": "Little, small (also spelled: pogy)",
     "origin": "From It./Sabir *poco* (\"little\")",
     "example": null,
     "notes_variants": null
@@ -2329,12 +2679,22 @@
     "example": null,
     "notes_variants": "Variant: ponce"
   },
+  "pots": {
+    "term": "Pots",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "pots",
+    "definition": "Teeth",
+    "origin": "Unclear",
+    "example": "\"Nanti pots in the cupboard.\"",
+    "notes_variants": null
+  },
   "prad": {
     "term": "Prad",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "prad",
-    "definition": "A horse",
+    "definition": "A pimp",
     "origin": "Possibly from Dutch *paard* (\"horse\")",
     "example": null,
     "notes_variants": null
@@ -2419,15 +2779,25 @@
     "example": null,
     "notes_variants": null
   },
-  "riah-riha": {
-    "term": "Riah / riha",
+  "riah": {
+    "term": "Riah",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "RY-ah",
-    "definition": "Hair",
+    "definition": "Hair (also spelled: riha)",
     "origin": "Backslang for \"hair\"",
     "example": "\"Zhoosh your riah before we go.\"",
     "notes_variants": "\"Riah shusher\" = hairdresser"
+  },
+  "riah-zhoosher": {
+    "term": "Riah zhoosher",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "RY-ah ZHOO-sher",
+    "definition": "A hairdresser",
+    "origin": "From \"riah\" (hair) + \"zhoosh\" (style)",
+    "example": null,
+    "notes_variants": null
   },
   "rough-trade": {
     "term": "Rough trade",
@@ -2459,12 +2829,12 @@
     "example": null,
     "notes_variants": null
   },
-  "salter-saltee": {
-    "term": "Salter / saltee",
+  "salter": {
+    "term": "Salter",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "SAWL-tuh",
-    "definition": "A penny",
+    "definition": "A penny (also spelled: saltee)",
     "origin": "From Italian *soldi*",
     "example": null,
     "notes_variants": null
@@ -2509,6 +2879,16 @@
     "example": null,
     "notes_variants": null
   },
+  "schmutter": {
+    "term": "Schmutter",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "SHMUT-er",
+    "definition": "Clothing",
+    "origin": "From Yiddish *shmatte* (rag)",
+    "example": null,
+    "notes_variants": null
+  },
   "schonk": {
     "term": "Schonk",
     "entry_type": "word",
@@ -2516,6 +2896,26 @@
     "pronunciation": "shonk",
     "definition": "To hit",
     "origin": "Possibly from Yiddish",
+    "example": null,
+    "notes_variants": null
+  },
+  "schooner": {
+    "term": "Schooner",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "SKOO-ner",
+    "definition": "A bottle",
+    "origin": "Nautical glassware term",
+    "example": null,
+    "notes_variants": null
+  },
+  "scotch": {
+    "term": "Scotch",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "skoch",
+    "definition": "A leg",
+    "origin": "Rhyming slang: scotch egg = leg",
     "example": null,
     "notes_variants": null
   },
@@ -2549,6 +2949,16 @@
     "example": null,
     "notes_variants": null
   },
+  "sea-queen": {
+    "term": "Sea queen",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "see kween",
+    "definition": "A gay sailor; a gay man drawn to sailors",
+    "origin": "Merchant-navy gay slang",
+    "example": null,
+    "notes_variants": null
+  },
   "send-up": {
     "term": "Send up",
     "entry_type": "phrase",
@@ -2579,6 +2989,26 @@
     "example": "\"Sharda, she missed the bus.\"",
     "notes_variants": null
   },
+  "sharpy": {
+    "term": "Sharpy",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "SHAR-pee",
+    "definition": "A policeman",
+    "origin": "From \"charpering omi\"",
+    "example": null,
+    "notes_variants": null
+  },
+  "sharpy-polone": {
+    "term": "Sharpy polone",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "SHAR-pee poh-LOHN",
+    "definition": "A policewoman",
+    "origin": "From \"sharpy\" + \"palone\" (woman)",
+    "example": null,
+    "notes_variants": null
+  },
   "she": {
     "term": "She",
     "entry_type": "word",
@@ -2599,23 +3029,23 @@
     "example": null,
     "notes_variants": "\"Shush bag\" = bag for stolen goods"
   },
-  "shyckle-shyker": {
-    "term": "Shyckle / shyker",
-    "entry_type": "word",
+  "shush-bag": {
+    "term": "Shush bag",
+    "entry_type": "phrase",
     "part_of_speech": "Noun",
-    "pronunciation": "SHY-kul",
-    "definition": "A wig",
-    "origin": "From Yiddish שייטל (*sheitl*, a married Orthodox woman's wig)",
+    "pronunciation": "shush bag",
+    "definition": "A holdall; bag for stolen goods",
+    "origin": "From \"shush\" (steal)",
     "example": null,
     "notes_variants": null
   },
-  "signor": {
-    "term": "Signor",
+  "shyckle": {
+    "term": "Shyckle",
     "entry_type": "word",
     "part_of_speech": "Noun",
-    "pronunciation": "seen-YOR",
-    "definition": "An honorific given to men",
-    "origin": "From Italian *signor* (\"Mr.\")",
+    "pronunciation": "SHY-kul",
+    "definition": "A wig (also spelled: shyker)",
+    "origin": "From Yiddish שייטל (*sheitl*, a married Orthodox woman's wig)",
     "example": null,
     "notes_variants": null
   },
@@ -2669,6 +3099,26 @@
     "example": null,
     "notes_variants": null
   },
+  "stimpcovers": {
+    "term": "Stimpcovers",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "STIMP-kuv-erz",
+    "definition": "Stockings, hosiery",
+    "origin": "From \"stimps\" (legs)",
+    "example": null,
+    "notes_variants": null
+  },
+  "stimps": {
+    "term": "Stimps",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "stimps",
+    "definition": "Legs",
+    "origin": "Unclear",
+    "example": null,
+    "notes_variants": null
+  },
   "strange": {
     "term": "Strange",
     "entry_type": "word",
@@ -2687,6 +3137,16 @@
     "definition": "Exhausted",
     "origin": "Unclear",
     "example": "\"I'm a complete stretcher-case after that.\"",
+    "notes_variants": null
+  },
+  "strides": {
+    "term": "Strides",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "strydz",
+    "definition": "Trousers",
+    "origin": "British slang",
+    "example": null,
     "notes_variants": null
   },
   "striller-s": {
@@ -2729,22 +3189,22 @@
     "example": "\"He's TBH, you know.\"",
     "notes_variants": null
   },
-  "three-drags-and-a-spit": {
-    "term": "Three drags and a spit",
-    "entry_type": "phrase",
+  "thews": {
+    "term": "Thews",
+    "entry_type": "word",
     "part_of_speech": "Noun",
-    "pronunciation": "three dragz an a spit",
-    "definition": "A cigarette",
-    "origin": "Variation of \"three draws and a spit\" (the act of smoking)",
+    "pronunciation": "thyooz",
+    "definition": "Thighs; muscles",
+    "origin": "Archaic English",
     "example": null,
     "notes_variants": null
   },
-  "thrummer-thrums": {
-    "term": "Thrummer / thrums",
+  "thrummer": {
+    "term": "Thrummer",
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "THRUM-uh",
-    "definition": "Threepence",
+    "definition": "Threepence (also spelled: thrums)",
     "origin": "Unclear, via Cant",
     "example": null,
     "notes_variants": null
@@ -2758,6 +3218,36 @@
     "origin": "Possibly Romani, disputed",
     "example": null,
     "notes_variants": "\"Tober omee\" = rent collector/landlord"
+  },
+  "tod": {
+    "term": "Tod",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "tod",
+    "definition": "Alone (\"on your tod\")",
+    "origin": "Rhyming slang: Tod Sloan = alone",
+    "example": null,
+    "notes_variants": null
+  },
+  "tootsie-trade": {
+    "term": "Tootsie trade",
+    "entry_type": "phrase",
+    "part_of_speech": "Noun",
+    "pronunciation": "TUT-see trayd",
+    "definition": "Sex between two feminine men",
+    "origin": "From \"trade\"",
+    "example": null,
+    "notes_variants": null
+  },
+  "tosheroon": {
+    "term": "Tosheroon",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "tosh-er-OON",
+    "definition": "Half a crown",
+    "origin": "Parlyaree money term",
+    "example": null,
+    "notes_variants": null
   },
   "trade": {
     "term": "Trade",
@@ -2776,6 +3266,16 @@
     "pronunciation": "tray",
     "definition": "Three",
     "origin": "From It./Sabir *tre* (\"three\")",
+    "example": null,
+    "notes_variants": null
+  },
+  "treash": {
+    "term": "Treash",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "treesh",
+    "definition": "Term of endearment",
+    "origin": "From \"treasure\"",
     "example": null,
     "notes_variants": null
   },
@@ -2809,12 +3309,12 @@
     "example": null,
     "notes_variants": null
   },
-  "vada-varda": {
-    "term": "Vada / varda",
+  "vada": {
+    "term": "Vada",
     "entry_type": "word",
     "part_of_speech": "Verb",
     "pronunciation": "VAH-duh",
-    "definition": "To look, to see",
+    "definition": "To look, to see (also spelled: varda)",
     "origin": "Disputed: possibly Venetian *vardia* or Romani *vater* (\"watch\")",
     "example": "\"Vada that bona omi over there!\"",
     "notes_variants": "\"Vardavision\" = television"
@@ -2869,6 +3369,16 @@
     "example": null,
     "notes_variants": null
   },
+  "vogueress": {
+    "term": "Vogueress",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "VOHG-er-ess",
+    "definition": "A female smoker",
+    "origin": "From \"vogue\" (cigarette)",
+    "example": null,
+    "notes_variants": null
+  },
   "vonka": {
     "term": "Vonka",
     "entry_type": "word",
@@ -2889,6 +3399,16 @@
     "example": null,
     "notes_variants": "\"Walloper\" = dancer"
   },
+  "walloper": {
+    "term": "Walloper",
+    "entry_type": "word",
+    "part_of_speech": "Noun",
+    "pronunciation": "WOL-op-er",
+    "definition": "A dancer",
+    "origin": "From \"wallop\" (to dance)",
+    "example": null,
+    "notes_variants": null
+  },
   "willets": {
     "term": "Willets",
     "entry_type": "word",
@@ -2899,13 +3419,23 @@
     "example": null,
     "notes_variants": null
   },
-  "yokel": {
-    "term": "Yokel",
+  "yeute": {
+    "term": "Yeute",
+    "entry_type": "word",
+    "part_of_speech": "Adjective",
+    "pronunciation": "yoot",
+    "definition": "No, none",
+    "origin": "Unclear",
+    "example": null,
+    "notes_variants": null
+  },
+  "yews": {
+    "term": "Yews",
     "entry_type": "word",
     "part_of_speech": "Noun",
-    "pronunciation": "YOH-kul",
-    "definition": "A person from outside the city",
-    "origin": "English slang, often with connotations of being uneducated",
+    "pronunciation": "yooz",
+    "definition": "Eyes",
+    "origin": "From French *yeux*",
     "example": null,
     "notes_variants": null
   },
@@ -2919,14 +3449,24 @@
     "example": null,
     "notes_variants": null
   },
-  "zhoosh-zhuzh": {
-    "term": "Zhoosh / zhuzh",
+  "zhoosh": {
+    "term": "Zhoosh",
     "entry_type": "word",
     "part_of_speech": "Verb, Noun",
     "pronunciation": "zhoosh",
-    "definition": "To style, primp, tart up (esp. hair); styling/ornamentation",
+    "definition": "To style, primp, tart up (esp. hair); styling/ornamentation (also spelled: zhuzh)",
     "origin": "Possibly from Romani *zhouzho* (\"clean, neat\") or onomatopoeic",
     "example": "\"Just let me zhoosh my riah before we go in.\"",
     "notes_variants": "\"Zhoosher\"/\"riah zhoosher\" = hairdresser"
+  },
+  "zhooshy": {
+    "term": "Zhooshy",
+    "entry_type": "word",
+    "part_of_speech": "Adjective",
+    "pronunciation": "ZHOO-shee",
+    "definition": "Showy",
+    "origin": "From \"zhoosh\"",
+    "example": null,
+    "notes_variants": null
   }
 }

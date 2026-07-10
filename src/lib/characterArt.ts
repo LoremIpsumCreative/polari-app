@@ -7,13 +7,13 @@ const CHARACTER_ART: Record<string, ImageSourcePropType> = {
   'antique-hp': require('../../assets/characters/antique-hp.png'),
   aspro: require('../../assets/characters/aspro.png'),
   auntie: require('../../assets/characters/auntie.png'),
-  'barkey-barkie-barky': require('../../assets/characters/barkey-barkie-barky.png'),
+  barkey: require('../../assets/characters/barkey.png'),
   beak: require('../../assets/characters/beak.png'),
   'blaz-queen': require('../../assets/characters/blaz-queen.png'),
-  'glossy-glossies': require('../../assets/characters/glossy-glossies.png'),
+  glossy: require('../../assets/characters/glossy.png'),
   queen: require('../../assets/characters/queen.png'),
   trade: require('../../assets/characters/trade.png'),
-  'vada-varda': require('../../assets/characters/vada-varda.png'),
+  vada: require('../../assets/characters/vada.png'),
 };
 
 export const COMING_SOON_ART: ImageSourcePropType = require('../../assets/characters/coming-soon.png');
