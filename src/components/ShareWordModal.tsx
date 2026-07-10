@@ -21,11 +21,12 @@ type Props = {
 export function ShareWordModal({ word, visible, onClose }: Props) {
   const cardRef = useRef<View>(null);
   const [sharing, setSharing] = useState(false);
-  const { height: winH } = useWindowDimensions();
-  // Fit the full 9:16 card between the top inset and the action buttons. The
-  // captured PNG is unaffected — view-shot snapshots the card's own 340×604
-  // layout, not this scaled-down preview.
-  const scale = Math.min(1, (winH - 260) / CARD_HEIGHT);
+  const { width: winW, height: winH } = useWindowDimensions();
+  // Fit the full card between the top inset and the action buttons, and within
+  // the screen width (the card is built at the Figma frame's native 566px).
+  // The captured PNG is unaffected — view-shot snapshots the card's own
+  // 566×1007 layout, not this scaled-down preview.
+  const scale = Math.min(1, (winH - 260) / CARD_HEIGHT, (winW - 48) / CARD_WIDTH);
 
   async function handleShare() {
     setSharing(true);
