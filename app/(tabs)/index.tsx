@@ -28,7 +28,7 @@ const SWIPE_THRESHOLD = 48;
 
 export default function TodayScreen() {
   const { session } = useAuth();
-  const { recordEngagement } = useStreaks();
+  const { recordEngagement, celebration, dismissCelebration } = useStreaks();
   const { words, loading, error, refetch } = useWords();
 
   // 0 = today, 1 = yesterday, … capped at the app's epoch so "previous"
@@ -51,6 +51,13 @@ export default function TodayScreen() {
       recordEngagement();
     }
   }, [session, word, recordEngagement]);
+
+  // Milestone banners linger briefly, then bow out
+  useEffect(() => {
+    if (celebration === null) return;
+    const t = setTimeout(dismissCelebration, 6000);
+    return () => clearTimeout(t);
+  }, [celebration, dismissCelebration]);
 
   // Slide-and-fade whenever the displayed day changes
   const transition = useRef(new Animated.Value(0)).current;
@@ -152,6 +159,24 @@ export default function TodayScreen() {
         label={`Illustration for ${word.term}`}
       />
 
+      {celebration !== null ? (
+        <Pressable
+          style={styles.milestoneBanner}
+          onPress={dismissCelebration}
+          accessibilityRole="alert"
+          accessibilityLabel={`${celebration} day streak milestone`}
+        >
+          <Text style={styles.milestoneText}>
+            🔥 {celebration}-day streak — fantabulosa, ducky!
+          </Text>
+          <Text style={styles.milestoneSub}>
+            {celebration % 7 === 0
+              ? 'A streak freeze just landed in the bank. ❄️'
+              : 'Keep vada-ing, one word a day.'}
+          </Text>
+        </Pressable>
+      ) : null}
+
       {/* Floating day selector: pinned above the navbar so long cards
           scroll beneath it instead of pushing it off screen */}
       <View style={styles.pagerPill}>
@@ -236,6 +261,28 @@ const styles = StyleSheet.create({
     top: 78,
     bottom: 47,
     backgroundColor: '#ADADB5',
+  },
+  milestoneBanner: {
+    position: 'absolute',
+    top: spacing.md,
+    alignSelf: 'center',
+    backgroundColor: colors.dark,
+    borderRadius: 16,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md - 4,
+    alignItems: 'center',
+    gap: 2,
+    maxWidth: '88%',
+  },
+  milestoneText: {
+    color: '#FAF3E7',
+    fontFamily: 'Digitale-Bold',
+    fontSize: 14,
+  },
+  milestoneSub: {
+    color: '#B7B0CE',
+    fontFamily: 'Digitale-Regular',
+    fontSize: 12,
   },
   pagerPill: {
     position: 'absolute',

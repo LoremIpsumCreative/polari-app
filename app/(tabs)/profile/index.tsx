@@ -77,6 +77,12 @@ export default function ProfileScreen() {
         <StatCard label="Longest streak" value={stats?.longest_streak ?? 0} />
         <StatCard label="Words learned" value={stats?.words_learned_count ?? 0} />
       </View>
+      {stats && stats.streak_freezes > 0 ? (
+        <Text style={styles.freezeNote}>
+          ❄️ {stats.streak_freezes === 1 ? 'A streak freeze' : `${stats.streak_freezes} streak freezes`} in
+          the bank — one missed day won't break you. Another arrives every 7-day milestone.
+        </Text>
+      ) : null}
 
       <Pressable
         style={({ pressed }) => [styles.rowButton, pressed && styles.rowPressed]}
@@ -151,6 +157,13 @@ const styles = StyleSheet.create({
   statsRow: {
     flexDirection: 'row',
     gap: spacing.sm,
+  },
+  freezeNote: {
+    fontFamily: fonts.regular,
+    fontSize: 12.5,
+    lineHeight: 18,
+    color: colors.textMuted,
+    paddingHorizontal: spacing.xs,
   },
   statCard: {
     flex: 1,

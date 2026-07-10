@@ -183,6 +183,7 @@ export type Database = {
           current_streak: number
           last_active_date: string | null
           longest_streak: number
+          streak_freezes: number
           updated_at: string
           user_id: string
           words_learned_count: number
@@ -332,6 +333,7 @@ export type Database = {
           current_streak: number
           longest_streak: number
           words_learned_count: number
+          streak_freezes: number
         }[]
       }
     }
