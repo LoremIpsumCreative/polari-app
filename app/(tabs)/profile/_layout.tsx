@@ -6,6 +6,7 @@ export default function ProfileLayout() {
     <Stack screenOptions={headerOptions}>
       <Stack.Screen name="index" options={{ title: 'Account' }} />
       <Stack.Screen name="feedback" options={{ title: 'Feedback' }} />
+      <Stack.Screen name="about" options={{ title: 'About Polari' }} />
     </Stack>
   );
 }

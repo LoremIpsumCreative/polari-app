@@ -59,6 +59,11 @@ export default function ProfileScreen() {
             New here? <Text style={styles.linkStrong}>Create an account</Text>
           </Text>
         </Pressable>
+        <Pressable onPress={() => router.push('/profile/about')}>
+          <Text style={styles.link}>
+            Curious? <Text style={styles.linkStrong}>Read the story of Polari</Text>
+          </Text>
+        </Pressable>
       </View>
     );
   }
@@ -72,6 +77,13 @@ export default function ProfileScreen() {
         <StatCard label="Longest streak" value={stats?.longest_streak ?? 0} />
         <StatCard label="Words learned" value={stats?.words_learned_count ?? 0} />
       </View>
+
+      <Pressable
+        style={({ pressed }) => [styles.rowButton, pressed && styles.rowPressed]}
+        onPress={() => router.push('/profile/about')}
+      >
+        <Text style={styles.rowButtonText}>📖 About Polari — the story & sources</Text>
+      </Pressable>
 
       <Pressable
         style={({ pressed }) => [styles.rowButton, pressed && styles.rowPressed]}
