@@ -211,8 +211,22 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
   const dashboardIndex = state.routes.findIndex((r) => isDashboardRoute(r.name));
   const dashboardActive = state.index === dashboardIndex;
 
-  const activeRouteName = state.routes[state.index]?.name.replace(/\/index$/, '') ?? '';
-  const ringColor = DARK_STAGE_ROUTES.has(activeRouteName) ? colors.dark : colors.background;
+  const activeRoute = state.routes[state.index];
+  const activeRouteName = activeRoute?.name.replace(/\/index$/, '') ?? '';
+  // Only the quiz *intro* uses the dark stage backdrop; deeper quiz screens
+  // (play, results) are light again, so the ring must follow the focused
+  // child route, not just the tab.
+  // Inline getFocusedRouteNameFromRoute: expo-router 57 vendors react-navigation
+  // so the helper isn't importable. In a PartialState, an undefined index means
+  // the focused route is the last one in the array.
+  const nested = (activeRoute as { state?: { index?: number; routes?: { name: string }[] } })
+    ?.state;
+  const focusedChild =
+    nested?.routes?.[nested.index ?? nested.routes.length - 1]?.name ?? 'index';
+  const ringColor =
+    DARK_STAGE_ROUTES.has(activeRouteName) && focusedChild === 'index'
+      ? colors.dark
+      : colors.background;
 
   useEffect(() => {
     if (tabWidth === 0) return;

@@ -192,7 +192,9 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
-    borderRadius: 20,
+    borderRadius: 16,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(170, 170, 170, 0.5)',
     paddingHorizontal: 17,
     paddingTop: spacing.md + 4,
     paddingBottom: spacing.md,

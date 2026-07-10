@@ -220,20 +220,22 @@ const styles = StyleSheet.create({
   deckCard: {
     position: 'absolute',
     width: 60,
-    backgroundColor: colors.surface,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(170, 170, 170, 0.4)',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(170, 170, 170, 0.5)',
   },
+  // Colours/radii sampled from the Figma assets (Rectangle 9 / Rectangle 4)
   deckCardMid: {
     left: -10,
     top: 38,
     bottom: 7,
+    backgroundColor: '#DBDBE2',
+    borderRadius: 12,
   },
   deckCardBack: {
     left: -14,
     top: 78,
     bottom: 47,
+    backgroundColor: '#ADADB5',
   },
   pagerPill: {
     position: 'absolute',
