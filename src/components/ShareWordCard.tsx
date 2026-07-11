@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { IconBook2, IconQuote, IconWorld } from '@tabler/icons-react-native';
+import { IconBook2, IconQuote, IconStack2, IconWorldSearch } from '@tabler/icons-react-native';
 import type { Word } from '../types/database';
 import { fonts } from '../lib/theme';
 import { useCharacterArt } from '../lib/remoteArt';
@@ -14,15 +14,22 @@ import { useCharacterArt } from '../lib/remoteArt';
 // download CTA + QR footer.
 //
 // Built at the Figma stage's native 566x1007 so measurements transfer verbatim
-// (frame art 545x968 at 10,20); colours sampled from the design exports.
+// (frame art 545x968 at 10,20); colours are the design-token palette
+// (neutral/1000 stage, neutral/200 field, neutral/900 body, neutral/250 lines).
 export const CARD_WIDTH = 566;
 export const CARD_HEIGHT = 1007;
 
 const frameArt = require('../../assets/share/frame.png');
 const qrArt = require('../../assets/share/qr-polari.png');
 
-const INK = '#121212';
-const FIELD = '#EAEAEA';
+const STAGE = '#0E1D31'; // neutral/1000
+const FIELD = '#DCDFE4'; // neutral/200
+const BODY = '#172B4D'; // neutral/900
+const META = '#2C3E5D'; // neutral/800
+const MUTED = '#44546F'; // neutral/700
+const LABEL = '#758195'; // neutral/500
+const LINE = '#C8CCD4'; // neutral/250
+const ROW = '#F8F9FA'; // neutral/50
 
 function stripEmphasis(text: string): string {
   return text.replace(/\*([^*]+)\*/g, '$1');
@@ -51,7 +58,7 @@ function FieldRow({
   return (
     <View>
       <View style={styles.fieldRow}>
-        <Icon size={15} color={INK} />
+        <Icon size={15} color={BODY} />
         <Text style={[styles.fieldText, italic && styles.fieldTextItalic]}>
           {stripEmphasis(children)}
         </Text>
@@ -105,12 +112,12 @@ export const ShareWordCard = forwardRef<View, Props>(function ShareWordCard(
           </FieldRow>
         ) : null}
         {word.origin ? (
-          <FieldRow label="origin" Icon={IconWorld}>
+          <FieldRow label="origin" Icon={IconWorldSearch}>
             {word.origin}
           </FieldRow>
         ) : null}
         {word.cultural_context ? (
-          <FieldRow label="culture" Icon={IconWorld}>
+          <FieldRow label="culture" Icon={IconStack2}>
             {word.cultural_context}
           </FieldRow>
         ) : null}
@@ -129,9 +136,8 @@ export const ShareWordCard = forwardRef<View, Props>(function ShareWordCard(
       {/* Frame art last so its ornament overlaps the field and the date pill
           nestles into the arch */}
       <Image source={frameArt} style={styles.frame} resizeMode="stretch" pointerEvents="none" />
-      <View style={styles.datePill}>
-        <Text style={styles.dateText}>{formatDate(date)}</Text>
-      </View>
+      {/* The frame art paints the arch cartouche; the date is bare text on it */}
+      <Text style={styles.dateText}>{formatDate(date)}</Text>
     </View>
   );
 });
@@ -140,7 +146,7 @@ const styles = StyleSheet.create({
   stage: {
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
-    backgroundColor: INK,
+    backgroundColor: STAGE,
   },
   frame: {
     position: 'absolute',
@@ -151,121 +157,116 @@ const styles = StyleSheet.create({
   },
   field: {
     position: 'absolute',
-    left: 40,
-    top: 65,
-    width: 486,
-    height: 878,
-    borderRadius: 48,
+    left: 53,
+    top: 104,
+    width: 460,
+    height: 819,
+    borderRadius: 30,
     backgroundColor: FIELD,
-  },
-  datePill: {
-    position: 'absolute',
-    top: 100,
-    alignSelf: 'center',
-    backgroundColor: FIELD,
-    borderWidth: 1,
-    borderColor: INK,
-    borderRadius: 999,
-    paddingHorizontal: 26,
-    paddingVertical: 9,
   },
   dateText: {
+    position: 'absolute',
+    top: 120,
+    left: 0,
+    right: 0,
+    textAlign: 'center',
     fontFamily: fonts.bold,
     fontSize: 13,
     lineHeight: 14,
     letterSpacing: 0.5,
-    color: INK,
+    color: STAGE,
     textTransform: 'capitalize',
   },
   lede: {
     position: 'absolute',
-    top: 176,
+    top: 187,
     left: 0,
     right: 0,
     textAlign: 'center',
     fontFamily: fonts.regular,
-    fontSize: 20,
-    lineHeight: 20,
+    fontSize: 16,
+    lineHeight: 16,
     letterSpacing: 0.2,
-    color: INK,
+    color: BODY,
   },
   term: {
     position: 'absolute',
-    top: 206,
+    top: 233,
     left: 0,
     right: 0,
     textAlign: 'center',
-    fontFamily: fonts.bold,
-    fontSize: 42,
-    lineHeight: 44,
-    color: INK,
+    fontFamily: fonts.semibold,
+    fontSize: 40,
+    lineHeight: 42,
+    color: STAGE,
   },
   metaRow: {
     position: 'absolute',
-    top: 258,
+    top: 278,
     left: 0,
     right: 0,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 5,
+    gap: 8,
   },
   metaDot: {
     fontFamily: fonts.semibold,
-    fontSize: 14,
-    color: INK,
+    fontSize: 12,
+    color: MUTED,
   },
   pron: {
     fontFamily: fonts.semibold,
     fontSize: 12,
     lineHeight: 13,
     letterSpacing: 0.3,
-    color: INK,
+    color: META,
   },
   posChip: {
     borderWidth: 1,
-    borderColor: '#7F7F7F',
+    borderColor: META,
     borderRadius: 999,
-    paddingHorizontal: 9,
+    paddingHorizontal: 6,
     paddingVertical: 4,
   },
   posText: {
-    fontFamily: fonts.semibold,
+    fontFamily: fonts.bold,
     fontSize: 10,
     lineHeight: 11,
     letterSpacing: 0.3,
-    color: INK,
+    color: META,
     textTransform: 'capitalize',
   },
   character: {
     position: 'absolute',
-    top: 320,
+    top: 327,
     alignSelf: 'center',
-    width: 236,
+    width: 169,
     height: 226,
   },
   detailBox: {
     position: 'absolute',
-    top: 528,
+    top: 570,
     alignSelf: 'center',
-    width: 387,
+    width: 397,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: 'rgba(170, 170, 170, 0.5)',
-    borderRadius: 14,
-    padding: 18,
-    gap: 18,
+    borderColor: LINE,
+    borderRadius: 16,
+    paddingHorizontal: 18,
+    paddingVertical: 20,
+    gap: 16,
   },
   fieldRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
     minHeight: 52,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: ROW,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#C9C9C9',
+    borderColor: LINE,
     borderRadius: 8,
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
     paddingVertical: 10,
   },
   fieldText: {
@@ -274,7 +275,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 15,
     letterSpacing: 0.3,
-    color: INK,
+    color: BODY,
   },
   fieldTextItalic: {
     fontFamily: fonts.italic,
@@ -282,9 +283,10 @@ const styles = StyleSheet.create({
   fieldLabelPatch: {
     position: 'absolute',
     top: -4,
-    left: 7,
+    left: 8,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 2,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
   },
   fieldLabel: {
     fontFamily: fonts.extrabold,
@@ -292,11 +294,11 @@ const styles = StyleSheet.create({
     lineHeight: 8,
     letterSpacing: 0.4,
     textTransform: 'uppercase',
-    color: '#888888',
+    color: LABEL,
   },
   footer: {
     position: 'absolute',
-    top: 838,
+    top: 836,
     left: 94,
     right: 94,
     flexDirection: 'row',
@@ -314,8 +316,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 15,
     letterSpacing: 0.3,
-    color: '#143AD9',
-    textDecorationLine: 'underline',
+    color: MUTED,
   },
   footerSub: {
     textAlign: 'center',
@@ -323,11 +324,11 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 12,
     letterSpacing: 0.3,
-    color: '#000000',
+    color: BODY,
     opacity: 0.7,
   },
   qr: {
-    width: 42,
-    height: 42,
+    width: 47,
+    height: 47,
   },
 });

@@ -3,12 +3,14 @@ import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import { useRouter } from 'expo-router';
 import {
   IconBook2,
+  IconChartBar,
   IconInfoCircle,
   IconLink,
   IconNotes,
   IconQuote,
   IconSend,
-  IconWorld,
+  IconStack2,
+  IconWorldSearch,
   type IconProps,
 } from '@tabler/icons-react-native';
 import type { Word, UsageStatus } from '../types/database';
@@ -116,12 +118,12 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
           </FieldRow>
         ) : null}
         {word.origin ? (
-          <FieldRow label="origin" Icon={IconWorld}>
+          <FieldRow label="origin" Icon={IconWorldSearch}>
             {word.origin}
           </FieldRow>
         ) : null}
         {word.cultural_context ? (
-          <FieldRow label="culture" Icon={IconWorld}>
+          <FieldRow label="culture" Icon={IconStack2}>
             {word.cultural_context}
           </FieldRow>
         ) : null}
@@ -141,8 +143,8 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
 
       {usage ? (
         <View style={styles.usageWrap}>
-          <Text style={styles.usageLabel}>modern usage</Text>
-          <View style={styles.usageRow}>
+          <View style={styles.usageBox}>
+            <IconChartBar size={14} color={colors.text} />
             {USAGE_OPTIONS.map((opt) => (
               <View
                 key={opt.value}
@@ -158,6 +160,9 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
                 </Text>
               </View>
             ))}
+          </View>
+          <View style={styles.fieldLabelPatch}>
+            <Text style={styles.fieldLabel}>modern usage</Text>
           </View>
         </View>
       ) : null}
@@ -192,7 +197,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderRadius: 16,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(170, 170, 170, 0.5)',
+    borderColor: colors.fieldBorder,
     paddingHorizontal: 17,
     paddingTop: spacing.md + 4,
     paddingBottom: spacing.md,
@@ -218,7 +223,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   posChip: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.inset,
     borderWidth: 1,
     borderColor: colors.chipGrey,
     borderRadius: radii.pill,
@@ -251,7 +256,7 @@ const styles = StyleSheet.create({
     lineHeight: 34,
   },
   pron: {
-    color: '#121212',
+    color: colors.textMuted,
     fontFamily: fonts.semibold,
     fontSize: 12,
     letterSpacing: 0.3,
@@ -260,7 +265,7 @@ const styles = StyleSheet.create({
   },
   fields: {
     marginTop: spacing.md + 4,
-    gap: 18,
+    gap: 16,
   },
   fieldWrap: {
     position: 'relative',
@@ -271,15 +276,15 @@ const styles = StyleSheet.create({
     gap: 14,
     backgroundColor: colors.inset,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.chipGrey,
+    borderColor: colors.fieldBorder,
     borderRadius: 8,
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
     paddingVertical: 14,
     minHeight: 52,
   },
   fieldText: {
     flex: 1,
-    color: '#121212',
+    color: colors.text,
     fontFamily: fonts.regular,
     fontSize: 12,
     lineHeight: 15,
@@ -291,12 +296,13 @@ const styles = StyleSheet.create({
   fieldLabelPatch: {
     position: 'absolute',
     top: -5,
-    left: 7,
+    left: 8,
     backgroundColor: colors.surface,
-    paddingHorizontal: 2,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
   },
   fieldLabel: {
-    color: colors.chipGrey,
+    color: colors.label,
     fontFamily: fonts.extrabold,
     fontSize: 7,
     letterSpacing: 0.4,
@@ -317,28 +323,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 17,
   },
-  // Borderless per the updated Figma frame: a fieldset-style label above a
-  // plain row of options, left-aligned with the field rows.
+  // Boxed fieldset row per frame 1042-205: leading chart icon, options inside,
+  // label patch sitting on the border like the other rows.
   usageWrap: {
-    marginTop: 20,
-    gap: 8,
+    position: 'relative',
+    marginTop: 16,
   },
-  usageLabel: {
-    paddingLeft: 9,
-    color: colors.chipGrey,
-    fontFamily: fonts.extrabold,
-    fontSize: 7,
-    letterSpacing: 0.4,
-    textTransform: 'uppercase',
-    lineHeight: 8,
-  },
-  usageRow: {
+  usageBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 14,
+    backgroundColor: colors.inset,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.fieldBorder,
+    borderRadius: 8,
+    padding: 14,
   },
   usageOption: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: radii.pill,
     borderWidth: 1,
@@ -349,7 +351,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   usageOptionText: {
-    color: '#AAAAAA',
+    color: colors.inactive,
     fontFamily: fonts.bold,
     fontSize: 10,
     letterSpacing: 0.3,
@@ -367,7 +369,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     gap: 14,
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
     paddingVertical: 14,
     minHeight: 52,
     borderRadius: 8,

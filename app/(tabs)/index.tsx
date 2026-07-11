@@ -284,9 +284,9 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   dateLabel: {
-    fontFamily: 'Digitale-Semibold',
-    fontSize: 13,
-    color: colors.textFaint,
+    fontFamily: 'Digitale-Regular',
+    fontSize: 10,
+    color: colors.text,
     letterSpacing: 0.3,
   },
   errorText: {

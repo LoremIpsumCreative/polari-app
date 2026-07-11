@@ -1,28 +1,32 @@
-// Central design tokens — matches the Figma "Polari" design (latest frame
-// 1042-205): near-white canvas, brand blue --blue-polari (#143AD9) for the
-// navbar/actions, soft blue chip fills, labelled grey fieldset rows on white
-// cards. Type is Digitale.
+// Central design tokens — matches the Figma "Polari" token palette (frames
+// 1042-205 / 1058-1546): cool neutral canvas (neutral/200), navy ink
+// (neutral/900), brand blue blue/700, soft blue fills, labelled neutral/50
+// fieldset rows with neutral/250 hairlines. Type is Digitale.
 export const colors = {
-  background: '#EAEAEA',
-  surface: '#FFFFFF',
-  inset: '#FAFAFA', // recessed rows inside white cards (Figma definition/example rows)
-  primary: '#143AD9',
-  primarySoft: '#F0F1FF',
-  accent: '#143AD9',
-  accentSoft: '#F0F1FF',
-  related: '#2898BD', // related-word chips (Figma 1042:186)
-  relatedSoft: '#E7F9FF',
-  chipGrey: '#888888', // part-of-speech chip + fieldset row borders/labels
+  background: '#DCDFE4', // neutral/200
+  surface: '#FFFFFF', // neutral/0
+  inset: '#F8F9FA', // neutral/50 — recessed fieldset rows
+  primary: '#0C66E4', // blue/700
+  primarySoft: '#F4F9FF', // blue/blue50
+  accent: '#0C66E4',
+  accentSoft: '#F4F9FF',
+  related: '#2898BD', // teal/600 — related-word chips
+  relatedSoft: '#F4FCFF', // teal/50
+  chipGrey: '#44546F', // neutral/700 — part-of-speech chip
+  fieldBorder: '#C8CCD4', // neutral/250 — fieldset row + pill hairlines
+  label: '#758195', // neutral/500 — fieldset labels
+  inactive: '#8590A2', // neutral/400 — inactive segmented options
   teal: '#27958A',
   tealSoft: '#DDEFEB',
   blush: '#E98F7F',
   blushSoft: '#FADFD8',
-  text: '#1B1B1B',
-  dark: '#1B1B1B', // dark stage backdrop (quiz intro, navbar)
+  text: '#172B4D', // neutral/900
+  ink: '#0E1D31', // neutral/1000 — darkest ink (share stage)
+  dark: '#1B1B1B', // dark stage backdrop (quiz intro)
   spotlight: '#F0ECE3', // cream spotlight ellipse on the quiz stage
-  textMuted: '#646464',
-  textFaint: '#7F7F7F',
-  border: 'rgba(27, 27, 27, 0.12)',
+  textMuted: '#44546F', // neutral/700
+  textFaint: '#758195', // neutral/500
+  border: 'rgba(23, 43, 77, 0.12)',
   danger: '#ED3241',
   heart: '#ED3241',
   onPrimary: '#FFFFFF',

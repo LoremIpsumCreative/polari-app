@@ -117,7 +117,7 @@ function TabItem({
           ],
         }}
       >
-        <Icon size={ICON_SIZE} color={active ? colors.primary : colors.textFaint} />
+        <Icon size={ICON_SIZE} color={active ? colors.primary : colors.textMuted} />
       </Animated.View>
       <Text style={[styles.label, active && styles.labelActive]}>{label}</Text>
     </Pressable>
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     height: LABEL_HEIGHT,
     lineHeight: LABEL_HEIGHT,
-    color: colors.textFaint,
+    color: colors.textMuted,
   },
   labelActive: {
     color: colors.primary,
