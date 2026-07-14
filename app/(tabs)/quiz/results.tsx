@@ -1,62 +1,87 @@
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useHighScore } from '../../../src/lib/quizScores';
+import { supabase } from '../../../src/lib/supabase';
+import { useAuth } from '../../../src/lib/auth';
+import { useQuizStats } from '../../../src/lib/quizScores';
+import { QUIZ_MODES, isQuizModeId } from '../../../src/lib/quizModes';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 
 export default function QuizResultsScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ score?: string; total?: string }>();
+  const params = useLocalSearchParams<{
+    mode?: string;
+    score?: string;
+    tenRun?: string;
+    correct?: string;
+    answered?: string;
+  }>();
+  const isReview = params.mode === 'review';
+  const modeId = isQuizModeId(params.mode) ? params.mode : 'ten';
+  const mode = QUIZ_MODES[modeId];
   const score = Number(params.score ?? 0);
-  const total = Number(params.total ?? 10);
-  const { highScore, saveAttempt, signedIn } = useHighScore();
+  const tenRun = Number(params.tenRun ?? 0);
+  const correct = Number(params.correct ?? 0);
+  const answered = Number(params.answered ?? 0);
 
-  // Snapshot the previous best before saving, so "New high score!" compares
-  // against what stood when the round finished.
+  const { session } = useAuth();
+  const { recordGame, bestFor } = useQuizStats();
+
   const previousBest = useRef<number | null>(null);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    if (saved) return;
-    previousBest.current = highScore;
-    if (signedIn) {
-      saveAttempt(score, total).then(() => setSaved(true));
+    if (saved || isReview) return;
+    previousBest.current = bestFor(modeId);
+    if (session) {
+      recordGame(modeId, score, tenRun);
+      // Keep the achievement counters (attempts / best / perfect) fed.
+      supabase
+        .from('quiz_attempts')
+        .insert({ user_id: session.user.id, score: correct, total_questions: answered || 1 });
+      setSaved(true);
     }
-    // Save exactly once per results view; highScore in deps would re-trigger
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signedIn]);
+  }, [session, isReview]);
 
-  const isNewHighScore =
-    signedIn && saved && (previousBest.current === null || score > previousBest.current);
+  const isNewBest =
+    !isReview && saved && session != null && (previousBest.current === null || score > previousBest.current);
 
   const headline =
-    score === total
+    score >= 10
       ? 'Fantabulosa! 🎉'
-      : score >= total * 0.7
+      : score >= 6
         ? 'Bona work! 👏'
-        : score >= total * 0.4
+        : score >= 3
           ? 'Not bad, ducky.'
           : 'Time to vada the dictionary…';
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headline}>{headline}</Text>
-      <Text style={styles.score}>
-        {score}/{total}
-      </Text>
-      {isNewHighScore ? <Text style={styles.newBest}>🏆 New high score!</Text> : null}
-      {!signedIn ? (
+      <Text style={styles.headline}>{isReview ? 'Review done 👏' : headline}</Text>
+      <Text style={styles.score}>{score}</Text>
+      <Text style={styles.scoreLabel}>{isReview ? 'reviewed' : mode.scoreLabel}</Text>
+
+      {isReview ? (
+        <Text style={styles.sub}>
+          {correct}/{answered} correct — your due words are updated.
+        </Text>
+      ) : isNewBest ? (
+        <Text style={styles.newBest}>🏆 New high score!</Text>
+      ) : session ? (
+        <Text style={styles.sub}>High score: {Math.max(bestFor(modeId), score)}</Text>
+      ) : (
         <Pressable onPress={() => router.push('/sign-in')}>
-          <Text style={styles.signInHint}>
-            <Text style={styles.signInLink}>Sign in</Text> to save your score
+          <Text style={styles.sub}>
+            <Text style={styles.link}>Sign in</Text> to save your score
           </Text>
         </Pressable>
-      ) : null}
+      )}
 
       <View style={styles.buttons}>
         <Pressable
           style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}
-          onPress={() => router.replace('/quiz/play')}
+          onPress={() => router.replace(`/quiz/play?mode=${isReview ? 'review' : modeId}`)}
         >
           <Text style={styles.primaryText}>Play again</Text>
         </Pressable>
@@ -78,49 +103,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: spacing.xl,
-    gap: spacing.sm,
+    gap: spacing.xs,
   },
-  headline: {
-    fontSize: 26,
-    fontFamily: fonts.bold,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  score: {
-    fontSize: 56,
-    fontFamily: fonts.extrabold,
-    color: colors.primary,
-  },
-  newBest: {
-    fontSize: 16,
-    fontFamily: fonts.bold,
-    color: colors.accent,
-  },
-  signInHint: {
-    fontFamily: fonts.regular,
-    fontSize: 14,
-    color: colors.textMuted,
-  },
-  signInLink: {
-    color: colors.primary,
+  headline: { fontSize: 26, fontFamily: fonts.bold, color: colors.text, textAlign: 'center' },
+  score: { fontSize: 64, fontFamily: fonts.extrabold, color: colors.primary, marginTop: spacing.sm },
+  scoreLabel: {
+    fontSize: 13,
     fontFamily: fonts.semibold,
+    color: colors.textMuted,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
   },
-  buttons: {
-    marginTop: spacing.xl,
-    gap: spacing.sm,
-    alignSelf: 'stretch',
-  },
-  primaryButton: {
-    backgroundColor: colors.primary,
-    borderRadius: radii.md,
-    paddingVertical: spacing.md,
-    alignItems: 'center',
-  },
-  primaryText: {
-    color: '#fff',
-    fontSize: 16,
-    fontFamily: fonts.bold,
-  },
+  sub: { marginTop: spacing.sm, fontFamily: fonts.regular, fontSize: 14, color: colors.textMuted },
+  link: { color: colors.primary, fontFamily: fonts.semibold },
+  newBest: { marginTop: spacing.sm, fontSize: 16, fontFamily: fonts.bold, color: colors.accent },
+  buttons: { marginTop: spacing.xl, gap: spacing.sm, alignSelf: 'stretch' },
+  primaryButton: { backgroundColor: colors.primary, borderRadius: radii.md, paddingVertical: spacing.md, alignItems: 'center' },
+  primaryText: { color: '#fff', fontSize: 16, fontFamily: fonts.bold },
   secondaryButton: {
     borderRadius: radii.md,
     borderWidth: 1,
@@ -129,12 +128,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     alignItems: 'center',
   },
-  secondaryText: {
-    color: colors.text,
-    fontSize: 16,
-    fontFamily: fonts.semibold,
-  },
-  pressed: {
-    opacity: 0.8,
-  },
+  secondaryText: { color: colors.text, fontSize: 16, fontFamily: fonts.semibold },
+  pressed: { opacity: 0.8 },
 });

@@ -206,7 +206,7 @@ export default function QuizIntroScreen() {
       <Animated.View style={[styles.footer, { opacity: textOpacity }]}>
         <Pressable
           style={({ pressed }) => [styles.startButton, pressed && styles.startPressed]}
-          onPress={() => router.push('/quiz/play')}
+          onPress={() => router.push('/quiz/play?mode=ten')}
           disabled={loading || words.length < 4}
           accessibilityRole="button"
           accessibilityLabel="Start quiz"

@@ -1,14 +1,13 @@
 import type { Word } from '../types/database';
+import { CHARACTER_SLUGS } from './characterArt';
 
 export const QUIZ_LENGTH = 10;
 const OPTIONS_PER_QUESTION = 4;
+const MATCH_SIZE = 4; // words per matching board
 
-// A round mixes three formats in a gentle difficulty ramp: recognise the
-// definition, then recognise the term, then recall the term unprompted.
-const MEANING_COUNT = 5;
-const REVERSE_COUNT = 3;
-// remainder of QUIZ_LENGTH becomes typed questions
-
+// A round mixes formats in a gentle difficulty ramp — recognise the definition,
+// fill a gap in real usage, recognise the term, name the character, recall the
+// term unprompted — and closes with a matching board.
 export type QuizQuestion =
   | {
       kind: 'meaning'; // show the term, pick the definition
@@ -23,8 +22,26 @@ export type QuizQuestion =
       correctIndex: number;
     }
   | {
+      kind: 'blank'; // fill the missing word in the example sentence
+      word: Word;
+      sentence: string; // the example with the term replaced by a gap
+      options: string[];
+      correctIndex: number;
+    }
+  | {
+      kind: 'character'; // show the illustration, pick the word
+      word: Word;
+      options: string[];
+      correctIndex: number;
+    }
+  | {
       kind: 'typed'; // show the definition, type the term
       word: Word;
+    }
+  | {
+      kind: 'match'; // pair four words with their definitions
+      words: Word[]; // display order (terms)
+      defs: string[]; // shuffled definitions
     };
 
 function shuffle<T>(items: T[]): T[] {
@@ -44,16 +61,43 @@ function normalise(text: string): string {
     .trim();
 }
 
-// Terms like "Vada/Varda" or "Barkey/Barkie/Barky" list variants — any one of
-// them (or the whole string) counts as a correct typed answer.
+// Split a term into its spellings ("Vada / varda" -> ["Vada", "varda"]).
+function spellings(term: string): string[] {
+  return term
+    .split(/[/,]/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+// Terms like "Vada/Varda" list variants — any one (or the whole string) counts.
 export function isTypedAnswerCorrect(word: Word, answer: string): boolean {
   const given = normalise(answer);
   if (!given) return false;
-  const variants = word.term
-    .split(/[/,]/)
-    .map(normalise)
-    .filter(Boolean);
+  const variants = spellings(word.term).map(normalise);
   return variants.includes(given) || normalise(word.term) === given;
+}
+
+// Whether a word can host a fill-in-the-blank: its example must contain one of
+// its spellings so we can blank it out. Returns the gapped sentence, or null.
+function blankSentence(word: Word): string | null {
+  if (!word.example) return null;
+  for (const v of spellings(word.term)) {
+    const re = new RegExp(`\\b${v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+    if (re.test(word.example)) return word.example.replace(re, '  ______  ');
+  }
+  return null;
+}
+
+function hasArt(word: Word): boolean {
+  return CHARACTER_SLUGS.includes(word.slug);
+}
+
+function termOptions(word: Word, pool: Word[]): { options: string[]; correctIndex: number } {
+  const distractors = shuffle(pool.filter((w) => w.id !== word.id && w.term !== word.term))
+    .slice(0, OPTIONS_PER_QUESTION - 1)
+    .map((w) => w.term);
+  const options = shuffle([word.term, ...distractors]);
+  return { options, correctIndex: options.indexOf(word.term) };
 }
 
 function buildMeaning(word: Word, pool: Word[]): QuizQuestion {
@@ -67,31 +111,106 @@ function buildMeaning(word: Word, pool: Word[]): QuizQuestion {
 }
 
 function buildReverse(word: Word, pool: Word[]): QuizQuestion {
-  const distractors = shuffle(pool.filter((w) => w.id !== word.id && w.term !== word.term))
-    .slice(0, OPTIONS_PER_QUESTION - 1)
-    .map((w) => w.term);
-  const options = shuffle([word.term, ...distractors]);
-  return { kind: 'reverse', word, options, correctIndex: options.indexOf(word.term) };
+  const { options, correctIndex } = termOptions(word, pool);
+  return { kind: 'reverse', word, options, correctIndex };
 }
 
-// Builds a mixed round entirely from the cached word list. Distractors are real
-// definitions/terms from other words, so options read plausibly. Words with
-// duplicate definitions (e.g. two terms for "drink") are excluded from each
-// other's option sets to avoid two "correct" answers appearing at once.
-// `from` narrows which words get asked (e.g. the SRS due queue) while `words`
-// stays the full pool so distractors remain varied.
+function buildBlank(word: Word, pool: Word[]): QuizQuestion | null {
+  const sentence = blankSentence(word);
+  if (!sentence) return null;
+  const { options, correctIndex } = termOptions(word, pool);
+  return { kind: 'blank', word, sentence, options, correctIndex };
+}
+
+function buildCharacter(word: Word, pool: Word[]): QuizQuestion | null {
+  if (!hasArt(word)) return null;
+  const { options, correctIndex } = termOptions(word, pool);
+  return { kind: 'character', word, options, correctIndex };
+}
+
+// A match board scored every pair correctly (used for scoring).
+// pairs[i] = index into q.defs the player assigned to word i.
+export function isMatchComplete(
+  q: Extract<QuizQuestion, { kind: 'match' }>,
+  pairs: (number | null)[]
+): boolean {
+  return q.words.every((w, i) => pairs[i] !== null && q.defs[pairs[i] as number] === w.definition);
+}
+
+const SINGLE_FORMATS = ['meaning', 'reverse', 'blank', 'character', 'typed'] as const;
+
+function buildSingle(fmt: (typeof SINGLE_FORMATS)[number], word: Word, pool: Word[]): QuizQuestion | null {
+  switch (fmt) {
+    case 'meaning':
+      return buildMeaning(word, pool);
+    case 'reverse':
+      return buildReverse(word, pool);
+    case 'blank':
+      return buildBlank(word, pool);
+    case 'character':
+      return buildCharacter(word, pool);
+    case 'typed':
+      return { kind: 'typed', word };
+  }
+}
+
+// Draw ONE question in a random format from a random unused word — the engine
+// behind every mode, so questions and formats are always randomised. `used`
+// tracks words already asked this game (mutated); `pickFrom` narrows which
+// words get asked (e.g. the SRS due queue) while `pool` stays the distractor
+// source. Returns null when no more questions can be built.
+export function nextQuestion(
+  pool: Word[],
+  used: Set<string>,
+  pickFrom?: Word[]
+): QuizQuestion | null {
+  const askable = (pickFrom && pickFrom.length > 0 ? pickFrom : pool).filter(
+    (w) => !used.has(w.id)
+  );
+  if (askable.length === 0) return null;
+
+  // Occasionally a matching board, when there's room for four fresh words.
+  if (askable.length >= MATCH_SIZE + 1 && Math.random() < 0.18) {
+    const picks: Word[] = [];
+    const seenDefs = new Set<string>();
+    for (const w of shuffle(askable)) {
+      if (seenDefs.has(w.definition)) continue;
+      seenDefs.add(w.definition);
+      picks.push(w);
+      if (picks.length === MATCH_SIZE) break;
+    }
+    if (picks.length === MATCH_SIZE) {
+      picks.forEach((w) => used.add(w.id));
+      return { kind: 'match', words: picks, defs: shuffle(picks.map((w) => w.definition)) };
+    }
+  }
+
+  // Single-word: pick a random format, then the first unused word it fits.
+  for (const fmt of shuffle([...SINGLE_FORMATS])) {
+    for (const w of shuffle(askable)) {
+      const q = buildSingle(fmt, w, pool);
+      if (q) {
+        used.add(w.id);
+        return q;
+      }
+    }
+  }
+  return null;
+}
+
+// A fixed-length round (Mode 1 / review). Endless modes call nextQuestion
+// directly as the player advances.
 export function generateQuiz(
   words: Word[],
   length: number = QUIZ_LENGTH,
   from?: Word[]
 ): QuizQuestion[] {
-  const source = from && from.length > 0 ? from : words;
-  const questionWords = shuffle(source).slice(0, Math.min(length, source.length));
-
-  return questionWords.map((word, i) => {
-    if (i < Math.min(MEANING_COUNT, questionWords.length)) return buildMeaning(word, words);
-    if (i < Math.min(MEANING_COUNT + REVERSE_COUNT, questionWords.length))
-      return buildReverse(word, words);
-    return { kind: 'typed', word };
-  });
+  const used = new Set<string>();
+  const screens: QuizQuestion[] = [];
+  for (let i = 0; i < length; i++) {
+    const q = nextQuestion(words, used, from);
+    if (!q) break;
+    screens.push(q);
+  }
+  return screens;
 }

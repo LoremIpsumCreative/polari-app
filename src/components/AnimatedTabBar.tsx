@@ -17,6 +17,7 @@ import {
   type IconProps,
 } from '@tabler/icons-react-native';
 import { colors, fonts } from '../lib/theme';
+import { QUIZ_MODES, QUIZ_MODE_ORDER } from '../lib/quizModes';
 
 const BUBBLE_SIZE = 56;
 // The ring around the bubble, painted in the screens' background colour so the
@@ -62,17 +63,29 @@ type Satellite = {
   disabled: boolean;
 };
 
-const DASHBOARD_SATELLITES: Satellite[] = [
-  { key: 'favourites', label: 'Favourites', Icon: IconHeart, disabled: false },
-  { key: 'achievements', label: 'Achievements', Icon: IconTrophy, disabled: false },
-  { key: 'gallery', label: 'Gallery', Icon: IconPhoto, disabled: false },
-];
+// Tabs that open a satellite fan instead of just navigating. Dashboard fans out
+// its sub-screens; Quiz fans out the three game modes.
+const FAN_TABS: Record<string, Satellite[]> = {
+  favourites: [
+    { key: 'favourites', label: 'Favourites', Icon: IconHeart, disabled: false },
+    { key: 'achievements', label: 'Achievements', Icon: IconTrophy, disabled: false },
+    { key: 'gallery', label: 'Gallery', Icon: IconPhoto, disabled: false },
+  ],
+  quiz: QUIZ_MODE_ORDER.map((id) => ({
+    key: id,
+    label: QUIZ_MODES[id].label,
+    Icon: QUIZ_MODES[id].Icon,
+    disabled: false,
+  })),
+};
 
 // RN-web only supports the JS animation driver
 const useNative = Platform.OS !== 'web';
 
-function isDashboardRoute(routeName: string): boolean {
-  return routeName.replace(/\/index$/, '') === 'favourites';
+// The route "base" (strips the auto "/index") if this tab has a fan, else null.
+function fanBaseFor(routeName: string): string | null {
+  const base = routeName.replace(/\/index$/, '');
+  return base in FAN_TABS ? base : null;
 }
 
 function TabItem({
@@ -125,11 +138,13 @@ function TabItem({
 }
 
 function SatelliteFan({
+  satellites,
   progress,
   centerX,
   open,
   onSelect,
 }: {
+  satellites: Satellite[];
   progress: Animated.Value;
   centerX: number;
   open: boolean;
@@ -137,7 +152,7 @@ function SatelliteFan({
 }) {
   return (
     <>
-      {DASHBOARD_SATELLITES.map((sat, i) => {
+      {satellites.map((sat, i) => {
         const angle = (FAN_ANGLES_DEG[i] * Math.PI) / 180;
         const dx = Math.cos(angle) * FAN_RADIUS;
         const dy = -Math.sin(angle) * FAN_RADIUS;
@@ -207,10 +222,13 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
 
   const bubbleX = useRef(new Animated.Value(0)).current;
   const fanProgress = useRef(new Animated.Value(0)).current;
-  const [fanOpen, setFanOpen] = useState(false);
+  // Which tab's fan is open (route base) — null when closed.
+  const [fanRoute, setFanRoute] = useState<string | null>(null);
 
-  const dashboardIndex = state.routes.findIndex((r) => isDashboardRoute(r.name));
-  const dashboardActive = state.index === dashboardIndex;
+  const fanIndex = fanRoute
+    ? state.routes.findIndex((r) => fanBaseFor(r.name) === fanRoute)
+    : -1;
+  const fanSatellites = fanRoute ? FAN_TABS[fanRoute] : [];
 
   const activeRoute = state.routes[state.index];
   const activeRouteName = activeRoute?.name.replace(/\/index$/, '') ?? '';
@@ -239,26 +257,32 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
     }).start();
   }, [state.index, tabWidth, bubbleX]);
 
-  // Leaving the dashboard tab always folds the fan away
+  // Leaving the fan's tab always folds it away
+  const activeBase = activeRoute?.name.replace(/\/index$/, '') ?? '';
   useEffect(() => {
-    if (!dashboardActive && fanOpen) setFanOpen(false);
-  }, [dashboardActive, fanOpen]);
+    if (fanRoute && activeBase !== fanRoute) setFanRoute(null);
+  }, [activeBase, fanRoute]);
 
   useEffect(() => {
     Animated.spring(fanProgress, {
-      toValue: fanOpen ? 1 : 0,
+      toValue: fanRoute ? 1 : 0,
       useNativeDriver: useNative,
       friction: 8,
       tension: 70,
     }).start();
-  }, [fanOpen, fanProgress]);
+  }, [fanRoute, fanProgress]);
 
   function handleSatelliteSelect(key: string) {
-    setFanOpen(false);
-    // The dashboard route already shows the favourites screen; the other
-    // satellites push their screens within the dashboard stack.
-    if (key === 'achievements') router.push('/favourites/achievements');
-    else if (key === 'gallery') router.push('/favourites/gallery');
+    const from = fanRoute;
+    setFanRoute(null);
+    if (from === 'favourites') {
+      // The dashboard route already shows favourites; the others push in-stack.
+      if (key === 'achievements') router.push('/favourites/achievements');
+      else if (key === 'gallery') router.push('/favourites/gallery');
+    } else if (from === 'quiz') {
+      // Each mode starts a game; the play screen runs the countdown first.
+      router.push(`/quiz/play?mode=${key}`);
+    }
   }
 
   return (
@@ -275,11 +299,12 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
         />
       ) : null}
 
-      {tabWidth > 0 && dashboardIndex >= 0 ? (
+      {tabWidth > 0 && fanIndex >= 0 ? (
         <SatelliteFan
+          satellites={fanSatellites}
           progress={fanProgress}
-          centerX={dashboardIndex * tabWidth + tabWidth / 2}
-          open={fanOpen}
+          centerX={fanIndex * tabWidth + tabWidth / 2}
+          open={!!fanRoute}
           onSelect={handleSatelliteSelect}
         />
       ) : null}
@@ -298,17 +323,18 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
             });
             if (event.defaultPrevented) return;
 
-            if (isDashboardRoute(route.name)) {
+            const base = fanBaseFor(route.name);
+            if (base) {
               if (active) {
-                setFanOpen((open) => !open);
+                setFanRoute((open) => (open === base ? null : base));
               } else {
                 navigation.navigate(route.name, route.params);
-                setFanOpen(true);
+                setFanRoute(base);
               }
               return;
             }
 
-            setFanOpen(false);
+            setFanRoute(null);
             if (!active) {
               navigation.navigate(route.name, route.params);
             }

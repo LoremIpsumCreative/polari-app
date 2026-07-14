@@ -178,6 +178,33 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_stats: {
+        Row: {
+          user_id: string
+          ten_run_current: number
+          ten_run_best: number
+          timed_best: number
+          life_best: number
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          ten_run_current?: number
+          ten_run_best?: number
+          timed_best?: number
+          life_best?: number
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          ten_run_current?: number
+          ten_run_best?: number
+          timed_best?: number
+          life_best?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_streaks: {
         Row: {
           current_streak: number
@@ -335,6 +362,17 @@ export type Database = {
           words_learned_count: number
           streak_freezes: number
         }[]
+      }
+      record_quiz_game: {
+        Args: { p_mode: string; p_score: number; p_ten_run?: number }
+        Returns: {
+          user_id: string
+          ten_run_current: number
+          ten_run_best: number
+          timed_best: number
+          life_best: number
+          updated_at: string
+        }
       }
     }
     Enums: {
