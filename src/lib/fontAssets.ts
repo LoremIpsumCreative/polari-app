@@ -8,4 +8,6 @@ export const fontAssets = {
   'Digitale-Semibold': require('../../assets/fonts/Digitale-Semibold.otf'),
   'Digitale-Bold': require('../../assets/fonts/Digitale-Bold.otf'),
   'Digitale-Extrabold': require('../../assets/fonts/Digitale-Extrabold.otf'),
+  // Display face for quiz headlines, mode chips and countdown titles.
+  'MouseMemoirs-Regular': require('../../assets/fonts/MouseMemoirs-Regular.ttf'),
 };

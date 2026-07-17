@@ -7,4 +7,6 @@ export const fontAssets = {
   'Digitale-Semibold': require('../../assets/fonts/Digitale-Semibold.woff2'),
   'Digitale-Bold': require('../../assets/fonts/Digitale-Bold.woff2'),
   'Digitale-Extrabold': require('../../assets/fonts/Digitale-Extrabold.woff2'),
+  // Display face for quiz headlines, mode chips and countdown titles.
+  'MouseMemoirs-Regular': require('../../assets/fonts/MouseMemoirs-Regular.woff2'),
 };
