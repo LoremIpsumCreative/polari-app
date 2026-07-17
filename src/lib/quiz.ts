@@ -5,9 +5,8 @@ export const QUIZ_LENGTH = 10;
 const OPTIONS_PER_QUESTION = 4;
 const MATCH_SIZE = 4; // words per matching board
 
-// A round mixes formats in a gentle difficulty ramp — recognise the definition,
-// fill a gap in real usage, recognise the term, name the character, recall the
-// term unprompted — and closes with a matching board.
+// A round mixes formats — recognise the definition, recognise the term, name the
+// character — and closes with a matching board.
 export type QuizQuestion =
   | {
       kind: 'meaning'; // show the term, pick the definition
@@ -22,21 +21,10 @@ export type QuizQuestion =
       correctIndex: number;
     }
   | {
-      kind: 'blank'; // fill the missing word in the example sentence
-      word: Word;
-      sentence: string; // the example with the term replaced by a gap
-      options: string[];
-      correctIndex: number;
-    }
-  | {
       kind: 'character'; // show the illustration, pick the word
       word: Word;
       options: string[];
       correctIndex: number;
-    }
-  | {
-      kind: 'typed'; // show the definition, type the term
-      word: Word;
     }
   | {
       kind: 'match'; // pair four words with their definitions
@@ -51,41 +39,6 @@ function shuffle<T>(items: T[]): T[] {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
-}
-
-// Case/punctuation-insensitive comparison for typed answers.
-function normalise(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim();
-}
-
-// Split a term into its spellings ("Vada / varda" -> ["Vada", "varda"]).
-function spellings(term: string): string[] {
-  return term
-    .split(/[/,]/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
-
-// Terms like "Vada/Varda" list variants — any one (or the whole string) counts.
-export function isTypedAnswerCorrect(word: Word, answer: string): boolean {
-  const given = normalise(answer);
-  if (!given) return false;
-  const variants = spellings(word.term).map(normalise);
-  return variants.includes(given) || normalise(word.term) === given;
-}
-
-// Whether a word can host a fill-in-the-blank: its example must contain one of
-// its spellings so we can blank it out. Returns the gapped sentence, or null.
-function blankSentence(word: Word): string | null {
-  if (!word.example) return null;
-  for (const v of spellings(word.term)) {
-    const re = new RegExp(`\\b${v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-    if (re.test(word.example)) return word.example.replace(re, '  ______  ');
-  }
-  return null;
 }
 
 function hasArt(word: Word): boolean {
@@ -115,13 +68,6 @@ function buildReverse(word: Word, pool: Word[]): QuizQuestion {
   return { kind: 'reverse', word, options, correctIndex };
 }
 
-function buildBlank(word: Word, pool: Word[]): QuizQuestion | null {
-  const sentence = blankSentence(word);
-  if (!sentence) return null;
-  const { options, correctIndex } = termOptions(word, pool);
-  return { kind: 'blank', word, sentence, options, correctIndex };
-}
-
 function buildCharacter(word: Word, pool: Word[]): QuizQuestion | null {
   if (!hasArt(word)) return null;
   const { options, correctIndex } = termOptions(word, pool);
@@ -137,7 +83,7 @@ export function isMatchComplete(
   return q.words.every((w, i) => pairs[i] !== null && q.defs[pairs[i] as number] === w.definition);
 }
 
-const SINGLE_FORMATS = ['meaning', 'reverse', 'blank', 'character', 'typed'] as const;
+const SINGLE_FORMATS = ['meaning', 'reverse', 'character'] as const;
 
 function buildSingle(fmt: (typeof SINGLE_FORMATS)[number], word: Word, pool: Word[]): QuizQuestion | null {
   switch (fmt) {
@@ -145,12 +91,8 @@ function buildSingle(fmt: (typeof SINGLE_FORMATS)[number], word: Word, pool: Wor
       return buildMeaning(word, pool);
     case 'reverse':
       return buildReverse(word, pool);
-    case 'blank':
-      return buildBlank(word, pool);
     case 'character':
       return buildCharacter(word, pool);
-    case 'typed':
-      return { kind: 'typed', word };
   }
 }
 
