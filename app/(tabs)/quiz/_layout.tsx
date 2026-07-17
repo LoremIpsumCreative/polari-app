@@ -5,8 +5,8 @@ export default function QuizLayout() {
   return (
     <Stack screenOptions={headerOptions}>
       <Stack.Screen name="index" options={{ title: 'Quiz', headerShown: false }} />
-      <Stack.Screen name="play" options={{ title: 'Quiz', headerBackVisible: false }} />
-      <Stack.Screen name="results" options={{ title: 'Results', headerBackVisible: false }} />
+      <Stack.Screen name="play" options={{ title: 'Quiz', headerShown: false }} />
+      <Stack.Screen name="results" options={{ title: 'Results', headerShown: false }} />
     </Stack>
   );
 }

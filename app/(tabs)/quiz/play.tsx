@@ -1,44 +1,35 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { IconClockHour4, IconHeart } from '@tabler/icons-react-native';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import { IconChevronLeft, IconFlame, IconTrophy } from '@tabler/icons-react-native';
 import { useWords } from '../../../src/lib/words';
 import { useProgress } from '../../../src/lib/progress';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { useCharacterArt } from '../../../src/lib/remoteArt';
-import { nextQuestion, isTypedAnswerCorrect, QUIZ_LENGTH, type QuizQuestion } from '../../../src/lib/quiz';
+import { nextQuestion, QUIZ_LENGTH, type QuizQuestion } from '../../../src/lib/quiz';
 import { QUIZ_MODES, isQuizModeId, type QuizModeId } from '../../../src/lib/quizModes';
-import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
+import { setStageDark } from '../../../src/lib/stageDark';
+import { colors, fonts } from '../../../src/lib/theme';
 
-const PAIR_COLORS = ['#0C66E4', '#27958A', '#DE9A26', '#B4574A'];
+// All geometry lives in the Figma frames' 394-wide design space and is scaled
+// by the device width, so the screens reproduce the mockups proportionally.
+const DESIGN_WIDTH = 394;
 
-function mmss(total: number) {
-  const m = Math.floor(total / 60);
-  const s = total % 60;
-  return `${m}:${s.toString().padStart(2, '0')}`;
-}
-
-// 3 · 2 · 1 · Go! start countdown, shown before every game.
-function Countdown({ onDone }: { onDone: () => void }) {
-  const [n, setN] = useState(3);
-  useEffect(() => {
-    if (n < 0) {
-      onDone();
-      return;
-    }
-    const t = setTimeout(() => setN((v) => v - 1), n === 0 ? 550 : 700);
-    return () => clearTimeout(t);
-  }, [n, onDone]);
-  return (
-    <View style={styles.countdown}>
-      <Text style={styles.countdownReady}>{n > 0 ? (n === 3 ? 'Ready…' : n === 2 ? 'Set…' : 'Go!') : 'Go!'}</Text>
-      <Text style={styles.countdownNum}>{n > 0 ? n : '✨'}</Text>
-    </View>
-  );
-}
+// Match-pair palette in pairing order: yellow, blue, green, pink
+// (Figma "Match Word to Definition", frame 1353:439).
+const PAIR_STYLES = [
+  { fill: '#FFFBEC', ink: '#B38600' },
+  { fill: '#F4F9FF', ink: '#1D7AFC' },
+  { fill: '#F7FFEC', ink: '#5B7F24' },
+  { fill: '#FFF6FC', ink: '#CD519D' },
+] as const;
 
 export default function QuizPlayScreen() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const s = Math.min(width, 430) / DESIGN_WIDTH;
+
   const params = useLocalSearchParams<{ mode?: string }>();
   const isReview = params.mode === 'review';
   const modeId: QuizModeId = isQuizModeId(params.mode) ? params.mode : 'ten';
@@ -46,7 +37,7 @@ export default function QuizPlayScreen() {
 
   const { words } = useWords();
   const { dueWordIds, recordAnswer } = useProgress();
-  const { stats, recordGame } = useQuizStats();
+  const { stats, recordGame, bestFor } = useQuizStats();
   const { artFor } = useCharacterArt();
 
   const pickFrom = useMemo(
@@ -57,6 +48,7 @@ export default function QuizPlayScreen() {
   // ── Game state ──
   const usedRef = useRef<Set<string>>(new Set());
   const [phase, setPhase] = useState<'countdown' | 'playing'>('countdown');
+  const [count, setCount] = useState(3);
   const [question, setQuestion] = useState<QuizQuestion | null>(null);
   // Scoring accumulators, mirrored to a ref so the timer can read them fresh.
   const [sc, setSc] = useState({ correct: 0, run: 0, best: 0, answered: 0 });
@@ -71,15 +63,33 @@ export default function QuizPlayScreen() {
 
   // Per-question answer state
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [typedAnswer, setTypedAnswer] = useState('');
-  const [typedResult, setTypedResult] = useState<'correct' | 'wrong' | null>(null);
   const [matchSel, setMatchSel] = useState<number | null>(null);
   const [matchPairs, setMatchPairs] = useState<(number | null)[]>([null, null, null, null]);
+  // Pair colours are dealt in pairing order; a word keeps its colour until unpaired.
+  const [pairColor, setPairColor] = useState<(number | null)[]>([null, null, null, null]);
   const [matchDone, setMatchDone] = useState(false);
 
   // Timers
-  const [remaining, setRemaining] = useState(mode.countdownSeconds ?? 0); // countdown (timed)
-  const [elapsed, setElapsed] = useState(0); // count-up (life)
+  const [remaining, setRemaining] = useState(mode.countdownSeconds ?? 0);
+
+  // The countdown screen is a dark stage; questions are light again.
+  useEffect(() => {
+    setStageDark(phase === 'countdown');
+    return () => setStageDark(false);
+  }, [phase]);
+
+  // 3 · 2 · 1 → start. If the word list hasn't arrived yet the countdown holds
+  // at 1 and starts as soon as it lands (deep links race the fetch).
+  useEffect(() => {
+    if (phase !== 'countdown') return;
+    if (count <= 0) {
+      if (words.length >= 4) startGame();
+      return;
+    }
+    const t = setTimeout(() => setCount((c) => c - 1), 800);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, count, words.length]);
 
   function endGame(finalScore: number) {
     if (endedRef.current) return;
@@ -96,7 +106,6 @@ export default function QuizPlayScreen() {
     });
   }
 
-  // Start the game once the countdown finishes and words are loaded.
   function startGame() {
     usedRef.current = new Set();
     endedRef.current = false;
@@ -105,41 +114,56 @@ export default function QuizPlayScreen() {
     scRef.current = init;
     setSc(init);
     setRemaining(mode.countdownSeconds ?? 0);
-    setElapsed(0);
     setQuestion(nextQuestion(words, usedRef.current, pickFrom));
     setPhase('playing');
   }
 
-  // Countdown clock for the timed mode; count-up for the life mode.
+  // Countdown clock for the timed mode. The tick only decrements; the game-over
+  // navigation lives in its own effect because calling router.replace inside a
+  // state updater is a side effect during render (React warns and may misfire).
   useEffect(() => {
-    if (phase !== 'playing') return;
-    if (mode.timer === 'countdown') {
-      const t = setInterval(() => {
-        setRemaining((r) => {
-          if (r <= 1) {
-            clearInterval(t);
-            endGame(scRef.current.correct);
-            return 0;
-          }
-          return r - 1;
-        });
-      }, 1000);
-      return () => clearInterval(t);
-    }
-    if (mode.timer === 'elapsed') {
-      const t = setInterval(() => setElapsed((e) => e + 1), 1000);
-      return () => clearInterval(t);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (phase !== 'playing' || mode.timer !== 'countdown') return;
+    const t = setInterval(() => setRemaining((r) => Math.max(0, r - 1)), 1000);
+    return () => clearInterval(t);
   }, [phase, mode.timer]);
 
+  useEffect(() => {
+    if (phase !== 'playing' || mode.timer !== 'countdown' || remaining > 0) return;
+    endGame(scRef.current.correct);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, mode.timer, remaining]);
+
+  // ── Countdown screen (dark stage, per-mode copy) ──
   if (phase === 'countdown') {
     return (
-      <View style={styles.container}>
-        <Countdown onDone={startGame} />
+      <View style={styles.stage}>
+        <Svg style={StyleSheet.absoluteFill} width="100%" height="100%" pointerEvents="none">
+          <Defs>
+            <LinearGradient id="cdFade" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor={colors.stageDeep} stopOpacity={0} />
+              <Stop offset="1" stopColor={colors.stageDeep} stopOpacity={1} />
+            </LinearGradient>
+          </Defs>
+          <Rect x="0" y="47.7%" width="100%" height="52.3%" fill="url(#cdFade)" />
+        </Svg>
+
+        <View style={[styles.cdIcon, { top: 80 * s, width: 43 * s, height: 43 * s, borderRadius: 22 * s }]}>
+          <mode.Icon size={17 * s} color={colors.textMuted} />
+        </View>
+        <Text style={[styles.cdTitle, { top: 141 * s, fontSize: 80 * s }]}>{isReview ? 'Review' : mode.label}</Text>
+        <View style={[styles.cdBlurb, { top: 280 * s, width: 295 * s, borderRadius: 10 * s, paddingVertical: 16 * s }]}>
+          <Text style={[styles.cdBlurbText, { fontSize: 14 * s, width: 262 * s }]}>
+            {isReview ? 'A quick pass over your due words.' : mode.blurb}
+          </Text>
+        </View>
+        <Text style={[styles.cdStartsIn, { top: 538 * s, left: 69 * s, fontSize: 20 * s }]}>Quiz starts in:</Text>
+        <Text style={[styles.cdNumber, { top: 445 * s, left: 217 * s, fontSize: 200 * s }]}>
+          {Math.max(count, 1)}
+        </Text>
       </View>
     );
   }
+
   if (!question) {
     return (
       <View style={styles.center}>
@@ -149,11 +173,9 @@ export default function QuizPlayScreen() {
   }
 
   const q = question;
-  const isTyped = q.kind === 'typed';
   const isMatch = q.kind === 'match';
-  const isMC = q.kind === 'meaning' || q.kind === 'reverse' || q.kind === 'blank' || q.kind === 'character';
-  const answered = isMatch ? matchDone : isTyped ? typedResult !== null : selectedIndex !== null;
-  const termAnswer = q.kind === 'reverse' || q.kind === 'blank' || q.kind === 'character' || q.kind === 'typed';
+  const isMC = q.kind === 'meaning' || q.kind === 'reverse' || q.kind === 'character';
+  const answered = isMatch ? matchDone : selectedIndex !== null;
 
   const matchCorrectCount = isMatch
     ? q.words.reduce(
@@ -163,11 +185,8 @@ export default function QuizPlayScreen() {
     : 0;
   const wasCorrect = isMatch
     ? matchCorrectCount === q.words.length
-    : isTyped
-      ? typedResult === 'correct'
-      : isMC && selectedIndex === q.correctIndex;
+    : isMC && selectedIndex === q.correctIndex;
 
-  // Register a resolved answer: update scoring, feed the SRS, handle life death.
   function resolve(correct: boolean, wordIds: string[]) {
     wordIds.forEach((id) => recordAnswer(id, correct));
     applySc((p) => {
@@ -187,24 +206,31 @@ export default function QuizPlayScreen() {
     resolve(index === q.correctIndex, [q.word.id]);
   }
 
-  function handleTypedSubmit() {
-    if (answered || q.kind !== 'typed' || !typedAnswer.trim()) return;
-    const correct = isTypedAnswerCorrect(q.word, typedAnswer);
-    setTypedResult(correct ? 'correct' : 'wrong');
-    resolve(correct, [q.word.id]);
+  // The smallest pair colour not currently held by any word.
+  function nextColor(colors_: (number | null)[]): number {
+    for (let c = 0; c < PAIR_STYLES.length; c++) if (!colors_.includes(c)) return c;
+    return 0;
+  }
+
+  function handleMatchWord(i: number) {
+    if (matchDone) return;
+    setMatchSel((cur) => (cur === i ? null : i));
   }
 
   function handleMatchDef(defIndex: number) {
     if (matchDone || matchSel === null || q.kind !== 'match') return;
-    const next = matchPairs.map((v) => (v === defIndex ? null : v));
-    next[matchSel] = defIndex;
+    const nextPairs = matchPairs.map((v) => (v === defIndex ? null : v));
+    const nextColors = pairColor.map((c, i) => (nextPairs[i] === null && i !== matchSel ? null : c));
+    nextPairs[matchSel] = defIndex;
+    if (nextColors[matchSel] === null) nextColors[matchSel] = nextColor(nextColors);
     setMatchSel(null);
-    setMatchPairs(next);
-    if (next.every((v) => v !== null)) {
+    setMatchPairs(nextPairs);
+    setPairColor(nextColors);
+    if (nextPairs.every((v) => v !== null)) {
       setMatchDone(true);
       let allRight = true;
       q.words.forEach((w, i) => {
-        const ok = q.defs[next[i] as number] === w.definition;
+        const ok = q.defs[nextPairs[i] as number] === w.definition;
         if (!ok) allRight = false;
         recordAnswer(w.id, ok);
       });
@@ -221,7 +247,6 @@ export default function QuizPlayScreen() {
     }
   }
 
-  // End conditions after this answer
   const reachedLimit = modeId === 'ten' && sc.answered >= (mode.questionLimit ?? QUIZ_LENGTH);
   const lifeOver = modeId === 'life' && answered && !wasCorrect;
   const willEnd = reachedLimit || lifeOver;
@@ -233,6 +258,7 @@ export default function QuizPlayScreen() {
   }
 
   function handleContinue() {
+    if (!answered) return;
     if (willEnd) {
       if (!isReview) recordGame(modeId, finalScoreForMode(), scRef.current.run);
       endGame(finalScoreForMode());
@@ -240,325 +266,314 @@ export default function QuizPlayScreen() {
     }
     setQuestion(nextQuestion(words, usedRef.current, pickFrom));
     setSelectedIndex(null);
-    setTypedAnswer('');
-    setTypedResult(null);
     setMatchSel(null);
     setMatchPairs([null, null, null, null]);
+    setPairColor([null, null, null, null]);
     setMatchDone(false);
   }
 
-  // ── Header: progress + live status chips ──
-  const header =
-    modeId === 'ten' ? (
-      <>
-        <View style={styles.progressTrack}>
-          <View
-            style={[
-              styles.progressFill,
-              { width: `${Math.min(1, (sc.answered + (answered ? 0 : 0)) / (mode.questionLimit ?? 10)) * 100}%` },
-            ]}
-          />
-        </View>
-        <Text style={styles.counter}>
-          Question {answered ? sc.answered : Math.min(sc.answered + 1, mode.questionLimit ?? 10)} of{' '}
-          {mode.questionLimit ?? 10}
-          {isReview ? '  ·  review' : `  ·  streak ${sc.run}`}
-        </Text>
-      </>
-    ) : (
-      <View style={styles.statusRow}>
-        <View style={[styles.statusChip, modeId === 'timed' && remaining <= 10 && styles.statusUrgent]}>
-          {modeId === 'timed' ? (
-            <IconClockHour4 size={16} color={remaining <= 10 ? colors.danger : colors.primary} />
-          ) : (
-            <IconHeart size={16} color={colors.primary} />
-          )}
-          <Text style={[styles.statusText, modeId === 'timed' && remaining <= 10 && styles.statusTextUrgent]}>
-            {modeId === 'timed' ? mmss(remaining) : mmss(elapsed)}
-          </Text>
-        </View>
-        <View style={styles.statusChip}>
-          <Text style={styles.statusText}>
-            {modeId === 'timed' ? `${sc.correct} correct` : `${sc.run} in a row`}
-          </Text>
-        </View>
-      </View>
-    );
+  // ── Header (per-mode: progress + stat pills, Figma 1114:368 / 1353:578 / 1353:680) ──
+  const questionNo = Math.min(sc.answered + (answered ? 0 : 1), mode.questionLimit ?? QUIZ_LENGTH);
+  const progress =
+    modeId === 'ten'
+      ? Math.min(1, sc.answered / (mode.questionLimit ?? QUIZ_LENGTH))
+      : modeId === 'timed'
+        ? remaining / (mode.countdownSeconds ?? 60)
+        : null;
+  const progressLabel =
+    modeId === 'ten'
+      ? `Question ${questionNo} of ${mode.questionLimit ?? QUIZ_LENGTH}`
+      : modeId === 'timed'
+        ? `${remaining} seconds remaining`
+        : null;
+  const leftPill =
+    modeId === 'ten'
+      ? { label: 'current streak:', value: sc.run }
+      : { label: 'current score:', value: modeId === 'timed' ? sc.correct : sc.run };
+  const highScore = isReview ? null : bestFor(modeId);
 
   const prompt =
     q.kind === 'meaning' ? (
-      <Text style={styles.prompt}>
-        What does <Text style={styles.promptTerm}>“{q.word.term}”</Text> mean?
+      <Text style={[styles.prompt, { left: 36 * s, top: 323 * s, width: 323 * s, fontSize: 22 * s }]}>
+        What does the word <Text style={styles.promptTerm}>{q.word.term}</Text> mean?
       </Text>
     ) : q.kind === 'reverse' ? (
-      <Text style={styles.prompt}>
-        Which word means <Text style={styles.promptTerm}>“{q.word.definition}”</Text>?
+      <Text style={[styles.prompt, { left: 36 * s, top: 323 * s, width: 323 * s, fontSize: 22 * s }]}>
+        What word also means <Text style={styles.promptTerm}>{q.word.definition}</Text>?
       </Text>
-    ) : q.kind === 'blank' ? (
-      <Text style={styles.prompt}>{q.sentence.replace(/______/, '⬚⬚⬚')}</Text>
     ) : q.kind === 'character' ? (
-      <Text style={styles.prompt}>Which word does this character bring to life?</Text>
-    ) : q.kind === 'match' ? (
-      <Text style={styles.promptSmall}>Match each word to its meaning.</Text>
+      <Text style={[styles.prompt, { left: 36 * s, top: 240 * s, width: 323 * s, fontSize: 22 * s }]}>
+        Which word does this character bring to life?
+      </Text>
     ) : (
-      <Text style={styles.prompt}>
-        Type the Polari for <Text style={styles.promptTerm}>“{q.word.definition}”</Text>
+      <Text style={[styles.promptMatch, { top: 272 * s, fontSize: 16 * s }]}>
+        Match each word to its meaning:
       </Text>
     );
 
+  const tileBase = { width: 166 * s, minHeight: 60 * s, borderRadius: 8 * s, padding: 12 * s };
+
   return (
-    <View style={styles.container}>
-      {header}
+    <View style={styles.screen}>
+      {/* Back to the quiz landing */}
+      <Pressable
+        style={[styles.backChip, { left: 17 * s, top: 23 * s, height: 28 * s }]}
+        onPress={() => router.replace('/quiz')}
+        accessibilityRole="button"
+        accessibilityLabel="Back to quizzes"
+      >
+        <IconChevronLeft size={10 * s} color={colors.text} />
+        <Text style={[styles.backText, { fontSize: 10 * s }]}>Quizzes</Text>
+      </Pressable>
+
+      {/* Mode chip */}
+      <View style={[styles.modeChip, { left: 21 * s, top: 68 * s, height: 53 * s, borderRadius: 12 * s, paddingHorizontal: 14 * s }]}>
+        <Text style={[styles.modeChipText, { fontSize: 34 * s }]}>{isReview ? 'Review' : mode.label}</Text>
+      </View>
+
+      {/* Progress rail (10 Q's and 1 Min only) */}
+      {progress !== null ? (
+        <>
+          <Text style={[styles.progressLabel, { left: 141 * s, top: 78 * s, fontSize: 10 * s }]}>
+            {progressLabel}
+          </Text>
+          <View
+            style={[
+              styles.progressTrack,
+              { left: 137 * s, top: 91 * s, width: 237 * s, height: 20 * s, borderRadius: 999 },
+            ]}
+          >
+            <View
+              style={[
+                styles.progressFill,
+                { width: Math.max(0, Math.min(1, progress)) * 229 * s, height: 12 * s, borderRadius: 999 },
+              ]}
+            />
+          </View>
+        </>
+      ) : null}
+
+      {/* Stat pills */}
+      <View style={[styles.statPill, { left: 33 * s, top: 148 * s, height: 35 * s, borderRadius: 8 * s }]}>
+        <IconFlame size={11 * s} color={colors.metaText} />
+        <Text style={[styles.statLabel, { fontSize: 10 * s }]}>{leftPill.label}</Text>
+        <Text style={[styles.statValue, { fontSize: 16 * s }]}>{String(leftPill.value).padStart(2, '0')}</Text>
+      </View>
+      {highScore !== null ? (
+        <View style={[styles.statPill, { left: 221 * s, top: 148 * s, height: 35 * s, borderRadius: 8 * s }]}>
+          <IconTrophy size={11 * s} color={colors.metaText} />
+          <Text style={[styles.statLabel, { fontSize: 10 * s }]}>high score:</Text>
+          <Text style={[styles.statValue, { fontSize: 16 * s }]}>{String(highScore).padStart(2, '0')}</Text>
+        </View>
+      ) : null}
+
       {prompt}
 
       {q.kind === 'character' ? (
         <Image
           source={artFor(q.word.slug)}
-          style={styles.characterImage}
+          style={{ position: 'absolute', left: 126 * s, top: 282 * s, width: 143 * s, height: 192 * s }}
           resizeMode="contain"
           accessibilityLabel="Mystery Polari character"
         />
       ) : null}
 
-      {/* Answer area fills the space between header and footer — no scroll */}
-      <View style={styles.answerArea}>
-        {isTyped ? (
-          <View style={styles.typedWrap}>
-            <TextInput
-              style={[
-                styles.typedInput,
-                typedResult === 'correct' && styles.typedInputCorrect,
-                typedResult === 'wrong' && styles.typedInputWrong,
-              ]}
-              placeholder="Your answer…"
-              placeholderTextColor={colors.textMuted}
-              value={typedAnswer}
-              onChangeText={setTypedAnswer}
-              editable={!answered}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onSubmitEditing={handleTypedSubmit}
-              returnKeyType="done"
-            />
-            {!answered ? (
-              <Pressable
-                style={({ pressed }) => [
-                  styles.submitButton,
-                  !typedAnswer.trim() && styles.submitDisabled,
-                  pressed && styles.continuePressed,
-                ]}
-                onPress={handleTypedSubmit}
-                disabled={!typedAnswer.trim()}
-              >
-                <Text style={styles.continueText}>Check</Text>
-              </Pressable>
-            ) : null}
-          </View>
-        ) : isMatch ? (
-          <>
-            {q.words.map((w, i) => {
-              const assigned = matchPairs[i];
-              const ok = matchDone && assigned !== null && q.defs[assigned] === w.definition;
-              const bad = matchDone && !ok;
-              return (
+      {/* Answers — anchored to the bottom like the mockups (grid ends 124 above
+          the bar), so tiles can grow upward without ever crowding the bubble. */}
+      {isMatch ? (
+        // Words run down the left column, meanings down the right (per Figma).
+        <View style={[styles.grid, { left: 21 * s, bottom: 124 * s, width: 352 * s, columnGap: 17 * s, rowGap: 20 * s }]}>
+          {q.words.map((w, i) => {
+            const paired = matchPairs[i] !== null;
+            const sel = matchSel === i;
+            const wordPal = paired ? PAIR_STYLES[pairColor[i] ?? 0] : null;
+            const j = i; // def shown in this row
+            const owner = matchPairs.findIndex((p) => p === j);
+            const defPal = owner !== -1 ? PAIR_STYLES[pairColor[owner] ?? 0] : null;
+            return (
+              <View key={w.id} style={{ flexDirection: 'row', columnGap: 17 * s }}>
                 <Pressable
-                  key={w.id}
-                  onPress={() => !matchDone && setMatchSel(i)}
+                  onPress={() => handleMatchWord(i)}
                   disabled={matchDone}
-                  style={({ pressed }) => [
-                    styles.matchChip,
-                    matchSel === i && styles.matchChipSel,
-                    assigned !== null && !matchDone && { borderColor: PAIR_COLORS[i] },
-                    ok && styles.optionCorrect,
-                    bad && styles.optionWrong,
-                    pressed && !matchDone && styles.optionPressed,
+                  style={[
+                    styles.tile,
+                    tileBase,
+                    wordPal
+                      ? { backgroundColor: wordPal.fill, borderColor: wordPal.ink, borderWidth: 1 }
+                      : sel
+                        ? { borderColor: colors.primary, borderWidth: 1 }
+                        : null,
                   ]}
                 >
-                  <View style={[styles.matchDot, { backgroundColor: assigned !== null ? PAIR_COLORS[i] : colors.fieldBorder }]} />
-                  <Text style={styles.matchTerm} numberOfLines={1}>
+                  <Text
+                    style={[
+                      styles.tileText,
+                      { fontSize: 14 * s },
+                      wordPal && { color: wordPal.ink, fontFamily: fonts.bold },
+                    ]}
+                  >
                     {w.term}
                   </Text>
                 </Pressable>
-              );
-            })}
-            <View style={styles.matchDivider} />
-            {q.defs.map((def, j) => {
-              const owner = matchPairs.findIndex((p) => p === j);
-              const paired = owner !== -1;
-              const ok = matchDone && paired && q.defs[j] === q.words[owner].definition;
-              const bad = matchDone && paired && !ok;
-              return (
                 <Pressable
-                  key={j}
                   onPress={() => handleMatchDef(j)}
                   disabled={matchDone || matchSel === null}
-                  style={({ pressed }) => [
-                    styles.matchChip,
-                    paired && !matchDone && { borderColor: PAIR_COLORS[owner] },
-                    ok && styles.optionCorrect,
-                    bad && styles.optionWrong,
-                    pressed && !matchDone && matchSel !== null && styles.optionPressed,
+                  style={[
+                    styles.tile,
+                    tileBase,
+                    defPal ? { backgroundColor: defPal.fill, borderColor: defPal.ink, borderWidth: 1 } : null,
                   ]}
                 >
-                  <View style={[styles.matchDot, { backgroundColor: paired ? PAIR_COLORS[owner] : colors.fieldBorder }]} />
-                  <Text style={styles.matchDef} numberOfLines={2}>
-                    {def}
+                  <Text
+                    style={[
+                      styles.tileText,
+                      { fontSize: 14 * s },
+                      defPal && { color: defPal.ink, fontFamily: fonts.bold },
+                    ]}
+                  >
+                    {q.defs[j]}
                   </Text>
                 </Pressable>
-              );
-            })}
-          </>
-        ) : (
-          q.options.map((option, index) => {
+              </View>
+            );
+          })}
+        </View>
+      ) : (
+        <View style={[styles.grid, { left: 21 * s, bottom: 124 * s, width: 352 * s, columnGap: 20 * s, rowGap: 20 * s }]}>
+          {q.options.map((option, index) => {
             const isCorrect = index === q.correctIndex;
             const isSelected = index === selectedIndex;
+            const showCorrect = answered && isCorrect;
+            const showWrong = answered && isSelected && !isCorrect;
             return (
               <Pressable
                 key={index}
                 onPress={() => handleSelect(index)}
                 disabled={answered}
                 style={({ pressed }) => [
-                  styles.option,
-                  pressed && !answered && styles.optionPressed,
-                  answered && isCorrect && styles.optionCorrect,
-                  answered && isSelected && !isCorrect && styles.optionWrong,
+                  styles.tile,
+                  tileBase,
+                  pressed && !answered && { borderColor: colors.primary },
+                  showCorrect && styles.tileCorrect,
+                  showWrong && styles.tileWrong,
                 ]}
               >
                 <Text
-                  numberOfLines={3}
                   style={[
-                    styles.optionText,
-                    answered && isCorrect && styles.optionTextCorrect,
-                    answered && isSelected && !isCorrect && styles.optionTextWrong,
+                    styles.tileText,
+                    { fontSize: 14 * s },
+                    showCorrect && styles.tileTextCorrect,
+                    showWrong && styles.tileTextWrong,
                   ]}
                 >
                   {option}
                 </Text>
               </Pressable>
             );
-          })
-        )}
-      </View>
+          })}
+        </View>
+      )}
 
-      {/* Footer space is always reserved so the answer area never resizes */}
-      <View style={styles.footer}>
-        {answered ? (
-          <>
-            <Text style={styles.feedback} numberOfLines={2}>
-              {isMatch
-                ? wasCorrect
-                  ? 'Fantabulosa! All four matched.'
-                  : `${matchCorrectCount} of ${q.words.length} matched — greens are right.`
-                : wasCorrect
-                  ? 'Bona! That’s right.'
-                  : termAnswer
-                    ? `Not quite — it’s “${q.word.term}”.`
-                    : `Not quite — it means “${q.word.definition}”.`}
-            </Text>
-            <Pressable
-              style={({ pressed }) => [styles.continueButton, pressed && styles.continuePressed]}
-              onPress={handleContinue}
-            >
-              <Text style={styles.continueText}>{willEnd ? 'See results' : 'Continue'}</Text>
-            </Pressable>
-          </>
-        ) : null}
-      </View>
+      {/* Continue — always present, enabled once answered; its bottom margin is
+          the Figma gap to the bar (54), which also clears the bubble. */}
+      <Pressable
+        style={({ pressed }) => [
+          styles.continueButton,
+          { width: 235 * s, height: 38 * s, bottom: 54 * s },
+          !answered && styles.continueDisabled,
+          pressed && answered && { opacity: 0.85 },
+        ]}
+        onPress={handleContinue}
+        disabled={!answered}
+        accessibilityRole="button"
+      >
+        <Text style={[styles.continueText, { fontSize: 14 * s }]}>
+          {willEnd ? 'See results' : 'Continue'}
+        </Text>
+      </Pressable>
     </View>
   );
 }
 
-const FOOTER_HEIGHT = 108;
-
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
+  screen: { flex: 1, backgroundColor: colors.background },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background },
   dimText: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 15 },
-  countdown: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.sm },
-  countdownReady: { fontFamily: fonts.semibold, fontSize: 22, color: colors.textMuted, letterSpacing: 0.5 },
-  countdownNum: { fontFamily: fonts.extrabold, fontSize: 96, color: colors.primary },
-  progressTrack: { height: 10, borderRadius: 5, backgroundColor: colors.border, overflow: 'hidden' },
-  progressFill: { height: '100%', borderRadius: 5, backgroundColor: colors.accent },
-  counter: {
-    marginTop: spacing.sm,
-    fontSize: 12,
-    fontFamily: fonts.semibold,
-    color: colors.textMuted,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
+
+  // Countdown (dark stage)
+  stage: { flex: 1, backgroundColor: colors.stage, alignItems: 'center' },
+  cdIcon: { position: 'absolute', backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
+  cdTitle: { position: 'absolute', fontFamily: fonts.display, color: '#FFFFFF' },
+  cdBlurb: { position: 'absolute', backgroundColor: 'rgba(249, 247, 255, 0.2)', alignItems: 'center' },
+  cdBlurbText: { fontFamily: fonts.regular, color: '#FFFFFF', textAlign: 'center', lineHeight: 16 },
+  cdStartsIn: { position: 'absolute', fontFamily: fonts.semibold, color: '#FFFBEC' },
+  cdNumber: { position: 'absolute', fontFamily: fonts.extrabold, color: '#FFFFFF', lineHeight: undefined },
+
+  // Header
+  backChip: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 4 },
+  backText: { fontFamily: fonts.bold, color: colors.text, letterSpacing: 0.3 },
+  modeChip: {
+    position: 'absolute',
+    backgroundColor: 'rgba(110, 93, 198, 0.2)', // #6E5DC6 at 20%
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  statusRow: { flexDirection: 'row', gap: spacing.sm },
-  statusChip: {
+  modeChipText: { fontFamily: fonts.display, color: colors.quizInk },
+  progressLabel: {
+    position: 'absolute',
+    fontFamily: fonts.semibold,
+    color: colors.metaText,
+    letterSpacing: 0.7,
+    textTransform: 'uppercase',
+  },
+  progressTrack: {
+    position: 'absolute',
+    backgroundColor: colors.progressTrack,
+    borderWidth: 1,
+    borderColor: colors.progressBorder,
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+  },
+  progressFill: { backgroundColor: colors.progressFill },
+  statPill: {
+    position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: colors.surface,
-    borderRadius: radii.pill,
-    borderWidth: 1,
+    backgroundColor: colors.progressTrack,
+    paddingHorizontal: 14,
+  },
+  statLabel: { fontFamily: fonts.semibold, color: colors.metaText, letterSpacing: 0.3, textTransform: 'uppercase' },
+  statValue: { fontFamily: fonts.bold, color: colors.textMuted },
+
+  // Prompt
+  prompt: { position: 'absolute', fontFamily: fonts.semibold, color: colors.text, lineHeight: 30 },
+  promptTerm: { fontFamily: fonts.bold, color: colors.primary },
+  promptMatch: { position: 'absolute', alignSelf: 'center', fontFamily: fonts.semibold, color: colors.text },
+
+  // Answer tiles (2-column grid)
+  grid: { position: 'absolute', flexDirection: 'row', flexWrap: 'wrap' },
+  tile: {
+    backgroundColor: colors.inset,
+    borderWidth: 0.5,
     borderColor: colors.fieldBorder,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs + 2,
-  },
-  statusUrgent: { borderColor: colors.danger, backgroundColor: colors.blushSoft },
-  statusText: { fontFamily: fonts.bold, fontSize: 14, color: colors.text },
-  statusTextUrgent: { color: colors.danger },
-  prompt: { marginTop: spacing.md, fontSize: 21, fontFamily: fonts.bold, color: colors.text, lineHeight: 28 },
-  promptSmall: { marginTop: spacing.md, fontSize: 17, fontFamily: fonts.bold, color: colors.text },
-  promptTerm: { color: colors.primary },
-  characterImage: { width: '100%', height: 150, marginTop: spacing.sm },
-  answerArea: { flex: 1, marginTop: spacing.md, gap: spacing.sm, justifyContent: 'center' },
-  typedWrap: { gap: spacing.sm },
-  typedInput: {
-    backgroundColor: colors.surface,
-    borderRadius: radii.md,
-    borderWidth: 2,
-    borderColor: colors.border,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 4,
-    fontFamily: fonts.regular,
-    fontSize: 17,
-    color: colors.text,
-  },
-  typedInputCorrect: { borderColor: colors.teal, backgroundColor: colors.tealSoft },
-  typedInputWrong: { borderColor: colors.danger, backgroundColor: colors.blushSoft },
-  submitButton: { backgroundColor: colors.primary, borderRadius: radii.pill, paddingVertical: spacing.sm + 4, alignItems: 'center' },
-  submitDisabled: { opacity: 0.4 },
-  option: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: radii.md,
-    borderWidth: 2,
-    borderColor: colors.border,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  optionPressed: { borderColor: colors.primary },
-  optionCorrect: { borderColor: colors.teal, backgroundColor: colors.tealSoft },
-  optionWrong: { borderColor: colors.danger, backgroundColor: colors.blushSoft },
-  optionText: { fontFamily: fonts.regular, fontSize: 15, color: colors.text, lineHeight: 20 },
-  optionTextCorrect: { color: colors.teal, fontFamily: fonts.semibold },
-  optionTextWrong: { color: colors.danger },
-  matchChip: {
-    flex: 1,
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.sm,
-    backgroundColor: colors.surface,
-    borderRadius: radii.md,
-    borderWidth: 2,
-    borderColor: colors.border,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
+    justifyContent: 'center',
   },
-  matchChipSel: { borderColor: colors.primary, backgroundColor: colors.primarySoft },
-  matchDot: { width: 12, height: 12, borderRadius: 6 },
-  matchTerm: { flex: 1, fontFamily: fonts.semibold, fontSize: 15, color: colors.text },
-  matchDef: { flex: 1, fontFamily: fonts.regular, fontSize: 13, color: colors.text, lineHeight: 17 },
-  matchDivider: { height: 1, backgroundColor: colors.border },
-  footer: { height: FOOTER_HEIGHT, justifyContent: 'flex-end', gap: spacing.sm, paddingBottom: 44 },
-  feedback: { fontFamily: fonts.regular, fontSize: 14, color: colors.textMuted, lineHeight: 20 },
-  continueButton: { backgroundColor: colors.primary, borderRadius: radii.pill, paddingVertical: spacing.sm + 4, alignItems: 'center' },
-  continuePressed: { opacity: 0.8 },
-  continueText: { color: '#fff', fontSize: 16, fontFamily: fonts.bold },
+  tileCorrect: { backgroundColor: colors.correctSoft, borderColor: colors.correct, borderWidth: 1 },
+  tileWrong: { backgroundColor: colors.incorrectSoft, borderColor: colors.incorrect, borderWidth: 1 },
+  tileText: { fontFamily: fonts.regular, color: colors.text, letterSpacing: 0.3, textAlign: 'center' },
+  tileTextCorrect: { color: colors.correct, fontFamily: fonts.bold },
+  tileTextWrong: { color: colors.incorrect, fontFamily: fonts.bold },
+
+  continueButton: {
+    position: 'absolute',
+    alignSelf: 'center',
+    backgroundColor: colors.primary,
+    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  continueDisabled: { opacity: 0.4 },
+  continueText: { fontFamily: fonts.bold, color: colors.onPrimary, letterSpacing: 0.3 },
 });
