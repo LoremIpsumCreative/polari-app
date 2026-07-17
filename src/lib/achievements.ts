@@ -106,5 +106,5 @@ export function useAchievements() {
   }, [stats, favouriteWordIds, progress, quiz, session]);
 }
 
-// Re-exported so the dashboard summary can show a trophy without re-deriving
+// Re-exported so the collection summary can show a trophy without re-deriving
 export { IconTrophy };

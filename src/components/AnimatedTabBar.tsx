@@ -16,19 +16,22 @@ import {
   IconUserCircle,
   type IconProps,
 } from '@tabler/icons-react-native';
-import { colors, fonts } from '../lib/theme';
+import { colors, fonts, tabAccents } from '../lib/theme';
+import { useStageDark } from '../lib/stageDark';
 import { QUIZ_MODES, QUIZ_MODE_ORDER } from '../lib/quizModes';
 
-const BUBBLE_SIZE = 56;
+// Geometry taken from the Figma "Navbar" component (node 1096:217): the
+// selection bubble is a 75px circle with a 9px OUTSIDE ring, and the bar is
+// 101px tall with 24px icons.
+const BUBBLE_SIZE = 75;
 // The ring around the bubble, painted in the screens' background colour so the
 // bubble reads as "cut out" of the bar, like the reference animation
-const BUBBLE_RING = 6;
-const ICON_SIZE = 26;
+const BUBBLE_RING = 9;
+const ICON_SIZE = 24;
 const LABEL_HEIGHT = 16;
 const ICON_LABEL_GAP = 4;
-// Taller bar = the requested extra breathing room below the icons; the
-// icon+label column is centred in this full height.
-const BAR_CONTENT_HEIGHT = 84;
+// The icon+label column is centred in this full height.
+const BAR_CONTENT_HEIGHT = 101;
 
 // Where the icon's centre rests inside the bar (column is vertically centred)
 const ICON_REST_CENTER =
@@ -37,7 +40,14 @@ const ICON_REST_CENTER =
 // the icon by its resting depth lands it dead-centre in the bubble.
 const ICON_LIFT = ICON_REST_CENTER;
 
-// Dashboard satellite fan
+// The bubble's top half overhangs the bar into the screen above it. Screens must
+// keep this much clear at the bottom or their content collides with the
+// selection circle. TAB_CONTENT_CLEARANCE adds the 20px breathing gap the Figma
+// screens leave above the circle (Continue ends y=700, circle top y=720).
+export const TAB_BUBBLE_OVERHANG = BUBBLE_SIZE / 2 + BUBBLE_RING;
+export const TAB_CONTENT_CLEARANCE = TAB_BUBBLE_OVERHANG + 20;
+
+// Collection satellite fan
 const SATELLITE_SIZE = 48;
 const SATELLITE_ICON_SIZE = 22;
 const FAN_RADIUS = 86;
@@ -52,9 +62,6 @@ const TAB_ICONS: Record<string, React.ComponentType<IconProps>> = {
   profile: IconUserCircle,
 };
 
-// The bubble's cut-out ring must match whatever backdrop sits behind it,
-// which is the active screen's background (the quiz stage is dark).
-const DARK_STAGE_ROUTES = new Set(['quiz']);
 
 type Satellite = {
   key: string;
@@ -63,7 +70,7 @@ type Satellite = {
   disabled: boolean;
 };
 
-// Tabs that open a satellite fan instead of just navigating. Dashboard fans out
+// Tabs that open a satellite fan instead of just navigating. Collection fans out
 // its sub-screens; Quiz fans out the three game modes.
 const FAN_TABS: Record<string, Satellite[]> = {
   favourites: [
@@ -111,7 +118,10 @@ function TabItem({
   }, [active, lift]);
 
   // Routes without a nested _layout are registered as "name/index"
-  const Icon = TAB_ICONS[routeName.replace(/\/index$/, '')] ?? IconSparkles;
+  const base = routeName.replace(/\/index$/, '');
+  const Icon = TAB_ICONS[base] ?? IconSparkles;
+  // Every tab lights up in its own colour when active (per the Figma Navbar).
+  const accent = tabAccents[base] ?? colors.primary;
 
   return (
     <Pressable style={styles.tab} onPress={onPress} accessibilityRole="tab" accessibilityLabel={label}>
@@ -130,9 +140,11 @@ function TabItem({
           ],
         }}
       >
-        <Icon size={ICON_SIZE} color={active ? colors.primary : colors.textMuted} />
+        <Icon size={ICON_SIZE} color={active ? accent : colors.textMuted} />
       </Animated.View>
-      <Text style={[styles.label, active && styles.labelActive]}>{label}</Text>
+      <Text style={[styles.label, active && styles.labelActive, active && { color: accent }]}>
+        {label}
+      </Text>
     </Pressable>
   );
 }
@@ -143,12 +155,14 @@ function SatelliteFan({
   centerX,
   open,
   onSelect,
+  accent,
 }: {
   satellites: Satellite[];
   progress: Animated.Value;
   centerX: number;
   open: boolean;
   onSelect: (key: string) => void;
+  accent: string;
 }) {
   return (
     <>
@@ -201,7 +215,7 @@ function SatelliteFan({
             >
               <sat.Icon
                 size={SATELLITE_ICON_SIZE}
-                color={sat.disabled ? colors.textFaint : colors.primary}
+                color={sat.disabled ? colors.textFaint : accent}
               />
             </Pressable>
             <Text style={styles.satelliteLabel} numberOfLines={1}>
@@ -231,21 +245,12 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
   const fanSatellites = fanRoute ? FAN_TABS[fanRoute] : [];
 
   const activeRoute = state.routes[state.index];
-  const activeRouteName = activeRoute?.name.replace(/\/index$/, '') ?? '';
-  // Only the quiz *intro* uses the dark stage backdrop; deeper quiz screens
-  // (play, results) are light again, so the ring must follow the focused
-  // child route, not just the tab.
-  // Inline getFocusedRouteNameFromRoute: expo-router 57 vendors react-navigation
-  // so the helper isn't importable. In a PartialState, an undefined index means
-  // the focused route is the last one in the array.
-  const nested = (activeRoute as { state?: { index?: number; routes?: { name: string }[] } })
-    ?.state;
-  const focusedChild =
-    nested?.routes?.[nested.index ?? nested.routes.length - 1]?.name ?? 'index';
-  const ringColor =
-    DARK_STAGE_ROUTES.has(activeRouteName) && focusedChild === 'index'
-      ? colors.dark
-      : colors.background;
+  // The bubble's cut-out ring must match whatever backdrop sits behind it.
+  // Dark quiz stages declare themselves via setStageDark — by the bottom of a
+  // dark stage the gradient has washed to solid stageDeep, so the ring uses
+  // that rather than the stage's lighter base colour.
+  const stageDark = useStageDark();
+  const ringColor = stageDark ? colors.stageDeep : colors.background;
 
   useEffect(() => {
     if (tabWidth === 0) return;
@@ -276,7 +281,7 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
     const from = fanRoute;
     setFanRoute(null);
     if (from === 'favourites') {
-      // The dashboard route already shows favourites; the others push in-stack.
+      // The collection route already shows favourites; the others push in-stack.
       if (key === 'achievements') router.push('/favourites/achievements');
       else if (key === 'gallery') router.push('/favourites/gallery');
     } else if (from === 'quiz') {
@@ -306,6 +311,7 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
           centerX={fanIndex * tabWidth + tabWidth / 2}
           open={!!fanRoute}
           onSelect={handleSatelliteSelect}
+          accent={(fanRoute && tabAccents[fanRoute]) || colors.primary}
         />
       ) : null}
 

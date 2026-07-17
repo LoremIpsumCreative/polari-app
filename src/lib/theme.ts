@@ -23,16 +23,47 @@ export const colors = {
   text: '#172B4D', // neutral/900
   ink: '#0E1D31', // neutral/1000 — darkest ink (share stage)
   dark: '#1B1B1B', // dark stage backdrop (quiz intro)
-  spotlight: '#F0ECE3', // cream spotlight ellipse on the quiz stage
+  // Quiz dark stage: a #2B273F base with a #121212 gradient washing the lower
+  // half to near-black (Figma "background" + "gradient overlay" vectors).
+  stage: '#2B273F',
+  stageDeep: '#121212',
+  spotlight: '#FFF7D6', // cream spotlight ellipse on the quiz stage (Figma "spotlight")
   textMuted: '#44546F', // neutral/700
   textFaint: '#758195', // neutral/500
   border: 'rgba(23, 43, 77, 0.12)',
   danger: '#ED3241',
   heart: '#ED3241',
   onPrimary: '#FFFFFF',
+
+  // Quiz redesign (Figma "Quiz" section, node 1114-106)
+  correct: '#5B7F24', // answer tile border + text when right
+  correctSoft: '#F7FFEC', // answer tile fill when right
+  incorrect: '#C9372C', // answer tile border + text when wrong
+  incorrectSoft: '#FFF6F5', // answer tile fill when wrong
+  quizPurple: '#6E5DC6', // mode chip fill + active Quiz tab
+  quizPurpleDark: '#493B8B', // mode chip border
+  quizInk: '#3D2232', // mode chip label
+  progressTrack: '#F1F2F4', // progress rail + stat pills
+  progressFill: '#5E4DB2', // progress bar fill
+  progressBorder: '#352C63', // progress rail hairline
+  metaText: '#626F86', // "Question 3 of 10" / pill labels
+};
+
+// Each tab owns an accent colour, used for its icon + label when active.
+// Taken from the Figma "Navbar" component variants (node 1096:217); keys are
+// expo-router route names.
+export const tabAccents: Record<string, string> = {
+  index: '#0C66E4', // Today
+  dictionary: '#6A9A23', // Dictionary
+  favourites: '#CD519D', // Collection
+  quiz: '#6E5DC6', // Quiz
+  profile: '#22A06B', // Account
 };
 
 export const fonts = {
+  // Display face (Mouse Memoirs) — quiz headlines, mode chips, countdown titles.
+  // Everything else is Digitale.
+  display: 'MouseMemoirs-Regular',
   regular: 'Digitale-Regular',
   italic: 'Digitale-Italic',
   semibold: 'Digitale-Semibold',
