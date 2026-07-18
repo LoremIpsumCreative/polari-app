@@ -281,8 +281,9 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
     const from = fanRoute;
     setFanRoute(null);
     if (from === 'favourites') {
-      // The collection route already shows favourites; the others push in-stack.
-      if (key === 'achievements') router.push('/favourites/achievements');
+      // The collection tab lands on the hub; every satellite pushes in-stack.
+      if (key === 'favourites') router.push('/favourites/list');
+      else if (key === 'achievements') router.push('/favourites/achievements');
       else if (key === 'gallery') router.push('/favourites/gallery');
     } else if (from === 'quiz') {
       // Each mode starts a game; the play screen runs the countdown first.

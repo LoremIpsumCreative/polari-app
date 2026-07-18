@@ -1,197 +1,160 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useMemo, useState } from 'react';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { useRouter } from 'expo-router';
-import { IconTrophy } from '@tabler/icons-react-native';
 import { useAchievements, type Achievement } from '../../../src/lib/achievements';
-import { SpaceHost } from '../../../src/components/illustrations/SpaceHost';
-import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
+import {
+  COLLECTION_CHIP,
+  CollectionHeader,
+  CollectionPanel,
+} from '../../../src/components/CollectionChrome';
+import { colors, fonts } from '../../../src/lib/theme';
 
-function Badge({ a }: { a: Achievement }) {
+const DESIGN_WIDTH = 394;
+// 3 columns of cards inside the 363 panel: 19 inset, 12 gutters (Figma frame
+// 1351:723). Card width derives from the panel so rounding can never tip the
+// third card onto the next row.
+const PANEL = 363;
+const CARD_H = 105;
+const GRID_INSET = 19;
+const GAP = 12;
+const LOCKED_INK = '#B3B9C4';
+// −2 accounts for the panel's own borders plus sub-pixel rounding.
+const cardWidth = (s: number) => ((PANEL - GRID_INSET * 2 - GAP * 2) * s - 2) / 3 - 1;
+
+function AchievementCard({ a, s }: { a: Achievement; s: number }) {
   const pct = a.target > 0 ? a.current / a.target : 0;
   return (
-    <View style={[styles.badge, a.earned && styles.badgeEarned]}>
-      <View style={[styles.badgeIcon, a.earned && styles.badgeIconEarned]}>
-        <a.Icon size={22} color={a.earned ? colors.primary : colors.textFaint} />
+    <View style={[styles.card, { width: cardWidth(s), height: CARD_H * s, borderRadius: 12 * s }]}>
+      <View
+        style={[
+          styles.cardIcon,
+          { width: 37 * s, height: 37 * s, borderRadius: 19 * s, marginTop: 10 * s },
+          a.earned ? styles.cardIconEarned : styles.cardIconLocked,
+        ]}
+      >
+        <a.Icon size={17 * s} color={a.earned ? colors.primary : LOCKED_INK} />
       </View>
-      <Text style={styles.badgeTitle} numberOfLines={1}>
+      <View style={[styles.bar, { width: 59 * s, height: 10 * s, marginTop: 9 * s }]}>
+        <View
+          style={[
+            styles.barFill,
+            { width: Math.max(0.08, Math.min(1, pct)) * 55 * s, height: 6 * s, borderRadius: 12 * s },
+          ]}
+        />
+      </View>
+      <Text style={[styles.progressText, { fontSize: 7 * s, marginTop: 4 * s }]}>
+        {a.current} of {a.target}
+      </Text>
+      <Text
+        style={[
+          styles.cardName,
+          { fontSize: 10 * s, marginTop: 12 * s, color: a.earned ? colors.text : LOCKED_INK },
+        ]}
+        numberOfLines={1}
+      >
         {a.title}
       </Text>
-      <Text style={styles.badgeDescription} numberOfLines={2}>
-        {a.description}
-      </Text>
-      {a.earned ? (
-        <Text style={styles.badgeEarnedText}>Earned ✓</Text>
-      ) : (
-        <View style={styles.progressWrap}>
-          <View style={styles.progressTrack}>
-            <View style={[styles.progressFill, { width: `${Math.round(pct * 100)}%` }]} />
-          </View>
-          <Text style={styles.progressText}>
-            {a.current}/{a.target}
-          </Text>
-        </View>
-      )}
     </View>
   );
 }
 
 export default function AchievementsScreen() {
   const router = useRouter();
-  const { achievements, earnedCount, signedIn } = useAchievements();
+  const { achievements, signedIn } = useAchievements();
+  const { width } = useWindowDimensions();
+  const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const [search, setSearch] = useState('');
 
-  if (!signedIn) {
-    return (
-      <View style={styles.center}>
-        <SpaceHost width={200} />
-        <Text style={styles.emptyTitle}>Trophies want an owner</Text>
-        <Text style={styles.emptyBody}>
-          Sign in to earn badges for streaks, quiz wins and words mastered.
-        </Text>
-        <Pressable style={styles.button} onPress={() => router.push('/sign-in')}>
-          <Text style={styles.buttonText}>Sign in</Text>
-        </Pressable>
-      </View>
-    );
-  }
+  const visible = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return q ? achievements.filter((a) => a.title.toLowerCase().includes(q)) : achievements;
+  }, [achievements, search]);
+
+  // Pad the grid with empty slots so the last row stays a full three across.
+  const fillers = (3 - (visible.length % 3)) % 3;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.summary}>
-        <View style={styles.summaryIcon}>
-          <IconTrophy size={26} color={colors.primary} />
-        </View>
-        <View style={styles.summaryText}>
-          <Text style={styles.summaryTitle}>
-            {earnedCount} of {achievements.length} earned
-          </Text>
-          <Text style={styles.summarySub}>
-            {earnedCount === achievements.length
-              ? 'The full set — fantabulosa, ducky!'
-              : 'Keep vada-ing, quizzing and streaking.'}
-          </Text>
-        </View>
-      </View>
-
-      <View style={styles.grid}>
-        {achievements.map((a) => (
-          <Badge key={a.id} a={a} />
-        ))}
-      </View>
-    </ScrollView>
+    <View style={styles.screen}>
+      <CollectionHeader
+        s={s}
+        title="Achievements"
+        chipColor={COLLECTION_CHIP.achievements}
+        search={search}
+        onSearch={setSearch}
+      />
+      <CollectionPanel s={s}>
+        {!signedIn ? (
+          <View style={{ padding: 20 * s, flex: 1 }}>
+            <View style={[styles.gateRow, { height: 40 * s, borderRadius: 8 * s }]}>
+              <Text style={[styles.gateText, { fontSize: 12 * s }]}>
+                Sign in to earn achievements
+              </Text>
+            </View>
+            <Pressable onPress={() => router.push('/sign-in')} accessibilityRole="button">
+              <Text style={[styles.gateLink, { fontSize: 14 * s }]}>Sign in</Text>
+            </Pressable>
+          </View>
+        ) : (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              padding: GRID_INSET * s,
+              gap: GAP * s,
+            }}
+          >
+            {visible.map((a) => (
+              <AchievementCard key={a.id} a={a} s={s} />
+            ))}
+            {Array.from({ length: fillers }).map((_, i) => (
+              <View
+                key={`filler-${i}`}
+                style={[styles.card, { width: cardWidth(s), height: CARD_H * s, borderRadius: 12 * s }]}
+              />
+            ))}
+          </ScrollView>
+        )}
+      </CollectionPanel>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.md, paddingBottom: spacing.xl + 96 },
-  center: {
-    flex: 1,
+  screen: { flex: 1, backgroundColor: colors.background },
+  card: { backgroundColor: colors.progressTrack, alignItems: 'center' },
+  cardIcon: { alignItems: 'center', justifyContent: 'center' },
+  cardIconEarned: { backgroundColor: colors.primarySoft },
+  cardIconLocked: { backgroundColor: colors.inset, borderWidth: 0.5, borderColor: colors.fieldBorder },
+  bar: {
+    borderWidth: 0.5,
+    borderColor: colors.inactive,
+    borderRadius: 999,
+    justifyContent: 'center',
+    paddingHorizontal: 2,
+  },
+  barFill: { backgroundColor: colors.textMuted },
+  progressText: { fontFamily: fonts.extrabold, color: colors.text },
+  cardName: { fontFamily: fonts.semibold, paddingHorizontal: 4 },
+  gateRow: {
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.sm,
-    padding: spacing.xl,
-    backgroundColor: colors.background,
-  },
-  emptyTitle: { fontSize: 18, fontFamily: fonts.bold, color: colors.text, textAlign: 'center' },
-  emptyBody: {
-    fontFamily: fonts.regular,
-    fontSize: 14,
-    color: colors.textMuted,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  button: {
-    marginTop: spacing.md,
-    backgroundColor: colors.primary,
-    borderRadius: radii.pill,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-  },
-  buttonText: { color: colors.onPrimary, fontFamily: fonts.semibold },
-  summary: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    backgroundColor: colors.surface,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-  },
-  summaryIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: colors.primarySoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  summaryText: { flex: 1, gap: 2 },
-  summaryTitle: { fontFamily: fonts.bold, fontSize: 17, color: colors.text },
-  summarySub: { fontFamily: fonts.regular, fontSize: 13, color: colors.textMuted },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  badge: {
-    // Two columns with one gap between them
-    flexBasis: '48.5%',
-    flexGrow: 1,
-    backgroundColor: colors.surface,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.md,
-    gap: spacing.xs,
-  },
-  badgeEarned: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primarySoft,
-  },
-  badgeIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
     backgroundColor: colors.inset,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.xs,
+    borderWidth: 0.5,
+    borderColor: colors.inactive,
   },
-  badgeIconEarned: {
-    backgroundColor: colors.surface,
-  },
-  badgeTitle: { fontFamily: fonts.bold, fontSize: 14, color: colors.text },
-  badgeDescription: {
-    fontFamily: fonts.regular,
-    fontSize: 12,
-    color: colors.textMuted,
-    lineHeight: 16,
-    minHeight: 32,
-  },
-  badgeEarnedText: {
+  gateText: { fontFamily: fonts.semibold, color: colors.inactive },
+  gateLink: {
+    marginTop: 24,
     fontFamily: fonts.semibold,
-    fontSize: 12,
     color: colors.primary,
-  },
-  progressWrap: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  progressTrack: {
-    flex: 1,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: colors.inset,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    borderRadius: 3,
-    backgroundColor: colors.primary,
-  },
-  progressText: {
-    fontFamily: fonts.semibold,
-    fontSize: 11,
-    color: colors.textFaint,
-    minWidth: 34,
-    textAlign: 'right',
+    textAlign: 'center',
   },
 });
