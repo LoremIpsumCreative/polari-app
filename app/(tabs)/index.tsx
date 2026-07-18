@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -9,7 +9,9 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 import {
   IconArrowsMaximize,
   IconChevronLeft,
@@ -22,21 +24,60 @@ import { CharacterFullScreen } from '../../src/components/CharacterFullScreen';
 import { WordDetailCard } from '../../src/components/WordDetailCard';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
-import { colors, spacing } from '../../src/lib/theme';
+import { getUnlockedDate, setUnlockedToday, todayKey } from '../../src/lib/dailyUnlock';
+import { TAB_CONTENT_CLEARANCE } from '../../src/components/AnimatedTabBar';
+import { colors, fonts, spacing } from '../../src/lib/theme';
+
+const presentArt = require('../../assets/present.png');
 
 const SWIPE_THRESHOLD = 48;
+// The present screen's geometry lives in the Figma frame's 394-wide space
+// (node 1114:1124) and scales with the device width.
+const DESIGN_WIDTH = 394;
 
 export default function TodayScreen() {
   const { session } = useAuth();
   const { recordEngagement, celebration, dismissCelebration } = useStreaks();
   const { words, loading, error, refetch } = useWords();
   const { artFor } = useCharacterArt();
+  const { width } = useWindowDimensions();
+  const s = Math.min(width, 430) / DESIGN_WIDTH;
 
   // 0 = today, 1 = yesterday, … capped at the app's epoch so "previous"
   // never wraps into future words nobody has seen yet.
   const [dayOffset, setDayOffset] = useState(0);
   const [artFullScreen, setArtFullScreen] = useState(false);
   const maxOffset = Math.max(0, daysSinceEpoch(new Date()));
+
+  // Today's word arrives gift-wrapped: the first visit each day shows a
+  // present to tap open. null = still reading the stored unlock date.
+  const [unlocked, setUnlocked] = useState<boolean | null>(null);
+  const presentFade = useRef(new Animated.Value(1)).current;
+  useFocusEffect(
+    // Re-checked on every focus so the gift comes back after midnight even if
+    // the app never re-mounted.
+    useCallback(() => {
+      let live = true;
+      getUnlockedDate().then((d) => {
+        if (live) setUnlocked(d === todayKey());
+      });
+      return () => {
+        live = false;
+      };
+    }, [])
+  );
+
+  function openPresent() {
+    setUnlockedToday();
+    Animated.timing(presentFade, {
+      toValue: 0,
+      duration: 260,
+      useNativeDriver: false,
+    }).start(() => {
+      setUnlocked(true);
+      presentFade.setValue(1);
+    });
+  }
 
   const viewedDate = useMemo(() => {
     const d = new Date();
@@ -106,6 +147,39 @@ export default function TodayScreen() {
           <Text style={styles.retryText}>Try again</Text>
         </Pressable>
       </View>
+    );
+  }
+
+  if (unlocked === null) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator color={colors.primary} size="large" />
+      </View>
+    );
+  }
+
+  // First visit of the day: the word is wrapped (Figma "New Word", 1114:1124)
+  if (!unlocked) {
+    return (
+      <Animated.View style={[styles.screen, { opacity: presentFade }]}>
+        <Pressable
+          style={styles.presentScreen}
+          onPress={openPresent}
+          accessibilityRole="button"
+          accessibilityLabel="Open today's word"
+        >
+          <Text style={[styles.presentHeadline, { top: 190 * s, fontSize: 50 * s, lineHeight: 44 * s }]}>
+            A <Text style={styles.presentHighlight}>new word</Text> is ready{'\n'}to be unlocked!
+          </Text>
+          <Image
+            source={presentArt}
+            resizeMode="contain"
+            style={{ position: 'absolute', left: 76 * s, top: 310 * s, width: 244 * s, height: 232 * s }}
+            accessibilityIgnoresInvertColors
+          />
+          <Text style={[styles.presentTap, { top: 567 * s, fontSize: 20 * s }]}>Tap to open</Text>
+        </Pressable>
+      </Animated.View>
     );
   }
 
@@ -211,6 +285,24 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  presentScreen: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  presentHeadline: {
+    position: 'absolute',
+    fontFamily: fonts.display,
+    color: colors.text,
+    textAlign: 'center',
+  },
+  presentHighlight: {
+    color: colors.primary,
+  },
+  presentTap: {
+    position: 'absolute',
+    fontFamily: fonts.semibold,
+    color: colors.inactive,
+  },
   container: {
     flex: 1,
   },
@@ -258,7 +350,9 @@ const styles = StyleSheet.create({
   },
   pagerPill: {
     position: 'absolute',
-    bottom: spacing.md,
+    // Today is the centre tab, so its selection bubble rises directly beneath
+    // this pill — keep the pill fully above the bubble's overhang.
+    bottom: TAB_CONTENT_CLEARANCE,
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
