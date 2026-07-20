@@ -12,6 +12,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { useFocusEffect } from 'expo-router';
+import Svg, { Path } from 'react-native-svg';
 import {
   IconArrowsMaximize,
   IconChevronLeft,
@@ -168,16 +169,38 @@ export default function TodayScreen() {
           accessibilityRole="button"
           accessibilityLabel="Open today's word"
         >
-          <Text style={[styles.presentHeadline, { top: 190 * s, fontSize: 50 * s, lineHeight: 44 * s }]}>
-            A <Text style={styles.presentHighlight}>new word</Text> is ready{'\n'}to be unlocked!
-          </Text>
+          {/* Decorative shapes: a wonky blue blob behind the headline and a
+              dark diamond behind the present (paths verbatim from Figma). */}
+          <Svg
+            pointerEvents="none"
+            style={styles.presentShapes}
+            width={394 * s}
+            height={853 * s}
+            viewBox="0 0 394 853"
+          >
+            <Path
+              d="M14.5853 29.1806 C15.2061 25.168 18.1916 21.929 22.1405 20.984 L104.053 1.38226 C107.614 0.530231 111.355 1.69197 113.807 4.41083 L124.192 15.9276 C126.52 18.5092 127.341 22.1146 126.359 25.4493 L105.207 97.2782 C104.356 100.169 102.246 102.521 99.4656 103.682 L25.6656 134.48 C22.6819 135.726 19.2802 135.451 16.5344 133.744 L5.61294 126.954 C2.20911 124.838 0.397674 120.894 1.01041 116.933 L14.5853 29.1806 Z"
+              transform="translate(204.6, 410)"
+              fill="#121212"
+            />
+            <Path
+              d="M2.98577 18.5435 C1.41972 8.81735 8.93092 0 18.7823 0 L249.135 0 C259.014 0 266.533 8.86524 264.92 18.6123 L252.508 93.6123 C251.23 101.336 244.551 107 236.723 107 L30.8584 107 C23.0037 107 16.3105 101.298 15.0619 93.5435 L2.98577 18.5435 Z"
+              transform="translate(64, 171)"
+              fill="#E9F2FF"
+            />
+          </Svg>
+
           <Image
             source={presentArt}
             resizeMode="contain"
-            style={{ position: 'absolute', left: 76 * s, top: 310 * s, width: 244 * s, height: 232 * s }}
+            style={{ position: 'absolute', left: 95 * s, top: 354 * s, width: 205 * s, height: 195 * s }}
             accessibilityIgnoresInvertColors
           />
-          <Text style={[styles.presentTap, { top: 567 * s, fontSize: 20 * s }]}>Tap to open</Text>
+
+          <Text style={[styles.presentHeadline, { top: 200 * s, fontSize: 34 * s, lineHeight: 34 * s }]}>
+            A <Text style={styles.presentHighlight}>new word</Text> is ready{'\n'}to be unlocked!
+          </Text>
+          <Text style={[styles.presentTap, { top: 581 * s, fontSize: 20 * s }]}>Tap to open</Text>
         </Pressable>
       </Animated.View>
     );
@@ -290,6 +313,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  presentShapes: { position: 'absolute', top: 0, left: 0 },
   presentHeadline: {
     position: 'absolute',
     fontFamily: fonts.display,
