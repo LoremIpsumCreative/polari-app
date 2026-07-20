@@ -1,35 +1,36 @@
 import { forwardRef } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { IconBook2, IconQuote, IconStack2, IconWorldSearch } from '@tabler/icons-react-native';
+import { IconBook2, IconQuote, IconWorldSearch } from '@tabler/icons-react-native';
 import type { Word } from '../types/database';
 import { fonts } from '../lib/theme';
 import { useCharacterArt } from '../lib/remoteArt';
 
-// The visual card that gets snapshotted and shared as an image — a pixel match
-// of the Figma "Share Card" (node 1058-1546): black story backdrop, the ornate
-// baroque Polari frame, and on its grey field a date pill nestled in the arch,
-// "The Polari word of the day is:", the term in ink, a part-of-speech chip •
-// pronunciation row, the illustration, then the app's labelled fieldset rows
-// (definition / in use / origin / culture) in a white box, and an underlined
+// The visual card snapshotted and shared as an image — a pixel match of the
+// revised Figma "Share Card" (node 1114:1089): a dark stage, the blue baroque
+// frame with a date pill in its top arch, and on the grey field the lede, the
+// term in Mouse Memoirs, a POS·pronunciation row, the illustration, three
+// labelled fieldset rows (definition / in use / origin) in a white box, and a
 // download CTA + QR footer.
 //
-// Built at the Figma stage's native 566x1007 so measurements transfer verbatim
-// (frame art 545x968 at 10,20); colours are the design-token palette
-// (neutral/1000 stage, neutral/200 field, neutral/900 body, neutral/250 lines).
+// Built at the Figma stage's native 566x1007 so measurements transfer verbatim.
 export const CARD_WIDTH = 566;
 export const CARD_HEIGHT = 1007;
+
+// The grey field the content sits on, in stage coordinates.
+const FIELD = { x: 52, y: 104, w: 460, h: 819 };
 
 const frameArt = require('../../assets/share/frame.png');
 const qrArt = require('../../assets/share/qr-polari.png');
 
-const STAGE = '#0E1D31'; // neutral/1000
-const FIELD = '#DCDFE4'; // neutral/200
-const BODY = '#172B4D'; // neutral/900
-const META = '#2C3E5D'; // neutral/800
-const MUTED = '#44546F'; // neutral/700
-const LABEL = '#758195'; // neutral/500
-const LINE = '#C8CCD4'; // neutral/250
-const ROW = '#F8F9FA'; // neutral/50
+const STAGE = '#0E1D31';
+const FIELD_BG = '#E7E9EC';
+const BODY = '#172B4D';
+const SLATE = '#626F86'; // POS/pronunciation + row meta
+const MUTED = '#44546F'; // footer CTA
+const LABEL = '#758195';
+const LINE = '#C8CCD4';
+const BOX = '#F8F9FA';
+const ROW_ICON = '#B3B9C4';
 
 function stripEmphasis(text: string): string {
   return text.replace(/\*([^*]+)\*/g, '$1');
@@ -44,22 +45,26 @@ function formatDate(date: Date): string {
   }).format(date);
 }
 
+// Fieldset row: white pill with a leading grey icon and a tiny uppercase label
+// sitting on its top border.
 function FieldRow({
   label,
   Icon,
   children,
   italic = false,
+  minHeight,
 }: {
   label: string;
   Icon: typeof IconBook2;
   children: string;
   italic?: boolean;
+  minHeight: number;
 }) {
   return (
     <View>
-      <View style={styles.fieldRow}>
-        <Icon size={15} color={BODY} />
-        <Text style={[styles.fieldText, italic && styles.fieldTextItalic]}>
+      <View style={[styles.fieldRow, { minHeight }]}>
+        <Icon size={12} color={ROW_ICON} />
+        <Text style={[styles.fieldText, italic && styles.fieldTextItalic]} numberOfLines={2}>
           {stripEmphasis(children)}
         </Text>
       </View>
@@ -80,64 +85,67 @@ export const ShareWordCard = forwardRef<View, Props>(function ShareWordCard(
 
   return (
     <View ref={ref} style={styles.stage} collapsable={false}>
-      {/* Grey field under the frame art; the painted frame masks its edges */}
-      <View style={styles.field} />
+      {/* The frame sits BEHIND the field: the opaque grey field covers the
+          frame's centre, so only its painted blue border shows around it. */}
+      <Image source={frameArt} style={styles.frame} resizeMode="stretch" />
 
-      <Text style={styles.lede}>The Polari word of the day is:</Text>
-      <Text style={styles.term}>{word.term}</Text>
-      <View style={styles.metaRow}>
-        {word.part_of_speech ? (
-          <View style={styles.posChip}>
-            <Text style={styles.posText}>{word.part_of_speech}</Text>
-          </View>
-        ) : null}
-        {word.part_of_speech && word.pronunciation ? <Text style={styles.metaDot}>•</Text> : null}
-        {word.pronunciation ? <Text style={styles.pron}>/{word.pronunciation}/</Text> : null}
-      </View>
-
-      <Image
-        source={artFor(word.slug)}
-        style={styles.character}
-        resizeMode="contain"
-        accessibilityLabel={`Illustration for ${word.term}`}
-      />
-
-      <View style={styles.detailBox}>
-        <FieldRow label="definition" Icon={IconBook2}>
-          {word.definition}
-        </FieldRow>
-        {word.example ? (
-          <FieldRow label="in use" Icon={IconQuote} italic>
-            {word.example}
-          </FieldRow>
-        ) : null}
-        {word.origin ? (
-          <FieldRow label="origin" Icon={IconWorldSearch}>
-            {word.origin}
-          </FieldRow>
-        ) : null}
-        {word.cultural_context ? (
-          <FieldRow label="culture" Icon={IconStack2}>
-            {word.cultural_context}
-          </FieldRow>
-        ) : null}
-      </View>
-
-      <View style={styles.footer}>
-        <View style={styles.footerText}>
-          <Text style={styles.footerTitle}>Learn the lingo! Download Polari</Text>
-          <Text style={styles.footerSub}>
-            Discover a word a day through queer history's secret coded language.
-          </Text>
+      <View style={styles.field}>
+        <View style={styles.datePill}>
+          <Text style={styles.date}>{formatDate(date)}</Text>
         </View>
-        <Image source={qrArt} style={styles.qr} accessibilityLabel="Polari QR code" />
-      </View>
+        <Text style={styles.lede}>The Polari word of the day is:</Text>
 
-      {/* Frame art last so its ornament overlaps the field and the date pill
-          nestles into the arch */}
-      <Image source={frameArt} style={styles.frame} resizeMode="stretch" pointerEvents="none" />
-      {/* The frame art paints the arch cartouche; the date is bare text on it */}
-      <Text style={styles.dateText}>{formatDate(date)}</Text>
+        {/* Badge floats top-left; the term is centred */}
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>{word.entry_type === 'phrase' ? 'Phrase' : 'Word'}</Text>
+        </View>
+        <Text style={styles.term} numberOfLines={1} adjustsFontSizeToFit>
+          {word.term}
+        </Text>
+
+        <View style={styles.metaRow}>
+          {word.part_of_speech ? (
+            <View style={styles.posChip}>
+              <Text style={styles.posText}>{word.part_of_speech}</Text>
+            </View>
+          ) : null}
+          {word.part_of_speech && word.pronunciation ? <Text style={styles.metaDot}>•</Text> : null}
+          {word.pronunciation ? <Text style={styles.pron}>/{word.pronunciation}/</Text> : null}
+        </View>
+
+        <Image
+          source={artFor(word.slug)}
+          style={styles.character}
+          resizeMode="contain"
+          accessibilityLabel={`Illustration for ${word.term}`}
+        />
+
+        <View style={styles.detailBox}>
+          <FieldRow label="definition" Icon={IconBook2} minHeight={53}>
+            {word.definition}
+          </FieldRow>
+          {word.example ? (
+            <FieldRow label="in use" Icon={IconQuote} italic minHeight={49}>
+              {word.example}
+            </FieldRow>
+          ) : null}
+          {word.origin ? (
+            <FieldRow label="origin" Icon={IconWorldSearch} minHeight={60}>
+              {word.origin}
+            </FieldRow>
+          ) : null}
+        </View>
+
+        <View style={styles.footer}>
+          <View style={styles.footerText}>
+            <Text style={styles.footerTitle}>Learn the lingo! Download Polari</Text>
+            <Text style={styles.footerSub}>
+              Discover a word a day through queer history’s secret coded language.
+            </Text>
+          </View>
+          <Image source={qrArt} style={styles.qr} resizeMode="contain" />
+        </View>
+      </View>
     </View>
   );
 });
@@ -157,52 +165,71 @@ const styles = StyleSheet.create({
   },
   field: {
     position: 'absolute',
-    left: 53,
-    top: 104,
-    width: 460,
-    height: 819,
-    borderRadius: 30,
-    backgroundColor: FIELD,
+    // Bleed 2px past the measured field so no grey ring of the frame's centre
+    // peeks between the field and the border's inner edge.
+    left: FIELD.x - 2,
+    top: FIELD.y - 2,
+    width: FIELD.w + 4,
+    height: FIELD.h + 4,
+    backgroundColor: FIELD_BG,
+    borderRadius: 26,
   },
-  dateText: {
+  datePill: {
     position: 'absolute',
-    top: 120,
-    left: 0,
-    right: 0,
-    textAlign: 'center',
+    top: 8,
+    alignSelf: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 999,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+  },
+  date: {
     fontFamily: fonts.bold,
     fontSize: 13,
-    lineHeight: 14,
-    letterSpacing: 0.5,
     color: STAGE,
-    textTransform: 'capitalize',
+    letterSpacing: 0.2,
   },
   lede: {
     position: 'absolute',
-    top: 187,
+    top: 79,
     left: 0,
     right: 0,
     textAlign: 'center',
     fontFamily: fonts.regular,
     fontSize: 16,
-    lineHeight: 16,
-    letterSpacing: 0.2,
     color: BODY,
+  },
+  badge: {
+    position: 'absolute',
+    top: 129,
+    left: 48,
+    backgroundColor: '#F4F9FF',
+    borderWidth: 1,
+    borderColor: '#0C66E4',
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  badgeText: {
+    color: '#0C66E4',
+    fontSize: 10,
+    fontFamily: fonts.bold,
+    letterSpacing: 0.3,
   },
   term: {
     position: 'absolute',
-    top: 233,
-    left: 0,
-    right: 0,
+    top: 116,
+    left: 40,
+    right: 40,
     textAlign: 'center',
-    fontFamily: fonts.semibold,
-    fontSize: 40,
-    lineHeight: 42,
-    color: STAGE,
+    fontFamily: fonts.display,
+    fontSize: 60,
+    lineHeight: 56,
+    color: BODY,
   },
   metaRow: {
     position: 'absolute',
-    top: 278,
+    top: 176,
     left: 0,
     right: 0,
     flexDirection: 'row',
@@ -210,59 +237,42 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
   },
-  metaDot: {
-    fontFamily: fonts.semibold,
-    fontSize: 12,
-    color: MUTED,
-  },
-  pron: {
-    fontFamily: fonts.semibold,
-    fontSize: 12,
-    lineHeight: 13,
-    letterSpacing: 0.3,
-    color: META,
-  },
   posChip: {
     borderWidth: 1,
-    borderColor: META,
-    borderRadius: 999,
+    borderColor: SLATE,
+    borderRadius: 116,
     paddingHorizontal: 6,
-    paddingVertical: 4,
+    paddingVertical: 2,
   },
-  posText: {
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    lineHeight: 11,
-    letterSpacing: 0.3,
-    color: META,
-    textTransform: 'capitalize',
-  },
+  posText: { color: SLATE, fontSize: 10, fontFamily: fonts.bold, letterSpacing: 0.3 },
+  metaDot: { color: SLATE, fontSize: 12, fontFamily: fonts.semibold },
+  pron: { color: SLATE, fontSize: 12, fontFamily: fonts.semibold, letterSpacing: 0.3 },
   character: {
     position: 'absolute',
-    top: 327,
-    alignSelf: 'center',
+    top: 223,
+    left: 146,
     width: 169,
     height: 226,
   },
   detailBox: {
     position: 'absolute',
-    top: 570,
-    alignSelf: 'center',
+    top: 466,
+    left: 32,
     width: 397,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: BOX,
     borderWidth: 1,
     borderColor: LINE,
     borderRadius: 16,
+    paddingTop: 20,
+    paddingBottom: 20,
     paddingHorizontal: 18,
-    paddingVertical: 20,
-    gap: 16,
+    gap: 12,
   },
   fieldRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
-    minHeight: 52,
-    backgroundColor: ROW,
+    gap: 12,
+    backgroundColor: '#FFFFFF',
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: LINE,
     borderRadius: 8,
@@ -271,64 +281,39 @@ const styles = StyleSheet.create({
   },
   fieldText: {
     flex: 1,
+    color: BODY,
     fontFamily: fonts.regular,
     fontSize: 12,
     lineHeight: 15,
-    letterSpacing: 0.3,
-    color: BODY,
+    letterSpacing: 0.2,
   },
-  fieldTextItalic: {
-    fontFamily: fonts.italic,
-  },
+  fieldTextItalic: { fontFamily: fonts.italic },
   fieldLabelPatch: {
     position: 'absolute',
-    top: -4,
-    left: 8,
+    top: -5,
+    left: 10,
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 4,
-    paddingVertical: 1,
   },
   fieldLabel: {
+    color: LABEL,
     fontFamily: fonts.extrabold,
     fontSize: 7,
-    lineHeight: 8,
     letterSpacing: 0.4,
     textTransform: 'uppercase',
-    color: LABEL,
+    lineHeight: 8,
   },
   footer: {
     position: 'absolute',
-    top: 836,
-    left: 94,
-    right: 94,
+    top: 721,
+    left: 90,
+    right: 90,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 14,
+    gap: 12,
   },
-  footerText: {
-    alignItems: 'center',
-    gap: 5,
-    maxWidth: 260,
-  },
-  footerTitle: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    lineHeight: 15,
-    letterSpacing: 0.3,
-    color: MUTED,
-  },
-  footerSub: {
-    textAlign: 'center',
-    fontFamily: fonts.regular,
-    fontSize: 10,
-    lineHeight: 12,
-    letterSpacing: 0.3,
-    color: BODY,
-    opacity: 0.7,
-  },
-  qr: {
-    width: 47,
-    height: 47,
-  },
+  footerText: { flex: 1 },
+  footerTitle: { color: MUTED, fontFamily: fonts.bold, fontSize: 14 },
+  footerSub: { color: BODY, fontFamily: fonts.regular, fontSize: 10, marginTop: 4 },
+  qr: { width: 47, height: 47 },
 });
