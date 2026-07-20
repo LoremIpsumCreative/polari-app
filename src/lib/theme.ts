@@ -50,14 +50,14 @@ export const colors = {
 };
 
 // Each tab owns an accent colour, used for its icon + label when active.
-// Taken from the Figma "Navbar" component variants (node 1096:217); keys are
-// expo-router route names.
+// Taken from the Figma "Navbar 2.0" component variants (node 1766:3478); keys
+// are expo-router route names.
 export const tabAccents: Record<string, string> = {
   index: '#0C66E4', // Today
   dictionary: '#6A9A23', // Dictionary
-  favourites: '#CD519D', // Collection
+  favourites: '#CD519D', // Collections
   quiz: '#6E5DC6', // Quiz
-  profile: '#22A06B', // Account
+  profile: '#227D9B', // Account
 };
 
 export const fonts = {

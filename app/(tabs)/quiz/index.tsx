@@ -15,7 +15,6 @@ import { IconTrophy } from '@tabler/icons-react-native';
 import { useWords } from '../../../src/lib/words';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { QUIZ_MODES } from '../../../src/lib/quizModes';
-import { setStageDark } from '../../../src/lib/stageDark';
 import { colors, fonts } from '../../../src/lib/theme';
 
 const quizmasterArt = require('../../../assets/quiz/quizmaster.png');
@@ -84,14 +83,11 @@ export default function QuizIntroScreen() {
     setDone(true);
   }
 
-  // Replay the entrance on focus; the landing is a dark stage, so the tab
-  // bar's bubble ring goes dark with it.
+  // Replay the entrance on focus.
   useFocusEffect(
     useCallback(() => {
-      setStageDark(true);
       playEntrance();
       return () => {
-        setStageDark(false);
         running.current?.stop();
       };
     }, [playEntrance])

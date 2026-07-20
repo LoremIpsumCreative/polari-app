@@ -9,7 +9,6 @@ import { useQuizStats } from '../../../src/lib/quizScores';
 import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { nextQuestion, QUIZ_LENGTH, type QuizQuestion } from '../../../src/lib/quiz';
 import { QUIZ_MODES, isQuizModeId, type QuizModeId } from '../../../src/lib/quizModes';
-import { setStageDark } from '../../../src/lib/stageDark';
 import { colors, fonts } from '../../../src/lib/theme';
 
 // All geometry lives in the Figma frames' 394-wide design space and is scaled
@@ -71,12 +70,6 @@ export default function QuizPlayScreen() {
 
   // Timers
   const [remaining, setRemaining] = useState(mode.countdownSeconds ?? 0);
-
-  // The countdown screen is a dark stage; questions are light again.
-  useEffect(() => {
-    setStageDark(phase === 'countdown');
-    return () => setStageDark(false);
-  }, [phase]);
 
   // 3 · 2 · 1 → start. If the word list hasn't arrived yet the countdown holds
   // at 1 and starts as soon as it lands (deep links race the fetch).
