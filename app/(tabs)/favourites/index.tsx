@@ -39,20 +39,20 @@ export default function CollectionsHub() {
         viewBox={`0 0 ${394 * s} ${752 * s}`}
       >
         <Path
-          d="M44.4119 45.4529 L156.702 0 L134.932 296.242 L1.23202e-05 275.271 L44.4119 45.4529 Z"
-          transform={`scale(${s}) matrix(0.893,-0.449,0.311,0.95,-37.734,277.92)`}
+          d="M43.8655 44.1831 L185.202 0 L118.716 278.999 L0 247.061 L43.8655 44.1831 Z"
+          transform={`scale(${s}) matrix(0.8933,-0.4494,0.3115,0.9503,-30.45,337.23)`}
           fill="#DA62AC"
           opacity={0.16}
         />
         <Path
-          d="M0 0 L164.5 0 L145.5 344.5 L47.5 335 L0 0 Z"
-          transform={`scale(${s}) matrix(1,0,0,1,109.5,184)`}
+          d="M0 0 L155.5 20 L123 281.5 L45 323 L0 0 Z"
+          transform={`scale(${s}) matrix(1,0,0,1,112,240)`}
           fill="#E2B203"
           opacity={0.16}
         />
         <Path
-          d="M82.6763 13.8804 L186.84 0 L147.298 288.982 L-6.05684e-06 251.022 L82.6763 13.8804 Z"
-          transform={`scale(${s}) matrix(-0.893,-0.449,-0.311,0.95,448.912,293.964)`}
+          d="M82.6763 0 L209.261 27.7663 L147.298 275.101 L0 237.141 L82.6763 0 Z"
+          transform={`scale(${s}) matrix(-0.8933,-0.4494,-0.3115,0.9503,444.59,351.15)`}
           fill="#2898BD"
           opacity={0.16}
         />
@@ -60,13 +60,13 @@ export default function CollectionsHub() {
       <Image
         source={trioFav}
         resizeMode="contain"
-        style={{ position: 'absolute', left: 57 * s, top: 248.5 * s, width: 117 * s, height: 255 * s }}
+        style={{ position: 'absolute', left: 57 * s, top: 292.5 * s, width: 117 * s, height: 255 * s }}
         accessibilityIgnoresInvertColors
       />
       <Image
         source={trioAch}
         resizeMode="contain"
-        style={{ position: 'absolute', left: 126 * s, top: 207.5 * s, width: 119 * s, height: 296 * s }}
+        style={{ position: 'absolute', left: 126 * s, top: 251.5 * s, width: 119 * s, height: 296 * s }}
         accessibilityIgnoresInvertColors
       />
       <Image
@@ -74,10 +74,10 @@ export default function CollectionsHub() {
         resizeMode="contain"
         style={{
           position: 'absolute',
-          left: 250 * s,
-          top: 248.5 * s,
-          width: 107 * s,
-          height: 255 * s,
+          left: 241 * s,
+          top: 282 * s,
+          width: 113 * s,
+          height: 269 * s,
           transform: [{ scaleX: -1 }],
         }}
         accessibilityIgnoresInvertColors
