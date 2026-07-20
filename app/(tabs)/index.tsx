@@ -283,7 +283,8 @@ export default function TodayScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.background,
+    // The Today canvas is one step lighter than the app background (Figma 1114:1023)
+    backgroundColor: '#E7E9EC',
   },
   presentScreen: {
     flex: 1,
@@ -320,8 +321,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   hero: {
-    width: 200,
-    height: 267,
+    width: 190,
+    height: 253,
     alignSelf: 'center',
     marginTop: spacing.md + 8,
     marginBottom: 13,
@@ -357,13 +358,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: 259,
-    height: 44,
+    width: 232,
+    height: 46,
     backgroundColor: colors.surface,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: 'rgba(170, 170, 170, 0.5)',
-    paddingHorizontal: 10,
+    borderColor: colors.fieldBorder,
+    paddingHorizontal: 16,
   },
   fullScreenButton: {
     position: 'absolute',
@@ -380,6 +381,7 @@ const styles = StyleSheet.create({
   dateLabel: {
     fontFamily: 'Digitale-Regular',
     fontSize: 10,
+    textAlign: 'center',
     color: colors.text,
     letterSpacing: 0.3,
   },

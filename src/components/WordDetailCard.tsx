@@ -58,7 +58,7 @@ function FieldRow({
   return (
     <View style={styles.fieldWrap}>
       <View style={styles.fieldRow}>
-        <Icon size={14} color={colors.text} />
+        <Icon size={14} color={'#B3B9C4'} />
         <Text style={[styles.fieldText, italic && styles.fieldTextItalic]}>
           {stripEmphasis(children)}
         </Text>
@@ -98,7 +98,7 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
             accessibilityLabel="Share this word"
             hitSlop={10}
           >
-            <IconSend size={22} color={colors.textFaint} />
+            <IconSend size={18} color={colors.textMuted} />
           </Pressable>
           <FavouriteButton wordId={word.id} />
         </View>
@@ -144,7 +144,7 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
       {usage ? (
         <View style={styles.usageWrap}>
           <View style={styles.usageBox}>
-            <IconChartBar size={14} color={colors.text} />
+            <IconChartBar size={14} color={'#B3B9C4'} />
             {USAGE_OPTIONS.map((opt) => (
               <View
                 key={opt.value}
@@ -170,7 +170,7 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
       {related.length ? (
         <View style={styles.relatedWrap}>
           <View style={styles.relatedRow}>
-            <IconLink size={14} color={colors.text} />
+            <IconLink size={14} color={'#B3B9C4'} />
             {related.map((r) => (
               <Pressable
                 key={r.slug}
@@ -194,9 +194,9 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.inset,
     borderRadius: 16,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 1,
     borderColor: colors.fieldBorder,
     paddingHorizontal: 17,
     paddingTop: spacing.md + 4,
@@ -251,12 +251,12 @@ const styles = StyleSheet.create({
   },
   term: {
     color: colors.text,
-    fontSize: 34,
-    fontFamily: fonts.semibold,
-    lineHeight: 34,
+    fontSize: 60,
+    fontFamily: fonts.display,
+    lineHeight: 56,
   },
   pron: {
-    color: colors.textMuted,
+    color: colors.metaText,
     fontFamily: fonts.semibold,
     fontSize: 12,
     letterSpacing: 0.3,
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   },
   fields: {
     marginTop: spacing.md + 4,
-    gap: 16,
+    gap: 12,
   },
   fieldWrap: {
     position: 'relative',
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-    backgroundColor: colors.inset,
+    backgroundColor: colors.surface,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.fieldBorder,
     borderRadius: 8,
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-    backgroundColor: colors.inset,
+    backgroundColor: colors.surface,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.fieldBorder,
     borderRadius: 8,
@@ -374,6 +374,8 @@ const styles = StyleSheet.create({
     minHeight: 52,
     borderRadius: 8,
     backgroundColor: colors.surface,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.fieldBorder,
   },
   relatedLabelPatch: {
     position: 'absolute',
@@ -383,9 +385,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   relatedChip: {
-    backgroundColor: colors.relatedSoft,
+    backgroundColor: colors.primarySoft,
     borderWidth: 1,
-    borderColor: colors.related,
+    borderColor: colors.primary,
     borderRadius: radii.pill,
     paddingHorizontal: 8,
     paddingVertical: 4,
@@ -394,7 +396,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   relatedChipText: {
-    color: colors.related,
+    color: colors.primary,
     fontFamily: fonts.bold,
     fontSize: 10,
     letterSpacing: 0.3,
