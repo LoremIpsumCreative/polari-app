@@ -88,7 +88,7 @@ export default function CollectionsHub() {
   if (!session) {
     return (
       <View style={styles.screen}>
-        <Text style={[styles.gateCopy, { left: 33 * s, top: 90 * s, width: 330 * s, fontSize: 18 * s, lineHeight: 26 * s }]}>
+        <Text style={[styles.gateCopy, { left: 33 * s, top: 90 * s, width: 330 * s, fontSize: 18 * s, lineHeight: 17.7 * s }]}>
           Sign in or create an account to save favourites, earn achievements and access the
           character gallery
         </Text>
