@@ -39,10 +39,10 @@ const RESTING_ICON_CENTER = 41.5;
 const LABEL_CAP_TOP = 71;
 const LABEL_BOX_TOP = LABEL_CAP_TOP - 1.5;
 const LABEL_SIZE = 10;
-// Tabs sit on an even 70px pitch about the bar's centre line. The mockup's own
-// nodes wander by up to 1.5px from that pitch (they were placed by hand); the
-// even spacing is plainly the intent and keeps the bar symmetrical.
-const TAB_PITCH = 70;
+// Tabs divide the bar's width evenly and sit at the centre of their share, so
+// the row stays centred and reaches the edges at any screen size. The mockup
+// insets them further (a 70px pitch, leaving ~14.5% clear either side), but
+// edge-to-edge is the intended behaviour here.
 
 // The bubble's top half overhangs the bar into the screen above it, so screens
 // must keep this much clear at the bottom or their content collides with it.
@@ -126,6 +126,7 @@ const TabItem = memo(function TabItem({
   routeName,
   active,
   centre,
+  slotWidth,
   s,
   onPress,
 }: {
@@ -133,6 +134,7 @@ const TabItem = memo(function TabItem({
   routeName: string;
   active: boolean;
   centre: number;
+  slotWidth: number;
   s: number;
   onPress: () => void;
 }) {
@@ -160,7 +162,7 @@ const TabItem = memo(function TabItem({
 
   return (
     <Pressable
-      style={[styles.tab, { left: centre - (TAB_PITCH * s) / 2, width: TAB_PITCH * s }]}
+      style={[styles.tab, { left: centre - slotWidth / 2, width: slotWidth }]}
       onPress={onPress}
       accessibilityRole="tab"
       accessibilityState={{ selected: active }}
@@ -213,10 +215,8 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
   const s = Math.min(width, 430) / DESIGN_WIDTH;
 
   const barHeight = BAR_HEIGHT * s;
-  // Tabs are laid out on an even pitch about the bar's centre, so the row stays
-  // centred (and the pitch stays true to the mockup) at any screen width.
-  const centreFor = (index: number) =>
-    barWidth / 2 + (index - (state.routes.length - 1) / 2) * TAB_PITCH * s;
+  const slotWidth = barWidth / state.routes.length;
+  const centreFor = (index: number) => (index + 0.5) * slotWidth;
 
   const initialCx = useRef(centreFor(state.index)).current;
   const notchX = useRef(new Animated.Value(initialCx)).current;
@@ -288,6 +288,7 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
             routeName={route.name}
             active={active}
             centre={centreFor(index)}
+            slotWidth={slotWidth}
             s={s}
             onPress={handlePress}
           />
