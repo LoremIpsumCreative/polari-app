@@ -26,7 +26,6 @@ import { WordDetailCard } from '../../src/components/WordDetailCard';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
 import { getUnlockedDate, setUnlockedToday, todayKey } from '../../src/lib/dailyUnlock';
-import { TAB_CONTENT_CLEARANCE } from '../../src/components/AnimatedTabBar';
 import { colors, fonts, spacing } from '../../src/lib/theme';
 
 const presentArt = require('../../assets/present.png');
@@ -241,6 +240,36 @@ export default function TodayScreen() {
             <IconArrowsMaximize size={22} color={colors.textFaint} />
           </Pressable>
           <WordDetailCard word={word} compact />
+
+          {/* Day selector sits in flow under the card (Figma 1114:1023, y920) */}
+          <View style={styles.pagerPill}>
+            <Pressable
+              onPress={goBackADay}
+              disabled={dayOffset >= maxOffset}
+              style={({ pressed }) => [styles.pagerButton, pressed && styles.pagerPressed]}
+              accessibilityRole="button"
+              accessibilityLabel="Previous word of the day"
+              accessibilityState={{ disabled: dayOffset >= maxOffset }}
+              hitSlop={12}
+            >
+              <IconChevronLeft
+                size={20}
+                color={dayOffset >= maxOffset ? '#D9D9D9' : colors.text}
+              />
+            </Pressable>
+            <Text style={styles.dateLabel}>{dateLabel}</Text>
+            <Pressable
+              onPress={goForwardADay}
+              disabled={dayOffset === 0}
+              style={({ pressed }) => [styles.pagerButton, pressed && styles.pagerPressed]}
+              accessibilityRole="button"
+              accessibilityLabel="Next word of the day"
+              accessibilityState={{ disabled: dayOffset === 0 }}
+              hitSlop={12}
+            >
+              <IconChevronRight size={20} color={dayOffset === 0 ? '#D9D9D9' : colors.text} />
+            </Pressable>
+          </View>
         </Animated.View>
       </ScrollView>
 
@@ -269,36 +298,6 @@ export default function TodayScreen() {
         </Pressable>
       ) : null}
 
-      {/* Floating day selector: pinned above the navbar so long cards
-          scroll beneath it instead of pushing it off screen */}
-      <View style={styles.pagerPill}>
-        <Pressable
-          onPress={goBackADay}
-          disabled={dayOffset >= maxOffset}
-          style={({ pressed }) => [styles.pagerButton, pressed && styles.pagerPressed]}
-          accessibilityRole="button"
-          accessibilityLabel="Previous word of the day"
-          accessibilityState={{ disabled: dayOffset >= maxOffset }}
-          hitSlop={12}
-        >
-          <IconChevronLeft
-            size={20}
-            color={dayOffset >= maxOffset ? '#D9D9D9' : colors.text}
-          />
-        </Pressable>
-        <Text style={styles.dateLabel}>{dateLabel}</Text>
-        <Pressable
-          onPress={goForwardADay}
-          disabled={dayOffset === 0}
-          style={({ pressed }) => [styles.pagerButton, pressed && styles.pagerPressed]}
-          accessibilityRole="button"
-          accessibilityLabel="Next word of the day"
-          accessibilityState={{ disabled: dayOffset === 0 }}
-          hitSlop={12}
-        >
-          <IconChevronRight size={20} color={dayOffset === 0 ? '#D9D9D9' : colors.text} />
-        </Pressable>
-      </View>
     </View>
   );
 }
@@ -332,7 +331,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: spacing.md,
+    // Matches Figma 1114:1023: 14px side margins, character at y87, card at
+    // y350. The 87 also keeps content clear of the status bar on device.
+    paddingHorizontal: 14,
+    paddingTop: 87,
     // Clear the floating day-selector pill and the navbar bubble
     paddingBottom: spacing.xl + 96,
   },
@@ -348,8 +350,8 @@ const styles = StyleSheet.create({
     width: 190,
     height: 253,
     alignSelf: 'center',
-    marginTop: spacing.md + 8,
-    marginBottom: 13,
+    // Card follows 10px below the character (Figma: art ends 340, card at 350)
+    marginBottom: 10,
   },
   milestoneBanner: {
     position: 'absolute',
@@ -374,10 +376,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   pagerPill: {
-    position: 'absolute',
-    // Today is the centre tab, so its selection bubble rises directly beneath
-    // this pill — keep the pill fully above the bubble's overhang.
-    bottom: TAB_CONTENT_CLEARANCE,
+    // In flow, 10 below the card (Figma 1114:1023: card ends 910, pill at 920)
+    marginTop: 10,
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',

@@ -29,9 +29,9 @@ export function FavouriteButton({ wordId }: { wordId: string }) {
       hitSlop={10}
     >
       {favourited ? (
-        <IconHeartFilled size={22} color={colors.heart} />
+        <IconHeartFilled size={20} color={colors.heart} />
       ) : (
-        <IconHeart size={22} color={colors.textFaint} />
+        <IconHeart size={20} color={colors.textFaint} />
       )}
     </Pressable>
   );
@@ -39,7 +39,7 @@ export function FavouriteButton({ wordId }: { wordId: string }) {
 
 const styles = StyleSheet.create({
   button: {
-    padding: spacing.xs,
+    padding: 0,
     borderRadius: radii.sm,
   },
   buttonPressed: {

@@ -198,15 +198,15 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.fieldBorder,
-    paddingHorizontal: 17,
-    paddingTop: spacing.md + 4,
+    paddingHorizontal: 18,
+    paddingTop: 22,
     paddingBottom: spacing.md,
   },
   badgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm - 2,
-    marginBottom: 34,
+    marginBottom: 19,
   },
   badge: {
     backgroundColor: colors.primarySoft,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     borderRadius: radii.pill,
     paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingVertical: 2,
   },
   badgeText: {
     color: colors.primary,
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     borderColor: colors.chipGrey,
     borderRadius: radii.pill,
     paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingVertical: 2,
   },
   posText: {
     color: colors.chipGrey,
@@ -243,7 +243,8 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   shareButton: {
-    padding: spacing.xs,
+    // No padding: the mock's row height comes from the 18px icon itself.
+    padding: 0,
     borderRadius: radii.sm,
   },
   shareButtonPressed: {
@@ -253,18 +254,19 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 60,
     fontFamily: fonts.display,
-    lineHeight: 56,
+    lineHeight: 42,
   },
   pron: {
     color: colors.metaText,
     fontFamily: fonts.semibold,
     fontSize: 12,
     letterSpacing: 0.3,
-    marginTop: 10,
-    marginBottom: 6,
+    lineHeight: 12,
+    marginTop: 12,
+    marginBottom: 0,
   },
   fields: {
-    marginTop: spacing.md + 4,
+    marginTop: 20,
     gap: 12,
   },
   fieldWrap: {
@@ -275,7 +277,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 14,
     backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 0.5,
     borderColor: colors.fieldBorder,
     borderRadius: 8,
     paddingHorizontal: 14,
@@ -334,7 +336,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 14,
     backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 0.5,
     borderColor: colors.fieldBorder,
     borderRadius: 8,
     padding: 14,
@@ -374,7 +376,7 @@ const styles = StyleSheet.create({
     minHeight: 52,
     borderRadius: 8,
     backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 0.5,
     borderColor: colors.fieldBorder,
   },
   relatedLabelPatch: {
