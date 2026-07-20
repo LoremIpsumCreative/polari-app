@@ -6,7 +6,16 @@ export default function TabsLayout() {
   return (
     <Tabs
       initialRouteName="index"
-      screenOptions={{ headerShown: true, ...headerOptions }}
+      screenOptions={{
+        headerShown: true,
+        ...headerOptions,
+        // The bar floats over the screens rather than taking layout space, so
+        // every screen's background runs the full height of the device — which
+        // is what the notch reveals. Without this the scoop shows the
+        // navigator's own backdrop instead of the screen behind it.
+        tabBarStyle: { position: 'absolute', backgroundColor: 'transparent', borderTopWidth: 0 },
+        sceneStyle: { backgroundColor: 'transparent' },
+      }}
       tabBar={(props) => <AnimatedTabBar {...props} />}
     >
       {/* Tab order mirrors the Figma navbar: Collections · Dictionary · Today · Quiz · Account */}

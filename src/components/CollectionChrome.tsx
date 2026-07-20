@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { IconChevronLeft, IconSearch } from '@tabler/icons-react-native';
 import { colors, fonts } from '../lib/theme';
+import { useTabBarInset } from './AnimatedTabBar';
 
 // Shared chrome for the Collections sub-screens (Figma section 1117:1577):
 // "◀ Collections" back chip, a Mouse Memoirs title chip in the screen's
@@ -85,6 +86,7 @@ export function CollectionPanel({
   children: ReactNode;
   width?: number; // design units; defaults to full width minus margins
 }) {
+  const tabInset = useTabBarInset();
   return (
     <View
       style={[
@@ -92,7 +94,7 @@ export function CollectionPanel({
         {
           left: 17 * s,
           top: 133 * s,
-          bottom: 49 * s,
+          bottom: 49 * s + tabInset,
           width: (width ?? 363) * s,
           borderRadius: 14 * s,
         },

@@ -49,6 +49,15 @@ const TAB_PITCH = 70;
 export const TAB_BUBBLE_OVERHANG = -BUBBLE_TOP;
 export const TAB_CONTENT_CLEARANCE = TAB_BUBBLE_OVERHANG + 20;
 
+// The bar floats over the screens, so anything a screen anchors to the bottom
+// has to clear it by hand. The mockup frames measure such elements from the
+// bar's top edge (y754 of 855), which is exactly what this returns.
+export function useTabBarInset() {
+  const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+  return BAR_HEIGHT * (Math.min(width, 430) / DESIGN_WIDTH) + insets.bottom;
+}
+
 const TAB_ICONS: Record<string, NavIconName> = {
   favourites: 'collections',
   dictionary: 'dictionary',
@@ -290,8 +299,14 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
 
 const styles = StyleSheet.create({
   bar: {
-    // Transparent: the bar's own white comes from the notched path, so the
-    // screen behind shows through the scoop.
+    // Absolute so the bar claims no layout space: screens then run the full
+    // height of the device and it is the screen — not the navigator's backdrop
+    // — that shows through the scoop.
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    // Transparent: the bar's own white comes from the notched path.
     backgroundColor: 'transparent',
     overflow: 'visible',
   },

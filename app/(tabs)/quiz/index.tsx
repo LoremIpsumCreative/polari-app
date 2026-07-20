@@ -16,6 +16,7 @@ import { useWords } from '../../../src/lib/words';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { QUIZ_MODES } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
+import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
 const quizmasterArt = require('../../../assets/quiz/quizmaster.png');
 
@@ -44,6 +45,7 @@ export default function QuizIntroScreen() {
   const { bestFor } = useQuizStats();
   const { width } = useWindowDimensions();
   const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const tabInset = useTabBarInset();
 
   const heroOpacity = useRef(new Animated.Value(0)).current;
   const uiOpacity = useRef(new Animated.Value(0)).current;
@@ -149,7 +151,7 @@ export default function QuizIntroScreen() {
         style={{
           position: 'absolute',
           left: 78 * s,
-          bottom: 123 * s,
+          bottom: 123 * s + tabInset,
           width: 12 * s,
           height: 11 * s,
           borderRadius: 6 * s,
@@ -187,7 +189,7 @@ export default function QuizIntroScreen() {
                 <View
                   style={[
                     styles.scoreBadge,
-                    { left: badge.x * s, bottom: badge.b * s, width: 40 * s, height: 19 * s },
+                    { left: badge.x * s, bottom: badge.b * s + tabInset, width: 40 * s, height: 19 * s },
                   ]}
                 >
                   <IconTrophy size={10 * s} color="#C25100" />
@@ -200,7 +202,7 @@ export default function QuizIntroScreen() {
                     styles.modeCircle,
                     {
                       left: circle.x * s,
-                      bottom: circle.b * s,
+                      bottom: circle.b * s + tabInset,
                       width: 50 * s,
                       height: 50 * s,
                       borderRadius: 25 * s,
@@ -217,7 +219,7 @@ export default function QuizIntroScreen() {
                 <Text
                   style={[
                     styles.modeLabel,
-                    { left: label.x * s, bottom: label.b * s, width: 65 * s, fontSize: 10 * s },
+                    { left: label.x * s, bottom: label.b * s + tabInset, width: 65 * s, fontSize: 10 * s },
                   ]}
                 >
                   {m.label}

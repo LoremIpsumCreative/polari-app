@@ -20,6 +20,7 @@ import {
   HEART_RED,
 } from '../../../src/components/CollectionChrome';
 import { colors, fonts } from '../../../src/lib/theme';
+import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
 const favouretteArt = require('../../../assets/collections/favourette.png');
 
@@ -35,6 +36,7 @@ export default function FavouritesListScreen() {
   const { words } = useWords();
   const { width } = useWindowDimensions();
   const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const tabInset = useTabBarInset();
 
   const [search, setSearch] = useState('');
   const scrollRef = useRef<ScrollView>(null);
@@ -147,7 +149,7 @@ export default function FavouritesListScreen() {
       <View
         style={[
           styles.rail,
-          { right: 13 * s, top: 133 * s, bottom: 49 * s, width: 30 * s, borderRadius: 16 * s },
+          { right: 13 * s, top: 133 * s, bottom: 49 * s + tabInset, width: 30 * s, borderRadius: 16 * s },
         ]}
       >
         {ALPHABET.map((letter) => {

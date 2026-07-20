@@ -10,6 +10,7 @@ import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { nextQuestion, QUIZ_LENGTH, type QuizQuestion } from '../../../src/lib/quiz';
 import { QUIZ_MODES, isQuizModeId, type QuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
+import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
 // All geometry lives in the Figma frames' 394-wide design space and is scaled
 // by the device width, so the screens reproduce the mockups proportionally.
@@ -28,6 +29,7 @@ export default function QuizPlayScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const tabInset = useTabBarInset();
 
   const params = useLocalSearchParams<{ mode?: string }>();
   const isReview = params.mode === 'review';
@@ -375,7 +377,7 @@ export default function QuizPlayScreen() {
           the bar), so tiles can grow upward without ever crowding the bubble. */}
       {isMatch ? (
         // Words run down the left column, meanings down the right (per Figma).
-        <View style={[styles.grid, { left: 21 * s, bottom: 124 * s, width: 352 * s, columnGap: 17 * s, rowGap: 20 * s }]}>
+        <View style={[styles.grid, { left: 21 * s, bottom: 124 * s + tabInset, width: 352 * s, columnGap: 17 * s, rowGap: 20 * s }]}>
           {q.words.map((w, i) => {
             const paired = matchPairs[i] !== null;
             const sel = matchSel === i;
@@ -432,7 +434,7 @@ export default function QuizPlayScreen() {
           })}
         </View>
       ) : (
-        <View style={[styles.grid, { left: 21 * s, bottom: 124 * s, width: 352 * s, columnGap: 20 * s, rowGap: 20 * s }]}>
+        <View style={[styles.grid, { left: 21 * s, bottom: 124 * s + tabInset, width: 352 * s, columnGap: 20 * s, rowGap: 20 * s }]}>
           {q.options.map((option, index) => {
             const isCorrect = index === q.correctIndex;
             const isSelected = index === selectedIndex;
@@ -472,7 +474,7 @@ export default function QuizPlayScreen() {
       <Pressable
         style={({ pressed }) => [
           styles.continueButton,
-          { width: 235 * s, height: 38 * s, bottom: 54 * s },
+          { width: 235 * s, height: 38 * s, bottom: 54 * s + tabInset },
           !answered && styles.continueDisabled,
           pressed && answered && { opacity: 0.85 },
         ]}

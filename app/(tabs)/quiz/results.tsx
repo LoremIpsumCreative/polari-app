@@ -18,6 +18,7 @@ import { useAuth } from '../../../src/lib/auth';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { isQuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
+import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
 // End-of-quiz screens (Figma 1114:482 / 1114:520 / 1365:1425, revised): a
 // stroke-burst behind gradient letterform titles, the score in a light panel
@@ -76,6 +77,7 @@ export default function QuizResultsScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const tabInset = useTabBarInset();
 
   const params = useLocalSearchParams<{
     mode?: string;
@@ -183,7 +185,7 @@ export default function QuizResultsScreen() {
         style={({ pressed }) => [
           styles.button,
           styles.finish,
-          { left: 39 * s, bottom: 50 * s, width: 149 * s, height: 42 * s },
+          { left: 39 * s, bottom: 50 * s + tabInset, width: 149 * s, height: 42 * s },
           pressed && styles.pressed,
         ]}
         onPress={() => router.replace('/quiz')}
@@ -195,7 +197,7 @@ export default function QuizResultsScreen() {
         style={({ pressed }) => [
           styles.button,
           styles.playAgain,
-          { left: 206 * s, bottom: 50 * s, width: 149 * s, height: 42 * s },
+          { left: 206 * s, bottom: 50 * s + tabInset, width: 149 * s, height: 42 * s },
           pressed && styles.pressed,
         ]}
         onPress={() => router.replace(`/quiz/play?mode=${isReview ? 'review' : modeId}`)}

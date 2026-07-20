@@ -14,6 +14,7 @@ import { useWords } from '../../../src/lib/words';
 import { useCollections } from '../../../src/lib/collections';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import type { Word } from '../../../src/types/database';
+import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
 type Filter = 'all' | 'word' | 'phrase';
 
@@ -81,6 +82,7 @@ function CollectionsRail() {
 export default function DictionaryScreen() {
   const router = useRouter();
   const { words, loading, error, refetch } = useWords();
+  const tabInset = useTabBarInset();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
 
@@ -149,7 +151,7 @@ export default function DictionaryScreen() {
           <WordRow word={item} onPress={() => router.push(`/dictionary/${item.slug}`)} />
         )}
         keyExtractor={(item) => item.slug}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[styles.listContent, { paddingBottom: tabInset + spacing.lg }]}
         ListEmptyComponent={
           <View style={styles.center}>
             <Text style={styles.emptyText}>Nanti matches for “{query.trim()}”, ducky.</Text>
