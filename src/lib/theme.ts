@@ -72,6 +72,7 @@ export const fonts = {
   bold: 'Digitale-Bold',
   extrabold: 'Digitale-Extrabold',
   boldItalic: 'Digitale-BoldItalic',
+  semiboldItalic: 'Digitale-SemiboldItalic',
 };
 
 // Shared navigator header styling (flat, canvas-coloured, Digitale)

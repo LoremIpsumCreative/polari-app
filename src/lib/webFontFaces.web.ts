@@ -17,7 +17,8 @@ const FACES: { family: string; file: string; weight: number; italic?: boolean }[
   { family: 'Digitale-Bold', file: 'Digitale-Variable', weight: 700 },
   { family: 'Digitale-Extrabold', file: 'Digitale-Variable', weight: 800 },
   { family: 'Digitale-Italic', file: 'Digitale-VariableItalic', weight: 400, italic: true },
-  // The bubble copy on the results screens wants a heavier italic.
+  // The results bubbles want heavier italics than the regular cut.
+  { family: 'Digitale-SemiboldItalic', file: 'Digitale-VariableItalic', weight: 600, italic: true },
   { family: 'Digitale-BoldItalic', file: 'Digitale-VariableItalic', weight: 700, italic: true },
 ];
 

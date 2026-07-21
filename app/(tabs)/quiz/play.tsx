@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
 import { IconChevronLeft, IconFlame, IconTrophy } from '@tabler/icons-react-native';
 import { useWords } from '../../../src/lib/words';
 import { useProgress } from '../../../src/lib/progress';
@@ -24,6 +24,22 @@ const PAIR_STYLES = [
   { fill: '#F7FFEC', ink: '#5B7F24' },
   { fill: '#FFF6FC', ink: '#CD519D' },
 ] as const;
+
+// Countdown screen (Figma 1114:330 / 1353:522 / 1353:548). The frames measure
+// text from its cap line; these tops are that cap line solved back through
+// Digitale's metrics (ascender 1.0em, descender 0.3em, cap 0.7em) and Mouse
+// Memoirs' (0.9375 / 0.2125 / 0.7193) for the given line heights.
+const CD = {
+  washTop: 408,
+  washHeight: 447,
+  titleTop: 146.3, // cap line 153
+  blurbTop: 24.9, // cap line 307.7, relative to the panel's top at 280
+  startsInTop: 535, // cap line 538
+  numberTop: 459, // cap line 475
+  // "Rectangle 24": a subtly skewed rounded rect, not a symmetrical one.
+  panel:
+    'M0 10.3097 C0 4.6674 4.66523 0.142329 10.3049 0.314388 L285.305 8.70422 C290.707 8.86901 295 13.2955 295 18.6996 L295 64.787 C295 70.2249 290.655 74.6661 285.218 74.7846 L10.2179 80.7773 C4.61107 80.8995 0 76.3878 0 70.7797 L0 10.3097 Z',
+};
 
 export default function QuizPlayScreen() {
   const router = useRouter();
@@ -132,27 +148,71 @@ export default function QuizPlayScreen() {
   if (phase === 'countdown') {
     return (
       <View style={styles.stage}>
-        <Svg style={StyleSheet.absoluteFill} width="100%" height="100%" pointerEvents="none">
+        {/* Wash to near-black (Figma "gradient overlay", y408-855). Its gradient
+            reaches solid at 62.7% of its own height, not at its foot. */}
+        <Svg
+          style={[styles.cdWash, { top: CD.washTop * s, height: CD.washHeight * s }]}
+          width="100%"
+          height={CD.washHeight * s}
+          pointerEvents="none"
+        >
           <Defs>
-            <LinearGradient id="cdFade" x1="0" y1="0" x2="0" y2="1">
+            <LinearGradient id="cdFade" x1="0.803" y1="0.0217" x2="0.803" y2="0.6271">
               <Stop offset="0" stopColor={colors.stageDeep} stopOpacity={0} />
               <Stop offset="1" stopColor={colors.stageDeep} stopOpacity={1} />
             </LinearGradient>
           </Defs>
-          <Rect x="0" y="47.7%" width="100%" height="52.3%" fill="url(#cdFade)" />
+          <Rect x="0" y="0" width="100%" height="100%" fill="url(#cdFade)" />
         </Svg>
 
         <View style={[styles.cdIcon, { top: 80 * s, width: 43 * s, height: 43 * s, borderRadius: 22 * s }]}>
           <mode.Icon size={17 * s} color={colors.textMuted} />
         </View>
-        <Text style={[styles.cdTitle, { top: 141 * s, fontSize: 80 * s }]}>{isReview ? 'Review' : mode.label}</Text>
-        <View style={[styles.cdBlurb, { top: 280 * s, width: 295 * s, borderRadius: 10 * s, paddingVertical: 16 * s }]}>
-          <Text style={[styles.cdBlurbText, { fontSize: 14 * s, width: 262 * s }]}>
+
+        <Text
+          style={[
+            styles.cdTitle,
+            { top: CD.titleTop * s, fontSize: 80 * s, lineHeight: 70.4 * s },
+          ]}
+        >
+          {isReview ? 'Review' : mode.label}
+        </Text>
+
+        {/* The blurb panel is a hand-drawn blob at 20%, not a plain rounded box */}
+        <View style={{ position: 'absolute', left: 50 * s, top: 280 * s, width: 295 * s, height: 81 * s }}>
+          <Svg
+            style={StyleSheet.absoluteFill}
+            width={295 * s}
+            height={81 * s}
+            viewBox="0 0 295 81"
+            pointerEvents="none"
+          >
+            <Path d={CD.panel} fill="#F9F7FF" fillOpacity={0.2} />
+          </Svg>
+          <Text
+            style={[
+              styles.cdBlurbText,
+              { top: CD.blurbTop * s, left: 16 * s, width: 262 * s, fontSize: 14 * s, lineHeight: 15.4 * s },
+            ]}
+          >
             {isReview ? 'A quick pass over your due words.' : mode.blurb}
           </Text>
         </View>
-        <Text style={[styles.cdStartsIn, { top: 538 * s, left: 69 * s, fontSize: 20 * s }]}>Quiz starts in:</Text>
-        <Text style={[styles.cdNumber, { top: 445 * s, left: 217 * s, fontSize: 200 * s }]}>
+
+        <Text
+          style={[
+            styles.cdStartsIn,
+            { top: CD.startsInTop * s, left: 69 * s, fontSize: 20 * s, lineHeight: 20 * s },
+          ]}
+        >
+          Quiz starts in:
+        </Text>
+        <Text
+          style={[
+            styles.cdNumber,
+            { top: CD.numberTop * s, left: 217 * s, width: 108 * s, fontSize: 200 * s, lineHeight: 176 * s },
+          ]}
+        >
           {Math.max(count, 1)}
         </Text>
       </View>
@@ -498,11 +558,11 @@ const styles = StyleSheet.create({
   // Countdown (dark stage)
   stage: { flex: 1, backgroundColor: colors.stage, alignItems: 'center' },
   cdIcon: { position: 'absolute', backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
-  cdTitle: { position: 'absolute', fontFamily: fonts.display, color: '#FFFFFF' },
-  cdBlurb: { position: 'absolute', backgroundColor: 'rgba(249, 247, 255, 0.2)', alignItems: 'center' },
-  cdBlurbText: { fontFamily: fonts.regular, color: '#FFFFFF', textAlign: 'center', lineHeight: 16 },
+  cdWash: { position: 'absolute', left: 0, right: 0 },
+  cdTitle: { position: 'absolute', left: 0, right: 0, textAlign: 'center', fontFamily: fonts.display, color: '#FFFFFF' },
+  cdBlurbText: { position: 'absolute', fontFamily: fonts.regular, color: '#FFFFFF', textAlign: 'center' },
   cdStartsIn: { position: 'absolute', fontFamily: fonts.semibold, color: '#FFFBEC' },
-  cdNumber: { position: 'absolute', fontFamily: fonts.extrabold, color: '#FFFFFF', lineHeight: undefined },
+  cdNumber: { position: 'absolute', textAlign: 'center', fontFamily: fonts.extrabold, color: '#FFFFFF' },
 
   // Header
   backChip: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 4 },

@@ -305,7 +305,7 @@ export default function QuizResultsScreen() {
               fontSize: l.fs * s,
               lineHeight: l.fs * 1.15 * s,
               color: l.color,
-              fontFamily: l.lead ? fonts.boldItalic : fonts.italic,
+              fontFamily: l.lead ? fonts.boldItalic : fonts.semiboldItalic,
             },
           ]}
         >
