@@ -433,11 +433,11 @@ export default function QuizPlayScreen() {
         />
       ) : null}
 
-      {/* Answers — anchored to the bottom like the mockups (grid ends 124 above
-          the bar), so tiles can grow upward without ever crowding the bubble. */}
+      {/* Answers — anchored to the bottom like the mockups (the grid's foot is
+          127 above the bar), so tiles grow upward without crowding the bubble. */}
       {isMatch ? (
         // Words run down the left column, meanings down the right (per Figma).
-        <View style={[styles.grid, { left: 21 * s, bottom: 124 * s + tabInset, width: 352 * s, columnGap: 17 * s, rowGap: 20 * s }]}>
+        <View style={[styles.grid, { left: 21 * s, bottom: 127 * s + tabInset, width: 352 * s, columnGap: 17 * s, rowGap: 20 * s }]}>
           {q.words.map((w, i) => {
             const paired = matchPairs[i] !== null;
             const sel = matchSel === i;
@@ -494,7 +494,7 @@ export default function QuizPlayScreen() {
           })}
         </View>
       ) : (
-        <View style={[styles.grid, { left: 21 * s, bottom: 124 * s + tabInset, width: 352 * s, columnGap: 20 * s, rowGap: 20 * s }]}>
+        <View style={[styles.grid, { left: 21 * s, bottom: 127 * s + tabInset, width: 352 * s, columnGap: 20 * s, rowGap: 20 * s }]}>
           {q.options.map((option, index) => {
             const isCorrect = index === q.correctIndex;
             const isSelected = index === selectedIndex;
@@ -529,12 +529,12 @@ export default function QuizPlayScreen() {
         </View>
       )}
 
-      {/* Continue — always present, enabled once answered; its bottom margin is
-          the Figma gap to the bar (54), which also clears the bubble. */}
+      {/* Continue — always present, enabled once answered; its foot sits the
+          frame's 53 above the bar, which also clears the bubble. */}
       <Pressable
         style={({ pressed }) => [
           styles.continueButton,
-          { width: 235 * s, height: 38 * s, bottom: 54 * s + tabInset },
+          { width: 235 * s, height: 42 * s, bottom: 53 * s + tabInset },
           !answered && styles.continueDisabled,
           pressed && answered && { opacity: 0.85 },
         ]}
@@ -551,7 +551,8 @@ export default function QuizPlayScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
+  // The question frames use a lighter canvas than the app default.
+  screen: { flex: 1, backgroundColor: '#E7E9EC' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background },
   dimText: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 15 },
 
