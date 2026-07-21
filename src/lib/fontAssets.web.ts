@@ -1,12 +1,7 @@
-// Web font assets. Browsers render woff2 (smaller and faster than otf), so the
-// web build uses these while native uses the otf files in fontAssets.ts. Metro
-// resolves this ".web" file automatically when bundling for web.
-export const fontAssets = {
-  'Digitale-Regular': require('../../assets/fonts/Digitale-Regular.woff2'),
-  'Digitale-Italic': require('../../assets/fonts/Digitale-Italic.woff2'),
-  'Digitale-Semibold': require('../../assets/fonts/Digitale-Semibold.woff2'),
-  'Digitale-Bold': require('../../assets/fonts/Digitale-Bold.woff2'),
-  'Digitale-Extrabold': require('../../assets/fonts/Digitale-Extrabold.woff2'),
-  // Display face for quiz headlines, mode chips and countdown titles.
-  'MouseMemoirs-Regular': require('../../assets/fonts/MouseMemoirs-Regular.woff2'),
-};
+// Web font assets. Digitale is now a variable family whose weight axis has to
+// be pinned per alias — something expo-font's web loader cannot express, since
+// it injects @font-face rules with no weight descriptor and the axis defaults
+// to 100 (Thin). The web faces are therefore declared as CSS in
+// webFontFaces.web.ts and served from public/fonts, leaving nothing for
+// expo-font to load here.
+export const fontAssets = {};

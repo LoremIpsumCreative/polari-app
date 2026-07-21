@@ -9,8 +9,14 @@ import { FavouritesProvider } from '../src/lib/favourites';
 import { StreaksProvider } from '../src/lib/streaks';
 import { ProgressProvider } from '../src/lib/progress';
 import { colors } from '../src/lib/theme';
-// Resolves to fontAssets.web.ts (woff2) on web and fontAssets.ts (otf) on native.
+// Resolves to fontAssets.web.ts on web and fontAssets.ts on native.
 import { fontAssets } from '../src/lib/fontAssets';
+import { installWebFonts } from '../src/lib/webFontFaces';
+
+// Digitale's weight axis has to be pinned per face, which only CSS can express,
+// so web declares its own @font-face rules. Run at module scope so the rules are
+// in the document before anything renders.
+installWebFonts();
 
 // On web, cap the app at a smartphone-sized column so wide browser windows
 // don't stretch the layout. Native devices are already phone-sized.

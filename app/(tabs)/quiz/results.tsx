@@ -305,9 +305,8 @@ export default function QuizResultsScreen() {
               fontSize: l.fs * s,
               lineHeight: l.fs * 1.15 * s,
               color: l.color,
-              fontFamily: l.lead ? fonts.bold : fonts.italic,
+              fontFamily: l.lead ? fonts.boldItalic : fonts.italic,
             },
-            l.lead && styles.bubbleLead,
           ]}
         >
           {l.text}
@@ -391,9 +390,6 @@ const styles = StyleSheet.create({
   },
   score: { fontFamily: fonts.extrabold, color: '#352C63', letterSpacing: 1 },
   bubbleLine: { position: 'absolute', textAlign: 'center' },
-  // Digitale ships no Bold Italic / Semibold Italic in this repo, so the lead
-  // line leans on a synthesised oblique and the body uses the true italic.
-  bubbleLead: { fontStyle: 'italic' },
   reviewNote: {
     position: 'absolute',
     alignSelf: 'center',

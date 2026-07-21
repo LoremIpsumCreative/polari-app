@@ -60,6 +60,8 @@ export const tabAccents: Record<string, string> = {
   profile: '#227D9B', // Account
 };
 
+// Digitale is one variable family; each name below is an alias pinned to a
+// point on its weight axis (see webFontFaces.web.ts).
 export const fonts = {
   // Display face (Mouse Memoirs) — quiz headlines, mode chips, countdown titles.
   // Everything else is Digitale.
@@ -69,6 +71,7 @@ export const fonts = {
   semibold: 'Digitale-Semibold',
   bold: 'Digitale-Bold',
   extrabold: 'Digitale-Extrabold',
+  boldItalic: 'Digitale-BoldItalic',
 };
 
 // Shared navigator header styling (flat, canvas-coloured, Digitale)

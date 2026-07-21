@@ -39,10 +39,20 @@ const RESTING_ICON_CENTER = 41.5;
 const LABEL_CAP_TOP = 71;
 const LABEL_BOX_TOP = LABEL_CAP_TOP - 1.5;
 const LABEL_SIZE = 10;
-// Tabs divide the bar's width evenly and sit at the centre of their share, so
-// the row stays centred and reaches the edges at any screen size. The mockup
-// insets them further (a 70px pitch, leaving ~14.5% clear either side), but
-// edge-to-edge is the intended behaviour here.
+// The updated component spreads the tabs on a 76px pitch. Its own nodes drift
+// ~8px off-centre (37 clear on the left, 29 on the right), so the pitch is kept
+// and re-centred rather than copied literally — the row then reaches the edges
+// symmetrically at any screen size.
+const TAB_PITCH = 76;
+const TAB_CENTRE_RATIOS = [-2, -1, 0, 1, 2].map(
+  (k) => (DESIGN_WIDTH / 2 + k * TAB_PITCH) / DESIGN_WIDTH
+);
+
+// A near-invisible pane behind every other layer: 1% #D9D9D9 over an 11px
+// background blur, covering the bar's top 58. The white bar hides it, so it
+// only ever reads through the scoop — softening whatever the screen puts there.
+const BLUR_HEIGHT = 58;
+const BLUR_RADIUS = 11;
 
 // The bubble's top half overhangs the bar into the screen above it, so screens
 // must keep this much clear at the bottom or their content collides with it.
@@ -216,7 +226,11 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
 
   const barHeight = BAR_HEIGHT * s;
   const slotWidth = barWidth / state.routes.length;
-  const centreFor = (index: number) => (index + 0.5) * slotWidth;
+  const centreFor = (index: number) => {
+    const n = state.routes.length;
+    const ratio = n === TAB_CENTRE_RATIOS.length ? TAB_CENTRE_RATIOS[index] : (index + 0.5) / n;
+    return barWidth * ratio;
+  };
 
   const initialCx = useRef(centreFor(state.index)).current;
   const notchX = useRef(new Animated.Value(initialCx)).current;
@@ -240,6 +254,8 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
     >
       {/* The safe-area strip below the bar is solid — only the scoop is open. */}
       <View style={[styles.safeAreaFill, { height: insets.bottom }]} />
+
+      <View style={[styles.blurPane, { height: BLUR_HEIGHT * s }]} pointerEvents="none" />
 
       <NotchedBar
         cx={notchX}
@@ -310,6 +326,16 @@ const styles = StyleSheet.create({
     // Transparent: the bar's own white comes from the notched path.
     backgroundColor: 'transparent',
     overflow: 'visible',
+  },
+  blurPane: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    backgroundColor: 'rgba(217, 217, 217, 0.01)',
+    // backdropFilter is a web-only CSS property; native would need expo-blur,
+    // and at 1% tint the pane is invisible there rather than wrong.
+    ...Platform.select({ web: { backdropFilter: `blur(${BLUR_RADIUS}px)` } as object, default: {} }),
   },
   safeAreaFill: {
     position: 'absolute',
