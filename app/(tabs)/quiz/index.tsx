@@ -3,6 +3,7 @@ import {
   Animated,
   Easing,
   Image,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -11,12 +12,12 @@ import {
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
-import { IconTrophy } from '@tabler/icons-react-native';
 import { useWords } from '../../../src/lib/words';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { QUIZ_MODES } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
+import { Blob, FLAME, ModeGlyph } from '../../../src/components/quizLandingArt';
 
 const quizmasterArt = require('../../../assets/quiz/quizmaster.png');
 
@@ -60,8 +61,49 @@ const HEAD_BLOB =
 const SIGN_BLOB =
   'M10.1798 59.3923 L3.55222 20.7248 C1.76587 10.3027 10.4005 1.04491 20.9216 2.10193 L115.554 11.6094 C125.609 12.6195 132.221 22.5827 129.246 32.2402 L122.606 53.7897 C120.7 59.9774 115.252 64.4062 108.806 65.0092 L27.4399 72.6198 C19.1139 73.3985 11.5925 67.6344 10.1798 59.3923 Z';
 
-const BLOB_FILL = ['#493B8B', '#352C63'] as const;
-const BLOB_EDGE = ['#F7DA75', '#F5CD47'] as const;
+// Her fill is a CROP: Figma shows only x 0-0.72002 and y 0-0.94004 of the
+// source. Rather than cut the file (and lose the rest of the art), the full
+// image is laid out oversized behind a 241x507 window, so the same region
+// shows through — which is exactly what the fill's transform describes.
+const HERO_CROP = {
+  x: 0.000296541751595214,
+  y: 0,
+  w: 241 / 0.7200165390968323,
+  h: 507 / 0.9400387406349182,
+};
+
+// Both purple blobs sit on a soft black shadow (blur 8.7, 25%). CSS drop-shadow
+// has no spread term, so the signpost's 3px spread is folded into its blur.
+const BLOB_SHADOW = (s: number, spread = 0) =>
+  Platform.select({
+    web: { filter: `drop-shadow(0 0 ${(8.7 + spread) * s}px rgba(0,0,0,0.25))` } as object,
+    default: {
+      shadowColor: '#000000',
+      shadowOpacity: 0.25,
+      shadowRadius: (8.7 + spread) * s,
+      shadowOffset: { width: 0, height: 0 },
+    },
+  });
+
+// Figma throws two shadows off the quizmaster, one each way: 5px blur at
+// (+15,+12) and (-15,+12), both black at 10%. A silhouette shadow is the only
+// kind that reads on cut-out art, so web uses drop-shadow filters; native falls
+// back to its single rectangular shadow, which is closer than none.
+const HERO_SHADOW = (s: number) =>
+  Platform.select({
+    web: {
+      filter:
+        `drop-shadow(${15 * s}px ${12 * s}px ${5 * s}px rgba(0,0,0,0.1)) ` +
+        `drop-shadow(${-15 * s}px ${12 * s}px ${5 * s}px rgba(0,0,0,0.1))`,
+    } as object,
+    default: {
+      shadowColor: '#000000',
+      shadowOpacity: 0.1,
+      shadowRadius: 5 * s,
+      shadowOffset: { width: 0, height: 12 * s },
+    },
+  });
+
 const GOLD_INK = '#F5CD47';
 const MODE_INK = '#6E5DC6';
 
@@ -152,22 +194,42 @@ export default function QuizIntroScreen() {
             d={b.d}
             transform={`translate(${b.tx}, ${b.ty})`}
             fill={`url(#${b.id})`}
+            opacity={0.83}
           />
         ))}
       </Svg>
 
-      <Animated.Image
-        source={quizmasterArt}
-        resizeMode="contain"
-        style={{
-          position: 'absolute',
-          left: 153 * s,
-          top: 262 * s,
-          width: 241 * s,
-          height: 507 * s,
-          opacity: heroOpacity,
-        }}
-      />
+      {/* The frame gives her two drop shadows, one thrown each way. RN caps a
+          view at one shadow, and on an image with alpha only a silhouette
+          shadow looks right — so web uses a two-stop drop-shadow filter. */}
+      <Animated.View
+        style={[
+          {
+            position: 'absolute',
+            left: 153 * s,
+            top: 262 * s,
+            width: 241 * s,
+            height: 507 * s,
+            opacity: heroOpacity,
+            overflow: 'hidden',
+          },
+          HERO_SHADOW(s),
+        ]}
+        pointerEvents="none"
+      >
+        <Image
+          source={quizmasterArt}
+          resizeMode="stretch"
+          style={{
+            position: 'absolute',
+            left: -HERO_CROP.x * HERO_CROP.w * s,
+            top: -HERO_CROP.y * HERO_CROP.h * s,
+            width: HERO_CROP.w * s,
+            height: HERO_CROP.h * s,
+          }}
+          accessibilityIgnoresInvertColors
+        />
+      </Animated.View>
 
       {/* Bottom wash to near-black (Figma "gradient overlay", y 469–855) */}
       <Svg style={styles.wash} width="100%" height="100%" pointerEvents="none">
@@ -198,26 +260,10 @@ export default function QuizIntroScreen() {
         style={[
           styles.headingPanel,
           { left: 29 * s, top: 97 * s, width: 336 * s, height: 87 * s, opacity: uiOpacity },
+          BLOB_SHADOW(s),
         ]}
       >
-        <Svg
-          style={StyleSheet.absoluteFill}
-          width={336 * s}
-          height={87 * s}
-          viewBox="-3 -3 342 93"
-        >
-          <Defs>
-            <LinearGradient id="headFill" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={BLOB_FILL[0]} />
-              <Stop offset="1" stopColor={BLOB_FILL[1]} />
-            </LinearGradient>
-            <LinearGradient id="headEdge" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={BLOB_EDGE[0]} />
-              <Stop offset="1" stopColor={BLOB_EDGE[1]} />
-            </LinearGradient>
-          </Defs>
-          <Path d={HEAD_BLOB} fill="url(#headFill)" stroke="url(#headEdge)" strokeWidth={5} />
-        </Svg>
+        <Blob id="head" d={HEAD_BLOB} w={336} h={87} s={s} />
         <Text style={[styles.heading, { fontSize: 36 * s, top: 24 * s }]}>
           How <Text style={styles.headingAccent}>bona</Text> is your Polari?
         </Text>
@@ -236,26 +282,12 @@ export default function QuizIntroScreen() {
           }}
         />
         <View
-          style={{ position: 'absolute', left: 20 * s, bottom: 52 * s + tabInset, width: 135 * s, height: 74 * s }}
+          style={[
+            { position: 'absolute', left: 20 * s, bottom: 52 * s + tabInset, width: 135 * s, height: 74 * s },
+            BLOB_SHADOW(s, 3),
+          ]}
         >
-          <Svg
-            style={StyleSheet.absoluteFill}
-            width={135 * s}
-            height={74 * s}
-            viewBox="-3 -3 141 80"
-          >
-            <Defs>
-              <LinearGradient id="signFill" x1="0" y1="0" x2="0" y2="1">
-                <Stop offset="0" stopColor={BLOB_FILL[0]} />
-                <Stop offset="1" stopColor={BLOB_FILL[1]} />
-              </LinearGradient>
-              <LinearGradient id="signEdge" x1="0" y1="0" x2="0" y2="1">
-                <Stop offset="0" stopColor={BLOB_EDGE[0]} />
-                <Stop offset="1" stopColor={BLOB_EDGE[1]} />
-              </LinearGradient>
-            </Defs>
-            <Path d={SIGN_BLOB} fill="url(#signFill)" stroke="url(#signEdge)" strokeWidth={5} />
-          </Svg>
+          <Blob id="sign" d={SIGN_BLOB} w={135} h={74} s={s} />
           <Text style={[styles.signText, { left: 24 * s, top: 25 * s, width: 83 * s, fontSize: 14 * s, lineHeight: 12 * s }]}>
             Choose your quiz type
           </Text>
@@ -276,7 +308,9 @@ export default function QuizIntroScreen() {
                     { left: badge.x * s, bottom: badge.b * s + tabInset, width: 40 * s, height: 19 * s },
                   ]}
                 >
-                  <IconTrophy size={10 * s} color="#C25100" />
+                  <Svg width={FLAME.w * s} height={FLAME.h * s} viewBox={`0 0 ${FLAME.w} ${FLAME.h}`}>
+                    <Path d={FLAME.d} fill="#F38A3F" />
+                  </Svg>
                   <Text style={[styles.scoreBadgeText, { fontSize: 10 * s }]}>
                     {String(best).padStart(2, '0')}
                   </Text>
@@ -298,7 +332,7 @@ export default function QuizIntroScreen() {
                   accessibilityRole="button"
                   accessibilityLabel={`Start ${m.label} quiz`}
                 >
-                  <m.Icon size={20 * s} color={MODE_INK} />
+                  <ModeGlyph name={mode} s={s} color={MODE_INK} />
                 </Pressable>
                 <Text
                   style={[
