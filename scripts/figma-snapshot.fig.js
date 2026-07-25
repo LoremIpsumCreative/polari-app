@@ -57,7 +57,12 @@ function paint(node, key) {
     if (!a || a === figma.mixed || !a.length) return undefined;
     const p = a.filter((x) => x.visible !== false)[0];
     if (!p) return undefined;
-    if (p.type === 'SOLID') return hex(p.color);
+    if (p.type === 'SOLID') {
+      // Capture fill-opacity: a solid at <1 renders far paler than its hex
+      // suggests (the New Word blob is #579DFF@0.11, a near-white blue).
+      const o = p.opacity === undefined ? 1 : p.opacity;
+      return o < 1 ? hex(p.color) + '@' + Math.round(o * 100) / 100 : hex(p.color);
+    }
     if (p.type === 'IMAGE') return 'img';
     if (p.type.startsWith('GRADIENT')) return 'grad:' + p.gradientStops.map((s) => hex(s.color)).join('/');
     return p.type;
