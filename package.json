@@ -41,7 +41,9 @@
     "words:check": "tsx scripts/check-words.ts",
     "words:apply": "tsx scripts/apply-words.ts",
     "art:check": "tsx scripts/check-art.ts",
-    "art:ack": "tsx scripts/check-art.ts --ack"
+    "art:ack": "tsx scripts/check-art.ts --ack",
+    "figma:check": "tsx scripts/check-figma.ts",
+    "figma:diff": "node scripts/pixel-diff.mjs"
   },
   "private": true
 }

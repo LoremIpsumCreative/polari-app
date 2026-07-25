@@ -40,3 +40,8 @@ yarn-error.*
 /ios
 /android
 .vercel
+
+# Design-fidelity tooling: reproducible outputs (scripts + snapshot are tracked)
+design/exports/
+design/renders/
+design/diffs/

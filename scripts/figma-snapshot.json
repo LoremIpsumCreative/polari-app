@@ -1,0 +1,993 @@
+{
+  "generatedFrom": "FqZJJjZaxz6Hc4V9FdEwV3",
+  "screens": {
+    "landing": {
+      "id": "1114:158",
+      "size": [
+        400,
+        856
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "VECTOR",
+          "box": [
+            3,
+            0,
+            394,
+            855
+          ],
+          "fill": "#2b273f"
+        },
+        {
+          "n": "Vector 8",
+          "t": "VECTOR",
+          "box": [
+            23.5,
+            0,
+            376,
+            757.5
+          ],
+          "op": 0.8,
+          "fill": "grad:#f8e6a0/#2b273f"
+        },
+        {
+          "n": "Vector 7",
+          "t": "VECTOR",
+          "box": [
+            0.5,
+            1,
+            396,
+            772
+          ],
+          "op": 0.8,
+          "fill": "grad:#fcefbb/#2b273f"
+        },
+        {
+          "n": "character_quizmaster-start_polari 1",
+          "t": "RECTANGLE",
+          "box": [
+            156,
+            262,
+            241,
+            507
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "gradient overlay",
+          "t": "VECTOR",
+          "box": [
+            3,
+            503,
+            394,
+            352
+          ],
+          "fill": "grad:#121212/#121212"
+        },
+        {
+          "n": "Navigation/BottomNav",
+          "t": "INSTANCE",
+          "box": [
+            3,
+            754,
+            394,
+            101
+          ]
+        },
+        {
+          "n": "Button/Quiz Type",
+          "t": "INSTANCE",
+          "box": [
+            175,
+            644,
+            65,
+            96
+          ]
+        },
+        {
+          "n": "Button/Quiz Type",
+          "t": "INSTANCE",
+          "box": [
+            247,
+            619,
+            65,
+            96
+          ]
+        },
+        {
+          "n": "Button/Quiz Type",
+          "t": "INSTANCE",
+          "box": [
+            319,
+            644,
+            65,
+            96
+          ]
+        },
+        {
+          "n": "Quiz Type Sign",
+          "t": "GROUP",
+          "box": [
+            16,
+            617,
+            145,
+            137
+          ]
+        },
+        {
+          "n": "Pole",
+          "t": "GROUP",
+          "box": [
+            81,
+            617,
+            12,
+            137
+          ]
+        },
+        {
+          "n": "Line 1",
+          "t": "LINE",
+          "box": [
+            91,
+            625,
+            0,
+            129
+          ],
+          "stroke": "grad:#f7da75/#f5cd47/#cf9f02",
+          "sw": 8
+        },
+        {
+          "n": "Ellipse 41",
+          "t": "ELLIPSE",
+          "box": [
+            81,
+            617,
+            12,
+            12
+          ],
+          "fill": "#f8e6a0"
+        },
+        {
+          "n": "Quiz/SignpostBoard",
+          "t": "INSTANCE",
+          "box": [
+            16,
+            622,
+            145,
+            80
+          ]
+        },
+        {
+          "n": "Group 98",
+          "t": "GROUP",
+          "box": [
+            55,
+            11.9,
+            306.2,
+            270.4
+          ]
+        },
+        {
+          "n": "Vector 4",
+          "t": "VECTOR",
+          "box": [
+            55,
+            42,
+            283,
+            233.5
+          ],
+          "fill": "grad:#493b8b/#352c63",
+          "stroke": "grad:#f7da75/#f5cd47",
+          "sw": 7
+        },
+        {
+          "n": "?",
+          "t": "TEXT",
+          "box": [
+            274.3,
+            128,
+            86.4,
+            154.3
+          ],
+          "fill": "#ffffff",
+          "stroke": "#ffffff",
+          "sw": 1,
+          "text": "?",
+          "fs": 206,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "How",
+          "t": "TEXT",
+          "box": [
+            93,
+            83,
+            71.9,
+            51.2
+          ],
+          "fill": "#ffffff",
+          "text": "How",
+          "fs": 52,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "bona",
+          "t": "TEXT_PATH",
+          "box": [
+            169.9,
+            109.3,
+            129.7,
+            50.4
+          ],
+          "fill": "#ffffff"
+        },
+        {
+          "n": "is",
+          "t": "TEXT",
+          "box": [
+            135,
+            130,
+            21.5,
+            31.3
+          ],
+          "fill": "#ffffff",
+          "text": "is",
+          "fs": 44,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "your",
+          "t": "TEXT_PATH",
+          "box": [
+            113,
+            140,
+            183.6,
+            38.9
+          ],
+          "fill": "#ffffff"
+        },
+        {
+          "n": "Polari",
+          "t": "TEXT_PATH",
+          "box": [
+            109,
+            220,
+            238.6,
+            35.7
+          ],
+          "fill": "#ffffff"
+        },
+        {
+          "n": "Group 111",
+          "t": "GROUP",
+          "box": [
+            32,
+            97,
+            336,
+            87
+          ]
+        },
+        {
+          "n": "Rectangle 55",
+          "t": "VECTOR",
+          "box": [
+            32,
+            97,
+            336,
+            87
+          ],
+          "fill": "grad:#493b8b/#352c63",
+          "stroke": "grad:#f7da75/#f5cd47",
+          "sw": 5
+        },
+        {
+          "n": "How bona is your Polari?",
+          "t": "TEXT",
+          "box": [
+            67.2,
+            127.5,
+            257,
+            25
+          ],
+          "text": "How bona is your Polari?",
+          "fs": 36,
+          "font": "Mouse Memoirs Regular"
+        }
+      ]
+    },
+    "results-highscore": {
+      "id": "1114:482",
+      "size": [
+        394,
+        855
+      ],
+      "nodes": [
+        {
+          "n": "Background",
+          "t": "RECTANGLE",
+          "box": [
+            0,
+            0,
+            394,
+            858
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "gradient overlay",
+          "t": "VECTOR",
+          "box": [
+            0,
+            556,
+            394,
+            302
+          ],
+          "op": 0.5,
+          "fill": "grad:#121212/#3c2000"
+        },
+        {
+          "n": "Quiz/ScorePanel",
+          "t": "INSTANCE",
+          "box": [
+            126,
+            222,
+            160,
+            128
+          ]
+        },
+        {
+          "n": "heading",
+          "t": "GROUP",
+          "box": [
+            69,
+            111,
+            256.7,
+            81.3
+          ]
+        },
+        {
+          "n": "Union",
+          "t": "BOOLEAN_OPERATION",
+          "box": [
+            69,
+            111,
+            256.7,
+            81.3
+          ],
+          "stroke": "grad:#352c63/#6c59c9",
+          "sw": 10
+        },
+        {
+          "n": "High Score!",
+          "t": "GROUP",
+          "box": [
+            69.7,
+            111.5,
+            255.4,
+            80.3
+          ]
+        },
+        {
+          "n": "character_quizmaster-highscore_polari-bg 1",
+          "t": "RECTANGLE",
+          "box": [
+            0,
+            360,
+            220,
+            409
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "Quiz/FinishPill",
+          "t": "INSTANCE",
+          "box": [
+            220,
+            660,
+            179,
+            42
+          ]
+        },
+        {
+          "n": "Navigation/BottomNav",
+          "t": "INSTANCE",
+          "box": [
+            0,
+            757,
+            394,
+            101
+          ]
+        },
+        {
+          "n": "Quiz/SpeechBubble",
+          "t": "INSTANCE",
+          "box": [
+            127,
+            417,
+            187,
+            84
+          ]
+        },
+        {
+          "n": "Quiz/PlayAgainBanner",
+          "t": "INSTANCE",
+          "box": [
+            195,
+            558,
+            186,
+            94
+          ]
+        }
+      ]
+    },
+    "results-timesup": {
+      "id": "1114:520",
+      "size": [
+        394,
+        855
+      ],
+      "nodes": [
+        {
+          "n": "Background",
+          "t": "RECTANGLE",
+          "box": [
+            0,
+            0,
+            394,
+            858
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "gradient overlay",
+          "t": "VECTOR",
+          "box": [
+            0,
+            556,
+            394,
+            302
+          ],
+          "op": 0.5,
+          "fill": "grad:#121212/#3c2000"
+        },
+        {
+          "n": "Quiz/ScorePanel",
+          "t": "INSTANCE",
+          "box": [
+            126,
+            222,
+            160,
+            128
+          ]
+        },
+        {
+          "n": "Quiz/FinishPill",
+          "t": "INSTANCE",
+          "box": [
+            220,
+            660,
+            179,
+            42
+          ]
+        },
+        {
+          "n": "Quiz/PlayAgainBanner",
+          "t": "INSTANCE",
+          "box": [
+            195,
+            558,
+            186,
+            94
+          ]
+        },
+        {
+          "n": "Quiz/SpeechBubble",
+          "t": "INSTANCE",
+          "box": [
+            132,
+            415,
+            187,
+            84
+          ]
+        },
+        {
+          "n": "heading",
+          "t": "GROUP",
+          "box": [
+            62.3,
+            100.4,
+            268.3,
+            98.1
+          ]
+        },
+        {
+          "n": "Union",
+          "t": "BOOLEAN_OPERATION",
+          "box": [
+            63.2,
+            100.5,
+            267.3,
+            97.2
+          ],
+          "stroke": "grad:#352c63/#6c59c9",
+          "sw": 10
+        },
+        {
+          "n": "Time’s Up!",
+          "t": "GROUP",
+          "box": [
+            62.3,
+            100.4,
+            268.3,
+            98.1
+          ]
+        },
+        {
+          "n": "character_quizmaster-timesup_polari 1",
+          "t": "RECTANGLE",
+          "box": [
+            -20,
+            377,
+            212,
+            380
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "Navigation/BottomNav",
+          "t": "INSTANCE",
+          "box": [
+            0,
+            757,
+            394,
+            101
+          ]
+        }
+      ]
+    },
+    "results-normal": {
+      "id": "1365:1425",
+      "size": [
+        394,
+        855
+      ],
+      "nodes": [
+        {
+          "n": "Background",
+          "t": "RECTANGLE",
+          "box": [
+            0,
+            0,
+            394,
+            858
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "gradient overlay",
+          "t": "VECTOR",
+          "box": [
+            0,
+            556,
+            394,
+            302
+          ],
+          "op": 0.5,
+          "fill": "grad:#121212/#3c2000"
+        },
+        {
+          "n": "Quiz/ScorePanel",
+          "t": "INSTANCE",
+          "box": [
+            126,
+            222,
+            160,
+            128
+          ]
+        },
+        {
+          "n": "Quiz/FinishPill",
+          "t": "INSTANCE",
+          "box": [
+            220,
+            660,
+            179,
+            42
+          ]
+        },
+        {
+          "n": "Quiz/PlayAgainBanner",
+          "t": "INSTANCE",
+          "box": [
+            195,
+            558,
+            186,
+            94
+          ]
+        },
+        {
+          "n": "Quiz/SpeechBubble",
+          "t": "INSTANCE",
+          "box": [
+            141,
+            417,
+            200,
+            84
+          ]
+        },
+        {
+          "n": "heading",
+          "t": "GROUP",
+          "box": [
+            100,
+            108.9,
+            193.8,
+            86.3
+          ]
+        },
+        {
+          "n": "Union",
+          "t": "BOOLEAN_OPERATION",
+          "box": [
+            101.5,
+            112.7,
+            190.7,
+            78.8
+          ],
+          "stroke": "grad:#352c63/#6c59c9",
+          "sw": 10
+        },
+        {
+          "n": "character_quizmaster-results_polari 1",
+          "t": "RECTANGLE",
+          "box": [
+            7,
+            375,
+            183,
+            382
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "Navigation/BottomNav",
+          "t": "INSTANCE",
+          "box": [
+            0,
+            757,
+            394,
+            101
+          ]
+        }
+      ]
+    },
+    "question": {
+      "id": "1351:1875",
+      "size": [
+        394,
+        855
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "VECTOR",
+          "box": [
+            0,
+            0,
+            394,
+            855
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Frame 53",
+          "t": "FRAME",
+          "box": [
+            17,
+            23,
+            80,
+            28
+          ]
+        },
+        {
+          "n": "Vector",
+          "t": "VECTOR",
+          "box": [
+            31,
+            34.5,
+            5,
+            5
+          ],
+          "fill": "#172b4d",
+          "stroke": "#172b4d",
+          "sw": 1
+        },
+        {
+          "n": "Quizzes",
+          "t": "TEXT",
+          "box": [
+            46,
+            33.5,
+            37,
+            7
+          ],
+          "fill": "#172b4d",
+          "text": "Quizzes",
+          "fs": 10,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Group 102",
+          "t": "GROUP",
+          "box": [
+            35,
+            83,
+            56,
+            24
+          ]
+        },
+        {
+          "n": "10 Q’s",
+          "t": "TEXT",
+          "box": [
+            35,
+            83,
+            56,
+            24
+          ],
+          "fill": "#3d2232",
+          "text": "10 Q’s",
+          "fs": 34,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Navigation/BottomNav",
+          "t": "INSTANCE",
+          "box": [
+            0,
+            757,
+            394,
+            101
+          ]
+        },
+        {
+          "n": "Frame 51",
+          "t": "FRAME",
+          "box": [
+            137,
+            91,
+            237,
+            20
+          ],
+          "fill": "#f1f2f4",
+          "stroke": "#352c63",
+          "sw": 1
+        },
+        {
+          "n": "Rectangle 26",
+          "t": "RECTANGLE",
+          "box": [
+            141,
+            95,
+            60,
+            12
+          ],
+          "fill": "#5e4db2"
+        },
+        {
+          "n": "Question 3 of 10",
+          "t": "TEXT",
+          "box": [
+            141,
+            78,
+            92,
+            7
+          ],
+          "fill": "#626f86",
+          "text": "Question 3 of 10",
+          "fs": 10,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "Rectangle 27",
+          "t": "VECTOR",
+          "box": [
+            21,
+            68,
+            89,
+            53
+          ],
+          "op": 0.2,
+          "fill": "#6e5dc6",
+          "stroke": "#493b8b",
+          "sw": 0
+        },
+        {
+          "n": "What does the word glossie mean?",
+          "t": "TEXT",
+          "box": [
+            36,
+            323,
+            323,
+            39
+          ],
+          "text": "What does the word glossie mean? ",
+          "fs": 22,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "Frame 72",
+          "t": "FRAME",
+          "box": [
+            221,
+            148,
+            141,
+            35
+          ],
+          "fill": "#f8f9fa"
+        },
+        {
+          "n": "Frame 69",
+          "t": "FRAME",
+          "box": [
+            235,
+            160,
+            113,
+            11
+          ]
+        },
+        {
+          "n": "Vector (Stroke)",
+          "t": "VECTOR",
+          "box": [
+            235,
+            160.5,
+            11,
+            10
+          ],
+          "fill": "#626f86"
+        },
+        {
+          "n": "high score:",
+          "t": "TEXT",
+          "box": [
+            254,
+            162,
+            65,
+            7
+          ],
+          "fill": "#626f86",
+          "text": "high score:",
+          "fs": 10,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "00",
+          "t": "TEXT",
+          "box": [
+            327,
+            160,
+            21,
+            11
+          ],
+          "fill": "#44546f",
+          "text": "00",
+          "fs": 16,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Frame 71",
+          "t": "FRAME",
+          "box": [
+            33,
+            148,
+            162,
+            35
+          ],
+          "fill": "#f8f9fa"
+        },
+        {
+          "n": "Frame 70",
+          "t": "FRAME",
+          "box": [
+            47,
+            160,
+            134,
+            11
+          ]
+        },
+        {
+          "n": "Vector (Stroke)",
+          "t": "VECTOR",
+          "box": [
+            47,
+            160.5,
+            8,
+            10
+          ],
+          "fill": "#626f86",
+          "stroke": "#626f86",
+          "sw": 0.30000001192092896
+        },
+        {
+          "n": "current streak:",
+          "t": "TEXT",
+          "box": [
+            61,
+            162,
+            93,
+            7
+          ],
+          "fill": "#626f86",
+          "text": "current streak:",
+          "fs": 10,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "00",
+          "t": "TEXT",
+          "box": [
+            160,
+            160,
+            21,
+            11
+          ],
+          "fill": "#44546f",
+          "text": "00",
+          "fs": 16,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Quiz/AnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            21,
+            490,
+            168,
+            62
+          ]
+        },
+        {
+          "n": "Quiz/AnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            207,
+            490,
+            168,
+            62
+          ]
+        },
+        {
+          "n": "Quiz/AnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            207,
+            570,
+            168,
+            62
+          ]
+        },
+        {
+          "n": "Quiz/AnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            21,
+            570,
+            168,
+            62
+          ]
+        },
+        {
+          "n": "Quiz",
+          "t": "INSTANCE",
+          "box": [
+            80,
+            662,
+            199,
+            50
+          ]
+        }
+      ]
+    }
+  }
+}
