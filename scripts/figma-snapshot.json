@@ -988,6 +988,525 @@
           ]
         }
       ]
+    },
+    "today-new-word": {
+      "id": "1837:762",
+      "size": [
+        394,
+        852
+      ],
+      "nodes": [
+        {
+          "n": "Template/Screen 394×852",
+          "t": "INSTANCE",
+          "box": [
+            0,
+            0,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "present_var1_polari 1",
+          "t": "RECTANGLE",
+          "box": [
+            72,
+            341,
+            250,
+            238
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "Group 113",
+          "t": "GROUP",
+          "box": [
+            53,
+            177,
+            289,
+            106
+          ]
+        },
+        {
+          "n": "Rectangle 52",
+          "t": "VECTOR",
+          "box": [
+            53,
+            177,
+            289,
+            106
+          ],
+          "fill": "#579dff"
+        },
+        {
+          "n": "A new word is ready to be opened!",
+          "t": "TEXT",
+          "box": [
+            80,
+            198,
+            235,
+            57
+          ],
+          "text": "A new word is ready to be opened!",
+          "fs": 36,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Tap to open",
+          "t": "TEXT",
+          "box": [
+            154,
+            613,
+            87,
+            11
+          ],
+          "fill": "#44546f",
+          "text": "Tap to open",
+          "fs": 16,
+          "font": "Digitale Variable Regular"
+        }
+      ]
+    },
+    "today-definition": {
+      "id": "1114:1023",
+      "size": [
+        394,
+        1086
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            0,
+            0,
+            394,
+            1118
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "character_abdabs_polari-bg 1",
+          "t": "RECTANGLE",
+          "box": [
+            102,
+            87,
+            190,
+            253
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "Vector (Stroke)",
+          "t": "VECTOR",
+          "box": [
+            344,
+            87,
+            18,
+            18
+          ],
+          "fill": "#44546f"
+        },
+        {
+          "n": "Definition Card",
+          "t": "GROUP",
+          "box": [
+            15,
+            350,
+            365,
+            574
+          ]
+        },
+        {
+          "n": "Rectangle 3",
+          "t": "VECTOR",
+          "box": [
+            15,
+            350,
+            365,
+            574
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 1
+        },
+        {
+          "n": "Frame 34",
+          "t": "FRAME",
+          "box": [
+            33,
+            508.4,
+            331,
+            397
+          ]
+        },
+        {
+          "n": "Definition/Row",
+          "t": "INSTANCE",
+          "box": [
+            32.5,
+            508.4,
+            332,
+            60
+          ]
+        },
+        {
+          "n": "Definition/Row",
+          "t": "INSTANCE",
+          "box": [
+            32.5,
+            576.4,
+            332,
+            58
+          ]
+        },
+        {
+          "n": "Definition/Row",
+          "t": "INSTANCE",
+          "box": [
+            32.5,
+            642.4,
+            332,
+            60
+          ]
+        },
+        {
+          "n": "Definition/Row",
+          "t": "INSTANCE",
+          "box": [
+            32.5,
+            710.4,
+            332,
+            60
+          ]
+        },
+        {
+          "n": "Definition/ModernUsage",
+          "t": "INSTANCE",
+          "box": [
+            32.5,
+            778.4,
+            332,
+            59
+          ]
+        },
+        {
+          "n": "Definition/Related",
+          "t": "INSTANCE",
+          "box": [
+            32.5,
+            845.4,
+            332,
+            60
+          ]
+        },
+        {
+          "n": "Heading",
+          "t": "FRAME",
+          "box": [
+            33,
+            412,
+            331,
+            71
+          ]
+        },
+        {
+          "n": "{name}",
+          "t": "TEXT",
+          "box": [
+            33,
+            412,
+            331,
+            42
+          ],
+          "fill": "#172b4d",
+          "text": "{name}",
+          "fs": 60,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "{pronunciation}",
+          "t": "TEXT",
+          "box": [
+            33,
+            474,
+            331,
+            10
+          ],
+          "fill": "#44546f",
+          "text": "{pronunciation}",
+          "fs": 14,
+          "font": "Digitale Variable Regular"
+        },
+        {
+          "n": "Union",
+          "t": "BOOLEAN_OPERATION",
+          "box": [
+            342.6,
+            368.1,
+            20.7,
+            18.6
+          ],
+          "fill": "#c9372c"
+        },
+        {
+          "n": "Vector (Stroke)",
+          "t": "VECTOR",
+          "box": [
+            305,
+            368,
+            18,
+            18.9
+          ],
+          "fill": "#44546f"
+        },
+        {
+          "n": "Frame 80",
+          "t": "FRAME",
+          "box": [
+            33,
+            367.8,
+            139,
+            18.9
+          ]
+        },
+        {
+          "n": "Badge/Type",
+          "t": "INSTANCE",
+          "box": [
+            33,
+            368.8,
+            41,
+            17
+          ],
+          "fill": "#f4f9ff",
+          "stroke": "#0c66e4",
+          "sw": 1
+        },
+        {
+          "n": "Badge/PoS",
+          "t": "INSTANCE",
+          "box": [
+            84,
+            368.8,
+            88,
+            17
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#44546f",
+          "sw": 1
+        },
+        {
+          "n": "Navbar 2.0",
+          "t": "INSTANCE",
+          "box": [
+            0,
+            1017,
+            394,
+            101
+          ]
+        },
+        {
+          "n": "Day Scroll Bar",
+          "t": "INSTANCE",
+          "box": [
+            82,
+            938,
+            230,
+            46
+          ],
+          "fill": "#ffffff",
+          "stroke": "#c8ccd4",
+          "sw": 1
+        }
+      ]
+    },
+    "today-share-card": {
+      "id": "1114:1089",
+      "size": [
+        566,
+        1007
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            0,
+            0,
+            566,
+            1007
+          ],
+          "fill": "grad:#44546f/#0e1d31"
+        },
+        {
+          "n": "Share Card",
+          "t": "FRAME",
+          "box": [
+            52,
+            104,
+            460,
+            819
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "The Polari word of the day is:",
+          "t": "TEXT",
+          "box": [
+            92,
+            178,
+            379,
+            15
+          ],
+          "fill": "#172b4d",
+          "text": "The Polari word of the day is:",
+          "fs": 22,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "{name}",
+          "t": "TEXT",
+          "box": [
+            219,
+            222,
+            126,
+            42
+          ],
+          "fill": "#172b4d",
+          "text": "{name}",
+          "fs": 60,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Badge/Type",
+          "t": "INSTANCE",
+          "box": [
+            146,
+            286,
+            41,
+            17
+          ],
+          "fill": "#f4f9ff",
+          "stroke": "#0c66e4",
+          "sw": 1
+        },
+        {
+          "n": "Badge/PoS",
+          "t": "INSTANCE",
+          "box": [
+            207,
+            286,
+            88,
+            17
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#44546f",
+          "sw": 1
+        },
+        {
+          "n": "{pronunciation}",
+          "t": "TEXT",
+          "box": [
+            315,
+            289.5,
+            100,
+            10
+          ],
+          "fill": "#44546f",
+          "text": "{pronunciation}",
+          "fs": 14,
+          "font": "Digitale Variable Regular"
+        },
+        {
+          "n": "character_abdabs_polari-bg 1",
+          "t": "RECTANGLE",
+          "box": [
+            198,
+            333,
+            169,
+            226
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "Monday, 6 July 2026",
+          "t": "TEXT",
+          "box": [
+            214,
+            120,
+            135,
+            10
+          ],
+          "fill": "#0e1d31",
+          "text": "Monday, 6 July 2026",
+          "fs": 14,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Learn the lingo! Download Polari",
+          "t": "TEXT",
+          "box": [
+            142,
+            840,
+            215,
+            10
+          ],
+          "fill": "#44546f",
+          "text": "Learn the lingo! Download Polari",
+          "fs": 14,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Discover a word a day through queer historys secret coded language.",
+          "t": "TEXT",
+          "box": [
+            147,
+            860,
+            204,
+            16
+          ],
+          "op": 0.7,
+          "fill": "#172b4d",
+          "fs": 10,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "exported_qrcode_image 1",
+          "t": "RECTANGLE",
+          "box": [
+            375,
+            836,
+            47,
+            47
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "Frame 46",
+          "t": "FRAME",
+          "box": [
+            99,
+            570,
+            367,
+            242
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 1
+        },
+        {
+          "n": "share-card_frame_polari 1",
+          "t": "RECTANGLE",
+          "box": [
+            10,
+            20,
+            545,
+            968
+          ],
+          "fill": "img"
+        }
+      ]
     }
   }
 }
