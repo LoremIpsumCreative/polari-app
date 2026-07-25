@@ -28,16 +28,24 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Edit this list to choose what to capture. Names are the snapshot keys.
+// Frame ids as of the "Quiz Type-Specific Screens" restructure (Mockups page,
+// Quiz section 1114:106). The three question kinds and three countdowns are the
+// paired *_Countdown / *_Question children of the 813-wide containers under
+// section 1353:769.
 const SCREENS = [
   ['landing', '1114:158'],
   ['results-highscore', '1114:482'],
   ['results-timesup', '1114:520'],
   ['results-normal', '1365:1425'],
-  ['question', '1351:1875'],
-  // Countdown IDs went stale after the last redesign — re-discover and re-add:
-  // ['countdown-ten', '____'],
-  // ['countdown-timed', '____'],
-  // ['countdown-life', '____'],
+  ['question-definition', '1351:1875'], // "Definition from Word" (the MC screen)
+  ['question-character', '1353:306'], // "Definition from Character"
+  ['question-match', '1353:439'], // "Match Word to Definition"
+  // Countdowns were REDESIGNED, not just re-id'd: a compact numeric badge on a
+  // Template/Screen instance, no blurb panel, title dropped 80→60. Capture the
+  // *_Countdown pane of each container, then rebuild the app screen to match.
+  //   ['countdown-ten',   '<_Countdown child of 1905:3223>'],
+  //   ['countdown-timed', '<_Countdown child of 1905:3255>'],
+  //   ['countdown-life',  '<_Countdown child of 1905:3381>'],
 ];
 
 const hex = (c) =>

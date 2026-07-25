@@ -366,7 +366,7 @@ export default function QuizPlayScreen() {
       </Text>
     );
 
-  const tileBase = { width: 166 * s, minHeight: 60 * s, borderRadius: 8 * s, padding: 12 * s };
+  const tileBase = { width: 168 * s, minHeight: 62 * s, borderRadius: 8 * s, padding: 12 * s };
 
   return (
     <View style={styles.screen}>
@@ -437,7 +437,7 @@ export default function QuizPlayScreen() {
           127 above the bar), so tiles grow upward without crowding the bubble. */}
       {isMatch ? (
         // Words run down the left column, meanings down the right (per Figma).
-        <View style={[styles.grid, { left: 21 * s, bottom: 127 * s + tabInset, width: 352 * s, columnGap: 17 * s, rowGap: 20 * s }]}>
+        <View style={[styles.grid, { left: 21 * s, bottom: 125 * s + tabInset, width: 352 * s, columnGap: 17 * s, rowGap: 20 * s }]}>
           {q.words.map((w, i) => {
             const paired = matchPairs[i] !== null;
             const sel = matchSel === i;
@@ -494,7 +494,7 @@ export default function QuizPlayScreen() {
           })}
         </View>
       ) : (
-        <View style={[styles.grid, { left: 21 * s, bottom: 127 * s + tabInset, width: 352 * s, columnGap: 20 * s, rowGap: 20 * s }]}>
+        <View style={[styles.grid, { left: 21 * s, bottom: 125 * s + tabInset, width: 354 * s, columnGap: 18 * s, rowGap: 18 * s }]}>
           {q.options.map((option, index) => {
             const isCorrect = index === q.correctIndex;
             const isSelected = index === selectedIndex;
@@ -529,12 +529,13 @@ export default function QuizPlayScreen() {
         </View>
       )}
 
-      {/* Continue — always present, enabled once answered; its foot sits the
-          frame's 53 above the bar, which also clears the bubble. */}
+      {/* Continue — always present, enabled once answered. Frame 1351:1875 puts
+          it at x80, 199×50, its foot 45 above the bar (which also clears the
+          bubble). */}
       <Pressable
         style={({ pressed }) => [
           styles.continueButton,
-          { width: 235 * s, height: 42 * s, bottom: 53 * s + tabInset },
+          { left: 80 * s, width: 199 * s, height: 50 * s, bottom: 45 * s + tabInset },
           !answered && styles.continueDisabled,
           pressed && answered && { opacity: 0.85 },
         ]}
@@ -624,7 +625,6 @@ const styles = StyleSheet.create({
 
   continueButton: {
     position: 'absolute',
-    alignSelf: 'center',
     backgroundColor: colors.primary,
     borderRadius: 999,
     alignItems: 'center',
