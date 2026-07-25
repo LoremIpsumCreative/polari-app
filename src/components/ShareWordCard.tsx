@@ -1,5 +1,6 @@
 import { forwardRef } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { IconBook2, IconQuote, IconWorldSearch } from '@tabler/icons-react-native';
 import type { Word } from '../types/database';
 import { fonts } from '../lib/theme';
@@ -85,6 +86,17 @@ export const ShareWordCard = forwardRef<View, Props>(function ShareWordCard(
 
   return (
     <View ref={ref} style={styles.stage} collapsable={false}>
+      {/* Stage is a vertical gradient (Figma 1114:1089: #44546F → #0E1D31). */}
+      <Svg style={StyleSheet.absoluteFill} width={CARD_WIDTH} height={CARD_HEIGHT}>
+        <Defs>
+          <LinearGradient id="shareStage" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor="#44546F" />
+            <Stop offset="1" stopColor={STAGE} />
+          </LinearGradient>
+        </Defs>
+        <Rect x="0" y="0" width={CARD_WIDTH} height={CARD_HEIGHT} fill="url(#shareStage)" />
+      </Svg>
+
       {/* The frame sits BEHIND the field: the opaque grey field covers the
           frame's centre, so only its painted blue border shows around it. */}
       <Image source={frameArt} style={styles.frame} resizeMode="stretch" />
@@ -95,21 +107,23 @@ export const ShareWordCard = forwardRef<View, Props>(function ShareWordCard(
         </View>
         <Text style={styles.lede}>The Polari word of the day is:</Text>
 
-        {/* Badge floats top-left; the term is centred */}
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>{word.entry_type === 'phrase' ? 'Phrase' : 'Word'}</Text>
-        </View>
         <Text style={styles.term} numberOfLines={1} adjustsFontSizeToFit>
           {word.term}
         </Text>
 
+        {/* One meta row: type badge · part-of-speech badge · pronunciation
+            (Figma 1114:1089 — the badge moved inline out of the top-left). */}
         <View style={styles.metaRow}>
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{word.entry_type === 'phrase' ? 'Phrase' : 'Word'}</Text>
+          </View>
+          {word.part_of_speech ? <Text style={styles.metaDot}>•</Text> : null}
           {word.part_of_speech ? (
             <View style={styles.posChip}>
               <Text style={styles.posText}>{word.part_of_speech}</Text>
             </View>
           ) : null}
-          {word.part_of_speech && word.pronunciation ? <Text style={styles.metaDot}>•</Text> : null}
+          {word.pronunciation ? <Text style={styles.metaDot}>•</Text> : null}
           {word.pronunciation ? <Text style={styles.pron}>/{word.pronunciation}/</Text> : null}
         </View>
 
@@ -185,24 +199,21 @@ const styles = StyleSheet.create({
   },
   date: {
     fontFamily: fonts.bold,
-    fontSize: 13,
+    fontSize: 14,
     color: STAGE,
     letterSpacing: 0.2,
   },
   lede: {
     position: 'absolute',
-    top: 79,
+    top: 74,
     left: 0,
     right: 0,
     textAlign: 'center',
-    fontFamily: fonts.regular,
-    fontSize: 16,
+    fontFamily: fonts.semibold,
+    fontSize: 22,
     color: BODY,
   },
   badge: {
-    position: 'absolute',
-    top: 129,
-    left: 48,
     backgroundColor: '#F4F9FF',
     borderWidth: 1,
     borderColor: '#0C66E4',
@@ -218,7 +229,7 @@ const styles = StyleSheet.create({
   },
   term: {
     position: 'absolute',
-    top: 116,
+    top: 118,
     left: 40,
     right: 40,
     textAlign: 'center',
@@ -229,7 +240,7 @@ const styles = StyleSheet.create({
   },
   metaRow: {
     position: 'absolute',
-    top: 176,
+    top: 182,
     left: 0,
     right: 0,
     flexDirection: 'row',
@@ -249,7 +260,7 @@ const styles = StyleSheet.create({
   pron: { color: SLATE, fontSize: 12, fontFamily: fonts.semibold, letterSpacing: 0.3 },
   character: {
     position: 'absolute',
-    top: 223,
+    top: 229,
     left: 146,
     width: 169,
     height: 226,
@@ -257,8 +268,8 @@ const styles = StyleSheet.create({
   detailBox: {
     position: 'absolute',
     top: 466,
-    left: 32,
-    width: 397,
+    left: 47,
+    width: 367,
     backgroundColor: BOX,
     borderWidth: 1,
     borderColor: LINE,
@@ -305,7 +316,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: 'absolute',
-    top: 721,
+    top: 732,
     left: 90,
     right: 90,
     flexDirection: 'row',
@@ -314,6 +325,6 @@ const styles = StyleSheet.create({
   },
   footerText: { flex: 1 },
   footerTitle: { color: MUTED, fontFamily: fonts.bold, fontSize: 14 },
-  footerSub: { color: BODY, fontFamily: fonts.regular, fontSize: 10, marginTop: 4 },
+  footerSub: { color: BODY, fontFamily: fonts.bold, fontSize: 10, marginTop: 4, opacity: 0.7 },
   qr: { width: 47, height: 47 },
 });
