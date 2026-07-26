@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 import { IconChevronLeft, IconFlame, IconTrophy } from '@tabler/icons-react-native';
 import { useWords } from '../../../src/lib/words';
 import { useProgress } from '../../../src/lib/progress';
@@ -25,20 +25,31 @@ const PAIR_STYLES = [
   { fill: '#FFF6FC', ink: '#CD519D' },
 ] as const;
 
-// Countdown screen (Figma 1114:330 / 1353:522 / 1353:548). The frames measure
-// text from its cap line; these tops are that cap line solved back through
-// Digitale's metrics (ascender 1.0em, descender 0.3em, cap 0.7em) and Mouse
-// Memoirs' (0.9375 / 0.2125 / 0.7193) for the given line heights.
+// Countdown screen, rebuilt to the current frames (Quiz/*_Countdown panes in
+// section 1353:769). It is a LIGHT screen now — the dark stage, spotlight wash
+// and blurb panel are gone. What remains: the mode title, a hand-drawn grey
+// card, and the count inside it under a navy "Quiz starts in:" pill.
+//
+// Tops are cap lines solved back through the fonts' metrics (Digitale: asc
+// 0.97em, desc 0.27em, cap 0.71em; Mouse Memoirs: 0.9375 / 0.2125 / 0.71925).
 const CD = {
-  washTop: 408,
-  washHeight: 447,
-  titleTop: 146.3, // cap line 153
-  blurbTop: 24.9, // cap line 307.7, relative to the panel's top at 280
-  startsInTop: 535, // cap line 538
-  numberTop: 459, // cap line 475
-  // "Rectangle 24": a subtly skewed rounded rect, not a symmetrical one.
-  panel:
-    'M0 10.3097 C0 4.6674 4.66523 0.142329 10.3049 0.314388 L285.305 8.70422 C290.707 8.86901 295 13.2955 295 18.6996 L295 64.787 C295 70.2249 290.655 74.6661 285.218 74.7846 L10.2179 80.7773 C4.61107 80.8995 0 76.3878 0 70.7797 L0 10.3097 Z',
+  backChip: { x: 17, y: 51.5, w: 80, h: 31 },
+  titleTop: 147.5, // cap line 152.5
+  titleSize: 60,
+  titleLine: 52.8,
+  card: {
+    x: 80,
+    y: 312,
+    w: 235,
+    h: 200.5,
+    fill: '#DCDFE4',
+    // "Vector 9" — a tapered, hand-drawn card, not a plain rounded rect.
+    d: 'M210.228 0.896026 L23.3402 7.65578 C10.8703 8.10682 1.54222 19.2675 3.31138 31.6195 L24.9186 182.477 C26.3999 192.82 35.2587 200.5 45.7065 200.5 L190.547 200.5 C201.101 200.5 210.016 192.667 211.373 182.201 L231.812 24.5829 C233.481 11.7142 223.195 0.426974 210.228 0.896026 Z',
+  },
+  pill: { x: 138.5, y: 357.5, w: 118, h: 30, fill: '#44546F' },
+  numberTop: 397.5, // cap line 405.5
+  numberSize: 100,
+  numberLine: 88,
 };
 
 export default function QuizPlayScreen() {
@@ -144,73 +155,68 @@ export default function QuizPlayScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, mode.timer, remaining]);
 
-  // ── Countdown screen (dark stage, per-mode copy) ──
+  // ── Countdown screen (light, per the current frames) ──
   if (phase === 'countdown') {
     return (
-      <View style={styles.stage}>
-        {/* Wash to near-black (Figma "gradient overlay", y408-855). Its gradient
-            reaches solid at 62.7% of its own height, not at its foot. */}
-        <Svg
-          style={[styles.cdWash, { top: CD.washTop * s, height: CD.washHeight * s }]}
-          width="100%"
-          height={CD.washHeight * s}
-          pointerEvents="none"
+      <View style={styles.screen}>
+        <Pressable
+          style={[
+            styles.cdBackChip,
+            { left: CD.backChip.x * s, top: CD.backChip.y * s, width: CD.backChip.w * s, height: CD.backChip.h * s },
+          ]}
+          onPress={() => router.replace('/quiz')}
+          accessibilityRole="button"
+          accessibilityLabel="Back to quizzes"
         >
-          <Defs>
-            <LinearGradient id="cdFade" x1="0.803" y1="0.0217" x2="0.803" y2="0.6271">
-              <Stop offset="0" stopColor={colors.stageDeep} stopOpacity={0} />
-              <Stop offset="1" stopColor={colors.stageDeep} stopOpacity={1} />
-            </LinearGradient>
-          </Defs>
-          <Rect x="0" y="0" width="100%" height="100%" fill="url(#cdFade)" />
-        </Svg>
-
-        <View style={[styles.cdIcon, { top: 80 * s, width: 43 * s, height: 43 * s, borderRadius: 22 * s }]}>
-          <mode.Icon size={17 * s} color={colors.textMuted} />
-        </View>
+          <IconChevronLeft size={10 * s} color={colors.text} />
+          <Text style={[styles.cdBackText, { fontSize: 10 * s }]}>Quizzes</Text>
+        </Pressable>
 
         <Text
           style={[
             styles.cdTitle,
-            { top: CD.titleTop * s, fontSize: 80 * s, lineHeight: 70.4 * s },
+            { top: CD.titleTop * s, fontSize: CD.titleSize * s, lineHeight: CD.titleLine * s },
           ]}
         >
           {isReview ? 'Review' : mode.label}
         </Text>
 
-        {/* The blurb panel is a hand-drawn blob at 20%, not a plain rounded box */}
-        <View style={{ position: 'absolute', left: 50 * s, top: 280 * s, width: 295 * s, height: 81 * s }}>
-          <Svg
-            style={StyleSheet.absoluteFill}
-            width={295 * s}
-            height={81 * s}
-            viewBox="0 0 295 81"
-            pointerEvents="none"
-          >
-            <Path d={CD.panel} fill="#F9F7FF" fillOpacity={0.2} />
-          </Svg>
-          <Text
-            style={[
-              styles.cdBlurbText,
-              { top: CD.blurbTop * s, left: 16 * s, width: 262 * s, fontSize: 14 * s, lineHeight: 15.4 * s },
-            ]}
-          >
-            {isReview ? 'A quick pass over your due words.' : mode.blurb}
-          </Text>
+        {/* The count sits in a hand-drawn card, under its label pill */}
+        <Svg
+          style={{ position: 'absolute', left: CD.card.x * s, top: CD.card.y * s }}
+          width={CD.card.w * s}
+          height={CD.card.h * s}
+          viewBox={`0 0 ${CD.card.w} ${CD.card.h}`}
+          pointerEvents="none"
+        >
+          <Path d={CD.card.d} fill={CD.card.fill} />
+        </Svg>
+
+        <View
+          style={[
+            styles.cdPill,
+            {
+              left: CD.pill.x * s,
+              top: CD.pill.y * s,
+              width: CD.pill.w * s,
+              height: CD.pill.h * s,
+              borderRadius: (CD.pill.h * s) / 2,
+            },
+          ]}
+        >
+          <Text style={[styles.cdPillText, { fontSize: 14 * s }]}>Quiz starts in:</Text>
         </View>
 
         <Text
           style={[
-            styles.cdStartsIn,
-            { top: CD.startsInTop * s, left: 69 * s, fontSize: 20 * s, lineHeight: 20 * s },
-          ]}
-        >
-          Quiz starts in:
-        </Text>
-        <Text
-          style={[
             styles.cdNumber,
-            { top: CD.numberTop * s, left: 217 * s, width: 108 * s, fontSize: 200 * s, lineHeight: 176 * s },
+            {
+              top: CD.numberTop * s,
+              left: CD.pill.x * s,
+              width: CD.pill.w * s,
+              fontSize: CD.numberSize * s,
+              lineHeight: CD.numberLine * s,
+            },
           ]}
         >
           {Math.max(count, 1)}
@@ -557,14 +563,38 @@ const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background },
   dimText: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 15 },
 
-  // Countdown (dark stage)
-  stage: { flex: 1, backgroundColor: colors.stage, alignItems: 'center' },
-  cdIcon: { position: 'absolute', backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
-  cdWash: { position: 'absolute', left: 0, right: 0 },
-  cdTitle: { position: 'absolute', left: 0, right: 0, textAlign: 'center', fontFamily: fonts.display, color: '#FFFFFF' },
-  cdBlurbText: { position: 'absolute', fontFamily: fonts.regular, color: '#FFFFFF', textAlign: 'center' },
-  cdStartsIn: { position: 'absolute', fontFamily: fonts.semibold, color: '#FFFBEC' },
-  cdNumber: { position: 'absolute', textAlign: 'center', fontFamily: fonts.extrabold, color: '#FFFFFF' },
+  // Countdown (light screen, per the current frames)
+  cdBackChip: {
+    position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    backgroundColor: colors.inset,
+    borderRadius: 999,
+  },
+  cdBackText: { fontFamily: fonts.bold, color: colors.text },
+  cdTitle: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    fontFamily: fonts.display,
+    color: colors.text,
+  },
+  cdPill: {
+    position: 'absolute',
+    backgroundColor: '#44546F',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cdPillText: { fontFamily: fonts.bold, color: '#FFFFFF' },
+  cdNumber: {
+    position: 'absolute',
+    textAlign: 'center',
+    fontFamily: fonts.extrabold,
+    color: '#44546F',
+  },
 
   // Header
   backChip: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 4 },
