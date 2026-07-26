@@ -93,9 +93,9 @@ export function CollectionPanel({
         styles.panel,
         {
           left: 17 * s,
-          top: 133 * s,
+          top: 202 * s,
           bottom: 49 * s + tabInset,
-          width: (width ?? 363) * s,
+          width: (width ?? 360) * s,
           borderRadius: 14 * s,
         },
       ]}
