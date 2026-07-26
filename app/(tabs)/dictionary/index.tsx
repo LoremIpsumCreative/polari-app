@@ -165,7 +165,7 @@ export default function DictionaryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: '#E7E9EC',
   },
   railWrap: {
     paddingTop: spacing.md,
