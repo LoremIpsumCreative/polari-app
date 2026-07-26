@@ -88,7 +88,7 @@ export default function CollectionsHub() {
   if (!session) {
     return (
       <View style={styles.screen}>
-        <Text style={[styles.gateCopy, { left: 33 * s, top: 90 * s, width: 330 * s, fontSize: 18 * s, lineHeight: 17.7 * s }]}>
+        <Text style={[styles.gateCopy, { left: 66 * s, top: 89 * s, width: 264 * s, fontSize: 16 * s, lineHeight: 20 * s }]}>
           Sign in or create an account to save favourites, earn achievements and access the
           character gallery
         </Text>
@@ -96,7 +96,7 @@ export default function CollectionsHub() {
         <Pressable
           style={({ pressed }) => [
             styles.signIn,
-            { left: 83 * s, top: 578 * s, width: 229 * s, height: 38 * s },
+            { left: 80 * s, top: 608 * s, width: 199 * s, height: 50 * s },
             pressed && styles.pressed,
           ]}
           onPress={() => router.push('/sign-in')}
@@ -104,7 +104,7 @@ export default function CollectionsHub() {
         >
           <Text style={[styles.signInText, { fontSize: 14 * s }]}>Sign In</Text>
         </Pressable>
-        <Text style={[styles.createLink, { top: 636 * s, fontSize: 12 * s }]}>
+        <Text style={[styles.createLink, { top: 673 * s, fontSize: 14 * s }]}>
           Don’t have an account yet?{' '}
           <Text style={styles.createLinkAccent} onPress={() => router.push('/sign-up')}>
             Create one.
@@ -137,11 +137,11 @@ export default function CollectionsHub() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background, alignItems: 'center' },
+  screen: { flex: 1, backgroundColor: '#E7E9EC', alignItems: 'center' },
   title: { position: 'absolute', fontFamily: fonts.display, color: colors.quizInk },
   gateCopy: {
     position: 'absolute',
-    fontFamily: fonts.semibold,
+    fontFamily: fonts.regular,
     color: colors.text,
     textAlign: 'center',
   },
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   },
   signInText: { fontFamily: fonts.bold, color: colors.onPrimary, letterSpacing: 0.3 },
   pressed: { opacity: 0.85 },
-  createLink: { position: 'absolute', fontFamily: fonts.semibold, color: colors.text },
+  createLink: { position: 'absolute', fontFamily: fonts.regular, color: colors.text },
   createLinkAccent: { color: colors.primary },
   sat: { position: 'absolute', alignItems: 'center' },
   satCircle: {
