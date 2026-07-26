@@ -46,6 +46,16 @@ const SCREENS = [
   //   ['countdown-ten',   '<_Countdown child of 1905:3223>'],
   //   ['countdown-timed', '<_Countdown child of 1905:3255>'],
   //   ['countdown-life',  '<_Countdown child of 1905:3381>'],
+  ['collections-hub-out', '1117:1578'],
+  ['collections-hub-in', '1351:1709'],
+  ['collections-favourites-empty', '1858:1479'],
+  ['collections-favourites', '1858:1480'],
+  ['collections-achievements', '1859:933'],
+  ['collections-gallery', '1859:1566'],
+  ['dictionary', '1886:1572'],
+  ['account', '1125:2037'],
+  ['question-character', '1353:306'],
+  ['question-match', '1353:439'],
 ];
 
 const hex = (c) =>

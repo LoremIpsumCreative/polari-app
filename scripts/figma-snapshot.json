@@ -1507,6 +1507,2753 @@
           "fill": "img"
         }
       ]
+    },
+    "collections-hub-out": {
+      "id": "1117:1578",
+      "size": [
+        395,
+        853
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            1,
+            0,
+            394,
+            853
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Hero Images",
+          "t": "GROUP",
+          "box": [
+            -2,
+            189,
+            400.6,
+            406.2
+          ]
+        },
+        {
+          "n": "favourette background",
+          "t": "VECTOR",
+          "box": [
+            -2,
+            263,
+            222.8,
+            313.6
+          ],
+          "op": 0.2,
+          "fill": "#da62ac"
+        },
+        {
+          "n": "gallerie background",
+          "t": "VECTOR",
+          "box": [
+            163,
+            281.3,
+            235.6,
+            313.8
+          ],
+          "op": 0.2,
+          "fill": "#2898bd"
+        },
+        {
+          "n": "achieevee background",
+          "t": "VECTOR",
+          "box": [
+            102,
+            233,
+            164,
+            293
+          ],
+          "op": 0.2,
+          "fill": "#e2b203"
+        },
+        {
+          "n": "achieevee_polari",
+          "t": "RECTANGLE",
+          "box": [
+            85,
+            189,
+            167.1,
+            328.3
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "favourette_polari",
+          "t": "RECTANGLE",
+          "box": [
+            55,
+            291,
+            102,
+            264
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "gallerie_polari",
+          "t": "RECTANGLE",
+          "box": [
+            218.1,
+            295.2,
+            129.5,
+            266.9
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "Sign in or create an account to save favourites, earn achievements and access the character gallery",
+          "t": "TEXT",
+          "box": [
+            66,
+            89,
+            264,
+            47
+          ],
+          "fill": "#172b4d",
+          "text": "Sign in or create an account to save favourites,",
+          "fs": 16,
+          "font": "Digitale Variable Regular"
+        },
+        {
+          "n": "Don’t have an account yet? Create one.",
+          "t": "TEXT",
+          "box": [
+            71,
+            673,
+            253,
+            10
+          ],
+          "text": "Don’t have an account yet? Create one.",
+          "fs": 14,
+          "font": "Digitale Variable Regular"
+        },
+        {
+          "n": "Navbar 2.0",
+          "t": "INSTANCE",
+          "box": [
+            1,
+            752,
+            394,
+            101
+          ]
+        },
+        {
+          "n": "Quiz",
+          "t": "INSTANCE",
+          "box": [
+            80,
+            608,
+            199,
+            50
+          ]
+        }
+      ]
+    },
+    "collections-hub-in": {
+      "id": "1351:1709",
+      "size": [
+        395,
+        853
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            1,
+            0,
+            394,
+            853
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Collections",
+          "t": "TEXT",
+          "box": [
+            107,
+            90,
+            181,
+            42
+          ],
+          "fill": "#172b4d",
+          "text": "Collections",
+          "fs": 60,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Hero Images",
+          "t": "GROUP",
+          "box": [
+            4.2,
+            189,
+            394.4,
+            406.2
+          ]
+        },
+        {
+          "n": "favourette background",
+          "t": "VECTOR",
+          "box": [
+            4.2,
+            285.5,
+            209.6,
+            291.1
+          ],
+          "op": 0.2,
+          "fill": "#da62ac"
+        },
+        {
+          "n": "gallerie background",
+          "t": "VECTOR",
+          "box": [
+            163,
+            281.3,
+            235.6,
+            313.8
+          ],
+          "op": 0.2,
+          "fill": "#2898bd"
+        },
+        {
+          "n": "achieevee background",
+          "t": "VECTOR",
+          "box": [
+            102,
+            233,
+            164,
+            293
+          ],
+          "op": 0.2,
+          "fill": "#e2b203"
+        },
+        {
+          "n": "achieevee_polari",
+          "t": "RECTANGLE",
+          "box": [
+            85,
+            189,
+            167.1,
+            328.3
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "favourette_polari",
+          "t": "RECTANGLE",
+          "box": [
+            55,
+            291,
+            102,
+            264
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "gallerie_polari",
+          "t": "RECTANGLE",
+          "box": [
+            218.1,
+            295.2,
+            129.5,
+            266.9
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "Navbar 2.0",
+          "t": "INSTANCE",
+          "box": [
+            1,
+            752,
+            394,
+            101
+          ]
+        },
+        {
+          "n": "Frame 84",
+          "t": "FRAME",
+          "box": [
+            62,
+            602,
+            271,
+            80
+          ]
+        },
+        {
+          "n": "Frame 82",
+          "t": "FRAME",
+          "box": [
+            62,
+            602,
+            64,
+            80
+          ]
+        },
+        {
+          "n": "Frame 56",
+          "t": "FRAME",
+          "box": [
+            66.5,
+            602,
+            55,
+            55
+          ],
+          "fill": "#f8f9fa"
+        },
+        {
+          "n": "Favourites",
+          "t": "TEXT",
+          "box": [
+            62,
+            674,
+            64,
+            8
+          ],
+          "fill": "#172b4d",
+          "text": "Favourites",
+          "fs": 12,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "Frame 81",
+          "t": "FRAME",
+          "box": [
+            156,
+            602,
+            83,
+            80
+          ]
+        },
+        {
+          "n": "Frame 55",
+          "t": "FRAME",
+          "box": [
+            170,
+            602,
+            55,
+            55
+          ],
+          "fill": "#f8f9fa"
+        },
+        {
+          "n": "Achievements",
+          "t": "TEXT",
+          "box": [
+            156,
+            674,
+            83,
+            8
+          ],
+          "fill": "#172b4d",
+          "text": "Achievements",
+          "fs": 12,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "Frame 83",
+          "t": "FRAME",
+          "box": [
+            269,
+            602,
+            64,
+            80
+          ]
+        },
+        {
+          "n": "Frame 54",
+          "t": "FRAME",
+          "box": [
+            273.5,
+            602,
+            55,
+            55
+          ],
+          "fill": "#f8f9fa"
+        },
+        {
+          "n": "Gallery",
+          "t": "TEXT",
+          "box": [
+            269,
+            674,
+            64,
+            8
+          ],
+          "fill": "#172b4d",
+          "text": "Gallery",
+          "fs": 12,
+          "font": "Digitale Variable Semibold"
+        }
+      ]
+    },
+    "collections-favourites-empty": {
+      "id": "1858:1479",
+      "size": [
+        395,
+        853
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            0,
+            0,
+            395,
+            853
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Frame 90",
+          "t": "FRAME",
+          "box": [
+            18,
+            202,
+            360,
+            651
+          ],
+          "fill": "#ffffff",
+          "stroke": "#c8ccd4",
+          "sw": 1
+        },
+        {
+          "n": "Frame 87",
+          "t": "FRAME",
+          "box": [
+            37,
+            216,
+            298,
+            513
+          ]
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            37,
+            216,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.800000011920929
+        },
+        {
+          "n": "Character",
+          "t": "GROUP",
+          "box": [
+            111.1,
+            292.4,
+            149.9,
+            330.4
+          ]
+        },
+        {
+          "n": "Save your favourite Polari words and phrases by tapping the heart icon on a word definition card.",
+          "t": "TEXT",
+          "box": [
+            66,
+            658.9,
+            240,
+            40
+          ],
+          "fill": "#172b4d",
+          "text": "Save your favourite Polari words and phrases by ",
+          "fs": 14,
+          "font": "Digitale Variable Regular"
+        },
+        {
+          "n": "Navigation/PaginationBar",
+          "t": "INSTANCE",
+          "box": [
+            344,
+            216,
+            23,
+            513
+          ]
+        },
+        {
+          "n": "Action/Collections",
+          "t": "INSTANCE",
+          "box": [
+            17,
+            52,
+            94,
+            31
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#f8f9fa",
+          "sw": 0.5
+        },
+        {
+          "n": "Template/Screen 394×852",
+          "t": "INSTANCE",
+          "box": [
+            1,
+            1,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "Favourites",
+          "t": "TEXT",
+          "box": [
+            143,
+            90,
+            108,
+            25
+          ],
+          "fill": "#172b4d",
+          "text": "Favourites",
+          "fs": 36,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Input/Search",
+          "t": "INSTANCE",
+          "box": [
+            18,
+            129,
+            360,
+            26
+          ],
+          "fill": "#ffffff",
+          "stroke": "#626f86",
+          "sw": 0.5
+        },
+        {
+          "n": "Input/FilterBar",
+          "t": "INSTANCE",
+          "box": [
+            17,
+            158,
+            378,
+            38
+          ]
+        }
+      ]
+    },
+    "collections-favourites": {
+      "id": "1858:1480",
+      "size": [
+        395,
+        853
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "VECTOR",
+          "box": [
+            0,
+            0,
+            395,
+            853
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Frame 90",
+          "t": "FRAME",
+          "box": [
+            18,
+            203,
+            360,
+            607
+          ],
+          "fill": "#ffffff",
+          "stroke": "#c8ccd4",
+          "sw": 1
+        },
+        {
+          "n": "Frame 87",
+          "t": "FRAME",
+          "box": [
+            39,
+            221,
+            298,
+            569
+          ]
+        },
+        {
+          "n": "Navigation/Pagination Lettet",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            221,
+            7,
+            7
+          ]
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            234,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.5
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            280.4,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.5
+        },
+        {
+          "n": "Navigation/Pagination Lettet",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            326.9,
+            7,
+            7
+          ]
+        },
+        {
+          "n": "Navigation/Pagination Lettet",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            339.9,
+            7,
+            7
+          ]
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            352.9,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.5
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            399.3,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.5
+        },
+        {
+          "n": "Navigation/Pagination Lettet",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            445.8,
+            7,
+            7
+          ]
+        },
+        {
+          "n": "Navigation/Pagination Lettet",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            458.8,
+            7,
+            7
+          ]
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            471.8,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.5
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            518.2,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.5
+        },
+        {
+          "n": "Navigation/Pagination Lettet",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            564.7,
+            7,
+            7
+          ]
+        },
+        {
+          "n": "Navigation/Pagination Lettet",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            577.7,
+            7,
+            7
+          ]
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            590.7,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.5
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            637.1,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.5
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            683.6,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.5
+        },
+        {
+          "n": "Navigation/Pagination Lettet",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            730,
+            7,
+            7
+          ]
+        },
+        {
+          "n": "Navigation/Pagination Lettet",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            743,
+            7,
+            7
+          ]
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            756,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.5
+        },
+        {
+          "n": "Button/Favourited Word",
+          "t": "INSTANCE",
+          "box": [
+            39,
+            802.4,
+            298,
+            40.4
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 0.5
+        },
+        {
+          "n": "Navigation/PaginationBar",
+          "t": "INSTANCE",
+          "box": [
+            346,
+            216,
+            19,
+            579
+          ]
+        },
+        {
+          "n": "Action/Collections",
+          "t": "INSTANCE",
+          "box": [
+            17,
+            52,
+            94,
+            31
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#f8f9fa",
+          "sw": 0.5
+        },
+        {
+          "n": "Favourites",
+          "t": "TEXT",
+          "box": [
+            143,
+            90,
+            108,
+            25
+          ],
+          "fill": "#172b4d",
+          "text": "Favourites",
+          "fs": 36,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Template/Screen 394×852",
+          "t": "INSTANCE",
+          "box": [
+            1,
+            1,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "Input/Search",
+          "t": "INSTANCE",
+          "box": [
+            18,
+            129,
+            360,
+            26
+          ],
+          "fill": "#ffffff",
+          "stroke": "#626f86",
+          "sw": 0.5
+        },
+        {
+          "n": "Input/FilterBar",
+          "t": "INSTANCE",
+          "box": [
+            17,
+            158,
+            378,
+            38
+          ]
+        }
+      ]
+    },
+    "collections-achievements": {
+      "id": "1859:933",
+      "size": [
+        395,
+        853
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "VECTOR",
+          "box": [
+            0,
+            0,
+            395,
+            853
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Frame 105",
+          "t": "FRAME",
+          "box": [
+            17,
+            202,
+            360,
+            651
+          ],
+          "fill": "#ffffff",
+          "stroke": "#c8ccd4",
+          "sw": 1
+        },
+        {
+          "n": "Frame 105",
+          "t": "INSTANCE",
+          "box": [
+            33,
+            218,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 106",
+          "t": "INSTANCE",
+          "box": [
+            147,
+            218,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 107",
+          "t": "INSTANCE",
+          "box": [
+            261,
+            218,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 108",
+          "t": "INSTANCE",
+          "box": [
+            33,
+            344.6,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 109",
+          "t": "INSTANCE",
+          "box": [
+            147,
+            344.6,
+            100,
+            112.6
+          ],
+          "fill": "#f4f9ff",
+          "stroke": "#0c66e4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 110",
+          "t": "INSTANCE",
+          "box": [
+            261,
+            344.6,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 113",
+          "t": "INSTANCE",
+          "box": [
+            33,
+            471.2,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 112",
+          "t": "INSTANCE",
+          "box": [
+            147,
+            471.2,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 111",
+          "t": "INSTANCE",
+          "box": [
+            261,
+            471.2,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 114",
+          "t": "INSTANCE",
+          "box": [
+            33,
+            597.8,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 115",
+          "t": "INSTANCE",
+          "box": [
+            147,
+            597.8,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 117",
+          "t": "INSTANCE",
+          "box": [
+            261,
+            597.8,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 119",
+          "t": "INSTANCE",
+          "box": [
+            33,
+            724.4,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 120",
+          "t": "INSTANCE",
+          "box": [
+            147,
+            724.4,
+            100,
+            112.6
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#b3b9c4",
+          "sw": 0.5
+        },
+        {
+          "n": "Frame 116",
+          "t": "INSTANCE",
+          "box": [
+            261,
+            724.4,
+            100,
+            112.6
+          ],
+          "fill": "#f4f9ff",
+          "stroke": "#0c66e4",
+          "sw": 0.5
+        },
+        {
+          "n": "Action/Collections",
+          "t": "INSTANCE",
+          "box": [
+            17,
+            52,
+            94,
+            31
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#f8f9fa",
+          "sw": 0.5
+        },
+        {
+          "n": "Template/Screen 394×852",
+          "t": "INSTANCE",
+          "box": [
+            1,
+            1,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "Achievements",
+          "t": "TEXT",
+          "box": [
+            127,
+            90,
+            141,
+            25
+          ],
+          "fill": "#172b4d",
+          "text": "Achievements",
+          "fs": 36,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Input/Search",
+          "t": "INSTANCE",
+          "box": [
+            18,
+            129,
+            360,
+            26
+          ],
+          "fill": "#ffffff",
+          "stroke": "#626f86",
+          "sw": 0.5
+        },
+        {
+          "n": "Input/FilterBar",
+          "t": "INSTANCE",
+          "box": [
+            17,
+            158,
+            378,
+            38
+          ]
+        }
+      ]
+    },
+    "collections-gallery": {
+      "id": "1859:1566",
+      "size": [
+        395,
+        853
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "VECTOR",
+          "box": [
+            0,
+            0,
+            395,
+            853
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Gallery",
+          "t": "TEXT",
+          "box": [
+            160,
+            90,
+            74,
+            25
+          ],
+          "fill": "#172b4d",
+          "text": "Gallery",
+          "fs": 36,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Input/Search",
+          "t": "INSTANCE",
+          "box": [
+            18,
+            129,
+            360,
+            26
+          ],
+          "fill": "#ffffff",
+          "stroke": "#626f86",
+          "sw": 0.5
+        },
+        {
+          "n": "Input/FilterBar",
+          "t": "INSTANCE",
+          "box": [
+            17,
+            158,
+            378,
+            38
+          ]
+        },
+        {
+          "n": "Frame 118",
+          "t": "FRAME",
+          "box": [
+            17,
+            202,
+            360,
+            651
+          ],
+          "fill": "#ffffff",
+          "stroke": "#b3b9c4",
+          "sw": 1
+        },
+        {
+          "n": "Frame 117",
+          "t": "FRAME",
+          "box": [
+            47,
+            216,
+            276,
+            611
+          ]
+        },
+        {
+          "n": "Badge/Gallery",
+          "t": "INSTANCE",
+          "box": [
+            47,
+            216,
+            128,
+            146
+          ]
+        },
+        {
+          "n": "Badge/Gallery",
+          "t": "INSTANCE",
+          "box": [
+            195,
+            216,
+            128,
+            146
+          ]
+        },
+        {
+          "n": "Badge/Gallery",
+          "t": "INSTANCE",
+          "box": [
+            47,
+            371,
+            128,
+            146
+          ]
+        },
+        {
+          "n": "Badge/Gallery",
+          "t": "INSTANCE",
+          "box": [
+            195,
+            371,
+            128,
+            146
+          ]
+        },
+        {
+          "n": "Badge/Gallery",
+          "t": "INSTANCE",
+          "box": [
+            47,
+            526,
+            128,
+            146
+          ]
+        },
+        {
+          "n": "Badge/Gallery",
+          "t": "INSTANCE",
+          "box": [
+            195,
+            526,
+            128,
+            146
+          ]
+        },
+        {
+          "n": "Badge/Gallery",
+          "t": "INSTANCE",
+          "box": [
+            47,
+            681,
+            128,
+            146
+          ]
+        },
+        {
+          "n": "Badge/Gallery",
+          "t": "INSTANCE",
+          "box": [
+            195,
+            681,
+            128,
+            146
+          ]
+        },
+        {
+          "n": "Navigation/PaginationBar",
+          "t": "INSTANCE",
+          "box": [
+            343,
+            216,
+            19,
+            507
+          ]
+        },
+        {
+          "n": "Action/Collections",
+          "t": "INSTANCE",
+          "box": [
+            17,
+            52,
+            94,
+            31
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#f8f9fa",
+          "sw": 0.5
+        },
+        {
+          "n": "Template/Screen 394×852",
+          "t": "INSTANCE",
+          "box": [
+            1,
+            1,
+            394,
+            852
+          ]
+        }
+      ]
+    },
+    "account": {
+      "id": "1125:2037",
+      "size": [
+        395,
+        853
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            1,
+            0,
+            394,
+            853
+          ],
+          "fill": "#dcdfe4"
+        },
+        {
+          "n": "Navigation/BottomNav",
+          "t": "INSTANCE",
+          "box": [
+            0,
+            752,
+            394,
+            101
+          ]
+        }
+      ]
+    },
+    "dictionary": {
+      "id": "1886:1572",
+      "size": [
+        2614,
+        1275
+      ],
+      "nodes": [
+        {
+          "n": "Dictionary/Dictionary Main",
+          "t": "FRAME",
+          "box": [
+            0,
+            0,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            0,
+            0,
+            394,
+            852
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Curated Lists",
+          "t": "TEXT",
+          "box": [
+            28,
+            210,
+            63,
+            7
+          ],
+          "fill": "#758195",
+          "text": "Curated Lists",
+          "fs": 10,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Frame 90",
+          "t": "FRAME",
+          "box": [
+            17,
+            305,
+            360,
+            511
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 1
+        },
+        {
+          "n": "Template/Screen 394×852",
+          "t": "INSTANCE",
+          "box": [
+            0,
+            0,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "Polari Dictionary",
+          "t": "TEXT",
+          "box": [
+            110,
+            90,
+            175,
+            25
+          ],
+          "fill": "#172b4d",
+          "text": "Polari Dictionary",
+          "fs": 36,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Input/Search",
+          "t": "INSTANCE",
+          "box": [
+            18,
+            129,
+            360,
+            26
+          ],
+          "fill": "#ffffff",
+          "stroke": "#626f86",
+          "sw": 0.5
+        },
+        {
+          "n": "Input/FilterBar",
+          "t": "INSTANCE",
+          "box": [
+            17,
+            158,
+            377,
+            38
+          ]
+        },
+        {
+          "n": "Frame 122",
+          "t": "FRAME",
+          "box": [
+            18,
+            223,
+            376,
+            65
+          ]
+        },
+        {
+          "n": "Dictionary/Filter Modal - Filters Inactive",
+          "t": "FRAME",
+          "box": [
+            444,
+            0,
+            394,
+            853
+          ]
+        },
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            444,
+            0,
+            394,
+            852
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Curated Lists",
+          "t": "TEXT",
+          "box": [
+            472,
+            210,
+            63,
+            7
+          ],
+          "fill": "#758195",
+          "text": "Curated Lists",
+          "fs": 10,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Frame 90",
+          "t": "FRAME",
+          "box": [
+            461,
+            305,
+            360,
+            511
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 1
+        },
+        {
+          "n": "Polari Dictionary",
+          "t": "TEXT",
+          "box": [
+            554,
+            90,
+            175,
+            25
+          ],
+          "fill": "#172b4d",
+          "text": "Polari Dictionary",
+          "fs": 36,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Input/Search",
+          "t": "INSTANCE",
+          "box": [
+            462,
+            129,
+            360,
+            26
+          ],
+          "fill": "#ffffff",
+          "stroke": "#626f86",
+          "sw": 0.5
+        },
+        {
+          "n": "Input/FilterBar",
+          "t": "INSTANCE",
+          "box": [
+            461,
+            158,
+            377,
+            38
+          ]
+        },
+        {
+          "n": "background blur",
+          "t": "RECTANGLE",
+          "box": [
+            444,
+            0,
+            394,
+            852
+          ],
+          "fill": "#121212@0.5"
+        },
+        {
+          "n": "Filters",
+          "t": "FRAME",
+          "box": [
+            461,
+            130,
+            361,
+            459
+          ],
+          "fill": "#ffffff"
+        },
+        {
+          "n": "Template/Screen 394×852",
+          "t": "INSTANCE",
+          "box": [
+            444,
+            0,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "Dictionary/Filter Modal - Filters Active",
+          "t": "FRAME",
+          "box": [
+            888,
+            0,
+            394,
+            1275
+          ]
+        },
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            888,
+            0,
+            394,
+            1275
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Curated Lists",
+          "t": "TEXT",
+          "box": [
+            916,
+            210,
+            63,
+            7
+          ],
+          "fill": "#758195",
+          "text": "Curated Lists",
+          "fs": 10,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Frame 90",
+          "t": "FRAME",
+          "box": [
+            905,
+            305,
+            360,
+            935
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 1
+        },
+        {
+          "n": "Template/Screen 394×852",
+          "t": "INSTANCE",
+          "box": [
+            888,
+            0,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "Polari Dictionary",
+          "t": "TEXT",
+          "box": [
+            998,
+            90,
+            175,
+            25
+          ],
+          "fill": "#172b4d",
+          "text": "Polari Dictionary",
+          "fs": 36,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Input/Search",
+          "t": "INSTANCE",
+          "box": [
+            906,
+            129,
+            360,
+            26
+          ],
+          "fill": "#ffffff",
+          "stroke": "#626f86",
+          "sw": 0.5
+        },
+        {
+          "n": "Input/FilterBar",
+          "t": "INSTANCE",
+          "box": [
+            905,
+            158,
+            377,
+            38
+          ]
+        },
+        {
+          "n": "background blur",
+          "t": "RECTANGLE",
+          "box": [
+            888,
+            0,
+            394,
+            1275
+          ],
+          "fill": "#121212@0.5"
+        },
+        {
+          "n": "Filters",
+          "t": "FRAME",
+          "box": [
+            905,
+            130,
+            361,
+            1008
+          ],
+          "fill": "#ffffff"
+        },
+        {
+          "n": "Navigation/BottomNav",
+          "t": "INSTANCE",
+          "box": [
+            888,
+            1174,
+            394,
+            101
+          ]
+        },
+        {
+          "n": "Dictionary/Filter - No Results",
+          "t": "FRAME",
+          "box": [
+            1332,
+            0,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            1332,
+            0,
+            394,
+            852
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Curated Lists",
+          "t": "TEXT",
+          "box": [
+            1360,
+            210,
+            63,
+            7
+          ],
+          "fill": "#758195",
+          "text": "Curated Lists",
+          "fs": 10,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Frame 90",
+          "t": "FRAME",
+          "box": [
+            1349,
+            305,
+            360,
+            509
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 1
+        },
+        {
+          "n": "Template/Screen 394×852",
+          "t": "INSTANCE",
+          "box": [
+            1332,
+            0,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "Polari Dictionary",
+          "t": "TEXT",
+          "box": [
+            1442,
+            90,
+            175,
+            25
+          ],
+          "fill": "#172b4d",
+          "text": "Polari Dictionary",
+          "fs": 36,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Input/Search",
+          "t": "INSTANCE",
+          "box": [
+            1350,
+            129,
+            360,
+            26
+          ],
+          "fill": "#ffffff",
+          "stroke": "#626f86",
+          "sw": 0.5
+        },
+        {
+          "n": "Input/FilterBar",
+          "t": "INSTANCE",
+          "box": [
+            1349,
+            158,
+            377,
+            38
+          ]
+        },
+        {
+          "n": "Frame 122",
+          "t": "FRAME",
+          "box": [
+            1350,
+            223,
+            376,
+            65
+          ]
+        },
+        {
+          "n": "Dictionary/Curated List",
+          "t": "FRAME",
+          "box": [
+            1776,
+            0,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            1776,
+            0,
+            394,
+            852
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Action/Collections",
+          "t": "INSTANCE",
+          "box": [
+            1793,
+            52,
+            92,
+            31
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#f8f9fa",
+          "sw": 0.5
+        },
+        {
+          "n": "{list name}",
+          "t": "TEXT",
+          "box": [
+            1793,
+            161,
+            360,
+            15
+          ],
+          "fill": "#172b4d",
+          "text": "{list name}",
+          "fs": 22,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "{list description}",
+          "t": "TEXT",
+          "box": [
+            1793,
+            189,
+            360,
+            8
+          ],
+          "fill": "#758195",
+          "text": "{list description}",
+          "fs": 12,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "Frame 90",
+          "t": "FRAME",
+          "box": [
+            1793,
+            222,
+            360,
+            630
+          ],
+          "fill": "#f8f9fa",
+          "stroke": "#c8ccd4",
+          "sw": 1
+        },
+        {
+          "n": "Template/Screen 394×852",
+          "t": "INSTANCE",
+          "box": [
+            1776,
+            0,
+            394,
+            852
+          ]
+        },
+        {
+          "n": "Badge/Type",
+          "t": "INSTANCE",
+          "box": [
+            1793,
+            123,
+            59,
+            17
+          ],
+          "fill": "#f4f9ff",
+          "stroke": "#0c66e4",
+          "sw": 1
+        },
+        {
+          "n": "Dictionary/Definition",
+          "t": "FRAME",
+          "box": [
+            2220,
+            0,
+            394,
+            1060
+          ]
+        },
+        {
+          "n": "background",
+          "t": "RECTANGLE",
+          "box": [
+            2220,
+            0,
+            394,
+            1059
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "character_abdabs_polari-bg 1",
+          "t": "RECTANGLE",
+          "box": [
+            2322,
+            87,
+            190,
+            253
+          ],
+          "fill": "img"
+        },
+        {
+          "n": "Vector (Stroke)",
+          "t": "VECTOR",
+          "box": [
+            2564,
+            87,
+            18,
+            18
+          ],
+          "fill": "#44546f"
+        },
+        {
+          "n": "Definition Card",
+          "t": "GROUP",
+          "box": [
+            2235,
+            350,
+            365,
+            574
+          ]
+        },
+        {
+          "n": "Navbar 2.0",
+          "t": "INSTANCE",
+          "box": [
+            2220,
+            958,
+            394,
+            101
+          ]
+        },
+        {
+          "n": "⚠ safe-zone guide — toggle visibility",
+          "t": "INSTANCE",
+          "box": [
+            2221,
+            0,
+            394,
+            852
+          ]
+        }
+      ]
+    },
+    "question-character": {
+      "id": "1353:306",
+      "size": [
+        394,
+        855
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "VECTOR",
+          "box": [
+            0,
+            0,
+            394,
+            855
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Frame 53",
+          "t": "FRAME",
+          "box": [
+            17,
+            23,
+            80,
+            28
+          ]
+        },
+        {
+          "n": "Vector",
+          "t": "VECTOR",
+          "box": [
+            31,
+            34.5,
+            5,
+            5
+          ],
+          "fill": "#172b4d",
+          "stroke": "#172b4d",
+          "sw": 1
+        },
+        {
+          "n": "Quizzes",
+          "t": "TEXT",
+          "box": [
+            46,
+            33.5,
+            37,
+            7
+          ],
+          "fill": "#172b4d",
+          "text": "Quizzes",
+          "fs": 10,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Group 102",
+          "t": "GROUP",
+          "box": [
+            35,
+            83,
+            56,
+            24
+          ]
+        },
+        {
+          "n": "10 Q’s",
+          "t": "TEXT",
+          "box": [
+            35,
+            83,
+            56,
+            24
+          ],
+          "fill": "#3d2232",
+          "text": "10 Q’s",
+          "fs": 34,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Navigation/BottomNav",
+          "t": "INSTANCE",
+          "box": [
+            0,
+            757,
+            394,
+            101
+          ]
+        },
+        {
+          "n": "Frame 51",
+          "t": "FRAME",
+          "box": [
+            137,
+            91,
+            237,
+            20
+          ],
+          "fill": "#f1f2f4",
+          "stroke": "#352c63",
+          "sw": 1
+        },
+        {
+          "n": "Rectangle 26",
+          "t": "RECTANGLE",
+          "box": [
+            141,
+            95,
+            60,
+            12
+          ],
+          "fill": "#5e4db2"
+        },
+        {
+          "n": "Question 3 of 10",
+          "t": "TEXT",
+          "box": [
+            141,
+            78,
+            92,
+            7
+          ],
+          "fill": "#626f86",
+          "text": "Question 3 of 10",
+          "fs": 10,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "Rectangle 27",
+          "t": "VECTOR",
+          "box": [
+            21,
+            68,
+            89,
+            53
+          ],
+          "op": 0.2,
+          "fill": "#6e5dc6",
+          "stroke": "#493b8b",
+          "sw": 0
+        },
+        {
+          "n": "Which word does this character bring to life?",
+          "t": "TEXT",
+          "box": [
+            36,
+            229,
+            323,
+            39
+          ],
+          "fill": "#172b4d",
+          "text": "Which word does this character bring to life?",
+          "fs": 22,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "Quiz/AnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            21,
+            490,
+            168,
+            62
+          ]
+        },
+        {
+          "n": "Quiz/AnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            207,
+            490,
+            168,
+            62
+          ]
+        },
+        {
+          "n": "Quiz/AnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            207,
+            570,
+            168,
+            62
+          ]
+        },
+        {
+          "n": "Quiz/AnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            21,
+            570,
+            168,
+            62
+          ]
+        },
+        {
+          "n": "Frame 72",
+          "t": "FRAME",
+          "box": [
+            221,
+            148,
+            141,
+            35
+          ],
+          "fill": "#f8f9fa"
+        },
+        {
+          "n": "Frame 69",
+          "t": "FRAME",
+          "box": [
+            235,
+            160,
+            113,
+            11
+          ]
+        },
+        {
+          "n": "Vector (Stroke)",
+          "t": "VECTOR",
+          "box": [
+            235,
+            160.5,
+            11,
+            10
+          ],
+          "fill": "#626f86"
+        },
+        {
+          "n": "high score:",
+          "t": "TEXT",
+          "box": [
+            254,
+            162,
+            65,
+            7
+          ],
+          "fill": "#626f86",
+          "text": "high score:",
+          "fs": 10,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "00",
+          "t": "TEXT",
+          "box": [
+            327,
+            160,
+            21,
+            11
+          ],
+          "fill": "#44546f",
+          "text": "00",
+          "fs": 16,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Frame 71",
+          "t": "FRAME",
+          "box": [
+            33,
+            148,
+            162,
+            35
+          ],
+          "fill": "#f8f9fa"
+        },
+        {
+          "n": "Frame 70",
+          "t": "FRAME",
+          "box": [
+            47,
+            160,
+            134,
+            11
+          ]
+        },
+        {
+          "n": "Vector (Stroke)",
+          "t": "VECTOR",
+          "box": [
+            47,
+            160.5,
+            8,
+            10
+          ],
+          "fill": "#626f86",
+          "stroke": "#626f86",
+          "sw": 0.30000001192092896
+        },
+        {
+          "n": "current streak:",
+          "t": "TEXT",
+          "box": [
+            61,
+            162,
+            93,
+            7
+          ],
+          "fill": "#626f86",
+          "text": "current streak:",
+          "fs": 10,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "00",
+          "t": "TEXT",
+          "box": [
+            160,
+            160,
+            21,
+            11
+          ],
+          "fill": "#44546f",
+          "text": "00",
+          "fs": 16,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Quiz",
+          "t": "INSTANCE",
+          "box": [
+            80,
+            662,
+            199,
+            50
+          ]
+        }
+      ]
+    },
+    "question-match": {
+      "id": "1353:439",
+      "size": [
+        394,
+        855
+      ],
+      "nodes": [
+        {
+          "n": "background",
+          "t": "VECTOR",
+          "box": [
+            0,
+            0,
+            394,
+            855
+          ],
+          "fill": "#e7e9ec"
+        },
+        {
+          "n": "Frame 53",
+          "t": "FRAME",
+          "box": [
+            17,
+            23,
+            80,
+            28
+          ]
+        },
+        {
+          "n": "Vector",
+          "t": "VECTOR",
+          "box": [
+            31,
+            34.5,
+            5,
+            5
+          ],
+          "fill": "#172b4d",
+          "stroke": "#172b4d",
+          "sw": 1
+        },
+        {
+          "n": "Quizzes",
+          "t": "TEXT",
+          "box": [
+            46,
+            33.5,
+            37,
+            7
+          ],
+          "fill": "#172b4d",
+          "text": "Quizzes",
+          "fs": 10,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Group 102",
+          "t": "GROUP",
+          "box": [
+            35,
+            83,
+            56,
+            24
+          ]
+        },
+        {
+          "n": "10 Q’s",
+          "t": "TEXT",
+          "box": [
+            35,
+            83,
+            56,
+            24
+          ],
+          "fill": "#3d2232",
+          "text": "10 Q’s",
+          "fs": 34,
+          "font": "Mouse Memoirs Regular"
+        },
+        {
+          "n": "Navigation/BottomNav",
+          "t": "INSTANCE",
+          "box": [
+            0,
+            757,
+            394,
+            101
+          ]
+        },
+        {
+          "n": "Frame 51",
+          "t": "FRAME",
+          "box": [
+            137,
+            91,
+            237,
+            20
+          ],
+          "fill": "#f1f2f4",
+          "stroke": "#352c63",
+          "sw": 1
+        },
+        {
+          "n": "Rectangle 26",
+          "t": "RECTANGLE",
+          "box": [
+            141,
+            95,
+            60,
+            12
+          ],
+          "fill": "#5e4db2"
+        },
+        {
+          "n": "Question 3 of 10",
+          "t": "TEXT",
+          "box": [
+            141,
+            78,
+            92,
+            7
+          ],
+          "fill": "#626f86",
+          "text": "Question 3 of 10",
+          "fs": 10,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "Rectangle 27",
+          "t": "VECTOR",
+          "box": [
+            21,
+            68,
+            89,
+            53
+          ],
+          "op": 0.2,
+          "fill": "#6e5dc6",
+          "stroke": "#493b8b",
+          "sw": 0
+        },
+        {
+          "n": "Match each word to its meaning:",
+          "t": "TEXT",
+          "box": [
+            36,
+            264,
+            323,
+            39
+          ],
+          "fill": "#172b4d",
+          "text": "Match each word to its meaning:",
+          "fs": 22,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "Quiz/MatchAnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            25,
+            490,
+            168,
+            60
+          ],
+          "fill": "#f9f7ff",
+          "stroke": "#6e5dc6",
+          "sw": 1
+        },
+        {
+          "n": "Quiz/MatchAnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            25,
+            330,
+            168,
+            60
+          ],
+          "fill": "#fffbec",
+          "stroke": "#b38600",
+          "sw": 1
+        },
+        {
+          "n": "Quiz/MatchAnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            25,
+            410,
+            168,
+            60
+          ],
+          "fill": "#f4f9ff",
+          "stroke": "#1d7afc",
+          "sw": 1
+        },
+        {
+          "n": "Quiz/MatchAnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            25,
+            570,
+            168,
+            60
+          ],
+          "fill": "#fff6fc",
+          "stroke": "#cd519d",
+          "sw": 1
+        },
+        {
+          "n": "Quiz/MatchAnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            208,
+            490,
+            168,
+            60
+          ],
+          "fill": "#f4f9ff",
+          "stroke": "#1d7afc",
+          "sw": 1
+        },
+        {
+          "n": "Quiz/MatchAnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            208,
+            330,
+            168,
+            60
+          ],
+          "fill": "#f9f7ff",
+          "stroke": "#6e5dc6",
+          "sw": 1
+        },
+        {
+          "n": "Quiz/MatchAnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            208,
+            410,
+            168,
+            60
+          ],
+          "fill": "#fff6fc",
+          "stroke": "#cd519d",
+          "sw": 1
+        },
+        {
+          "n": "Quiz/MatchAnswerTile",
+          "t": "INSTANCE",
+          "box": [
+            208,
+            570,
+            168,
+            60
+          ],
+          "fill": "#fffbec",
+          "stroke": "#b38600",
+          "sw": 1
+        },
+        {
+          "n": "Frame 72",
+          "t": "FRAME",
+          "box": [
+            221,
+            148,
+            141,
+            35
+          ],
+          "fill": "#f8f9fa"
+        },
+        {
+          "n": "Frame 69",
+          "t": "FRAME",
+          "box": [
+            235,
+            160,
+            113,
+            11
+          ]
+        },
+        {
+          "n": "Vector (Stroke)",
+          "t": "VECTOR",
+          "box": [
+            235,
+            160.5,
+            11,
+            10
+          ],
+          "fill": "#626f86"
+        },
+        {
+          "n": "high score:",
+          "t": "TEXT",
+          "box": [
+            254,
+            162,
+            65,
+            7
+          ],
+          "fill": "#626f86",
+          "text": "high score:",
+          "fs": 10,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "00",
+          "t": "TEXT",
+          "box": [
+            327,
+            160,
+            21,
+            11
+          ],
+          "fill": "#44546f",
+          "text": "00",
+          "fs": 16,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Frame 71",
+          "t": "FRAME",
+          "box": [
+            33,
+            148,
+            162,
+            35
+          ],
+          "fill": "#f8f9fa"
+        },
+        {
+          "n": "Frame 70",
+          "t": "FRAME",
+          "box": [
+            47,
+            160,
+            134,
+            11
+          ]
+        },
+        {
+          "n": "Vector (Stroke)",
+          "t": "VECTOR",
+          "box": [
+            47,
+            160.5,
+            8,
+            10
+          ],
+          "fill": "#626f86",
+          "stroke": "#626f86",
+          "sw": 0.30000001192092896
+        },
+        {
+          "n": "current streak:",
+          "t": "TEXT",
+          "box": [
+            61,
+            162,
+            93,
+            7
+          ],
+          "fill": "#626f86",
+          "text": "current streak:",
+          "fs": 10,
+          "font": "Digitale Variable Semibold"
+        },
+        {
+          "n": "00",
+          "t": "TEXT",
+          "box": [
+            160,
+            160,
+            21,
+            11
+          ],
+          "fill": "#44546f",
+          "text": "00",
+          "fs": 16,
+          "font": "Digitale Variable Bold"
+        },
+        {
+          "n": "Quiz",
+          "t": "INSTANCE",
+          "box": [
+            98,
+            662,
+            199,
+            50
+          ]
+        }
+      ]
     }
   }
 }
