@@ -41,13 +41,13 @@ function WordRow({ word, onPress }: { word: Word; onPress: () => void }) {
   );
 }
 
-function CollectionsRail() {
+function CuratedListsRail() {
   const router = useRouter();
   const { collections } = useCollections();
   if (!collections.length) return null;
   return (
     <View style={styles.railWrap}>
-      <Text style={styles.railLabel}>Collections</Text>
+      <Text style={styles.railLabel}>Curated Lists</Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -116,7 +116,7 @@ export default function DictionaryScreen() {
 
   return (
     <View style={styles.container}>
-      <CollectionsRail />
+      <Text style={styles.title}>Polari Dictionary</Text>
       <TextInput
         style={styles.search}
         placeholder="Search Polari…"
@@ -145,6 +145,7 @@ export default function DictionaryScreen() {
           {filtered.length} {filtered.length === 1 ? 'entry' : 'entries'}
         </Text>
       </View>
+      <CuratedListsRail />
       <FlashList
         data={filtered}
         renderItem={({ item }) => (
@@ -167,27 +168,37 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#E7E9EC',
   },
+  // Geometry follows the Figma frame (1886:1572), whose 394-wide space is
+  // close enough to a phone's width to read the coordinates off directly:
+  // title y90, search y129, filter bar y158, "Curated Lists" y210, rail y223.
+  title: {
+    marginTop: 72,
+    fontFamily: fonts.display,
+    fontSize: 36,
+    lineHeight: 44,
+    color: colors.text,
+    textAlign: 'center',
+  },
   railWrap: {
-    paddingTop: spacing.md,
-    gap: spacing.sm,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.md,
+    gap: 6,
   },
   railLabel: {
-    paddingHorizontal: spacing.md,
-    fontFamily: fonts.semibold,
-    fontSize: 11,
-    letterSpacing: 0.6,
-    textTransform: 'uppercase',
+    paddingHorizontal: 28,
+    fontFamily: fonts.bold,
+    fontSize: 10,
     color: colors.textFaint,
   },
   railContent: {
-    paddingHorizontal: spacing.md,
+    paddingHorizontal: 18,
     gap: spacing.sm,
   },
   collCard: {
-    width: 150,
-    height: 84,
+    width: 118,
+    height: 65,
     borderRadius: radii.md,
-    padding: spacing.md - 2,
+    padding: spacing.sm + 2,
     justifyContent: 'space-between',
   },
   collPressed: {
@@ -195,12 +206,12 @@ const styles = StyleSheet.create({
   },
   collTitle: {
     fontFamily: fonts.bold,
-    fontSize: 15,
-    lineHeight: 19,
+    fontSize: 13,
+    lineHeight: 16,
   },
   collCount: {
     fontFamily: fonts.semibold,
-    fontSize: 12,
+    fontSize: 11,
     color: colors.textMuted,
   },
   center: {
@@ -211,14 +222,15 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   search: {
-    margin: spacing.md,
-    marginBottom: spacing.sm,
+    marginHorizontal: 18,
+    marginTop: 13,
+    marginBottom: spacing.xs,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 2,
+    paddingVertical: spacing.sm - 2,
     backgroundColor: colors.surface,
     borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.metaText,
     fontFamily: fonts.regular,
     fontSize: 16,
     color: colors.text,
