@@ -39,7 +39,7 @@ export default function WordDetailScreen() {
               >
                 <IconArrowsMaximize size={22} color={colors.textFaint} />
               </Pressable>
-              <WordDetailCard word={word} />
+              <WordDetailCard word={word} style={styles.card} />
             </>
           ) : (
             <View style={styles.center}>
@@ -68,25 +68,31 @@ export default function WordDetailScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: colors.canvas,
   },
   container: {
     flex: 1,
   },
+  // Frame 1885:2061: art 190x253 at y87, fullscreen icon at x343 y86, the
+  // definition card inset 15 from each edge starting at y350.
   content: {
-    padding: spacing.md,
     paddingBottom: spacing.xl + 56,
   },
   hero: {
-    width: '100%',
-    height: 220,
-    marginBottom: spacing.md,
+    alignSelf: 'center',
+    width: 190,
+    height: 253,
+    marginTop: 87,
   },
   fullScreenButton: {
     position: 'absolute',
-    top: spacing.xs,
-    right: spacing.xs,
+    top: 86,
+    right: 31,
     padding: spacing.xs,
+  },
+  card: {
+    marginHorizontal: 15,
+    marginTop: 10,
   },
   pressed: {
     opacity: 0.6,
