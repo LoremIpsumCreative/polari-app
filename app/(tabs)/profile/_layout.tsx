@@ -9,6 +9,11 @@ export default function ProfileLayout() {
       <Stack.Screen name="feedback" options={{ title: 'Feedback' }} />
       {/* About draws its own back chip and title beside the Auntie art. */}
       <Stack.Screen name="about" options={{ title: 'About Polari', headerShown: false }} />
+      {/* Change Password likewise draws its own chip and title. */}
+      <Stack.Screen
+        name="change-password"
+        options={{ title: 'Change Password', headerShown: false }}
+      />
     </Stack>
   );
 }

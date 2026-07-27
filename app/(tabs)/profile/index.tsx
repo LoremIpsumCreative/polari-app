@@ -118,7 +118,7 @@ export default function ProfileScreen() {
             <ProfileField label="LAST NAME" value={meta.last_name ?? '—'} />
             <ProfileField label="EMAIL" value={session.user.email ?? '—'} />
             <Pressable
-              onPress={() => router.push('/forgot-password')}
+              onPress={() => router.push('/profile/change-password')}
               accessibilityRole="button"
             >
               <Text style={styles.changePassword}>CHANGE PASSWORD</Text>
