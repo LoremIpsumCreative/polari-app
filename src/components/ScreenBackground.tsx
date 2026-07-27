@@ -39,7 +39,7 @@ export function ScreenBackground() {
 
 const styles = StyleSheet.create({
   canvas: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.canvas,
     // A negative index paints the pattern above the parent's own background
     // fill but below every child. Without it the absolutely positioned layer
     // paints over in-flow content that isn't itself positioned — RN-web gives

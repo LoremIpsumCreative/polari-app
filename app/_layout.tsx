@@ -70,13 +70,13 @@ const styles = StyleSheet.create({
     // scrollable document — otherwise a short window scrolls past the gutter
     // and the bare page background shows below it.
     minHeight: DESIGN_HEIGHT,
-    backgroundColor: colors.background,
+    backgroundColor: colors.canvas,
   },
   phoneFrame: {
     flex: 1,
     width: '100%',
     maxWidth: PHONE_MAX_WIDTH,
     minHeight: DESIGN_HEIGHT,
-    backgroundColor: colors.background,
+    backgroundColor: colors.canvas,
   },
 });

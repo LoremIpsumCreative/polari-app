@@ -4,6 +4,9 @@
 // fieldset rows with neutral/250 hairlines. Type is Digitale.
 export const colors = {
   background: '#DCDFE4', // neutral/200
+  // The base canvas every screen sits on, per the mockups. The quiz landing
+  // and results screens are the only ones that paint their own base instead.
+  canvas: '#E7E9EC',
   surface: '#FFFFFF', // neutral/0
   inset: '#F8F9FA', // neutral/50 — recessed fieldset rows
   primary: '#0C66E4', // blue/700
@@ -77,7 +80,7 @@ export const fonts = {
 
 // Shared navigator header styling (flat, canvas-coloured, Digitale)
 export const headerOptions = {
-  headerStyle: { backgroundColor: colors.background },
+  headerStyle: { backgroundColor: colors.canvas },
   headerShadowVisible: false,
   headerTintColor: colors.text,
   headerTitleStyle: { fontFamily: fonts.semibold, fontSize: 17, color: colors.text },
