@@ -31,10 +31,15 @@ const BAR_TOP = 754;
 
 // Fan positions as distances up from the tab bar's top edge, so the arc hugs
 // the bar on any screen height.
+// Button/Quiz Type placements, top-anchored straight off the frame
+// (1114:158): 65x96 slots at y644 with the timed mode raised to y619. The x
+// values drop the frame's own 3px offset. These used to hang off the bottom
+// edge plus the tab-bar inset, which drifted low enough to bury the labels
+// under the floating bar.
 const FAN_LAYOUT = [
-  { mode: 'ten', circle: { x: 172, b: 29 }, badge: { x: 177, b: 87 }, label: { x: 165, b: 12 } },
-  { mode: 'timed', circle: { x: 241, b: 62 }, badge: { x: 246, b: 120 }, label: { x: 234, b: 45 } },
-  { mode: 'life', circle: { x: 310, b: 29 }, badge: { x: 315, b: 87 }, label: { x: 303, b: 12 } },
+  { mode: 'ten', x: 172, y: 644 },
+  { mode: 'timed', x: 244, y: 619 },
+  { mode: 'life', x: 316, y: 644 },
 ] as const;
 
 // The two spotlight beams, verbatim from the Figma vectors. Vector 8 sits
@@ -297,17 +302,16 @@ export default function QuizIntroScreen() {
       {/* Mode fan with per-mode high-score badges */}
       <Animated.View style={[StyleSheet.absoluteFill, { opacity: uiOpacity }]} pointerEvents="box-none">
         <View style={[styles.fanHost, { width: 394 * s }]} pointerEvents="box-none">
-          {FAN_LAYOUT.map(({ mode, circle, badge, label }) => {
+          {FAN_LAYOUT.map(({ mode, x, y }) => {
             const m = QUIZ_MODES[mode];
             const best = bestFor(mode);
             return (
-              <View key={mode} style={StyleSheet.absoluteFill} pointerEvents="box-none">
-                <View
-                  style={[
-                    styles.scoreBadge,
-                    { left: badge.x * s, bottom: badge.b * s + tabInset, width: 40 * s, height: 19 * s },
-                  ]}
-                >
+              <View
+                key={mode}
+                style={[styles.modeSlot, { left: x * s, top: y * s, width: 65 * s }]}
+                pointerEvents="box-none"
+              >
+                <View style={[styles.scoreBadge, { width: 40 * s, height: 19 * s }]}>
                   <Svg width={FLAME.w * s} height={FLAME.h * s} viewBox={`0 0 ${FLAME.w} ${FLAME.h}`}>
                     <Path d={FLAME.d} fill="#F38A3F" />
                   </Svg>
@@ -319,8 +323,7 @@ export default function QuizIntroScreen() {
                   style={({ pressed }) => [
                     styles.modeCircle,
                     {
-                      left: circle.x * s,
-                      bottom: circle.b * s + tabInset,
+                      marginTop: 4 * s,
                       width: 50 * s,
                       height: 50 * s,
                       borderRadius: 25 * s,
@@ -334,12 +337,7 @@ export default function QuizIntroScreen() {
                 >
                   <ModeGlyph name={mode} s={s} color={MODE_INK} />
                 </Pressable>
-                <Text
-                  style={[
-                    styles.modeLabel,
-                    { left: label.x * s, bottom: label.b * s + tabInset, width: 65 * s, fontSize: 10 * s },
-                  ]}
-                >
+                <Text style={[styles.modeLabel, { marginTop: 5 * s, fontSize: 10 * s }]}>
                   {m.label}
                 </Text>
               </View>
@@ -378,8 +376,8 @@ const styles = StyleSheet.create({
   // Explicit height: RN-web lets alignSelf centring collapse an absolute
   // child even with top/bottom set, which zero-heights the anchor box.
   fanHost: { position: 'absolute', top: 0, height: '100%', alignSelf: 'center' },
+  modeSlot: { position: 'absolute', alignItems: 'center' },
   scoreBadge: {
-    position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -394,7 +392,6 @@ const styles = StyleSheet.create({
     color: '#FFF6F5',
   },
   modeCircle: {
-    position: 'absolute',
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
@@ -403,7 +400,6 @@ const styles = StyleSheet.create({
     opacity: 0.85,
   },
   modeLabel: {
-    position: 'absolute',
     fontFamily: fonts.bold,
     color: '#FFF6F5',
     textAlign: 'center',
