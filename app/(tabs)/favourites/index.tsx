@@ -7,19 +7,29 @@ import { HEART_RED, TROPHY_GOLD } from '../../../src/components/CollectionChrome
 import { colors, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
-const trioFav = require('../../../assets/collections/trio-fav.png');
-const trioAch = require('../../../assets/collections/trio-ach.png');
-const trioGal = require('../../../assets/collections/trio-gal.png');
+const favourette = require('../../../assets/collections/hub-favourette.png');
+const achieevee = require('../../../assets/collections/hub-achieevee.png');
+const gallerie = require('../../../assets/collections/hub-gallerie.png');
 
-// The Collections hub (Figma "My Collections", frame 1351:1709) and its
-// signed-out gate (frame 1117:1578). Geometry lives in the mockups' 394-wide
-// design space.
+// The Collections hub — signed-in frame 1351:1709, signed-out gate 1117:1578.
+// Geometry lives in the mockups' 394-wide design space.
 const DESIGN_WIDTH = 394;
 
-const SATELLITES: { key: string; label: string; href: Href; Icon: typeof IconHeart; tint: string; x: number; w: number }[] = [
-  { key: 'favourites', label: 'Favourites', href: '/favourites/list', Icon: IconHeart, tint: HEART_RED, x: 66, w: 64 },
-  { key: 'achievements', label: 'Achievements', href: '/favourites/achievements', Icon: IconTrophy, tint: TROPHY_GOLD, x: 164, w: 68 },
-  { key: 'gallery', label: 'Gallery', href: '/favourites/gallery', Icon: IconPhoto, tint: colors.related, x: 266, w: 64 },
+// Icons Row Container, x62 y602 w271: three slots whose 55px circles sit at
+// the container's own offsets, labels 72 below the row's top.
+const SATELLITES: {
+  key: string;
+  label: string;
+  href: Href;
+  Icon: typeof IconHeart;
+  tint: string;
+  x: number;
+  w: number;
+  iconX: number;
+}[] = [
+  { key: 'favourites', label: 'Favourites', href: '/favourites/list', Icon: IconHeart, tint: HEART_RED, x: 62, w: 64, iconX: 4.5 },
+  { key: 'achievements', label: 'Achievements', href: '/favourites/achievements', Icon: IconTrophy, tint: TROPHY_GOLD, x: 156, w: 83, iconX: 14 },
+  { key: 'gallery', label: 'Gallery', href: '/favourites/gallery', Icon: IconPhoto, tint: colors.related, x: 269, w: 64, iconX: 4.5 },
 ];
 
 export default function CollectionsHub() {
@@ -28,61 +38,125 @@ export default function CollectionsHub() {
   const { width } = useWindowDimensions();
   const s = Math.min(width, 430) / DESIGN_WIDTH;
 
-  // The trio scene: three tinted spotlight panes (drawn from the Figma vector
-  // paths at 16% opacity — a flattened export bakes in a dark backdrop) with
-  // the shopper, trophy-winner and photographer layered over them.
+  // The trio scene (Hero Images, 1825:2862): three tinted spotlight panes at
+  // 20% behind the shopper, trophy-winner and photographer. Each pane and two
+  // of the three figures carry their own rotation, so every layer is boxed at
+  // the frame's outer size with the artwork rotated inside it.
   const trio = (
     <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-      <Svg
-        style={StyleSheet.absoluteFill}
-        width="100%"
-        height="100%"
-        viewBox={`0 0 ${394 * s} ${752 * s}`}
-      >
-        <Path
-          d="M43.8655 44.1831 L185.202 0 L118.716 278.999 L0 247.061 L43.8655 44.1831 Z"
-          transform={`scale(${s}) matrix(0.8933,-0.4494,0.3115,0.9503,-30.45,337.23)`}
-          fill="#DA62AC"
-          opacity={0.16}
-        />
-        <Path
-          d="M0 0 L155.5 20 L123 281.5 L45 323 L0 0 Z"
-          transform={`scale(${s}) matrix(1,0,0,1,112,240)`}
-          fill="#E2B203"
-          opacity={0.16}
-        />
-        <Path
-          d="M82.6763 0 L209.261 27.7663 L147.298 275.101 L0 237.141 L82.6763 0 Z"
-          transform={`scale(${s}) matrix(-0.8933,-0.4494,-0.3115,0.9503,444.59,351.15)`}
-          fill="#2898BD"
-          opacity={0.16}
-        />
-      </Svg>
-      <Image
-        source={trioFav}
-        resizeMode="contain"
-        style={{ position: 'absolute', left: 57 * s, top: 292.5 * s, width: 117 * s, height: 255 * s }}
-        accessibilityIgnoresInvertColors
-      />
-      <Image
-        source={trioAch}
-        resizeMode="contain"
-        style={{ position: 'absolute', left: 126 * s, top: 251.5 * s, width: 119 * s, height: 296 * s }}
-        accessibilityIgnoresInvertColors
-      />
-      <Image
-        source={trioGal}
-        resizeMode="contain"
+      <View
         style={{
           position: 'absolute',
-          left: 241 * s,
-          top: 282 * s,
-          width: 113 * s,
-          height: 269 * s,
-          transform: [{ scaleX: -1 }],
+          left: 4.22 * s,
+          top: 285.5 * s,
+          width: 209.634 * s,
+          height: 291.093 * s,
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
+      >
+        <Svg
+          width={153.11 * s}
+          height={233.923 * s}
+          viewBox="0 0 153.11 233.923"
+          style={{ transform: [{ rotate: '-26.7deg' }, { skewX: '-8.56deg' }] }}
+        >
+          <Path
+            d="M29.8097 20.616L153.11 0L90.3303 233.923L0 191.205L29.8097 20.616Z"
+            fill="#DA62AC"
+            opacity={0.2}
+          />
+        </Svg>
+      </View>
+
+      <View
+        style={{
+          position: 'absolute',
+          left: 163 * s,
+          top: 281.34 * s,
+          width: 235.634 * s,
+          height: 313.817 * s,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Svg
+          width={177.977 * s}
+          height={246.075 * s}
+          viewBox="0 0 177.977 246.075"
+          style={{
+            transform: [{ rotate: '-153.3deg' }, { scaleY: -1 }, { skewX: '8.56deg' }],
+          }}
+        >
+          <Path
+            d="M45.7906 20.5908L177.977 0L99.3744 246.075L0 185.977L45.7906 20.5908Z"
+            fill="#2898BD"
+            opacity={0.2}
+          />
+        </Svg>
+      </View>
+
+      <Svg
+        width={164 * s}
+        height={293 * s}
+        viewBox="0 0 164 293"
+        style={{ position: 'absolute', left: 102 * s, top: 233 * s }}
+      >
+        <Path d="M0 0L164 32.3895L129.39 293H69.2208L0 0Z" fill="#E2B203" opacity={0.2} />
+      </Svg>
+
+      <View
+        style={{
+          position: 'absolute',
+          left: 84.5 * s,
+          top: 189 * s,
+          width: 167.14 * s,
+          height: 328.315 * s,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Image
+          source={achieevee}
+          resizeMode="contain"
+          style={{
+            width: 152.805 * s,
+            height: 321.76 * s,
+            transform: [{ rotate: '2.58deg' }],
+          }}
+          accessibilityIgnoresInvertColors
+        />
+      </View>
+
+      <Image
+        source={favourette}
+        resizeMode="contain"
+        style={{ position: 'absolute', left: 55 * s, top: 291 * s, width: 102 * s, height: 264 * s }}
         accessibilityIgnoresInvertColors
       />
+
+      <View
+        style={{
+          position: 'absolute',
+          left: 218.14 * s,
+          top: 295.22 * s,
+          width: 129.513 * s,
+          height: 266.894 * s,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Image
+          source={gallerie}
+          resizeMode="contain"
+          style={{
+            width: 117.987 * s,
+            height: 261.908 * s,
+            transform: [{ rotate: '2.55deg' }],
+          }}
+          accessibilityIgnoresInvertColors
+        />
+      </View>
     </View>
   );
 
@@ -118,18 +192,24 @@ export default function CollectionsHub() {
 
   return (
     <View style={styles.screen}>
-      <Text style={[styles.title, { top: 90 * s, fontSize: 60 * s }]}>My Collections</Text>
+      <ScreenBackground />
+      <Text style={[styles.title, { top: 90 * s, fontSize: 60 * s }]}>Collections</Text>
       {trio}
-      {SATELLITES.map(({ key, label, href, Icon, tint, x, w }) => (
+      {SATELLITES.map(({ key, label, href, Icon, tint, x, w, iconX }) => (
         <Pressable
           key={key}
-          style={[styles.sat, { left: x * s, top: 573 * s, width: w * s }]}
+          style={[styles.sat, { left: x * s, top: 602 * s, width: w * s }]}
           onPress={() => router.push(href)}
           accessibilityRole="button"
           accessibilityLabel={label}
         >
-          <View style={[styles.satCircle, { width: 52 * s, height: 52 * s, borderRadius: 26 * s }]}>
-            <Icon size={23 * s} color={tint} />
+          <View
+            style={[
+              styles.satCircle,
+              { marginLeft: iconX * s, width: 55 * s, height: 55 * s, borderRadius: 27.5 * s },
+            ]}
+          >
+            <Icon size={24 * s} color={tint} />
           </View>
           <Text style={[styles.satLabel, { fontSize: 10 * s, marginTop: 17 * s }]}>{label}</Text>
         </Pressable>
@@ -139,8 +219,8 @@ export default function CollectionsHub() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#E7E9EC', alignItems: 'center' },
-  title: { position: 'absolute', fontFamily: fonts.display, color: colors.quizInk },
+  screen: { flex: 1, backgroundColor: colors.canvas, alignItems: 'center' },
+  title: { position: 'absolute', fontFamily: fonts.display, color: colors.text },
   gateCopy: {
     position: 'absolute',
     fontFamily: fonts.regular,
@@ -158,11 +238,11 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.85 },
   createLink: { position: 'absolute', fontFamily: fonts.regular, color: colors.text },
   createLinkAccent: { color: colors.primary },
-  sat: { position: 'absolute', alignItems: 'center' },
+  sat: { position: 'absolute' },
   satCircle: {
     backgroundColor: colors.inset,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  satLabel: { fontFamily: fonts.semibold, color: colors.text },
+  satLabel: { fontFamily: fonts.semibold, color: colors.text, textAlign: 'center' },
 });
