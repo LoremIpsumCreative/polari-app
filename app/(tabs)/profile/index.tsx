@@ -6,6 +6,7 @@ import { useAuth } from '../../../src/lib/auth';
 import { useStreaks } from '../../../src/lib/streaks';
 import { SpaceHost } from '../../../src/components/illustrations/SpaceHost';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
+import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
@@ -69,70 +70,75 @@ export default function ProfileScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.email}>{session.user.email}</Text>
+    <View style={styles.screenBg}>
+      <ScreenBackground />
+      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+        <Text style={styles.email}>{session.user.email}</Text>
 
-      <View style={styles.statsRow}>
-        <StatCard label="Current streak" value={`${stats?.current_streak ?? 0}🔥`} />
-        <StatCard label="Longest streak" value={stats?.longest_streak ?? 0} />
-        <StatCard label="Words learned" value={stats?.words_learned_count ?? 0} />
-      </View>
-      {stats && stats.streak_freezes > 0 ? (
-        <Text style={styles.freezeNote}>
-          ❄️ {stats.streak_freezes === 1 ? 'A streak freeze' : `${stats.streak_freezes} streak freezes`} in
-          the bank — one missed day won't break you. Another arrives every 7-day milestone.
-        </Text>
-      ) : null}
+        <View style={styles.statsRow}>
+          <StatCard label="Current streak" value={`${stats?.current_streak ?? 0}🔥`} />
+          <StatCard label="Longest streak" value={stats?.longest_streak ?? 0} />
+          <StatCard label="Words learned" value={stats?.words_learned_count ?? 0} />
+        </View>
+        {stats && stats.streak_freezes > 0 ? (
+          <Text style={styles.freezeNote}>
+            ❄️ {stats.streak_freezes === 1 ? 'A streak freeze' : `${stats.streak_freezes} streak freezes`} in
+            the bank — one missed day won't break you. Another arrives every 7-day milestone.
+          </Text>
+        ) : null}
 
-      <Pressable
-        style={({ pressed }) => [styles.rowButton, pressed && styles.rowPressed]}
-        onPress={() => router.push('/profile/about')}
-      >
-        <Text style={styles.rowButtonText}>📖 About Polari — the story & sources</Text>
-      </Pressable>
-
-      <Pressable
-        style={({ pressed }) => [styles.rowButton, pressed && styles.rowPressed]}
-        onPress={() => router.push('/profile/feedback')}
-      >
-        <Text style={styles.rowButtonText}>💌 Send feedback</Text>
-      </Pressable>
-
-      <Pressable
-        style={({ pressed }) => [styles.signOutButton, pressed && styles.signOutPressed]}
-        onPress={signOut}
-      >
-        <Text style={styles.signOutText}>Sign out</Text>
-      </Pressable>
-
-      <Pressable
-        style={({ pressed }) => [
-          styles.deleteButton,
-          confirmingDelete && styles.deleteButtonArmed,
-          pressed && styles.signOutPressed,
-        ]}
-        onPress={handleDeleteAccount}
-        disabled={deleting}
-      >
-        <Text style={styles.deleteText}>
-          {deleting
-            ? 'Deleting…'
-            : confirmingDelete
-              ? 'Tap again to permanently delete'
-              : 'Delete account'}
-        </Text>
-      </Pressable>
-      {confirmingDelete && !deleting ? (
-        <Pressable onPress={() => setConfirmingDelete(false)}>
-          <Text style={styles.cancelDelete}>Never mind, keep my account</Text>
+        <Pressable
+          style={({ pressed }) => [styles.rowButton, pressed && styles.rowPressed]}
+          onPress={() => router.push('/profile/about')}
+        >
+          <Text style={styles.rowButtonText}>📖 About Polari — the story & sources</Text>
         </Pressable>
-      ) : null}
-      {deleteError ? <Text style={styles.deleteError}>{deleteError}</Text> : null}
-    </ScrollView>
+
+        <Pressable
+          style={({ pressed }) => [styles.rowButton, pressed && styles.rowPressed]}
+          onPress={() => router.push('/profile/feedback')}
+        >
+          <Text style={styles.rowButtonText}>💌 Send feedback</Text>
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [styles.signOutButton, pressed && styles.signOutPressed]}
+          onPress={signOut}
+        >
+          <Text style={styles.signOutText}>Sign out</Text>
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [
+            styles.deleteButton,
+            confirmingDelete && styles.deleteButtonArmed,
+            pressed && styles.signOutPressed,
+          ]}
+          onPress={handleDeleteAccount}
+          disabled={deleting}
+        >
+          <Text style={styles.deleteText}>
+            {deleting
+              ? 'Deleting…'
+              : confirmingDelete
+                ? 'Tap again to permanently delete'
+                : 'Delete account'}
+          </Text>
+        </Pressable>
+        {confirmingDelete && !deleting ? (
+          <Pressable onPress={() => setConfirmingDelete(false)}>
+            <Text style={styles.cancelDelete}>Never mind, keep my account</Text>
+          </Pressable>
+        ) : null}
+        {deleteError ? <Text style={styles.deleteError}>{deleteError}</Text> : null}
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  // Wrapper so the sparkle pattern stays fixed behind the scrolling content.
+  screenBg: { flex: 1 },
   container: {
     flex: 1,
     backgroundColor: colors.background,

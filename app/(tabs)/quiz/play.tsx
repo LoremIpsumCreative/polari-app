@@ -11,6 +11,7 @@ import { nextQuestion, QUIZ_LENGTH, type QuizQuestion } from '../../../src/lib/q
 import { QUIZ_MODES, isQuizModeId, type QuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
+import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 // All geometry lives in the Figma frames' 394-wide design space and is scaled
 // by the device width, so the screens reproduce the mockups proportionally.
@@ -376,6 +377,7 @@ export default function QuizPlayScreen() {
 
   return (
     <View style={styles.screen}>
+      <ScreenBackground />
       {/* Back to the quiz landing */}
       <Pressable
         style={[styles.backChip, { left: 17 * s, top: 23 * s, height: 28 * s }]}

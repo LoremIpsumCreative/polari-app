@@ -7,6 +7,7 @@ import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../../src/components/CharacterFullScreen';
 import { WordDetailCard } from '../../../src/components/WordDetailCard';
 import { colors, spacing, fonts } from '../../../src/lib/theme';
+import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 export default function WordDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -19,6 +20,7 @@ export default function WordDetailScreen() {
     <>
       <Stack.Screen options={{ title: word?.term ?? 'Word' }} />
       <View style={styles.screen}>
+        <ScreenBackground />
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
           {word ? (
             <>

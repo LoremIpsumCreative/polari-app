@@ -21,6 +21,7 @@ import {
 } from '../../../src/components/CollectionChrome';
 import { colors, fonts } from '../../../src/lib/theme';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
+import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 const favouretteArt = require('../../../assets/collections/favourette.png');
 
@@ -62,6 +63,7 @@ export default function FavouritesListScreen() {
 
   return (
     <View style={styles.screen}>
+      <ScreenBackground />
       <CollectionHeader
         s={s}
         title="Favourites"

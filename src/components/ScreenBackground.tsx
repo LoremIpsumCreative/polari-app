@@ -38,5 +38,13 @@ export function ScreenBackground() {
 }
 
 const styles = StyleSheet.create({
-  canvas: { backgroundColor: colors.background },
+  canvas: {
+    backgroundColor: colors.background,
+    // A negative index paints the pattern above the parent's own background
+    // fill but below every child. Without it the absolutely positioned layer
+    // paints over in-flow content that isn't itself positioned — RN-web gives
+    // View and Text `position: relative`, but a TextInput's bare <input> gets
+    // nothing, so search fields vanished behind the canvas.
+    zIndex: -1,
+  },
 });

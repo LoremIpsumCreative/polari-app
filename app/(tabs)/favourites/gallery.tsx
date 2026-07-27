@@ -20,6 +20,7 @@ import {
 } from '../../../src/components/CollectionChrome';
 import { colors, fonts } from '../../../src/lib/theme';
 import type { ImageSourcePropType } from 'react-native';
+import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 const DESIGN_WIDTH = 394;
 // Same 3-column card grid as Achievements (Figma frame 1351:819). Card width
@@ -63,6 +64,7 @@ export default function GalleryScreen() {
 
   return (
     <View style={styles.screen}>
+      <ScreenBackground />
       <CollectionHeader
         s={s}
         title="Gallery"

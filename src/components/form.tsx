@@ -9,6 +9,7 @@ import {
   type TextInputProps,
 } from 'react-native';
 import { colors, radii, spacing, fonts } from '../lib/theme';
+import { ScreenBackground } from './ScreenBackground';
 
 export function LabeledInput({
   label,
@@ -63,6 +64,7 @@ export function FormError({ message }: { message: string | null }) {
 export function FormScreen({ title, children }: { title: string; children: ReactNode }) {
   return (
     <View style={styles.screen}>
+      <ScreenBackground />
       <Text style={styles.title}>{title}</Text>
       {children}
     </View>

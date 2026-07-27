@@ -6,6 +6,7 @@ import { useWords } from '../../../../src/lib/words';
 import { useCollections } from '../../../../src/lib/collections';
 import { colors, radii, spacing, fonts } from '../../../../src/lib/theme';
 import type { Word } from '../../../../src/types/database';
+import { ScreenBackground } from '../../../../src/components/ScreenBackground';
 
 export default function CollectionScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -32,6 +33,7 @@ export default function CollectionScreen() {
     <>
       <Stack.Screen options={{ title: collection?.title ?? 'Collection' }} />
       <View style={styles.screen}>
+        <ScreenBackground />
         {collection ? (
           <FlashList
             data={words}

@@ -15,6 +15,7 @@ import {
   CollectionPanel,
 } from '../../../src/components/CollectionChrome';
 import { colors, fonts } from '../../../src/lib/theme';
+import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 const DESIGN_WIDTH = 394;
 // 3 columns of cards inside the 363 panel: 19 inset, 12 gutters (Figma frame
@@ -82,6 +83,7 @@ export default function AchievementsScreen() {
 
   return (
     <View style={styles.screen}>
+      <ScreenBackground />
       <CollectionHeader
         s={s}
         title="Achievements"

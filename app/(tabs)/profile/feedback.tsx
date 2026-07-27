@@ -12,6 +12,7 @@ import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { FormError, PrimaryButton } from '../../../src/components/form';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
+import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 const CATEGORIES = [
   { value: 'bug', label: '🐛 Bug' },
@@ -68,57 +69,62 @@ export default function FeedbackScreen() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.label}>What's it about?</Text>
-      <View style={styles.chips}>
-        {CATEGORIES.map((c) => (
-          <Pressable
-            key={c.value}
-            style={[styles.chip, category === c.value && styles.chipActive]}
-            onPress={() => setCategory(c.value)}
-          >
-            <Text style={[styles.chipText, category === c.value && styles.chipTextActive]}>
-              {c.label}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
+    <View style={styles.screenBg}>
+      <ScreenBackground />
+      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+        <Text style={styles.label}>What's it about?</Text>
+        <View style={styles.chips}>
+          {CATEGORIES.map((c) => (
+            <Pressable
+              key={c.value}
+              style={[styles.chip, category === c.value && styles.chipActive]}
+              onPress={() => setCategory(c.value)}
+            >
+              <Text style={[styles.chipText, category === c.value && styles.chipTextActive]}>
+                {c.label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
 
-      <Text style={styles.label}>Your feedback</Text>
-      <TextInput
-        style={styles.messageInput}
-        value={message}
-        onChangeText={setMessage}
-        placeholder="Tell us what's bona and what's naff…"
-        placeholderTextColor={colors.textMuted}
-        multiline
-        numberOfLines={6}
-        textAlignVertical="top"
-      />
+        <Text style={styles.label}>Your feedback</Text>
+        <TextInput
+          style={styles.messageInput}
+          value={message}
+          onChangeText={setMessage}
+          placeholder="Tell us what's bona and what's naff…"
+          placeholderTextColor={colors.textMuted}
+          multiline
+          numberOfLines={6}
+          textAlignVertical="top"
+        />
 
-      <Text style={styles.label}>Contact email (optional)</Text>
-      <TextInput
-        style={styles.emailInput}
-        value={contactEmail}
-        onChangeText={setContactEmail}
-        placeholder="you@example.com"
-        placeholderTextColor={colors.textMuted}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
+        <Text style={styles.label}>Contact email (optional)</Text>
+        <TextInput
+          style={styles.emailInput}
+          value={contactEmail}
+          onChangeText={setContactEmail}
+          placeholder="you@example.com"
+          placeholderTextColor={colors.textMuted}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
 
-      <FormError message={error} />
-      <PrimaryButton
-        title="Send feedback"
-        onPress={handleSubmit}
-        loading={loading}
-        disabled={!message.trim()}
-      />
-    </ScrollView>
+        <FormError message={error} />
+        <PrimaryButton
+          title="Send feedback"
+          onPress={handleSubmit}
+          loading={loading}
+          disabled={!message.trim()}
+        />
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  // Wrapper so the sparkle pattern stays fixed behind the scrolling content.
+  screenBg: { flex: 1 },
   container: {
     flex: 1,
     backgroundColor: colors.background,

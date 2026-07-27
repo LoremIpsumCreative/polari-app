@@ -1,6 +1,7 @@
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { IconBook2, IconExternalLink } from '@tabler/icons-react-native';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
+import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 // Long-form "About Polari" — the history behind the app, plus sources and
 // further reading. Content is deliberately factual and credited: the app
@@ -63,52 +64,57 @@ const SOURCES: Source[] = [
 
 export default function AboutScreen() {
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.lede}>
-        The story behind the lingo — where Polari came from, why it mattered, and why it’s
-        worth keeping alive.
-      </Text>
-
-      {SECTIONS.map((s) => (
-        <View key={s.title} style={styles.section}>
-          <Text style={styles.sectionTitle}>{s.title}</Text>
-          <Text style={styles.sectionBody}>{s.body}</Text>
-        </View>
-      ))}
-
-      <View style={styles.sourcesCard}>
-        <View style={styles.sourcesHeader}>
-          <IconBook2 size={18} color={colors.primary} />
-          <Text style={styles.sourcesTitle}>Sources & further reading</Text>
-        </View>
-        <Text style={styles.sourcesNote}>
-          This app stands on the work of the scholars, archivists and elders who recorded
-          Polari before it could vanish. Definitions are drawn from the community record;
-          errors are ours, not theirs.
+    <View style={styles.screenBg}>
+      <ScreenBackground />
+      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+        <Text style={styles.lede}>
+          The story behind the lingo — where Polari came from, why it mattered, and why it’s
+          worth keeping alive.
         </Text>
-        {SOURCES.map((src) => (
-          <Pressable
-            key={src.title}
-            onPress={() => Linking.openURL(src.url)}
-            style={({ pressed }) => [styles.sourceRow, pressed && styles.sourcePressed]}
-            accessibilityRole="link"
-            accessibilityLabel={`Open ${src.title}`}
-          >
-            <View style={styles.sourceText}>
-              <Text style={styles.sourceTitle}>{src.title}</Text>
-              <Text style={styles.sourceDetail}>{src.detail}</Text>
-            </View>
-            <IconExternalLink size={16} color={colors.textFaint} />
-          </Pressable>
-        ))}
-      </View>
 
-      <Text style={styles.footer}>Bona to vada you. 💙</Text>
-    </ScrollView>
+        {SECTIONS.map((s) => (
+          <View key={s.title} style={styles.section}>
+            <Text style={styles.sectionTitle}>{s.title}</Text>
+            <Text style={styles.sectionBody}>{s.body}</Text>
+          </View>
+        ))}
+
+        <View style={styles.sourcesCard}>
+          <View style={styles.sourcesHeader}>
+            <IconBook2 size={18} color={colors.primary} />
+            <Text style={styles.sourcesTitle}>Sources & further reading</Text>
+          </View>
+          <Text style={styles.sourcesNote}>
+            This app stands on the work of the scholars, archivists and elders who recorded
+            Polari before it could vanish. Definitions are drawn from the community record;
+            errors are ours, not theirs.
+          </Text>
+          {SOURCES.map((src) => (
+            <Pressable
+              key={src.title}
+              onPress={() => Linking.openURL(src.url)}
+              style={({ pressed }) => [styles.sourceRow, pressed && styles.sourcePressed]}
+              accessibilityRole="link"
+              accessibilityLabel={`Open ${src.title}`}
+            >
+              <View style={styles.sourceText}>
+                <Text style={styles.sourceTitle}>{src.title}</Text>
+                <Text style={styles.sourceDetail}>{src.detail}</Text>
+              </View>
+              <IconExternalLink size={16} color={colors.textFaint} />
+            </Pressable>
+          ))}
+        </View>
+
+        <Text style={styles.footer}>Bona to vada you. 💙</Text>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  // Wrapper so the sparkle pattern stays fixed behind the scrolling content.
+  screenBg: { flex: 1 },
   container: { flex: 1, backgroundColor: colors.background },
   content: { padding: spacing.md, paddingBottom: spacing.xl + 56, gap: spacing.md },
   lede: {

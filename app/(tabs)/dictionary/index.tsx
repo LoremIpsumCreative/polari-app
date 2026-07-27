@@ -15,6 +15,7 @@ import { useCollections } from '../../../src/lib/collections';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import type { Word } from '../../../src/types/database';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
+import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 type Filter = 'all' | 'word' | 'phrase';
 
@@ -116,6 +117,7 @@ export default function DictionaryScreen() {
 
   return (
     <View style={styles.container}>
+      <ScreenBackground />
       <Text style={styles.title}>Polari Dictionary</Text>
       <TextInput
         style={styles.search}

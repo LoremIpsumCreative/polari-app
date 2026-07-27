@@ -5,6 +5,7 @@ import { IconHeart, IconPhoto, IconTrophy } from '@tabler/icons-react-native';
 import { useAuth } from '../../../src/lib/auth';
 import { HEART_RED, TROPHY_GOLD } from '../../../src/components/CollectionChrome';
 import { colors, fonts } from '../../../src/lib/theme';
+import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 const trioFav = require('../../../assets/collections/trio-fav.png');
 const trioAch = require('../../../assets/collections/trio-ach.png');
@@ -88,6 +89,7 @@ export default function CollectionsHub() {
   if (!session) {
     return (
       <View style={styles.screen}>
+        <ScreenBackground />
         <Text style={[styles.gateCopy, { left: 66 * s, top: 89 * s, width: 264 * s, fontSize: 16 * s, lineHeight: 20 * s }]}>
           Sign in or create an account to save favourites, earn achievements and access the
           character gallery
