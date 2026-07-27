@@ -17,6 +17,11 @@ export const colors = {
   relatedSoft: '#F4FCFF', // teal/50
   chipGrey: '#44546F', // neutral/700 — part-of-speech chip
   fieldBorder: '#C8CCD4', // neutral/250 — fieldset row + pill hairlines
+  // Curated-bundle card edges: the blue one reuses `primary`, these two are
+  // the teal/700 and green/700 stops the Button/Bundles variants use.
+  tealEdge: '#227D9B', // teal/700
+  green: '#1F845A', // green/700
+  greenSoft: '#EEFFF8', // green/50
   label: '#758195', // neutral/500 — fieldset labels
   inactive: '#8590A2', // neutral/400 — inactive segmented options
   teal: '#27958A',
