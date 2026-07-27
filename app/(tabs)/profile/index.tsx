@@ -1,18 +1,44 @@
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import {
+  IconBinoculars,
+  IconColorSwatch,
+  IconDeviceMobile,
+  IconLogout,
+  IconMail,
+  IconMoon,
+  IconSun,
+  IconUser,
+} from '@tabler/icons-react-native';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
-import { useStreaks } from '../../../src/lib/streaks';
 import { SpaceHost } from '../../../src/components/illustrations/SpaceHost';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
+import { AccountOption } from '../../../src/components/AccountOption';
 
-function StatCard({ label, value }: { label: string; value: string | number }) {
+// Account/Main (Figma 2154:3235, expanded 2132:3432): a welcome banner at
+// y116 over three groups of Button/Account Option rows — profile and
+// appearance, about and feedback, sign out — with Delete Account beneath.
+
+// The appearance modes the frame offers. Only Light exists in the app today,
+// so the other two render inert rather than pretending to switch themes.
+const APPEARANCE_MODES = [
+  { key: 'light', label: 'Light Mode', Icon: IconSun, available: true },
+  { key: 'dark', label: 'Dark Mode', Icon: IconMoon, available: false },
+  { key: 'system', label: 'System', Icon: IconDeviceMobile, available: false },
+];
+
+function ProfileField({ label, value }: { label: string; value: string }) {
   return (
-    <View style={styles.statCard}>
-      <Text style={styles.statValue}>{value}</Text>
-      <Text style={styles.statLabel}>{label}</Text>
+    <View style={styles.field}>
+      <Text style={styles.fieldLabel}>{label}</Text>
+      <View style={styles.fieldBox}>
+        <Text style={styles.fieldValue} numberOfLines={1}>
+          {value}
+        </Text>
+      </View>
     </View>
   );
 }
@@ -20,7 +46,7 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
 export default function ProfileScreen() {
   const router = useRouter();
   const { session, signOut } = useAuth();
-  const { stats } = useStreaks();
+  const [openSection, setOpenSection] = useState<'profile' | 'appearance' | null>(null);
   // Two-step confirm (RN Alert is a no-op on web, so an inline confirm state
   // works everywhere)
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -69,68 +95,88 @@ export default function ProfileScreen() {
     );
   }
 
+  const meta = (session.user.user_metadata ?? {}) as Record<string, string | undefined>;
+  const firstName = meta.first_name ?? session.user.email?.split('@')[0] ?? '';
+
   return (
     <View style={styles.screenBg}>
       <ScreenBackground />
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Text style={styles.email}>{session.user.email}</Text>
+        <Text style={styles.banner}>
+          Bonyo, <Text style={styles.bannerName}>{firstName}</Text>
+        </Text>
 
-        <View style={styles.statsRow}>
-          <StatCard label="Current streak" value={`${stats?.current_streak ?? 0}🔥`} />
-          <StatCard label="Longest streak" value={stats?.longest_streak ?? 0} />
-          <StatCard label="Words learned" value={stats?.words_learned_count ?? 0} />
+        <View style={styles.group}>
+          <AccountOption
+            label="Profile"
+            Icon={IconUser}
+            expandable
+            expanded={openSection === 'profile'}
+            onPress={() => setOpenSection((o) => (o === 'profile' ? null : 'profile'))}
+          >
+            <ProfileField label="FIRST NAME" value={meta.first_name ?? '—'} />
+            <ProfileField label="LAST NAME" value={meta.last_name ?? '—'} />
+            <ProfileField label="EMAIL" value={session.user.email ?? '—'} />
+            <Pressable
+              onPress={() => router.push('/forgot-password')}
+              accessibilityRole="button"
+            >
+              <Text style={styles.changePassword}>CHANGE PASSWORD</Text>
+            </Pressable>
+          </AccountOption>
+
+          <AccountOption
+            label="Appearance"
+            Icon={IconColorSwatch}
+            expandable
+            expanded={openSection === 'appearance'}
+            onPress={() => setOpenSection((o) => (o === 'appearance' ? null : 'appearance'))}
+          >
+            <View style={styles.modeRow}>
+              {APPEARANCE_MODES.map(({ key, label, Icon, available }) => (
+                <View
+                  key={key}
+                  style={[styles.mode, available ? styles.modeActive : styles.modeInert]}
+                >
+                  <Icon size={12} color={available ? colors.onPrimary : colors.inactive} />
+                  <Text style={[styles.modeText, !available && styles.modeTextInert]}>{label}</Text>
+                </View>
+              ))}
+            </View>
+          </AccountOption>
         </View>
-        {stats && stats.streak_freezes > 0 ? (
-          <Text style={styles.freezeNote}>
-            ❄️ {stats.streak_freezes === 1 ? 'A streak freeze' : `${stats.streak_freezes} streak freezes`} in
-            the bank — one missed day won't break you. Another arrives every 7-day milestone.
-          </Text>
-        ) : null}
 
-        <Pressable
-          style={({ pressed }) => [styles.rowButton, pressed && styles.rowPressed]}
-          onPress={() => router.push('/profile/about')}
-        >
-          <Text style={styles.rowButtonText}>📖 About Polari — the story & sources</Text>
-        </Pressable>
+        <View style={styles.group}>
+          <AccountOption
+            label="About Polari"
+            Icon={IconBinoculars}
+            onPress={() => router.push('/profile/about')}
+          />
+          <AccountOption
+            label="Feedback"
+            Icon={IconMail}
+            onPress={() => router.push('/profile/feedback')}
+          />
+        </View>
 
-        <Pressable
-          style={({ pressed }) => [styles.rowButton, pressed && styles.rowPressed]}
-          onPress={() => router.push('/profile/feedback')}
-        >
-          <Text style={styles.rowButtonText}>💌 Send feedback</Text>
-        </Pressable>
-
-        <Pressable
-          style={({ pressed }) => [styles.signOutButton, pressed && styles.signOutPressed]}
-          onPress={signOut}
-        >
-          <Text style={styles.signOutText}>Sign out</Text>
-        </Pressable>
-
-        <Pressable
-          style={({ pressed }) => [
-            styles.deleteButton,
-            confirmingDelete && styles.deleteButtonArmed,
-            pressed && styles.signOutPressed,
-          ]}
-          onPress={handleDeleteAccount}
-          disabled={deleting}
-        >
-          <Text style={styles.deleteText}>
-            {deleting
-              ? 'Deleting…'
-              : confirmingDelete
-                ? 'Tap again to permanently delete'
-                : 'Delete account'}
-          </Text>
-        </Pressable>
-        {confirmingDelete && !deleting ? (
-          <Pressable onPress={() => setConfirmingDelete(false)}>
-            <Text style={styles.cancelDelete}>Never mind, keep my account</Text>
+        <View style={styles.group}>
+          <AccountOption label="Sign Out" Icon={IconLogout} onPress={signOut} />
+          <Pressable onPress={handleDeleteAccount} disabled={deleting}>
+            <Text style={styles.deleteAccount}>
+              {deleting
+                ? 'Deleting…'
+                : confirmingDelete
+                  ? 'Tap again to permanently delete'
+                  : 'Delete Account'}
+            </Text>
           </Pressable>
-        ) : null}
-        {deleteError ? <Text style={styles.deleteError}>{deleteError}</Text> : null}
+          {confirmingDelete && !deleting ? (
+            <Pressable onPress={() => setConfirmingDelete(false)}>
+              <Text style={styles.cancelDelete}>Never mind, keep my account</Text>
+            </Pressable>
+          ) : null}
+          {deleteError ? <Text style={styles.deleteError}>{deleteError}</Text> : null}
+        </View>
       </ScrollView>
     </View>
   );
@@ -143,9 +189,70 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  // Account container x27 y187: three groups 60 apart, rows 8 apart.
   content: {
-    padding: spacing.md,
-    gap: spacing.md,
+    paddingHorizontal: 27,
+    paddingTop: 116,
+    paddingBottom: 120,
+  },
+  banner: {
+    marginLeft: 10,
+    marginBottom: 55,
+    fontFamily: fonts.bold,
+    fontSize: 20,
+    letterSpacing: 0.3,
+    color: colors.text,
+  },
+  bannerName: { color: colors.primary },
+  group: { gap: 8, marginBottom: 60 },
+
+  field: { gap: 6 },
+  fieldLabel: {
+    marginLeft: 10,
+    fontFamily: fonts.bold,
+    fontSize: 8,
+    letterSpacing: 0.3,
+    color: colors.textFaint,
+  },
+  fieldBox: {
+    borderRadius: 999,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.metaText,
+    paddingHorizontal: 16,
+    paddingVertical: 11,
+  },
+  fieldValue: { fontFamily: fonts.bold, fontSize: 12, letterSpacing: 0.3, color: colors.text },
+  changePassword: {
+    marginTop: 4,
+    fontFamily: fonts.bold,
+    fontSize: 10,
+    letterSpacing: 0.3,
+    color: colors.text,
+    textDecorationLine: 'underline',
+  },
+
+  modeRow: { flexDirection: 'row', gap: 8 },
+  mode: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  modeActive: { backgroundColor: colors.primary },
+  modeInert: { backgroundColor: colors.inset },
+  modeText: { fontFamily: fonts.bold, fontSize: 10, letterSpacing: 0.3, color: colors.onPrimary },
+  modeTextInert: { color: colors.inactive },
+
+  deleteAccount: {
+    marginTop: 24,
+    fontFamily: fonts.bold,
+    fontSize: 10,
+    letterSpacing: 0.3,
+    color: colors.danger,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
   },
   center: {
     flex: 1,
@@ -154,43 +261,6 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     padding: spacing.xl,
     backgroundColor: colors.background,
-  },
-  email: {
-    fontFamily: fonts.regular,
-    fontSize: 15,
-    color: colors.textMuted,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  freezeNote: {
-    fontFamily: fonts.regular,
-    fontSize: 12.5,
-    lineHeight: 18,
-    color: colors.textMuted,
-    paddingHorizontal: spacing.xs,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.md,
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  statValue: {
-    fontSize: 22,
-    fontFamily: fonts.bold,
-    color: colors.text,
-  },
-  statLabel: {
-    fontFamily: fonts.regular,
-    fontSize: 12,
-    color: colors.textMuted,
-    textAlign: 'center',
   },
   emptyTitle: {
     fontSize: 18,
@@ -225,48 +295,6 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontFamily: fonts.semibold,
   },
-  rowButton: {
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    paddingVertical: spacing.sm + 2,
-    alignItems: 'center',
-  },
-  rowPressed: {
-    backgroundColor: colors.primarySoft,
-  },
-  rowButtonText: {
-    color: colors.text,
-    fontFamily: fonts.semibold,
-    fontSize: 15,
-  },
-  signOutButton: {
-    marginTop: spacing.lg,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    paddingVertical: spacing.sm + 2,
-    alignItems: 'center',
-  },
-  deleteButton: {
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    paddingVertical: spacing.sm + 2,
-    alignItems: 'center',
-  },
-  deleteButtonArmed: {
-    borderColor: colors.danger,
-    backgroundColor: colors.blushSoft,
-  },
-  deleteText: {
-    color: colors.danger,
-    fontFamily: fonts.semibold,
-    fontSize: 15,
-  },
   cancelDelete: {
     color: colors.textMuted,
     fontFamily: fonts.regular,
@@ -278,13 +306,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular,
     fontSize: 13,
     textAlign: 'center',
-  },
-  signOutPressed: {
-    backgroundColor: colors.primarySoft,
-  },
-  signOutText: {
-    color: colors.danger,
-    fontFamily: fonts.semibold,
-    fontSize: 15,
   },
 });
