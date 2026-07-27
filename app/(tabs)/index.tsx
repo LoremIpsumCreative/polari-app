@@ -23,6 +23,7 @@ import { daysSinceEpoch, wordOfTheDay } from '../../src/lib/wordOfTheDay';
 import { useCharacterArt } from '../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../src/components/CharacterFullScreen';
 import { WordDetailCard } from '../../src/components/WordDetailCard';
+import { ScreenBackground } from '../../src/components/ScreenBackground';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
 import { getUnlockedDate, setUnlockedToday, todayKey } from '../../src/lib/dailyUnlock';
@@ -162,6 +163,7 @@ export default function TodayScreen() {
   if (!unlocked) {
     return (
       <Animated.View style={[styles.screen, { opacity: presentFade }]}>
+        <ScreenBackground />
         <Pressable
           style={styles.presentScreen}
           onPress={openPresent}
@@ -215,6 +217,7 @@ export default function TodayScreen() {
 
   return (
     <View style={styles.screen}>
+      <ScreenBackground />
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
