@@ -21,6 +21,11 @@ installWebFonts();
 // On web, cap the app at a smartphone-sized column so wide browser windows
 // don't stretch the layout. Native devices are already phone-sized.
 const PHONE_MAX_WIDTH = 430;
+// The mockups are drawn in a 394×852 frame. Below 852 the screens start
+// folding in on themselves — panels overlap the floating tab bar, absolutely
+// positioned chrome collides — so the column never renders shorter than the
+// design height and a short window scrolls instead.
+const DESIGN_HEIGHT = 852;
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts(fontAssets);
@@ -69,6 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     maxWidth: PHONE_MAX_WIDTH,
+    minHeight: DESIGN_HEIGHT,
     backgroundColor: colors.background,
   },
 });
