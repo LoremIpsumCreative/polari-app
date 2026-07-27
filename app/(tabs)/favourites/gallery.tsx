@@ -14,7 +14,6 @@ import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../../src/components/CharacterFullScreen';
 import { useWords } from '../../../src/lib/words';
 import {
-  COLLECTION_CHIP,
   CollectionHeader,
   CollectionPanel,
 } from '../../../src/components/CollectionChrome';
@@ -66,9 +65,7 @@ export default function GalleryScreen() {
     <View style={styles.screen}>
       <ScreenBackground />
       <CollectionHeader
-        s={s}
         title="Gallery"
-        chipColor={COLLECTION_CHIP.gallery}
         search={search}
         onSearch={setSearch}
       />

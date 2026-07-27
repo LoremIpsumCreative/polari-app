@@ -5,30 +5,21 @@ import { IconChevronLeft, IconSearch } from '@tabler/icons-react-native';
 import { colors, fonts } from '../lib/theme';
 import { useTabBarInset } from './AnimatedTabBar';
 
-// Shared chrome for the Collections sub-screens (Figma section 1117:1577):
-// "◀ Collections" back chip, a Mouse Memoirs title chip in the screen's
-// accent colour, a right-aligned search pill, and the white content panel.
-// All geometry is in the mockups' 394-wide design space, scaled by `s`.
-
-export const COLLECTION_CHIP = {
-  favourites: '#F797D2',
-  achievements: '#F5CD47',
-  gallery: '#9DD9EE',
-} as const;
+// Shared chrome for the Collections sub-screens, rebuilt against the current
+// frames (Favourites 1858:1480, Achievements 1859:933, Gallery 1859:1566):
+// a "Collections" back chip at y52, a plain centred Mouse Memoirs title at
+// y90, the full-width search field at y129, and the white panel from y203.
+// The coloured title chip the earlier section used is gone.
 
 export const HEART_RED = '#C9372C';
 export const TROPHY_GOLD = '#CF9F02';
 
 export function CollectionHeader({
-  s,
   title,
-  chipColor,
   search,
   onSearch,
 }: {
-  s: number;
   title: string;
-  chipColor: string;
   search?: string;
   onSearch?: (text: string) => void;
 }) {
@@ -36,42 +27,32 @@ export function CollectionHeader({
   return (
     <>
       <Pressable
-        style={[styles.backChip, { left: 17 * s, top: 23 * s, height: 28 * s }]}
+        style={({ pressed }) => [styles.backChip, pressed && styles.pressed]}
         onPress={() => (router.canGoBack() ? router.back() : router.replace('/favourites'))}
         accessibilityRole="button"
         accessibilityLabel="Back to Collections"
       >
-        <IconChevronLeft size={10 * s} color={colors.text} />
-        <Text style={[styles.backText, { fontSize: 10 * s }]}>Collections</Text>
+        <IconChevronLeft size={10} color={colors.text} />
+        <Text style={styles.backText}>Collections</Text>
       </Pressable>
 
+      <Text style={styles.title}>{title}</Text>
+
       {onSearch ? (
-        <View
-          style={[
-            styles.searchPill,
-            { right: 13 * s, top: 23 * s, width: 175 * s, height: 28 * s },
-          ]}
-        >
+        <View style={styles.searchWrap}>
           <TextInput
             value={search}
             onChangeText={onSearch}
-            placeholder="Search"
-            placeholderTextColor={colors.inactive}
-            style={[styles.searchInput, { fontSize: 10 * s }]}
+            style={styles.searchInput}
             accessibilityLabel={`Search ${title.toLowerCase()}`}
           />
-          <IconSearch size={10 * s} color={colors.inactive} />
+          {/* The frame parks the affordance on the right of the field. */}
+          <View style={styles.searchHint} pointerEvents="none">
+            {!search && <Text style={styles.searchHintText}>Search</Text>}
+            <IconSearch size={12} color={colors.text} />
+          </View>
         </View>
       ) : null}
-
-      <View
-        style={[
-          styles.titleChip,
-          { left: 17 * s, top: 68 * s, height: 55 * s, borderRadius: 8 * s, backgroundColor: chipColor },
-        ]}
-      >
-        <Text style={[styles.titleText, { fontSize: 34 * s }]}>{title}</Text>
-      </View>
     </>
   );
 }
@@ -92,8 +73,8 @@ export function CollectionPanel({
       style={[
         styles.panel,
         {
-          left: 17 * s,
-          top: 202 * s,
+          left: 18 * s,
+          top: 203 * s,
           bottom: 49 * s + tabInset,
           width: (width ?? 360) * s,
           borderRadius: 14 * s,
@@ -106,33 +87,61 @@ export function CollectionPanel({
 }
 
 const styles = StyleSheet.create({
-  backChip: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 4 },
-  backText: { fontFamily: fonts.bold, color: colors.text, letterSpacing: 0.3 },
-  searchPill: {
-    position: 'absolute',
+  // Back chip — "Collections button", x17 y52 w94 h31.
+  backChip: {
+    alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderWidth: 0.5,
-    borderColor: colors.inactive,
+    gap: 6,
+    marginTop: 52,
+    marginLeft: 17,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
     borderRadius: 999,
-    paddingHorizontal: 12,
+    backgroundColor: colors.inset,
+  },
+  backText: { fontFamily: fonts.semibold, fontSize: 10, letterSpacing: 0.3, color: colors.text },
+  pressed: { opacity: 0.7 },
+
+  // Page Title — centred at y90, the same treatment as the Dictionary title.
+  title: {
+    marginTop: 7,
+    fontFamily: fonts.display,
+    fontSize: 36,
+    // 40 rather than 44 so the search field still lands on the frame's y129.
+    lineHeight: 40,
+    color: colors.text,
+    textAlign: 'center',
+  },
+
+  // Input/Search — x18 y129 w360.
+  searchWrap: { marginHorizontal: 18, marginTop: 0, justifyContent: 'center' },
+  searchInput: {
+    paddingHorizontal: 16,
+    paddingVertical: 5,
+    paddingRight: 34,
+    backgroundColor: colors.surface,
+    borderRadius: 999,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.metaText,
+    fontFamily: fonts.regular,
+    fontSize: 13,
+    color: colors.text,
+  },
+  searchHint: {
+    position: 'absolute',
+    right: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 6,
   },
-  searchInput: {
-    flex: 1,
+  searchHintText: {
     fontFamily: fonts.semibold,
+    fontSize: 10,
+    letterSpacing: 0.3,
     color: colors.text,
-    textAlign: 'right',
-    paddingVertical: 0,
   },
-  titleChip: {
-    position: 'absolute',
-    alignSelf: 'flex-start',
-    justifyContent: 'center',
-    paddingHorizontal: 14,
-  },
-  titleText: { fontFamily: fonts.display, color: colors.quizInk },
+
   panel: {
     position: 'absolute',
     backgroundColor: colors.surface,

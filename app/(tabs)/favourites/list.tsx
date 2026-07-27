@@ -14,13 +14,11 @@ import { useAuth } from '../../../src/lib/auth';
 import { useFavourites } from '../../../src/lib/favourites';
 import { useWords } from '../../../src/lib/words';
 import {
-  COLLECTION_CHIP,
   CollectionHeader,
   CollectionPanel,
   HEART_RED,
 } from '../../../src/components/CollectionChrome';
 import { colors, fonts } from '../../../src/lib/theme';
-import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 const favouretteArt = require('../../../assets/collections/favourette.png');
@@ -37,7 +35,6 @@ export default function FavouritesListScreen() {
   const { words } = useWords();
   const { width } = useWindowDimensions();
   const s = Math.min(width, 430) / DESIGN_WIDTH;
-  const tabInset = useTabBarInset();
 
   const [search, setSearch] = useState('');
   const scrollRef = useRef<ScrollView>(null);
@@ -65,14 +62,13 @@ export default function FavouritesListScreen() {
     <View style={styles.screen}>
       <ScreenBackground />
       <CollectionHeader
-        s={s}
         title="Favourites"
-        chipColor={COLLECTION_CHIP.favourites}
         search={search}
         onSearch={setSearch}
       />
 
-      <CollectionPanel s={s} width={321}>
+      <CollectionPanel s={s}>
+        <View style={styles.panelRow}>
         {!session || !hasFavourites ? (
           <View style={{ padding: 20 * s, flex: 1 }}>
             <View style={[styles.row, styles.emptyRow, { height: 40 * s, borderRadius: 8 * s }]}>
@@ -145,40 +141,31 @@ export default function FavouritesListScreen() {
             ))}
           </ScrollView>
         )}
+        <View style={[styles.rail, { paddingVertical: 13 * s, width: 19 * s }]}>
+          {ALPHABET.map((letter) => {
+            const active = groups.has(letter);
+            return (
+              <Pressable
+                key={letter}
+                disabled={!active}
+                onPress={() => {
+                  const y = sectionYs.current[letter];
+                  if (y !== undefined) scrollRef.current?.scrollTo({ y, animated: true });
+                }}
+                hitSlop={4}
+              >
+                <Text
+                  style={[styles.railLetter, { fontSize: 10 * s }, !active && styles.railLetterInactive]}
+                >
+                  {letter}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+        </View>
       </CollectionPanel>
 
-      {/* A–Z rail: tap a letter to jump to its section */}
-      <View
-        style={[
-          styles.rail,
-          { right: 13 * s, top: 133 * s, bottom: 49 * s + tabInset, width: 30 * s, borderRadius: 16 * s },
-        ]}
-      >
-        {ALPHABET.map((letter) => {
-          const active = groups.has(letter);
-          return (
-            <Pressable
-              key={letter}
-              disabled={!active}
-              onPress={() => {
-                const y = sectionYs.current[letter];
-                if (y !== undefined) scrollRef.current?.scrollTo({ y, animated: true });
-              }}
-              hitSlop={4}
-            >
-              <Text
-                style={[
-                  styles.railLetter,
-                  { fontSize: 10 * s },
-                  !active && styles.railLetterInactive,
-                ]}
-              >
-                {letter}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
     </View>
   );
 }
@@ -207,8 +194,8 @@ const styles = StyleSheet.create({
   },
   signInLink: { color: colors.primary },
   letterHeader: { fontFamily: fonts.regular, color: colors.text },
+  panelRow: { flex: 1, flexDirection: 'row' },
   rail: {
-    position: 'absolute',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 10,

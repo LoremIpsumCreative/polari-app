@@ -10,7 +10,6 @@ import {
 import { useRouter } from 'expo-router';
 import { useAchievements, type Achievement } from '../../../src/lib/achievements';
 import {
-  COLLECTION_CHIP,
   CollectionHeader,
   CollectionPanel,
 } from '../../../src/components/CollectionChrome';
@@ -85,9 +84,7 @@ export default function AchievementsScreen() {
     <View style={styles.screen}>
       <ScreenBackground />
       <CollectionHeader
-        s={s}
         title="Achievements"
-        chipColor={COLLECTION_CHIP.achievements}
         search={search}
         onSearch={setSearch}
       />
