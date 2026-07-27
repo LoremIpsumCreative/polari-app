@@ -1,7 +1,19 @@
-import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { IconBook2, IconExternalLink } from '@tabler/icons-react-native';
+import { Image, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import {
+  IconBinoculars,
+  IconChevronLeft,
+  IconExternalLink,
+  IconUser,
+} from '@tabler/icons-react-native';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
+
+const auntie = require('../../../assets/characters/auntie.png');
+
+// Account/About (Figma 2172:3625): back chip y52, the title beside Auntie
+// bleeding off the left edge at y115, the lede at y177, then the prose card
+// from y285 and Further Reading from y941.
 
 // Long-form "About Polari" — the history behind the app, plus sources and
 // further reading. Content is deliberately factual and credited: the app
@@ -37,52 +49,77 @@ const SECTIONS: Section[] = [
   },
 ];
 
-type Source = { title: string; detail: string; url: string };
+type Source = { title: string; author: string; detail: string; url: string };
 
 const SOURCES: Source[] = [
   {
-    title: 'Fabulosa! The Story of Polari — Paul Baker',
+    title: 'Fabulosa! The Story of Polari',
+    author: 'Paul Baker',
     detail: 'The definitive popular history of Polari (Reaktion Books, 2019).',
     url: 'https://reaktionbooks.co.uk/work/fabulosa',
   },
   {
-    title: 'Polari: The Lost Language of Gay Men — Paul Baker',
+    title: 'Polari: The Lost Language of Gay Men',
+    author: 'Paul Baker',
     detail: 'The scholarly study and lexicon this field rests on (Routledge, 2002).',
     url: 'https://www.routledge.com/Polari-The-Lost-Language-of-Gay-Men/Baker/p/book/9780415261807',
   },
   {
-    title: 'Bishopsgate Institute — LGBTQ+ Archives',
+    title: 'Bishopsgate Institute',
+    author: 'LGBTQ+ Archives',
     detail: 'Home to major UK queer history collections, including Polari material.',
     url: 'https://www.bishopsgate.org.uk/collections/lgbtq-history',
   },
   {
-    title: 'Round the Horne — Julian & Sandy',
+    title: 'Round the Horne',
+    author: 'Julian & Sandy',
     detail: 'The BBC radio sketches that carried Polari to a mass audience (1965–68).',
     url: 'https://www.bbc.co.uk/programmes/b007jqvp',
   },
 ];
 
 export default function AboutScreen() {
+  const router = useRouter();
   return (
     <View style={styles.screenBg}>
       <ScreenBackground />
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Text style={styles.lede}>
-          The story behind the lingo — where Polari came from, why it mattered, and why it’s
-          worth keeping alive.
-        </Text>
+        <Pressable
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/profile'))}
+          style={({ pressed }) => [styles.backChip, pressed && styles.pressed]}
+          accessibilityRole="button"
+          accessibilityLabel="Back to Account"
+        >
+          <IconChevronLeft size={10} color={colors.text} />
+          <Text style={styles.backChipText}>Account</Text>
+        </Pressable>
 
-        {SECTIONS.map((s) => (
-          <View key={s.title} style={styles.section}>
-            <Text style={styles.sectionTitle}>{s.title}</Text>
-            <Text style={styles.sectionBody}>{s.body}</Text>
-          </View>
-        ))}
+        {/* Auntie bleeds off the left edge behind the heading block. */}
+        <Image source={auntie} style={styles.auntie} resizeMode="contain" accessibilityIgnoresInvertColors />
 
-        <View style={styles.sourcesCard}>
+        <View style={styles.heading}>
+          <Text style={styles.title}>About Polari</Text>
+          <Text style={styles.ledeTitle}>The story behind the lingo</Text>
+          <Text style={styles.ledeBody}>
+            Where Polari came from, why it mattered, and why it’s worth keeping alive.
+          </Text>
+        </View>
+
+        <View style={styles.card}>
+          {SECTIONS.map((sec) => (
+            <View key={sec.title} style={styles.section}>
+              <Text style={styles.sectionTitle}>{sec.title}</Text>
+              <Text style={styles.sectionBody}>{sec.body}</Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.card}>
           <View style={styles.sourcesHeader}>
-            <IconBook2 size={18} color={colors.primary} />
-            <Text style={styles.sourcesTitle}>Sources & further reading</Text>
+            <View style={styles.sourcesIcon}>
+              <IconBinoculars size={15} color={colors.onPrimary} />
+            </View>
+            <Text style={styles.sourcesTitle}>Further Reading</Text>
           </View>
           <Text style={styles.sourcesNote}>
             This app stands on the work of the scholars, archivists and elders who recorded
@@ -99,14 +136,18 @@ export default function AboutScreen() {
             >
               <View style={styles.sourceText}>
                 <Text style={styles.sourceTitle}>{src.title}</Text>
+                <View style={styles.authorRow}>
+                  <View style={styles.authorIcon}>
+                    <IconUser size={10} color={colors.primary} />
+                  </View>
+                  <Text style={styles.authorName}>{src.author}</Text>
+                </View>
                 <Text style={styles.sourceDetail}>{src.detail}</Text>
               </View>
-              <IconExternalLink size={16} color={colors.textFaint} />
+              <IconExternalLink size={16} color={colors.primary} />
             </Pressable>
           ))}
         </View>
-
-        <Text style={styles.footer}>Bona to vada you. 💙</Text>
       </ScrollView>
     </View>
   );
@@ -115,83 +156,123 @@ export default function AboutScreen() {
 const styles = StyleSheet.create({
   // Wrapper so the sparkle pattern stays fixed behind the scrolling content.
   screenBg: { flex: 1 },
-  container: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.md, paddingBottom: spacing.xl + 56, gap: spacing.md },
-  lede: {
-    fontFamily: fonts.italic,
-    fontSize: 16,
-    lineHeight: 23,
-    color: colors.textMuted,
+  container: { flex: 1, backgroundColor: colors.canvas },
+  content: { paddingBottom: spacing.xl + 56 },
+
+  backChip: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 52,
+    marginLeft: 17,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: radii.pill,
+    backgroundColor: colors.inset,
   },
-  section: {
-    backgroundColor: colors.surface,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.lg,
-    gap: spacing.sm,
-  },
-  sectionTitle: {
+  backChipText: { fontFamily: fonts.semibold, fontSize: 10, letterSpacing: 0.3, color: colors.text },
+  pressed: { opacity: 0.7 },
+
+  // auntie 1: x0 y115, 119x195, running off the left edge.
+  auntie: { position: 'absolute', left: 0, top: 115, width: 119, height: 195 },
+
+  // The heading block sits to the right of her, from x134.
+  heading: { marginLeft: 134, marginRight: 22, marginTop: 7 },
+  title: { fontFamily: fonts.display, fontSize: 36, lineHeight: 40, color: colors.text },
+  ledeTitle: {
+    marginTop: 47,
     fontFamily: fonts.bold,
-    fontSize: 18,
+    fontSize: 14,
+    letterSpacing: 0.3,
     color: colors.text,
   },
+  ledeBody: {
+    marginTop: 11,
+    fontFamily: fonts.regular,
+    fontSize: 11,
+    lineHeight: 14,
+    letterSpacing: 0.3,
+    color: colors.text,
+  },
+
+  // Prose card x23 y285 w349, and Further Reading below it.
+  card: {
+    marginTop: 63,
+    marginHorizontal: 23,
+    paddingHorizontal: 24,
+    paddingVertical: 32,
+    gap: 30,
+    backgroundColor: colors.surface,
+    borderRadius: 14,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.fieldBorder,
+  },
+  section: { gap: 16 },
+  sectionTitle: { fontFamily: fonts.bold, fontSize: 14, letterSpacing: 0.3, color: colors.text },
   sectionBody: {
     fontFamily: fonts.regular,
-    fontSize: 14.5,
-    lineHeight: 22,
-    color: colors.textMuted,
-  },
-  sourcesCard: {
-    backgroundColor: colors.primarySoft,
-    borderRadius: radii.md,
-    padding: spacing.lg,
-    gap: spacing.sm,
-  },
-  sourcesHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  sourcesTitle: {
-    fontFamily: fonts.bold,
-    fontSize: 16,
+    fontSize: 11,
+    lineHeight: 15,
+    letterSpacing: 0.3,
     color: colors.text,
   },
-  sourcesNote: {
-    fontFamily: fonts.regular,
-    fontSize: 13,
-    lineHeight: 19,
-    color: colors.textMuted,
-    marginBottom: spacing.xs,
+
+  sourcesHeader: { flexDirection: 'row', alignItems: 'center', gap: 11 },
+  sourcesIcon: {
+    width: 26,
+    height: 26,
+    borderRadius: 999,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  sourcesTitle: { fontFamily: fonts.bold, fontSize: 14, letterSpacing: 0.3, color: colors.text },
+  sourcesNote: {
+    marginTop: -14,
+    fontFamily: fonts.regular,
+    fontSize: 11,
+    lineHeight: 15,
+    letterSpacing: 0.3,
+    color: colors.text,
+  },
+
   sourceRow: {
+    marginTop: -14,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.sm,
-    backgroundColor: colors.surface,
-    borderRadius: radii.sm,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm + 2,
+    gap: 4,
+    paddingHorizontal: 22,
+    paddingVertical: 12,
+    backgroundColor: colors.primarySoft,
+    borderRadius: 8,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.fieldBorder,
   },
   sourcePressed: { opacity: 0.7 },
-  sourceText: { flex: 1, gap: 2 },
+  sourceText: { flex: 1, gap: 4 },
   sourceTitle: {
-    fontFamily: fonts.semibold,
-    fontSize: 14,
+    fontFamily: fonts.bold,
+    fontSize: 12,
+    lineHeight: 15,
+    letterSpacing: 0.3,
     color: colors.text,
   },
+  authorRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  authorIcon: {
+    width: 23,
+    height: 23,
+    borderRadius: 999,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  authorName: { fontFamily: fonts.semibold, fontSize: 11, letterSpacing: 0.3, color: colors.primary },
   sourceDetail: {
     fontFamily: fonts.regular,
-    fontSize: 12.5,
-    lineHeight: 17,
-    color: colors.textMuted,
-  },
-  footer: {
-    fontFamily: fonts.italic,
-    fontSize: 14,
-    color: colors.textFaint,
-    textAlign: 'center',
-    marginTop: spacing.sm,
+    fontSize: 10,
+    lineHeight: 14,
+    letterSpacing: 0.3,
+    color: colors.text,
   },
 });
