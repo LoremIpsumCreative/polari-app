@@ -24,7 +24,7 @@ export const QUIZ_MODES: Record<QuizModeId, QuizMode> = {
     id: 'ten',
     label: "10 Q's",
     Icon: IconListNumbers,
-    blurb: 'Answer 10 unique questions. Build your longest streak over multiple games.',
+    blurb: 'Answer 10 questions and build your longest streak over multiple games.',
     timer: 'none',
     questionLimit: 10,
     end: 'questions',

@@ -14,10 +14,11 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
 import { useWords } from '../../../src/lib/words';
 import { useQuizStats } from '../../../src/lib/quizScores';
-import { QUIZ_MODES } from '../../../src/lib/quizModes';
+import { QUIZ_MODES, type QuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import { Blob, FLAME, ModeGlyph } from '../../../src/components/quizLandingArt';
+import { IconX } from '@tabler/icons-react-native';
 
 const quizmasterArt = require('../../../assets/quiz/quizmaster.png');
 
@@ -124,6 +125,9 @@ export default function QuizIntroScreen() {
   const uiOpacity = useRef(new Animated.Value(0)).current;
   const running = useRef<Animated.CompositeAnimation | null>(null);
   const [done, setDone] = useState(false);
+  // Picking a mode opens its How to Play card (frame 1904:3022 and siblings)
+  // rather than dropping straight into the round.
+  const [chosen, setChosen] = useState<QuizModeId | null>(null);
 
   const playEntrance = useCallback(() => {
     setDone(false);
@@ -275,6 +279,14 @@ export default function QuizIntroScreen() {
       </Animated.View>
 
       {/* Signpost: a gold post with the board hung off its top */}
+      {chosen ? (
+        <Pressable
+          style={styles.howToScrim}
+          onPress={() => setChosen(null)}
+          accessibilityLabel="Close"
+        />
+      ) : null}
+
       <Animated.View style={[StyleSheet.absoluteFill, { opacity: uiOpacity }]} pointerEvents="none">
         <View
           style={{
@@ -308,7 +320,11 @@ export default function QuizIntroScreen() {
             return (
               <View
                 key={mode}
-                style={[styles.modeSlot, { left: x * s, top: y * s, width: 65 * s }]}
+                style={[
+                  styles.modeSlot,
+                  { left: x * s, top: y * s, width: 65 * s },
+                  chosen && chosen !== mode && styles.modeSlotDimmed,
+                ]}
                 pointerEvents="box-none"
               >
                 <View style={[styles.scoreBadge, { width: 40 * s, height: 19 * s }]}>
@@ -330,7 +346,7 @@ export default function QuizIntroScreen() {
                     },
                     pressed && styles.modePressed,
                   ]}
-                  onPress={() => router.push(`/quiz/play?mode=${mode}`)}
+                  onPress={() => setChosen(mode)}
                   disabled={loading || words.length < 4}
                   accessibilityRole="button"
                   accessibilityLabel={`Start ${m.label} quiz`}
@@ -345,6 +361,52 @@ export default function QuizIntroScreen() {
           })}
         </View>
       </Animated.View>
+
+      {chosen ? (
+        <>
+          <View
+            style={[
+              styles.howToCard,
+              { left: 65 * s, top: 234 * s, width: 263 * s, borderRadius: 14 * s },
+            ]}
+          >
+            <Pressable
+              onPress={() => setChosen(null)}
+              hitSlop={12}
+              style={[styles.howToClose, { right: 19 * s, top: 20 * s }]}
+              accessibilityRole="button"
+              accessibilityLabel="Close"
+            >
+              <IconX size={14 * s} color={colors.textFaint} />
+            </Pressable>
+            <Text style={[styles.howToTitle, { fontSize: 60 * s, lineHeight: 53 * s }]}>
+              {QUIZ_MODES[chosen].label}
+            </Text>
+            <Text style={[styles.howToKicker, { fontSize: 14 * s, marginTop: 32 * s }]}>
+              How to play:
+            </Text>
+            <Text
+              style={[
+                styles.howToBody,
+                { fontSize: 16 * s, lineHeight: 17.6 * s, marginTop: 18 * s },
+              ]}
+            >
+              {QUIZ_MODES[chosen].blurb}
+            </Text>
+            <Pressable
+              onPress={() => router.push(`/quiz/play?mode=${chosen}`)}
+              style={({ pressed }) => [
+                styles.howToStart,
+                { marginTop: 32 * s, width: 199 * s, height: 50 * s },
+                pressed && styles.modePressed,
+              ]}
+              accessibilityRole="button"
+            >
+              <Text style={[styles.howToStartText, { fontSize: 14 * s }]}>Start Quiz</Text>
+            </Pressable>
+          </View>
+        </>
+      ) : null}
     </Pressable>
   );
 }
@@ -377,6 +439,7 @@ const styles = StyleSheet.create({
   // child even with top/bottom set, which zero-heights the anchor box.
   fanHost: { position: 'absolute', top: 0, height: '100%', alignSelf: 'center' },
   modeSlot: { position: 'absolute', alignItems: 'center' },
+  modeSlotDimmed: { opacity: 0.35 },
   scoreBadge: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -399,6 +462,44 @@ const styles = StyleSheet.create({
   modePressed: {
     opacity: 0.85,
   },
+  // Quiz/How to Play (1904:3346): card at x68 y234, 263 wide.
+  howToScrim: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(18, 18, 18, 0.55)',
+  },
+  howToCard: {
+    position: 'absolute',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 32,
+    paddingTop: 42,
+    paddingBottom: 32,
+    alignItems: 'center',
+  },
+  howToClose: { position: 'absolute' },
+  howToTitle: { fontFamily: fonts.display, color: colors.text, textAlign: 'center' },
+  howToKicker: {
+    alignSelf: 'flex-start',
+    fontFamily: fonts.bold,
+    letterSpacing: 0.3,
+    color: colors.primary,
+  },
+  howToBody: {
+    alignSelf: 'flex-start',
+    fontFamily: fonts.regular,
+    letterSpacing: 0.2,
+    color: colors.text,
+  },
+  howToStart: {
+    borderRadius: 999,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  howToStartText: { fontFamily: fonts.bold, letterSpacing: 0.3, color: colors.onPrimary },
   modeLabel: {
     fontFamily: fonts.bold,
     color: '#FFF6F5',
