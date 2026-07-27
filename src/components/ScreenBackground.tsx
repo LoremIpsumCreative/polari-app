@@ -9,6 +9,7 @@ import { SPARKLE_TILE_PATH } from './sparkleTilePath';
 const TILE_W = 269;
 const TILE_H = 170.887;
 const SPARKLE_INK = '#DBDDE4';
+const SPARKLE_OPACITY = 0.7;
 
 export function ScreenBackground() {
   return (
@@ -21,7 +22,13 @@ export function ScreenBackground() {
             width={TILE_W}
             height={TILE_H}
           >
-            <Path d={SPARKLE_TILE_PATH} fill={SPARKLE_INK} fillRule="evenodd" clipRule="evenodd" />
+            <Path
+              d={SPARKLE_TILE_PATH}
+              fill={SPARKLE_INK}
+              fillOpacity={SPARKLE_OPACITY}
+              fillRule="evenodd"
+              clipRule="evenodd"
+            />
           </Pattern>
         </Defs>
         <Rect x="0" y="0" width="100%" height="100%" fill="url(#polari-sparkles)" />
