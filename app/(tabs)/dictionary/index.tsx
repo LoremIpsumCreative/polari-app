@@ -17,6 +17,20 @@ import {
   IconSearch,
 } from '@tabler/icons-react-native';
 import { useWords } from '../../../src/lib/words';
+import { useFavourites } from '../../../src/lib/favourites';
+import { useCharacterArt } from '../../../src/lib/remoteArt';
+import {
+  DictionaryFilterModal,
+  FilterChip,
+} from '../../../src/components/DictionaryFilterModal';
+import { HEART_RED } from '../../../src/components/CollectionChrome';
+import {
+  EMPTY_FILTERS,
+  countActiveFilters,
+  matchesFilters,
+  partOfSpeechOptions,
+  type DictionaryFilters,
+} from '../../../src/lib/dictionaryFilters';
 import { useCollections } from '../../../src/lib/collections';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import type { Word } from '../../../src/types/database';
@@ -28,14 +42,6 @@ import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 // to use the coordinates directly: title y90, search y129, filter bar y158,
 // "CURATED LISTS" y210, bundles y223, list panel y305 running off the bottom.
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
-type Filter = 'all' | 'word' | 'phrase';
-
-const FILTERS: { value: Filter; label: string }[] = [
-  { value: 'all', label: 'All' },
-  { value: 'word', label: 'Words' },
-  { value: 'phrase', label: 'Phrases' },
-];
 
 // The bundle cards cycle blue → teal → green (Button/Bundles variants).
 const BUNDLE_TINTS = [
@@ -112,17 +118,24 @@ export default function DictionaryScreen() {
   // The bar floats over the screen, so the list and the A–Z rail have to keep
   // clear of it themselves — the frame bakes this in as the rail's 63px tail.
   const tabInset = useTabBarInset();
+  const { isFavourite } = useFavourites();
+  const { castSlugs } = useCharacterArt();
   const [query, setQuery] = useState('');
-  const [filter, setFilter] = useState<Filter>('all');
+  const [filters, setFilters] = useState<DictionaryFilters>(EMPTY_FILTERS);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const artSlugs = useMemo(() => new Set(castSlugs), [castSlugs]);
+  const posOptions = useMemo(() => partOfSpeechOptions(words), [words]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const ctx = { isFavourite, hasArtwork: (slug: string) => artSlugs.has(slug) };
     return words.filter((w) => {
-      if (filter !== 'all' && w.entry_type !== filter) return false;
+      if (!matchesFilters(w, filters, ctx)) return false;
       if (!q) return true;
       return (w.search_text ?? `${w.term} ${w.definition}`.toLowerCase()).includes(q);
     });
-  }, [words, query, filter]);
+  }, [words, query, filters, isFavourite, artSlugs]);
 
   // First row index per initial letter, so the A–Z rail can jump the list.
   // Entries starting with punctuation ("-Ette") never claim a letter.
@@ -141,7 +154,7 @@ export default function DictionaryScreen() {
   };
 
   // The filter button's badge counts the narrowing filters actually applied.
-  const activeFilters = (filter === 'all' ? 0 : 1) + (query.trim() ? 1 : 0);
+  const activeFilters = countActiveFilters(filters);
 
   if (loading) {
     return (
@@ -188,6 +201,7 @@ export default function DictionaryScreen() {
       <View style={styles.filterBar}>
         <View style={styles.filterButtonWrap}>
           <Pressable
+            onPress={() => setFiltersOpen(true)}
             style={({ pressed }) => [styles.filterButton, pressed && styles.pressedSoft]}
             accessibilityRole="button"
             accessibilityLabel="Filters"
@@ -206,20 +220,22 @@ export default function DictionaryScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.filterOptions}
         >
-          {FILTERS.map((f) => {
-            const active = filter === f.value;
-            return (
-              <Pressable
-                key={f.value}
-                onPress={() => setFilter(f.value)}
-                style={[styles.filterChip, active && styles.filterChipActive]}
-              >
-                <Text style={[styles.filterChipText, active && styles.filterChipTextActive]}>
-                  {f.label}
-                </Text>
-              </Pressable>
-            );
-          })}
+          <FilterChip
+            label="Words"
+            selected={filters.words}
+            onPress={() => setFilters((f) => ({ ...f, words: !f.words }))}
+          />
+          <FilterChip
+            label="Phrases"
+            selected={filters.phrases}
+            onPress={() => setFilters((f) => ({ ...f, phrases: !f.phrases }))}
+          />
+          <FilterChip
+            label="Favourites"
+            selected={filters.favourites}
+            selectedColor={HEART_RED}
+            onPress={() => setFilters((f) => ({ ...f, favourites: !f.favourites }))}
+          />
         </ScrollView>
       </View>
 
@@ -270,6 +286,14 @@ export default function DictionaryScreen() {
           })}
         </View>
       </View>
+
+      <DictionaryFilterModal
+        visible={filtersOpen}
+        onClose={() => setFiltersOpen(false)}
+        filters={filters}
+        onChange={setFilters}
+        partOfSpeechOptions={posOptions}
+      />
     </View>
   );
 }
