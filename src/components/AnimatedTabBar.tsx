@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // and doesn't re-export its types from the package root.
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs/types';
 import Svg, { Path } from 'react-native-svg';
-import { colors, fonts, tabAccents } from '../lib/theme';
+import { colors, fonts, PHONE_MAX_WIDTH, tabAccents } from '../lib/theme';
 import { NavIcon, navIconSize, isNavIconName, type NavIconName } from './navIcons';
 
 // Figma "Navbar 2.0" (node 1766:3478). The bar is a single boolean shape 394x101
@@ -323,6 +323,18 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    // On web the column is at least DESIGN_HEIGHT tall, which is taller than a
+    // short window — an absolute bar would sit below the fold and scroll away
+    // with the document. Fixed pins it to the viewport instead, and the auto
+    // margins keep it aligned with the centred column rather than the page.
+    ...Platform.select({
+      web: {
+        position: 'fixed',
+        maxWidth: PHONE_MAX_WIDTH,
+        marginHorizontal: 'auto',
+      } as object,
+      default: {},
+    }),
     // Transparent: the bar's own white comes from the notched path.
     backgroundColor: 'transparent',
     overflow: 'visible',

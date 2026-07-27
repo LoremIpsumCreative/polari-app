@@ -8,7 +8,7 @@ import { RemoteArtProvider } from '../src/lib/remoteArt';
 import { FavouritesProvider } from '../src/lib/favourites';
 import { StreaksProvider } from '../src/lib/streaks';
 import { ProgressProvider } from '../src/lib/progress';
-import { colors } from '../src/lib/theme';
+import { colors, DESIGN_HEIGHT, PHONE_MAX_WIDTH } from '../src/lib/theme';
 // Resolves to fontAssets.web.ts on web and fontAssets.ts on native.
 import { fontAssets } from '../src/lib/fontAssets';
 import { installWebFonts } from '../src/lib/webFontFaces';
@@ -18,14 +18,12 @@ import { installWebFonts } from '../src/lib/webFontFaces';
 // in the document before anything renders.
 installWebFonts();
 
-// On web, cap the app at a smartphone-sized column so wide browser windows
-// don't stretch the layout. Native devices are already phone-sized.
-const PHONE_MAX_WIDTH = 430;
-// The mockups are drawn in a 394×852 frame. Below 852 the screens start
-// folding in on themselves — panels overlap the floating tab bar, absolutely
-// positioned chrome collides — so the column never renders shorter than the
-// design height and a short window scrolls instead.
-const DESIGN_HEIGHT = 852;
+// PHONE_MAX_WIDTH caps the app at a smartphone-sized column on web so wide
+// browser windows don't stretch the layout; native devices are already
+// phone-sized. DESIGN_HEIGHT is the mockups' frame height — below it the
+// screens fold in on themselves, so the column never renders shorter and a
+// short window scrolls instead. Both live in the theme because the tab bar
+// pins itself to the viewport and has to agree on the column width.
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts(fontAssets);
@@ -68,6 +66,10 @@ const styles = StyleSheet.create({
   gutter: {
     flex: 1,
     alignItems: 'center',
+    // Matches the column's own minimum so the canvas colour covers the whole
+    // scrollable document — otherwise a short window scrolls past the gutter
+    // and the bare page background shows below it.
+    minHeight: DESIGN_HEIGHT,
     backgroundColor: colors.background,
   },
   phoneFrame: {

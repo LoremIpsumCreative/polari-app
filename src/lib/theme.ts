@@ -91,6 +91,12 @@ export const spacing = {
   xl: 32,
 };
 
+// On web the app is capped to a smartphone-sized column; the tab bar has to
+// know the same width so it can pin to the viewport and still line up with it.
+export const PHONE_MAX_WIDTH = 430;
+// The mockups' frame height. Screens never render shorter than this.
+export const DESIGN_HEIGHT = 852;
+
 export const radii = {
   sm: 8,
   md: 12,
