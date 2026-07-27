@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import {
   IconBinoculars,
@@ -9,7 +9,9 @@ import {
   IconMail,
   IconMoon,
   IconSun,
+  IconTrash,
   IconUser,
+  IconUserCheck,
 } from '@tabler/icons-react-native';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
@@ -17,6 +19,7 @@ import { SpaceHost } from '../../../src/components/illustrations/SpaceHost';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { AccountOption } from '../../../src/components/AccountOption';
+import { HEART_RED } from '../../../src/components/CollectionChrome';
 
 // Account/Main (Figma 2154:3235, expanded 2132:3432): a welcome banner at
 // y116 over three groups of Button/Account Option rows — profile and
@@ -161,23 +164,60 @@ export default function ProfileScreen() {
 
         <View style={styles.group}>
           <AccountOption label="Sign Out" Icon={IconLogout} onPress={signOut} />
-          <Pressable onPress={handleDeleteAccount} disabled={deleting}>
+          <Pressable onPress={() => setConfirmingDelete(true)} disabled={deleting}>
             <Text style={styles.deleteAccount}>
-              {deleting
-                ? 'Deleting…'
-                : confirmingDelete
-                  ? 'Tap again to permanently delete'
-                  : 'Delete Account'}
+              {deleting ? 'Deleting…' : 'Delete Account'}
             </Text>
           </Pressable>
-          {confirmingDelete && !deleting ? (
-            <Pressable onPress={() => setConfirmingDelete(false)}>
-              <Text style={styles.cancelDelete}>Never mind, keep my account</Text>
-            </Pressable>
-          ) : null}
           {deleteError ? <Text style={styles.deleteError}>{deleteError}</Text> : null}
         </View>
       </ScrollView>
+
+      {/* Deletion Confirmation (frame 2144:3536) — a card over a dimmed
+          backdrop, replacing the old arm-the-label-then-tap-again confirm. */}
+      <Modal
+        visible={confirmingDelete}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setConfirmingDelete(false)}
+      >
+        <View style={styles.backdrop}>
+          <View style={styles.confirmCard}>
+            <Text style={styles.confirmTitle}>Are You Sure?</Text>
+            <Text style={styles.confirmBody}>
+              Your account and its data will be permanently deleted.
+            </Text>
+            <Text style={styles.confirmWarning}>This action can’t be undone.</Text>
+
+            <View style={styles.confirmActions}>
+              <Pressable
+                onPress={() => setConfirmingDelete(false)}
+                style={({ pressed }) => [styles.confirmButton, styles.keepButton, pressed && styles.pressed]}
+                accessibilityRole="button"
+              >
+                <View style={styles.keepBadge}>
+                  <IconUserCheck size={14} color={colors.onPrimary} />
+                </View>
+                <Text style={styles.confirmButtonText}>Keep my account</Text>
+              </Pressable>
+
+              <Pressable
+                onPress={handleDeleteAccount}
+                disabled={deleting}
+                style={({ pressed }) => [styles.confirmButton, styles.deleteButton, pressed && styles.pressed]}
+                accessibilityRole="button"
+              >
+                <View style={styles.deleteBadge}>
+                  <IconTrash size={13} color={HEART_RED} />
+                </View>
+                <Text style={styles.confirmButtonText}>
+                  {deleting ? 'Deleting…' : 'Yes, delete my account'}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -244,6 +284,83 @@ const styles = StyleSheet.create({
   modeInert: { backgroundColor: colors.inset },
   modeText: { fontFamily: fonts.bold, fontSize: 10, letterSpacing: 0.3, color: colors.onPrimary },
   modeTextInert: { color: colors.inactive },
+
+  pressed: { opacity: 0.85 },
+  backdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(18, 18, 18, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  confirmCard: {
+    width: 304,
+    backgroundColor: colors.surface,
+    borderRadius: 14,
+    paddingHorizontal: 32,
+    paddingTop: 42,
+    paddingBottom: 32,
+    alignItems: 'center',
+  },
+  confirmTitle: {
+    fontFamily: fonts.display,
+    fontSize: 60,
+    lineHeight: 58,
+    color: colors.text,
+    textAlign: 'center',
+  },
+  confirmBody: {
+    marginTop: 32,
+    fontFamily: fonts.regular,
+    fontSize: 16,
+    lineHeight: 18,
+    letterSpacing: 0.2,
+    color: colors.text,
+    textAlign: 'center',
+  },
+  confirmWarning: {
+    marginTop: 32,
+    fontFamily: fonts.bold,
+    fontSize: 16,
+    lineHeight: 18,
+    letterSpacing: 0.2,
+    color: colors.text,
+    textAlign: 'center',
+  },
+  confirmActions: { marginTop: 50, gap: 16 },
+  confirmButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    width: 240,
+    height: 50,
+    borderRadius: 999,
+    paddingHorizontal: 27,
+  },
+  keepButton: { backgroundColor: colors.primary },
+  deleteButton: { backgroundColor: HEART_RED, justifyContent: 'center', paddingHorizontal: 23 },
+  keepBadge: {
+    width: 26,
+    height: 26,
+    borderRadius: 999,
+    borderWidth: 1.5,
+    borderColor: colors.onPrimary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deleteBadge: {
+    width: 26,
+    height: 26,
+    borderRadius: 999,
+    backgroundColor: '#FFECEB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  confirmButtonText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    letterSpacing: 0.3,
+    color: colors.onPrimary,
+  },
 
   deleteAccount: {
     marginTop: 24,
