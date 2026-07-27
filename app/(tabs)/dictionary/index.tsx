@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -8,14 +8,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { FlashList, type FlashListRef } from '@shopify/flash-list';
 import { useRouter } from 'expo-router';
-import {
-  IconAdjustmentsHorizontal,
-  IconChevronRight,
-  IconMoodSad,
-  IconSearch,
-} from '@tabler/icons-react-native';
+import { IconAdjustmentsHorizontal, IconMoodSad, IconSearch } from '@tabler/icons-react-native';
 import { useWords } from '../../../src/lib/words';
 import { useFavourites } from '../../../src/lib/favourites';
 import { useCharacterArt } from '../../../src/lib/remoteArt';
@@ -33,42 +27,19 @@ import {
 } from '../../../src/lib/dictionaryFilters';
 import { useCollections } from '../../../src/lib/collections';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
-import type { Word } from '../../../src/types/database';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
-import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
+import { DictionaryListPanel } from '../../../src/components/DictionaryList';
 
 // Geometry is read straight off the Figma frame (Dictionary/Dictionary Main,
 // 1871:1178), whose 394-wide design space is close enough to a phone's width
 // to use the coordinates directly: title y90, search y129, filter bar y158,
 // "CURATED LISTS" y210, bundles y223, list panel y305 running off the bottom.
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
 // The bundle cards cycle blue → teal → green (Button/Bundles variants).
 const BUNDLE_TINTS = [
   { fill: colors.primarySoft, edge: colors.primary },
   { fill: colors.relatedSoft, edge: colors.tealEdge },
   { fill: colors.greenSoft, edge: colors.green },
 ];
-
-function DefinitionRow({ word, onPress }: { word: Word; onPress: () => void }) {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
-      accessibilityRole="button"
-    >
-      <View style={styles.rowText}>
-        <Text style={styles.rowTerm} numberOfLines={1}>
-          {word.term}
-        </Text>
-        <Text style={styles.rowDefinition} numberOfLines={1}>
-          {word.definition}
-        </Text>
-      </View>
-      <IconChevronRight size={12} color={colors.text} />
-    </Pressable>
-  );
-}
 
 // The horizontal rail of curated lists, each a tinted card showing its size.
 function ColorBundles() {
@@ -114,10 +85,6 @@ function ColorBundles() {
 export default function DictionaryScreen() {
   const router = useRouter();
   const { words, loading, error, refetch } = useWords();
-  const listRef = useRef<FlashListRef<Word>>(null);
-  // The bar floats over the screen, so the list and the A–Z rail have to keep
-  // clear of it themselves — the frame bakes this in as the rail's 63px tail.
-  const tabInset = useTabBarInset();
   const { isFavourite } = useFavourites();
   const { castSlugs } = useCharacterArt();
   const [query, setQuery] = useState('');
@@ -136,22 +103,6 @@ export default function DictionaryScreen() {
       return (w.search_text ?? `${w.term} ${w.definition}`.toLowerCase()).includes(q);
     });
   }, [words, query, filters, isFavourite, artSlugs]);
-
-  // First row index per initial letter, so the A–Z rail can jump the list.
-  // Entries starting with punctuation ("-Ette") never claim a letter.
-  const letterIndex = useMemo(() => {
-    const map = new Map<string, number>();
-    filtered.forEach((w, i) => {
-      const letter = w.term.replace(/[^a-z]/gi, '').charAt(0).toUpperCase();
-      if (letter && !map.has(letter)) map.set(letter, i);
-    });
-    return map;
-  }, [filtered]);
-
-  const jumpTo = (letter: string) => {
-    const index = letterIndex.get(letter);
-    if (index !== undefined) listRef.current?.scrollToIndex({ index, animated: true });
-  };
 
   // The filter button's badge counts the narrowing filters actually applied.
   const activeFilters = countActiveFilters(filters);
@@ -241,51 +192,20 @@ export default function DictionaryScreen() {
 
       <ColorBundles />
 
-      <View style={styles.panel}>
-        <View style={styles.panelList}>
-          <FlashList
-            ref={listRef}
-            data={filtered}
-            renderItem={({ item }) => (
-              <DefinitionRow
-                word={item}
-                onPress={() => router.push(`/dictionary/${item.slug}`)}
-              />
-            )}
-            keyExtractor={(item) => item.slug}
-            contentContainerStyle={{ paddingBottom: tabInset + spacing.md }}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={
-              <View style={styles.empty}>
-                <View style={styles.emptyTitleRow}>
-                  <IconMoodSad size={26} color={colors.inactive} />
-                  <Text style={styles.emptyTitle}>No results</Text>
-                </View>
-                <Text style={styles.emptyBody}>Try changing your filters{'\n'}and search again.</Text>
-              </View>
-            }
-          />
-        </View>
-        <View style={[styles.pagination, { paddingBottom: tabInset + 50 }]}>
-          {ALPHABET.map((letter) => {
-            const enabled = letterIndex.has(letter);
-            return (
-              <Pressable
-                key={letter}
-                onPress={() => jumpTo(letter)}
-                disabled={!enabled}
-                hitSlop={4}
-                accessibilityRole="button"
-                accessibilityLabel={`Jump to ${letter}`}
-              >
-                <Text style={[styles.paginationLetter, !enabled && styles.paginationLetterOff]}>
-                  {letter}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      </View>
+      <DictionaryListPanel
+        style={styles.panel}
+        words={filtered}
+        onSelect={(w) => router.push(`/dictionary/${w.slug}`)}
+        empty={
+          <View style={styles.empty}>
+            <View style={styles.emptyTitleRow}>
+              <IconMoodSad size={26} color={colors.inactive} />
+              <Text style={styles.emptyTitle}>No results</Text>
+            </View>
+            <Text style={styles.emptyBody}>Try changing your filters{'\n'}and search again.</Text>
+          </View>
+        }
+      />
 
       <DictionaryFilterModal
         visible={filtersOpen}
@@ -421,72 +341,9 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
 
-  // List panel — Horizontal container, x17 y305 w360, running off the bottom
-  // with only its top corners rounded.
-  panel: {
-    flex: 1,
-    flexDirection: 'row',
-    marginTop: 8,
-    marginHorizontal: 17,
-    paddingLeft: 20,
-    paddingRight: 12,
-    paddingTop: 20,
-    gap: 9,
-    backgroundColor: colors.inset,
-    borderWidth: 1,
-    borderBottomWidth: 0,
-    borderColor: colors.fieldBorder,
-    borderTopLeftRadius: 14,
-    borderTopRightRadius: 14,
-  },
-  panelList: { flex: 1 },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.fieldBorder,
-    height: 49.5,
-    paddingHorizontal: 12,
-    marginBottom: 6,
-  },
-  rowPressed: { backgroundColor: colors.primarySoft },
-  rowText: { flex: 1, gap: 3 },
-  rowTerm: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    lineHeight: 15,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-  rowDefinition: {
-    fontFamily: fonts.semibold,
-    fontSize: 10,
-    lineHeight: 11,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-
-  // A–Z rail — Pagination, 19 wide, letters spread down the panel.
-  pagination: {
-    width: 19,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 6,
-  },
-  paginationLetter: {
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    lineHeight: 11,
-    letterSpacing: 0.3,
-    textAlign: 'center',
-    color: colors.text,
-  },
-  paginationLetterOff: { color: colors.inactive },
-
-  // The frame outlines the empty area rather than leaving the panel bare.
+  // The panel's own geometry lives in DictionaryListPanel; the screen only
+  // says where it starts.
+  panel: { marginTop: 8 },
   empty: {
     alignItems: 'center',
     justifyContent: 'center',
