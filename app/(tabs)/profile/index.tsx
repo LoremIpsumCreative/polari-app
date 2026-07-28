@@ -181,8 +181,11 @@ export default function ProfileScreen() {
         animationType="fade"
         onRequestClose={() => setConfirmingDelete(false)}
       >
-        <View style={styles.backdrop}>
-          <View style={styles.confirmCard}>
+        {/* The backdrop must be a Pressable, not a View: RN-web's Modal
+            wrapper sets pointer-events:none and a plain View inherits it,
+            leaving every control inside the card dead on web. */}
+        <Pressable style={styles.backdrop} onPress={() => setConfirmingDelete(false)}>
+          <Pressable style={styles.confirmCard} onPress={() => {}}>
             <Text style={styles.confirmTitle}>Are You Sure?</Text>
             <Text style={styles.confirmBody}>
               Your account and its data will be permanently deleted.
@@ -215,8 +218,8 @@ export default function ProfileScreen() {
                 </Text>
               </Pressable>
             </View>
-          </View>
-        </View>
+          </Pressable>
+        </Pressable>
       </Modal>
     </View>
   );
@@ -237,7 +240,7 @@ const styles = StyleSheet.create({
   },
   banner: {
     marginLeft: 10,
-    marginBottom: 55,
+    marginBottom: 46,
     fontFamily: fonts.bold,
     fontSize: 20,
     letterSpacing: 0.3,

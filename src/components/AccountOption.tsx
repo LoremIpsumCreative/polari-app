@@ -21,6 +21,8 @@ export function AccountOption({
   expanded?: boolean;
   children?: ReactNode;
 }) {
+  // Only the expandable rows carry a chevron — the frame leaves About Polari,
+  // Feedback and Sign Out bare.
   const Chevron = expanded ? IconChevronUp : IconChevronDown;
   return (
     <View style={styles.option}>
@@ -35,7 +37,7 @@ export function AccountOption({
           <Icon size={14} color={colors.textFaint} />
         </View>
         <Text style={styles.label}>{label}</Text>
-        <Chevron size={12} color={colors.text} />
+        {expandable ? <Chevron size={12} color={colors.text} /> : null}
       </Pressable>
       {expanded && children ? <View style={styles.body}>{children}</View> : null}
     </View>
