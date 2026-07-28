@@ -364,16 +364,24 @@ export default function QuizPlayScreen() {
         What word also means <Text style={styles.promptTerm}>{q.word.definition}</Text>?
       </Text>
     ) : q.kind === 'character' ? (
-      <Text style={[styles.prompt, { left: 36 * s, top: 240 * s, width: 323 * s, fontSize: 22 * s }]}>
+      <Text style={[styles.prompt, { left: 36 * s, top: 244 * s, width: 323 * s, fontSize: 22 * s }]}>
         Which word does this character bring to life?
       </Text>
     ) : (
-      <Text style={[styles.promptMatch, { top: 272 * s, fontSize: 16 * s }]}>
+      <Text style={[styles.promptMatch, { top: 246 * s, fontSize: 16 * s }]}>
         Match each word to its meaning:
       </Text>
     );
 
   const tileBase = { width: 168 * s, minHeight: 62 * s, borderRadius: 8 * s, padding: 12 * s };
+  // The match variant's own tile: taller, narrower, absolutely placed.
+  const matchTile = {
+    position: 'absolute' as const,
+    width: 155 * s,
+    height: 82 * s,
+    borderRadius: 8 * s,
+    padding: 12 * s,
+  };
 
   return (
     <View style={styles.screen}>
@@ -441,7 +449,7 @@ export default function QuizPlayScreen() {
       {q.kind === 'character' ? (
         <Image
           source={artFor(q.word.slug)}
-          style={{ position: 'absolute', left: 126 * s, top: 282 * s, width: 143 * s, height: 192 * s }}
+          style={{ position: 'absolute', left: 132 * s, top: 299 * s, width: 131 * s, height: 175 * s }}
           resizeMode="contain"
           accessibilityLabel="Mystery Polari character"
         />
@@ -451,7 +459,9 @@ export default function QuizPlayScreen() {
           and Continue at y662, so both are top-anchored like the header. */}
       {isMatch ? (
         // Words run down the left column, meanings down the right (per Figma).
-        <View style={[styles.grid, { left: 21 * s, top: 490 * s, width: 352 * s, columnGap: 17 * s, rowGap: 18 * s }]}>
+        // Frame 1353:439: 155x82 tiles in two fixed columns (x22 / x217) on a
+        // 90px pitch from y280 — not the 168x62 grid the other variants use.
+        <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
           {q.words.map((w, i) => {
             const paired = matchPairs[i] !== null;
             const sel = matchSel === i;
@@ -460,13 +470,14 @@ export default function QuizPlayScreen() {
             const owner = matchPairs.findIndex((p) => p === j);
             const defPal = owner !== -1 ? PAIR_STYLES[pairColor[owner] ?? 0] : null;
             return (
-              <View key={w.id} style={{ flexDirection: 'row', columnGap: 17 * s }}>
+              <View key={w.id} pointerEvents="box-none">
                 <Pressable
                   onPress={() => handleMatchWord(i)}
                   disabled={matchDone}
                   style={[
                     styles.tile,
-                    tileBase,
+                    matchTile,
+                    { left: 22 * s, top: (280 + i * 90) * s },
                     wordPal
                       ? { backgroundColor: wordPal.fill, borderColor: wordPal.ink, borderWidth: 1 }
                       : sel
@@ -489,7 +500,8 @@ export default function QuizPlayScreen() {
                   disabled={matchDone || matchSel === null}
                   style={[
                     styles.tile,
-                    tileBase,
+                    matchTile,
+                    { left: 217 * s, top: (280 + j * 90) * s },
                     defPal ? { backgroundColor: defPal.fill, borderColor: defPal.ink, borderWidth: 1 } : null,
                   ]}
                 >
@@ -499,6 +511,9 @@ export default function QuizPlayScreen() {
                       { fontSize: 14 * s },
                       defPal && { color: defPal.ink, fontFamily: fonts.bold },
                     ]}
+                    // The frame's tile is a fixed 82 tall, so a long entry has
+                    // to clamp rather than spill past its own edges.
+                    numberOfLines={4}
                   >
                     {q.defs[j]}
                   </Text>
@@ -549,7 +564,7 @@ export default function QuizPlayScreen() {
       <Pressable
         style={({ pressed }) => [
           styles.continueButton,
-          { left: 80 * s, width: 199 * s, height: 50 * s, top: 662 * s },
+          { left: (isMatch ? 98 : 80) * s, width: 199 * s, height: 50 * s, top: 662 * s },
           !answered && styles.continueDisabled,
           pressed && answered && { opacity: 0.85 },
         ]}
