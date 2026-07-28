@@ -10,7 +10,6 @@ import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { nextQuestion, QUIZ_LENGTH, type QuizQuestion } from '../../../src/lib/quiz';
 import { QUIZ_MODES, isQuizModeId, type QuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
-import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 // All geometry lives in the Figma frames' 394-wide design space and is scaled
@@ -57,7 +56,6 @@ export default function QuizPlayScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const s = Math.min(width, 430) / DESIGN_WIDTH;
-  const tabInset = useTabBarInset();
 
   const params = useLocalSearchParams<{ mode?: string }>();
   const isReview = params.mode === 'review';
@@ -350,8 +348,10 @@ export default function QuizPlayScreen() {
         : null;
   const leftPill =
     modeId === 'ten'
-      ? { label: 'current streak:', value: sc.run }
-      : { label: 'current score:', value: modeId === 'timed' ? sc.correct : sc.run };
+      ? { label: 'STREAK:', value: sc.run }
+      : modeId === 'timed'
+        ? { label: 'SCORE:', value: sc.correct }
+        : { label: 'STREAK:', value: sc.run };
   const highScore = isReview ? null : bestFor(modeId);
 
   const prompt =
@@ -378,9 +378,13 @@ export default function QuizPlayScreen() {
   return (
     <View style={styles.screen}>
       <ScreenBackground />
-      {/* Back to the quiz landing */}
+      {/* Header Info (frame 2075:3321): back chip y51.5, the mode title
+          centred at y107, a full-width progress rail at y180.5, and the
+          streak / high-score pair inline beneath it at y210.5. This replaces
+          the old lilac mode chip, "QUESTION n OF m" label and boxed stat
+          pills. */}
       <Pressable
-        style={[styles.backChip, { left: 17 * s, top: 23 * s, height: 28 * s }]}
+        style={[styles.backChip, { left: 17 * s, top: 51.5 * s, height: 31 * s, paddingHorizontal: 14 * s }]}
         onPress={() => router.replace('/quiz')}
         accessibilityRole="button"
         accessibilityLabel="Back to quizzes"
@@ -389,46 +393,48 @@ export default function QuizPlayScreen() {
         <Text style={[styles.backText, { fontSize: 10 * s }]}>Quizzes</Text>
       </Pressable>
 
-      {/* Mode chip */}
-      <View style={[styles.modeChip, { left: 21 * s, top: 68 * s, height: 53 * s, borderRadius: 12 * s, paddingHorizontal: 14 * s }]}>
-        <Text style={[styles.modeChipText, { fontSize: 34 * s }]}>{isReview ? 'Review' : mode.label}</Text>
-      </View>
+      <Text style={[styles.modeTitle, { top: 107 * s, fontSize: 60 * s, lineHeight: 53 * s }]}>
+        {isReview ? 'Review' : mode.label}
+      </Text>
 
-      {/* Progress rail (10 Q's and 1 Min only) */}
       {progress !== null ? (
-        <>
-          <Text style={[styles.progressLabel, { left: 141 * s, top: 78 * s, fontSize: 10 * s }]}>
-            {progressLabel}
-          </Text>
+        <View
+          style={[
+            styles.progressTrack,
+            { left: 34 * s, top: 180.5 * s, width: 327 * s, height: 20 * s, borderRadius: 999 },
+          ]}
+        >
           <View
             style={[
-              styles.progressTrack,
-              { left: 137 * s, top: 91 * s, width: 237 * s, height: 20 * s, borderRadius: 999 },
+              styles.progressFill,
+              {
+                width: Math.max(0, Math.min(1, progress)) * 319 * s,
+                height: 12 * s,
+                borderRadius: 999,
+              },
             ]}
-          >
-            <View
-              style={[
-                styles.progressFill,
-                { width: Math.max(0, Math.min(1, progress)) * 229 * s, height: 12 * s, borderRadius: 999 },
-              ]}
-            />
-          </View>
-        </>
-      ) : null}
-
-      {/* Stat pills */}
-      <View style={[styles.statPill, { left: 33 * s, top: 148 * s, height: 35 * s, borderRadius: 8 * s }]}>
-        <IconFlame size={11 * s} color={colors.metaText} />
-        <Text style={[styles.statLabel, { fontSize: 10 * s }]}>{leftPill.label}</Text>
-        <Text style={[styles.statValue, { fontSize: 16 * s }]}>{String(leftPill.value).padStart(2, '0')}</Text>
-      </View>
-      {highScore !== null ? (
-        <View style={[styles.statPill, { left: 221 * s, top: 148 * s, height: 35 * s, borderRadius: 8 * s }]}>
-          <IconTrophy size={11 * s} color={colors.metaText} />
-          <Text style={[styles.statLabel, { fontSize: 10 * s }]}>high score:</Text>
-          <Text style={[styles.statValue, { fontSize: 16 * s }]}>{String(highScore).padStart(2, '0')}</Text>
+          />
         </View>
       ) : null}
+
+      <View style={[styles.headerStats, { top: 210.5 * s, gap: 57 * s }]}>
+        <View style={styles.statGroup}>
+          <IconFlame size={10 * s} color={colors.textFaint} />
+          <Text style={[styles.statLabel, { fontSize: 10 * s }]}>{leftPill.label}</Text>
+          <Text style={[styles.statValue, { fontSize: 14 * s }]}>
+            {String(leftPill.value).padStart(2, '0')}
+          </Text>
+        </View>
+        {highScore !== null ? (
+          <View style={styles.statGroup}>
+            <IconTrophy size={10 * s} color={colors.textFaint} />
+            <Text style={[styles.statLabel, { fontSize: 10 * s }]}>HIGH SCORE:</Text>
+            <Text style={[styles.statValue, { fontSize: 14 * s }]}>
+              {String(highScore).padStart(2, '0')}
+            </Text>
+          </View>
+        ) : null}
+      </View>
 
       {prompt}
 
@@ -441,11 +447,11 @@ export default function QuizPlayScreen() {
         />
       ) : null}
 
-      {/* Answers — anchored to the bottom like the mockups (the grid's foot is
-          127 above the bar), so tiles grow upward without crowding the bubble. */}
+      {/* Answers — the frames place the grid at y490 (168x62 tiles, 18 apart)
+          and Continue at y662, so both are top-anchored like the header. */}
       {isMatch ? (
         // Words run down the left column, meanings down the right (per Figma).
-        <View style={[styles.grid, { left: 21 * s, bottom: 125 * s + tabInset, width: 352 * s, columnGap: 17 * s, rowGap: 20 * s }]}>
+        <View style={[styles.grid, { left: 21 * s, top: 490 * s, width: 352 * s, columnGap: 17 * s, rowGap: 18 * s }]}>
           {q.words.map((w, i) => {
             const paired = matchPairs[i] !== null;
             const sel = matchSel === i;
@@ -502,7 +508,7 @@ export default function QuizPlayScreen() {
           })}
         </View>
       ) : (
-        <View style={[styles.grid, { left: 21 * s, bottom: 125 * s + tabInset, width: 354 * s, columnGap: 18 * s, rowGap: 18 * s }]}>
+        <View style={[styles.grid, { left: 21 * s, top: 490 * s, width: 354 * s, columnGap: 18 * s, rowGap: 18 * s }]}>
           {q.options.map((option, index) => {
             const isCorrect = index === q.correctIndex;
             const isSelected = index === selectedIndex;
@@ -543,7 +549,7 @@ export default function QuizPlayScreen() {
       <Pressable
         style={({ pressed }) => [
           styles.continueButton,
-          { left: 80 * s, width: 199 * s, height: 50 * s, bottom: 45 * s + tabInset },
+          { left: 80 * s, width: 199 * s, height: 50 * s, top: 662 * s },
           !answered && styles.continueDisabled,
           pressed && answered && { opacity: 0.85 },
         ]}
@@ -599,7 +605,32 @@ const styles = StyleSheet.create({
   },
 
   // Header
-  backChip: { position: 'absolute', flexDirection: 'row', alignItems: 'center', gap: 4 },
+  backChip: {
+    position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    borderRadius: 999,
+    backgroundColor: colors.inset,
+  },
+  modeTitle: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    fontFamily: fonts.display,
+    color: colors.text,
+    textAlign: 'center',
+  },
+  headerStats: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statGroup: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   backText: { fontFamily: fonts.bold, color: colors.text, letterSpacing: 0.3 },
   modeChip: {
     position: 'absolute',
@@ -632,8 +663,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.progressTrack,
     paddingHorizontal: 14,
   },
-  statLabel: { fontFamily: fonts.semibold, color: colors.metaText, letterSpacing: 0.3, textTransform: 'uppercase' },
-  statValue: { fontFamily: fonts.bold, color: colors.textMuted },
+  statLabel: { fontFamily: fonts.semibold, color: colors.textFaint, letterSpacing: 0.3 },
+  statValue: { fontFamily: fonts.bold, color: colors.textFaint, letterSpacing: 0.3 },
 
   // Prompt
   prompt: { position: 'absolute', fontFamily: fonts.semibold, color: colors.text, lineHeight: 30 },
