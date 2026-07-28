@@ -8,7 +8,6 @@ import { useAuth } from '../../../src/lib/auth';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { isQuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
-import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
 // End-of-quiz screens, rebuilt to the revised Figma frames (1114:482 /
 // 1114:520 / 1365:1425 in section 1353:936): a full-bleed golden stage, an
@@ -136,7 +135,6 @@ export default function QuizResultsScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const s = Math.min(width, 430) / DESIGN_WIDTH;
-  const tabInset = useTabBarInset();
 
   const params = useLocalSearchParams<{
     mode?: string;
@@ -187,10 +185,10 @@ export default function QuizResultsScreen() {
   const v = VARIANTS[variant];
   const bubble = BUBBLES[variant];
 
-  // The two controls hang off the tab bar's top edge so they clear it at any
-  // screen height; the mockup puts their bottoms 102.9 and 56.9 above it.
-  const blobBottom = (BAR_TOP - (566 + BLOB.h)) * s + tabInset;
-  const finishBottom = (BAR_TOP - (664.1 + 36)) * s + tabInset;
+  // Frame 1365:1425 places both controls outright: the Play Again banner at
+  // x195/y568 and the Finish pill at x213/y672, 151x50. They used to hang off
+  // the tab bar's top edge plus its inset, which drifted them ~25 low and left
+  // the pill almost touching the bar.
 
   const titleLabel =
     variant === 'highScore' ? 'High Score!' : variant === 'timesUp' ? 'Time’s Up!' : 'Results';
@@ -325,7 +323,7 @@ export default function QuizResultsScreen() {
           {
             position: 'absolute',
             left: 195 * s,
-            bottom: blobBottom,
+            top: 568 * s,
             width: BLOB.w * s,
             height: BLOB.h * s,
           },
@@ -361,7 +359,7 @@ export default function QuizResultsScreen() {
       <Pressable
         style={({ pressed }) => [
           styles.finish,
-          { left: 245 * s, bottom: finishBottom, width: 95 * s, height: 36 * s },
+          { left: 213 * s, top: 672 * s, width: 151 * s, height: 50 * s },
           pressed && styles.pressed,
         ]}
         onPress={() => router.replace('/quiz')}
@@ -407,7 +405,9 @@ const styles = StyleSheet.create({
   },
   finish: {
     position: 'absolute',
-    backgroundColor: '#223452',
+    // purple/800, the same stop the Play Again blob opens on — the pill was a
+    // near-black navy, which the frames never show.
+    backgroundColor: '#493B8B',
     borderRadius: 999,
     alignItems: 'center',
     justifyContent: 'center',
