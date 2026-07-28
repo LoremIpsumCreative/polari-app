@@ -187,7 +187,9 @@ export default function QuizPlayScreen() {
             <Text style={[styles.statLabel, { fontSize: 10 * s }]}>
               STREAK:
             </Text>
-            <Text style={[styles.statValue, { fontSize: 14 * s }]}>00</Text>
+            <Text style={[styles.statValue, { fontSize: 14 * s }]}>
+              {String(modeId === 'ten' && !isReview ? stats.ten_run_current : 0).padStart(2, '0')}
+            </Text>
           </View>
           {!isReview ? (
             <View style={styles.statGroup}>
@@ -366,14 +368,11 @@ export default function QuizPlayScreen() {
       : modeId === 'timed'
         ? `${remaining} seconds remaining`
         : null;
-  const leftPill =
-    modeId === 'ten'
-      ? { label: 'STREAK:', value: sc.run }
-      : modeId === 'timed'
-        // The 1 Min frame labels this STREAK too, though the value it shows is
-        // the running correct count — the mode has no streak to speak of.
-        ? { label: 'STREAK:', value: sc.correct }
-        : { label: 'STREAK:', value: sc.run };
+  // STREAK is the longest continuous run of right answers, so it reads the
+  // best-run accumulator rather than the live run or the total correct. For
+  // 10 Q's the run is seeded from the stored cross-game streak, which the mode
+  // is explicitly built to carry.
+  const leftPill = { label: 'STREAK:', value: sc.best };
   const highScore = isReview ? null : bestFor(modeId);
 
   const prompt =
