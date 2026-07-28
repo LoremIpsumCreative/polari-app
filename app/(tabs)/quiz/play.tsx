@@ -34,7 +34,7 @@ const PAIR_STYLES = [
 // 0.97em, desc 0.27em, cap 0.71em; Mouse Memoirs: 0.9375 / 0.2125 / 0.71925).
 const CD = {
   backChip: { x: 17, y: 51.5, w: 80, h: 31 },
-  titleTop: 147.5, // cap line 152.5
+  titleTop: 107, // matches the question screen's Mode Text
   titleSize: 60,
   titleLine: 52.8,
   card: {
@@ -158,6 +158,7 @@ export default function QuizPlayScreen() {
   if (phase === 'countdown') {
     return (
       <View style={styles.screen}>
+        <ScreenBackground />
         <Pressable
           style={[
             styles.cdBackChip,
@@ -179,6 +180,25 @@ export default function QuizPlayScreen() {
         >
           {isReview ? 'Review' : mode.label}
         </Text>
+
+        <View style={[styles.headerStats, { top: 210.5 * s, gap: 57 * s }]}>
+          <View style={styles.statGroup}>
+            <IconFlame size={10 * s} color={colors.textFaint} />
+            <Text style={[styles.statLabel, { fontSize: 10 * s }]}>
+              STREAK:
+            </Text>
+            <Text style={[styles.statValue, { fontSize: 14 * s }]}>00</Text>
+          </View>
+          {!isReview ? (
+            <View style={styles.statGroup}>
+              <IconTrophy size={10 * s} color={colors.textFaint} />
+              <Text style={[styles.statLabel, { fontSize: 10 * s }]}>HIGH SCORE:</Text>
+              <Text style={[styles.statValue, { fontSize: 14 * s }]}>
+                {String(bestFor(modeId)).padStart(2, '0')}
+              </Text>
+            </View>
+          ) : null}
+        </View>
 
         {/* The count sits in a hand-drawn card, under its label pill */}
         <Svg
@@ -350,7 +370,9 @@ export default function QuizPlayScreen() {
     modeId === 'ten'
       ? { label: 'STREAK:', value: sc.run }
       : modeId === 'timed'
-        ? { label: 'SCORE:', value: sc.correct }
+        // The 1 Min frame labels this STREAK too, though the value it shows is
+        // the running correct count — the mode has no streak to speak of.
+        ? { label: 'STREAK:', value: sc.correct }
         : { label: 'STREAK:', value: sc.run };
   const highScore = isReview ? null : bestFor(modeId);
 
