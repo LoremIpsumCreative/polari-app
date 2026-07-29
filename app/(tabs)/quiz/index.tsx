@@ -32,15 +32,16 @@ const BAR_TOP = 754;
 
 // Fan positions as distances up from the tab bar's top edge, so the arc hugs
 // the bar on any screen height.
-// Button/Quiz Type placements, top-anchored straight off the frame
-// (1114:158): 65x96 slots at y644 with the timed mode raised to y619. The x
-// values drop the frame's own 3px offset. These used to hang off the bottom
-// edge plus the tab-bar inset, which drifted low enough to bury the labels
-// under the floating bar.
+// Button/Quiz Type placements from the frame (1114:158): 65x96 slots whose
+// tops sit at y644, with the timed mode raised to y619. They are anchored to
+// the foot of the 852 design rather than its top, so the fan keeps its
+// relationship with the nav on a window taller than 852 — top-anchoring left
+// it stranded mid-screen. The x values drop the frame's own 3px offset.
+const DESIGN_H = 852;
 const FAN_LAYOUT = [
-  { mode: 'ten', x: 172, y: 644 },
-  { mode: 'timed', x: 244, y: 619 },
-  { mode: 'life', x: 316, y: 644 },
+  { mode: 'ten', x: 172, bottom: DESIGN_H - (644 + 96) },
+  { mode: 'timed', x: 244, bottom: DESIGN_H - (619 + 96) },
+  { mode: 'life', x: 316, bottom: DESIGN_H - (644 + 96) },
 ] as const;
 
 // The two spotlight beams, verbatim from the Figma vectors. Vector 8 sits
@@ -65,7 +66,10 @@ const BEAMS = [
 const HEAD_BLOB =
   'M2.62342 21.9117 C1.23436 12.3347 8.59898 3.72631 18.2756 3.61617 L315.543 0.232833 C325.941 0.11449 333.687 9.79048 331.296 19.9104 L318.358 74.6786 C316.652 81.8993 310.206 87 302.786 87 L25.9106 87 C17.9612 87 11.2173 81.1637 10.0763 73.2966 L2.62342 21.9117 Z';
 const SIGN_BLOB =
-  'M10.1798 59.3923 L3.55222 20.7248 C1.76587 10.3027 10.4005 1.04491 20.9216 2.10193 L115.554 11.6094 C125.609 12.6195 132.221 22.5827 129.246 32.2402 L122.606 53.7897 C120.7 59.9774 115.252 64.4062 108.806 65.0092 L27.4399 72.6198 C19.1139 73.3985 11.5925 67.6344 10.1798 59.3923 Z';
+  'M2.69727 18.2688C1.19996 9.47605 8.48921 1.67341 17.3633 2.57058L122.058 13.1575C130.527 14.0142 136.099 22.4004 133.607 30.5403L125.754 56.1975C124.153 61.4271 119.555 65.1742 114.11 65.6868L24.8731 74.0882C17.8398 74.7502 11.4858 69.8784 10.2998 62.9143L2.69727 18.2688Z';
+// The exported board is 136.707x76.6488 and sits inset inside the frame's
+// 145x80 slot (left 3.29, top 2.03).
+const SIGN_VIEW = { w: 136.707, h: 76.6488, dx: 3.29, dy: 2.03 };
 
 // Her fill is a CROP: Figma shows only x 0-0.72002 and y 0-0.94004 of the
 // source. Rather than cut the file (and lose the rest of the art), the full
@@ -291,21 +295,37 @@ export default function QuizIntroScreen() {
         <View
           style={{
             position: 'absolute',
-            left: 84 * s,
-            bottom: tabInset,
-            width: 8 * s,
-            height: 129 * s,
+            left: 81 * s,
+            bottom: (DESIGN_H - 754) * s,
+            width: 12 * s,
+            height: 137 * s,
             backgroundColor: GOLD_INK,
           }}
         />
         <View
           style={[
-            { position: 'absolute', left: 20 * s, bottom: 52 * s + tabInset, width: 135 * s, height: 74 * s },
+            {
+              position: 'absolute',
+              left: 16 * s,
+              bottom: (DESIGN_H - 702) * s,
+              width: 145 * s,
+              height: 80 * s,
+            },
             BLOB_SHADOW(s, 3),
           ]}
         >
-          <Blob id="sign" d={SIGN_BLOB} w={135} h={74} s={s} />
-          <Text style={[styles.signText, { left: 24 * s, top: 25 * s, width: 83 * s, fontSize: 14 * s, lineHeight: 12 * s }]}>
+          <Blob
+            id="sign"
+            d={SIGN_BLOB}
+            w={SIGN_VIEW.w}
+            h={SIGN_VIEW.h}
+            s={s}
+            edgeFrom="#FFF7D6"
+            edgeTo="#F7DA75"
+            offsetX={SIGN_VIEW.dx}
+            offsetY={SIGN_VIEW.dy}
+          />
+          <Text style={[styles.signText, { left: 28 * s, top: 27 * s, width: 90 * s, fontSize: 14 * s, lineHeight: 14 * s }]}>
             Choose your quiz type
           </Text>
         </View>
@@ -314,7 +334,7 @@ export default function QuizIntroScreen() {
       {/* Mode fan with per-mode high-score badges */}
       <Animated.View style={[StyleSheet.absoluteFill, { opacity: uiOpacity }]} pointerEvents="box-none">
         <View style={[styles.fanHost, { width: 394 * s }]} pointerEvents="box-none">
-          {FAN_LAYOUT.map(({ mode, x, y }) => {
+          {FAN_LAYOUT.map(({ mode, x, bottom }) => {
             const m = QUIZ_MODES[mode];
             const best = bestFor(mode);
             return (
@@ -322,7 +342,7 @@ export default function QuizIntroScreen() {
                 key={mode}
                 style={[
                   styles.modeSlot,
-                  { left: x * s, top: y * s, width: 65 * s },
+                  { left: x * s, bottom: bottom * s, width: 65 * s },
                   chosen && chosen !== mode && styles.modeSlotDimmed,
                 ]}
                 pointerEvents="box-none"

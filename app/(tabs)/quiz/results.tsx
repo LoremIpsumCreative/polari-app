@@ -57,10 +57,13 @@ const BUBBLES: Record<Variant, { w: number; h: number; d: string }> = {
 };
 
 // "Rectangle 55" — the hand-drawn blob the Play Again label sits in.
+// The banner's outline, exported from the frame's own Play Again Banner
+// (1841:567) rather than redrawn — the hand-drawn version had a different
+// top edge and a squarer taper.
 const BLOB = {
-  w: 186,
-  h: 88.14,
-  d: 'M2.22128 25.7472 C1.02526 16.4677 8.01204 8.14639 17.3585 7.71861 L168.452 0.803158 C177.867 0.37223 185.613 8.13207 185.166 17.5465 L182.579 71.9409 C182.155 80.8501 174.528 87.6928 165.625 87.1513 L22.1132 78.4226 C14.4495 77.9565 8.19724 72.1123 7.21577 64.4974 L2.22128 25.7472 Z',
+  w: 200.689,
+  h: 109.54,
+  d: 'M8.81752 34.0051C7.70336 24.7855 14.6463 16.5573 23.9218 16.1045L175.209 8.71947C184.623 8.25991 192.393 15.997 191.973 25.4132L189.291 85.5524C188.892 94.5066 181.216 101.386 172.271 100.806L28.9177 91.5069C21.2325 91.0083 14.9929 85.1057 14.069 77.46L8.81752 34.0051Z',
 };
 
 const ACCENT = '#0C66E4';
@@ -337,7 +340,7 @@ export default function QuizResultsScreen() {
           style={StyleSheet.absoluteFill}
           width={BLOB.w * s}
           height={BLOB.h * s}
-          viewBox={`-3 -3 ${BLOB.w + 6} ${BLOB.h + 6}`}
+          viewBox={`0 0 ${BLOB.w} ${BLOB.h}`}
         >
           <Defs>
             <LinearGradient id="blobFill" x1="0" y1="0" x2="0" y2="1">

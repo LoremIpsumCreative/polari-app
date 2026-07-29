@@ -1,4 +1,4 @@
-import Svg, { ClipPath, Defs, G, LinearGradient, Path, Stop } from 'react-native-svg';
+import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg';
 
 // Glyphs and shapes lifted from the quiz landing frame (Figma 1114:158). The
 // high-score badge carries a flame, not a trophy, and each mode circle has its
@@ -63,6 +63,12 @@ export function Blob({
   h,
   s,
   strokeWidth = 5,
+  vw,
+  vh,
+  edgeFrom = '#F7DA75',
+  edgeTo = '#F5CD47',
+  offsetX = 0,
+  offsetY = 0,
 }: {
   id: string;
   d: string;
@@ -70,13 +76,25 @@ export function Blob({
   h: number;
   s: number;
   strokeWidth?: number;
+  // The path's own authoring box, when it differs from the size the frame
+  // renders it at — the shape then scales instead of being cropped.
+  vw?: number;
+  vh?: number;
+  // Each shape carries its own edge gradient in the frame: the headline blob
+  // runs gold to deeper gold, the signpost board and Play Again banner run
+  // cream to gold. They are not interchangeable.
+  edgeFrom?: string;
+  edgeTo?: string;
+  // Where the exported shape sits inside the frame's slot.
+  offsetX?: number;
+  offsetY?: number;
 }) {
   return (
     <Svg
       width={w * s}
       height={h * s}
-      viewBox={`0 0 ${w} ${h}`}
-      style={{ position: 'absolute', left: 0, top: 0 }}
+      viewBox={`0 0 ${vw ?? w} ${vh ?? h}`}
+      style={{ position: 'absolute', left: offsetX * s, top: offsetY * s }}
       pointerEvents="none"
     >
       <Defs>
@@ -85,17 +103,16 @@ export function Blob({
           <Stop offset="1" stopColor="#352C63" />
         </LinearGradient>
         <LinearGradient id={`${id}Edge`} x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor="#F7DA75" />
-          <Stop offset="1" stopColor="#F5CD47" />
+          <Stop offset="0" stopColor={edgeFrom} />
+          <Stop offset="1" stopColor={edgeTo} />
         </LinearGradient>
-        <ClipPath id={`${id}Clip`}>
-          <Path d={d} />
-        </ClipPath>
       </Defs>
-      <Path d={d} fill={`url(#${id}Fill)`} />
-      <G clipPath={`url(#${id}Clip)`}>
-        <Path d={d} fill="none" stroke={`url(#${id}Edge)`} strokeWidth={strokeWidth * 2} />
-      </G>
+      <Path
+        d={d}
+        fill={`url(#${id}Fill)`}
+        stroke={`url(#${id}Edge)`}
+        strokeWidth={strokeWidth}
+      />
     </Svg>
   );
 }
