@@ -487,6 +487,40 @@ export default function QuizPlayScreen() {
         // Frame 1353:439: 155x82 tiles in two fixed columns (x22 / x217) on a
         // 90px pitch from y280 — not the 168x62 grid the other variants use.
         <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+          {/* Answers state (frame 2068:2584): once the board is finished, a
+              connector runs through the 40px gutter from each word to the
+              definition that actually belongs to it — the answer key, whatever
+              the player paired. Stroke matches Quiz/Answer Connections; the
+              curve is generated per span rather than using the fixed
+              per-variant assets. Drawn first so the tiles sit over it. */}
+          {matchDone ? (
+            <Svg
+              pointerEvents="none"
+              style={StyleSheet.absoluteFill}
+              width={394 * s}
+              height={852 * s}
+            >
+              {q.words.map((w, i) => {
+                const target = q.defs.indexOf(w.definition);
+                if (target < 0) return null;
+                const x0 = 177 * s;
+                const x1 = 217 * s;
+                const y0 = (321 + i * 90) * s;
+                const y1 = (321 + target * 90) * s;
+                const bow = 26 * s;
+                return (
+                  <Path
+                    key={`link-${w.id}`}
+                    d={`M${x0} ${y0} C${x0 + bow} ${y0} ${x1 - bow} ${y1} ${x1} ${y1}`}
+                    stroke="#758195"
+                    strokeWidth={2 * s}
+                    strokeOpacity={0.7}
+                    fill="none"
+                  />
+                );
+              })}
+            </Svg>
+          ) : null}
           {q.words.map((w, i) => {
             const paired = matchPairs[i] !== null;
             const sel = matchSel === i;
