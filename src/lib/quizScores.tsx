@@ -18,10 +18,15 @@ export function useQuizStats() {
   const { session } = useAuth();
   const userId = session?.user.id ?? null;
   const [stats, setStats] = useState<QuizStats>(EMPTY_STATS);
+  // Stats start at zero and arrive asynchronously. Anything comparing a fresh
+  // score against a stored best has to wait, or it compares against 0 and
+  // reads every game as a new record.
+  const [ready, setReady] = useState(false);
 
   const refresh = useCallback(async () => {
     if (!userId) {
       setStats(EMPTY_STATS);
+      setReady(true);
       return;
     }
     const { data } = await supabase
@@ -30,6 +35,7 @@ export function useQuizStats() {
       .eq('user_id', userId)
       .maybeSingle();
     setStats(data ?? EMPTY_STATS);
+    setReady(true);
   }, [userId]);
 
   useEffect(() => {
@@ -56,7 +62,7 @@ export function useQuizStats() {
   const bestFor = (mode: QuizModeId) =>
     mode === 'ten' ? stats.ten_run_best : mode === 'timed' ? stats.timed_best : stats.life_best;
 
-  return { stats, recordGame, bestFor, signedIn: !!userId };
+  return { stats, ready, recordGame, bestFor, signedIn: !!userId };
 }
 
 // Best score is derived from quiz_attempts (max score), never stored separately.

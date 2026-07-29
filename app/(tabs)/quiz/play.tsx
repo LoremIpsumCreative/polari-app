@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 import { IconChevronLeft, IconFlame, IconTrophy } from '@tabler/icons-react-native';
@@ -10,6 +10,7 @@ import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { nextQuestion, QUIZ_LENGTH, type QuizQuestion } from '../../../src/lib/quiz';
 import { QUIZ_MODES, isQuizModeId, type QuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
+import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 // All geometry lives in the Figma frames' 394-wide design space and is scaled
@@ -54,8 +55,7 @@ const CD = {
 
 export default function QuizPlayScreen() {
   const router = useRouter();
-  const { width } = useWindowDimensions();
-  const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const s = useDesignScale();
 
   const params = useLocalSearchParams<{ mode?: string }>();
   const isReview = params.mode === 'review';
@@ -335,7 +335,11 @@ export default function QuizPlayScreen() {
 
   function finalScoreForMode(): number {
     if (mode.scoring === 'totalCorrect') return scRef.current.correct;
-    if (mode.scoring === 'consecutive') return scRef.current.run;
+    // 1 Life ends ON the wrong answer, and that same answer has already reset
+    // the live run to zero — so reading `run` here recorded 0 every time and
+    // the mode's high score never moved. The streak that was actually reached
+    // is the best run.
+    if (mode.scoring === 'consecutive') return scRef.current.best;
     return scRef.current.best; // longestStreak
   }
 

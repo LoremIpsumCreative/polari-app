@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Svg, { Defs, LinearGradient, Path, Rect, Stop, SvgXml } from 'react-native-svg';
 import { TITLE_HIGH, TITLE_NORM, TITLE_TIME } from '../../../src/components/resultsTitles';
@@ -8,6 +8,7 @@ import { useAuth } from '../../../src/lib/auth';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { isQuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
+import { useDesignScale } from '../../../src/lib/designScale';
 
 // End-of-quiz screens, rebuilt to the revised Figma frames (1114:482 /
 // 1114:520 / 1365:1425 in section 1353:936): a full-bleed golden stage, an
@@ -136,8 +137,7 @@ const VARIANTS: Record<
 
 export default function QuizResultsScreen() {
   const router = useRouter();
-  const { width } = useWindowDimensions();
-  const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const s = useDesignScale();
 
   const params = useLocalSearchParams<{
     mode?: string;
@@ -154,13 +154,15 @@ export default function QuizResultsScreen() {
   const answered = Number(params.answered ?? 0);
 
   const { session } = useAuth();
-  const { recordGame, bestFor } = useQuizStats();
+  const { ready, recordGame, bestFor } = useQuizStats();
 
   const previousBest = useRef<number | null>(null);
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    if (saved || isReview) return;
+    // Wait for the stored stats: capturing the previous best before they land
+    // reads it as 0 and every game looks like a new high score.
+    if (saved || isReview || !ready) return;
     previousBest.current = bestFor(modeId);
     if (session) {
       recordGame(modeId, score, tenRun);
@@ -171,14 +173,18 @@ export default function QuizResultsScreen() {
       setSaved(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, isReview]);
+  }, [session, isReview, ready]);
 
-  // A high score needs a stored best to beat, so signed-out players never see it.
+  // "High Score!" means a record was broken, so it needs a stored best to beat
+  // — a first-ever game has nothing to beat and gets the ordinary result
+  // screen. Signed-out players never see it either.
   const isNewBest =
     !isReview &&
     saved &&
     session != null &&
-    (previousBest.current === null || score > previousBest.current);
+    score > 0 &&
+    (previousBest.current ?? 0) > 0 &&
+    score > (previousBest.current ?? 0);
 
   const variant: Variant = isNewBest
     ? 'highScore'

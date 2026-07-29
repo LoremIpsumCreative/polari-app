@@ -8,7 +8,6 @@ import {
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
@@ -16,6 +15,7 @@ import { useWords } from '../../../src/lib/words';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { QUIZ_MODES, type QuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
+import { useDesignScale } from '../../../src/lib/designScale';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import { Blob, FLAME, ModeGlyph } from '../../../src/components/quizLandingArt';
 import { IconX } from '@tabler/icons-react-native';
@@ -121,8 +121,7 @@ export default function QuizIntroScreen() {
   const router = useRouter();
   const { words, loading } = useWords();
   const { bestFor } = useQuizStats();
-  const { width } = useWindowDimensions();
-  const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const s = useDesignScale();
   const tabInset = useTabBarInset();
 
   const heroOpacity = useRef(new Animated.Value(0)).current;
@@ -166,9 +165,12 @@ export default function QuizIntroScreen() {
     setDone(true);
   }
 
-  // Replay the entrance on focus.
+  // Replay the entrance on focus, and clear any mode the player had opened —
+  // otherwise coming back from a round via the Quiz tab lands them on that
+  // mode's How to Play card instead of the landing screen.
   useFocusEffect(
     useCallback(() => {
+      setChosen(null);
       playEntrance();
       return () => {
         running.current?.stop();
