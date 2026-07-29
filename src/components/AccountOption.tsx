@@ -12,6 +12,8 @@ export function AccountOption({
   onPress,
   expandable,
   expanded,
+  disabled,
+  showChevron,
   children,
 }: {
   label: string;
@@ -19,25 +21,33 @@ export function AccountOption({
   onPress?: () => void;
   expandable?: boolean;
   expanded?: boolean;
+  disabled?: boolean;
+  // Which rows carry a trailing arrow varies per frame, so it is explicit
+  // rather than inferred; expandable rows show one by default.
+  showChevron?: boolean;
   children?: ReactNode;
 }) {
   // Only the expandable rows carry a chevron — the frame leaves About Polari,
   // Feedback and Sign Out bare.
   const Chevron = expanded ? IconChevronUp : IconChevronDown;
+  const chevron = showChevron ?? expandable;
   return (
-    <View style={styles.option}>
+    <View style={[styles.option, disabled && styles.optionDisabled]}>
       <Pressable
         style={styles.header}
-        onPress={onPress}
+        onPress={disabled ? undefined : onPress}
+        disabled={disabled}
         accessibilityRole="button"
         accessibilityLabel={label}
         accessibilityState={expandable ? { expanded: !!expanded } : undefined}
       >
-        <View style={styles.badge}>
-          <Icon size={14} color={colors.textFaint} />
+        <View style={[styles.badge, disabled && styles.badgeDisabled]}>
+          <Icon size={14} color={disabled ? colors.inactive : colors.textFaint} />
         </View>
-        <Text style={styles.label}>{label}</Text>
-        {expandable ? <Chevron size={12} color={colors.text} /> : null}
+        <Text style={[styles.label, disabled && styles.labelDisabled]}>{label}</Text>
+        {chevron ? (
+          <Chevron size={12} color={disabled ? colors.inactive : colors.text} />
+        ) : null}
       </Pressable>
       {expanded && children ? <View style={styles.body}>{children}</View> : null}
     </View>
@@ -54,6 +64,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   header: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  optionDisabled: { backgroundColor: colors.inset, borderColor: colors.inactive },
+  badgeDisabled: { backgroundColor: colors.progressTrack },
+  labelDisabled: { color: colors.inactive },
   badge: {
     width: 26,
     height: 26,

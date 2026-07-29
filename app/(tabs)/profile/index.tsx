@@ -73,27 +73,60 @@ export default function ProfileScreen() {
     await signOut();
   }
 
+  // Signed out (frame 2130:3264): the same option rows with Profile disabled,
+  // over a Sign In button at y608 and the create-account line at y673. The old
+  // illustration-and-blurb gate is gone.
   if (!session) {
     return (
-      <View style={styles.center}>
-        <SpaceHost width={200} />
-        <Text style={styles.emptyTitle}>Your Polari journey</Text>
-        <Text style={styles.emptyBody}>
-          Sign in to track streaks, save favourites, and record quiz high scores.
+      <View style={styles.screenBg}>
+        <ScreenBackground />
+        <View style={styles.gateRows}>
+          <AccountOption label="Profile" Icon={IconUser} disabled showChevron />
+          <AccountOption
+            label="Appearance"
+            Icon={IconColorSwatch}
+            expandable
+            expanded={openSection === 'appearance'}
+            onPress={() => setOpenSection((o) => (o === 'appearance' ? null : 'appearance'))}
+          >
+            <View style={styles.modeRow}>
+              {APPEARANCE_MODES.map(({ key, label, Icon, available }) => (
+                <View
+                  key={key}
+                  style={[styles.mode, available ? styles.modeActive : styles.modeInert]}
+                >
+                  <Icon size={12} color={available ? colors.onPrimary : colors.inactive} />
+                  <Text style={[styles.modeText, !available && styles.modeTextInert]}>{label}</Text>
+                </View>
+              ))}
+            </View>
+          </AccountOption>
+          <AccountOption
+            label="About Polari"
+            Icon={IconBinoculars}
+            showChevron
+            onPress={() => router.push('/profile/about')}
+          />
+          <AccountOption
+            label="Feedback"
+            Icon={IconMail}
+            onPress={() => router.push('/profile/feedback')}
+          />
+        </View>
+
+        <Pressable
+          style={({ pressed }) => [styles.gateSignIn, pressed && styles.pressed]}
+          onPress={() => router.push('/sign-in')}
+          accessibilityRole="button"
+        >
+          <Text style={styles.gateSignInText}>Sign In</Text>
+        </Pressable>
+        <Text style={styles.gateCreate}>
+          Don’t have an account yet?{' '}
+          <Text style={styles.gateCreateAccent} onPress={() => router.push('/sign-up')}>
+            Create one.
+          </Text>
         </Text>
-        <Pressable style={styles.primaryButton} onPress={() => router.push('/sign-in')}>
-          <Text style={styles.primaryButtonText}>Sign in</Text>
-        </Pressable>
-        <Pressable onPress={() => router.push('/sign-up')}>
-          <Text style={styles.link}>
-            New here? <Text style={styles.linkStrong}>Create an account</Text>
-          </Text>
-        </Pressable>
-        <Pressable onPress={() => router.push('/profile/about')}>
-          <Text style={styles.link}>
-            Curious? <Text style={styles.linkStrong}>Read the story of Polari</Text>
-          </Text>
-        </Pressable>
       </View>
     );
   }
@@ -238,6 +271,36 @@ const styles = StyleSheet.create({
     paddingTop: 116,
     paddingBottom: 120,
   },
+  // Signed-out gate: rows from y186, Sign In at y608, prompt at y673.
+  gateRows: { marginTop: 186, marginHorizontal: 27, gap: 8 },
+  gateSignIn: {
+    position: 'absolute',
+    left: 98,
+    top: 608,
+    width: 199,
+    height: 50,
+    borderRadius: 999,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gateSignInText: {
+    fontFamily: fonts.bold,
+    fontSize: 14,
+    letterSpacing: 0.3,
+    color: colors.onPrimary,
+  },
+  gateCreate: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 673,
+    fontFamily: fonts.regular,
+    fontSize: 14,
+    color: colors.text,
+    textAlign: 'center',
+  },
+  gateCreateAccent: { color: colors.primary },
   banner: {
     marginLeft: 10,
     marginBottom: 46,
