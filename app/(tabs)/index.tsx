@@ -27,14 +27,13 @@ import { ScreenBackground } from '../../src/components/ScreenBackground';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
 import { getUnlockedDate, setUnlockedToday, todayKey } from '../../src/lib/dailyUnlock';
-import { colors, fonts, spacing } from '../../src/lib/theme';
+import { colors, fonts, spacing, DESIGN_WIDTH } from '../../src/lib/theme';
 
 const presentArt = require('../../assets/present.png');
 
 const SWIPE_THRESHOLD = 48;
 // The present screen's geometry lives in the Figma frame's 394-wide space
 // (node 1114:1124) and scales with the device width.
-const DESIGN_WIDTH = 394;
 
 export default function TodayScreen() {
   const { session } = useAuth();

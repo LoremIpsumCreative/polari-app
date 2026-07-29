@@ -4,7 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { IconHeart, IconPhoto, IconTrophy } from '@tabler/icons-react-native';
 import { useAuth } from '../../../src/lib/auth';
 import { HEART_RED, TROPHY_GOLD } from '../../../src/components/CollectionChrome';
-import { colors, fonts } from '../../../src/lib/theme';
+import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 const favourette = require('../../../assets/collections/hub-favourette.png');
@@ -12,8 +12,7 @@ const achieevee = require('../../../assets/collections/hub-achieevee.png');
 const gallerie = require('../../../assets/collections/hub-gallerie.png');
 
 // The Collections hub — signed-in frame 1351:1709, signed-out gate 1117:1578.
-// Geometry lives in the mockups' 394-wide design space.
-const DESIGN_WIDTH = 394;
+// Geometry lives in the mockups' 393-wide design space.
 
 // Icons Row Container, x62 y602 w271: three slots whose 55px circles sit at
 // the container's own offsets, labels 72 below the row's top.

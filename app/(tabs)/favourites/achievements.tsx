@@ -13,10 +13,9 @@ import {
   CollectionHeader,
   CollectionPanel,
 } from '../../../src/components/CollectionChrome';
-import { colors, fonts } from '../../../src/lib/theme';
+import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
-const DESIGN_WIDTH = 394;
 // 3 columns of cards inside the 363 panel: 19 inset, 12 gutters (Figma frame
 // 1351:723). Card width derives from the panel so rounding can never tip the
 // third card onto the next row.

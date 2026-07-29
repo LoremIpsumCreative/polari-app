@@ -7,16 +7,15 @@ import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { isQuizModeId } from '../../../src/lib/quizModes';
-import { colors, fonts } from '../../../src/lib/theme';
+import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 
 // End-of-quiz screens, rebuilt to the revised Figma frames (1114:482 /
 // 1114:520 / 1365:1425 in section 1353:936): a full-bleed golden stage, an
 // arced letterform heading, the score in a white box with a heavy gradient
 // border, the quizmaster with a speech bubble, and a blob "Play Again?" over a
-// small "Finish" pill. Geometry lives in the mockups' 394-wide design space,
+// small "Finish" pill. Geometry lives in the mockups' 393-wide design space,
 // whose content runs to y858 with the tab bar's top edge at y757.
-const DESIGN_WIDTH = 394;
 const BAR_TOP = 757;
 
 const stageArt = require('../../../assets/quiz/results-stage.png');

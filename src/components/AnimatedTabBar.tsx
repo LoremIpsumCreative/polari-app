@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // and doesn't re-export its types from the package root.
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs/types';
 import Svg, { Path } from 'react-native-svg';
-import { colors, fonts, tabAccents } from '../lib/theme';
+import { colors, fonts, tabAccents, DESIGN_WIDTH } from '../lib/theme';
 import { NavIcon, navIconSize, isNavIconName, type NavIconName } from './navIcons';
 
 // Figma "Navbar 2.0" (node 1766:3478). The bar is a single boolean shape 394x101
@@ -13,7 +13,6 @@ import { NavIcon, navIconSize, isNavIconName, type NavIconName } from './navIcon
 // floats in that scoop. Because the notch is a genuine hole rather than a ring
 // painted to match the backdrop, whatever is behind the bar — including the
 // quiz's dark gradient stage — shows through it correctly.
-const DESIGN_WIDTH = 394;
 const BAR_HEIGHT = 101;
 
 // The scoop, measured from the Today variant's path and re-expressed relative to

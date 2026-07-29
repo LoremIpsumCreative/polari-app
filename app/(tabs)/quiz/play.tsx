@@ -9,13 +9,12 @@ import { useQuizStats } from '../../../src/lib/quizScores';
 import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { nextQuestion, QUIZ_LENGTH, type QuizQuestion } from '../../../src/lib/quiz';
 import { QUIZ_MODES, isQuizModeId, type QuizModeId } from '../../../src/lib/quizModes';
-import { colors, fonts } from '../../../src/lib/theme';
+import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
-// All geometry lives in the Figma frames' 394-wide design space and is scaled
+// All geometry lives in the Figma frames' 393-wide design space and is scaled
 // by the device width, so the screens reproduce the mockups proportionally.
-const DESIGN_WIDTH = 394;
 
 // Match-pair palette in pairing order: yellow, blue, green, pink
 // (Figma "Match Word to Definition", frame 1353:439).

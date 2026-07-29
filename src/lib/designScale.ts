@@ -1,9 +1,7 @@
 import { useWindowDimensions } from 'react-native';
-import { DESIGN_HEIGHT, PHONE_MAX_WIDTH } from './theme';
+import { DESIGN_HEIGHT, DESIGN_WIDTH, PHONE_MAX_WIDTH } from './theme';
 
-const DESIGN_WIDTH = 394;
-
-// Screens that place everything absolutely in the mockups' 394x852 space scale
+// Screens that place everything absolutely in the mockups' 393x852 space scale
 // by the device. Scaling on width alone overflows a wide-but-short window — at
 // 429x859 the design becomes 928 tall and the bottom 69px (the results screen's
 // Finish pill, for one) falls off the end. Fitting both axes keeps the whole

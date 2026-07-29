@@ -17,11 +17,10 @@ import {
   CollectionHeader,
   CollectionPanel,
 } from '../../../src/components/CollectionChrome';
-import { colors, fonts } from '../../../src/lib/theme';
+import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
 import type { ImageSourcePropType } from 'react-native';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
-const DESIGN_WIDTH = 394;
 // Same 3-column card grid as Achievements (Figma frame 1351:819). Card width
 // is derived from the panel so rounding can never tip the third card onto the
 // next row.

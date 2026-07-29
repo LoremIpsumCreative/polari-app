@@ -14,7 +14,7 @@ import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
 import { useWords } from '../../../src/lib/words';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { QUIZ_MODES, type QuizModeId } from '../../../src/lib/quizModes';
-import { colors, fonts } from '../../../src/lib/theme';
+import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import { Blob, FLAME, ModeGlyph } from '../../../src/components/quizLandingArt';
@@ -25,9 +25,8 @@ const quizmasterArt = require('../../../assets/quiz/quizmaster.png');
 // The quiz landing (Figma frame 1114:158, revised): two cream spotlight beams
 // rake down onto the quizmaster, the headline sits in a hand-drawn gold-edged
 // blob, a signpost points at the mode fan, and the fan itself arcs over the tab
-// bar's Quiz bubble. All geometry lives in the 394-wide design space, whose
+// bar's Quiz bubble. All geometry lives in the 393-wide design space, whose
 // content runs to y855 with the tab bar's top edge at y754.
-const DESIGN_WIDTH = 394;
 const BAR_TOP = 754;
 
 // Fan positions as distances up from the tab bar's top edge, so the arc hugs

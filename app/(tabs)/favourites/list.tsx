@@ -18,12 +18,11 @@ import {
   CollectionPanel,
   HEART_RED,
 } from '../../../src/components/CollectionChrome';
-import { colors, fonts } from '../../../src/lib/theme';
+import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 const favouretteArt = require('../../../assets/collections/favourette.png');
 
-const DESIGN_WIDTH = 394;
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 // Favourites (Figma frames 1153:631 empty / 1153:649 populated): an A–Z

@@ -102,7 +102,11 @@ export const spacing = {
 // On web the app is capped to a smartphone-sized column; the tab bar has to
 // know the same width so it can pin to the viewport and still line up with it.
 export const PHONE_MAX_WIDTH = 430;
-// The mockups' frame height. Screens never render shorter than this.
+// The mockups' frame. 393x852 is the logical resolution of iPhone 15/16 Pro,
+// so the Figma template, the localhost preview and the device all agree — the
+// old 394 matched no real device and was where the drift started.
+export const DESIGN_WIDTH = 393;
+// Screens never render shorter than this.
 export const DESIGN_HEIGHT = 852;
 
 export const radii = {

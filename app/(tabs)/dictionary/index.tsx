@@ -31,7 +31,7 @@ import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { DictionaryListPanel } from '../../../src/components/DictionaryList';
 
 // Geometry is read straight off the Figma frame (Dictionary/Dictionary Main,
-// 1871:1178), whose 394-wide design space is close enough to a phone's width
+// 1871:1178), whose 393-wide design space is close enough to a phone's width
 // to use the coordinates directly: title y90, search y129, filter bar y158,
 // "CURATED LISTS" y210, bundles y223, list panel y305 running off the bottom.
 // The bundle cards cycle blue → teal → green (Button/Bundles variants).
