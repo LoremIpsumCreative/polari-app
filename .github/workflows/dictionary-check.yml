@@ -29,7 +29,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # 22+ because @supabase/supabase-js and its sub-packages declare
+          # engines.node >=22.0.0; on 20 every install logs EBADENGINE. Matches
+          # art-check.yml so both workflows resolve the same tree.
+          node-version: '22.13.x'
           cache: npm
 
       - run: npm ci
