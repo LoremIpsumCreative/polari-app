@@ -9,6 +9,7 @@ import {
 import type { ImageSourcePropType } from 'react-native';
 import { supabase } from './supabase';
 import { CHARACTER_SLUGS, characterArtFor } from './characterArt';
+import { slugFromAssetName } from './characterAssetName';
 
 // Character artwork lives in the public "characters" storage bucket, keyed by
 // word slug (e.g. bull.png). The bucket is the source of truth so new or
@@ -37,7 +38,7 @@ export function RemoteArtProvider({ children }: { children: ReactNode }) {
       const map = new Map<string, string>();
       for (const obj of data) {
         if (!obj.name.endsWith('.png')) continue;
-        const slug = obj.name.replace(/\.png$/, '');
+        const slug = slugFromAssetName(obj.name);
         const { data: pub } = supabase.storage.from('characters').getPublicUrl(obj.name);
         const version = encodeURIComponent(obj.updated_at ?? '');
         map.set(slug, `${pub.publicUrl}?v=${version}`);
