@@ -16,13 +16,18 @@ import { ScreenBackground } from '../../../src/components/ScreenBackground';
 // All geometry lives in the Figma frames' 393-wide design space and is scaled
 // by the device width, so the screens reproduce the mockups proportionally.
 
-// Match-pair palette in pairing order: yellow, blue, green, pink
-// (Figma "Match Word to Definition", frame 1353:439).
+// Match-pair palette in pairing order: yellow, blue, purple, teal. Taken from
+// the Quiz/MatchAnswerTile variants, whose fills and inks are bound to the
+// Match/1..4 tokens — frame 1353:439 renders the same four.
+//
+// The third and fourth used to be green (#5B7F24) and pink (#CD519D), which
+// matched no frame: green is also Feedback/Correct, so a third pairing read as
+// "you got it right" before the board was even submitted.
 const PAIR_STYLES = [
-  { fill: '#FFFBEC', ink: '#B38600' },
-  { fill: '#F4F9FF', ink: '#1D7AFC' },
-  { fill: '#F7FFEC', ink: '#5B7F24' },
-  { fill: '#FFF6FC', ink: '#CD519D' },
+  { fill: '#FFFBEC', ink: '#B38600' }, // Match/1 — Yellow/600
+  { fill: '#F4F9FF', ink: '#1D7AFC' }, // Match/2 — Blue/600
+  { fill: '#F9F7FF', ink: '#6E5DC6' }, // Match/3 — Purple/700
+  { fill: '#F4FCFF', ink: '#227D9B' }, // Match/4 — Teal/700
 ] as const;
 
 // Countdown screen, rebuilt to the current frames (Quiz/*_Countdown panes in
