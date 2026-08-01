@@ -19,6 +19,8 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { slugFromAssetName } from '../src/lib/characterAssetName';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SNAPSHOT_PATH = join(HERE, 'art-snapshot.json');
 const CHANGES_PATH = join(HERE, '..', 'art-changes.md');
@@ -87,7 +89,7 @@ async function main() {
     .sort();
   const removed = Object.keys(before).filter((n) => !current[n]).sort();
   const orphans = Object.keys(current)
-    .filter((n) => !slugs.has(n.replace(/\.png$/, '')))
+    .filter((n) => !slugs.has(slugFromAssetName(n)))
     .sort();
   const hasChanges = added.length + updated.length + removed.length > 0;
 
