@@ -28,34 +28,75 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Edit this list to choose what to capture. Names are the snapshot keys.
-// Frame ids as of the "Quiz Type-Specific Screens" restructure (Mockups page,
-// Quiz section 1114:106). The three question kinds and three countdowns are the
-// paired *_Countdown / *_Question children of the 813-wide containers under
-// section 1353:769.
+//
+// Every top-level frame on the Mockups page, verified 2026-08-02. All 44 are
+// 393 wide; heights are 852 except the deliberately tall scroll screens and
+// the Share Card, which is an export asset rather than a screen.
+//
+// The previous list had drifted: `dictionary` pointed at 1886:1572, a 2614px
+// container rather than a screen, and `account` at 1125:2037, a two-node
+// legacy frame. Both still resolved, so figma:check stayed green while the
+// snapshot quietly tracked the wrong nodes — the exact silent trap that script
+// exists to catch. Prefer one entry per real screen over container ids.
+//
+// NOTE: 44 screens overflow the ~20kB MCP message cap in a single pass. Run in
+// batches by commenting out groups, then merge the JSON.
 const SCREENS = [
-  ['landing', '1114:158'],
-  ['results-highscore', '1114:482'],
-  ['results-timesup', '1114:520'],
-  ['results-normal', '1365:1425'],
-  ['question-definition', '1351:1875'], // "Definition from Word" (the MC screen)
-  ['question-character', '1353:306'], // "Definition from Character"
-  ['question-match', '1353:439'], // "Match Word to Definition"
-  // Countdowns were REDESIGNED, not just re-id'd: a compact numeric badge on a
-  // Template/Screen instance, no blurb panel, title dropped 80→60. Capture the
-  // *_Countdown pane of each container, then rebuild the app screen to match.
-  //   ['countdown-ten',   '<_Countdown child of 1905:3223>'],
-  //   ['countdown-timed', '<_Countdown child of 1905:3255>'],
-  //   ['countdown-life',  '<_Countdown child of 1905:3381>'],
+  // App launch + onboarding
+  ['app-launch-begin', '1753:2754'],
+  ['app-launch-end', '1753:2755'],
+  ['onboarding-new-word', '2452:2772'],
+
+  // Today
+  ['today-new-word', '1837:762'],
+  ['today-definition', '1114:1023'],
+  ['today-share-card', '1114:1089'],
+
+  // Dictionary
+  ['dictionary-main', '1871:1178'],
+  ['dictionary-curated-list', '1885:1496'],
+  ['dictionary-definition', '1885:2061'],
+  ['dictionary-no-results', '1900:3458'],
+  ['dictionary-filters-inactive', '1886:1573'],
+  ['dictionary-filters-active', '1889:1832'],
+
+  // Collections
   ['collections-hub-out', '1117:1578'],
   ['collections-hub-in', '1351:1709'],
   ['collections-favourites-empty', '1858:1479'],
   ['collections-favourites', '1858:1480'],
   ['collections-achievements', '1859:933'],
   ['collections-gallery', '1859:1566'],
-  ['dictionary', '1886:1572'],
-  ['account', '1125:2037'],
-  ['question-character', '1353:306'],
-  ['question-match', '1353:439'],
+
+  // Quiz — landing, countdowns, questions, results
+  ['quiz-landing', '1114:158'],
+  ['quiz-landing-ten', '1904:3022'],
+  ['quiz-landing-timed', '1904:3360'],
+  ['quiz-landing-life', '1904:3437'],
+  ['countdown-ten', '1905:3174'],
+  ['countdown-timed', '1905:3256'],
+  ['countdown-life', '1905:3382'],
+  ['question-ten', '1905:3173'],
+  ['question-timed', '1905:3263'],
+  ['question-life', '1905:3389'],
+  ['question-definition', '1351:1875'], // "Definition from Word" (the MC screen)
+  ['question-character', '1353:306'], // "Definition from Character"
+  ['question-match', '1353:439'], // match board, before grading
+  ['question-match-answers', '2068:2584'], // match board, graded — ticks/crosses + connectors
+  ['results-highscore', '1114:482'],
+  ['results-timesup', '1114:520'],
+  ['results-normal', '1365:1425'],
+
+  // Account
+  ['account-signed-out', '2130:3264'],
+  ['account-signed-in', '2154:3235'],
+  ['account-signed-in-expanded', '2132:3432'],
+  ['account-forgot-password', '2149:3060'],
+  ['account-change-password', '2444:2636'],
+  ['account-create', '2444:2697'],
+  ['account-create-success', '2444:2758'],
+  ['account-about', '2172:3625'],
+  ['account-delete-confirm', '2144:3536'],
 ];
 
 const hex = (c) =>

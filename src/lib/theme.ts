@@ -13,7 +13,11 @@ export const colors = {
   primarySoft: '#F4F9FF', // blue/blue50
   accent: '#0C66E4',
   accentSoft: '#F4F9FF',
-  related: '#2898BD', // teal/600 — related-word chips
+  // Not the related-word chips, despite the name: those are blue, built from
+  // `primarySoft`/`primary` to match Pill/Related. These are the teal stops —
+  // `related` tints the Gallery satellite on the Collections hub and
+  // `relatedSoft` fills the teal Button/Bundles card (Background/Related Soft).
+  related: '#2898BD', // teal/600
   relatedSoft: '#F4FCFF', // teal/50
   chipGrey: '#44546F', // neutral/700 — part-of-speech chip
   fieldBorder: '#C8CCD4', // neutral/250 — fieldset row + pill hairlines
@@ -65,7 +69,7 @@ export const tabAccents: Record<string, string> = {
   dictionary: '#6A9A23', // Dictionary
   favourites: '#CD519D', // Collections
   quiz: '#6E5DC6', // Quiz
-  profile: '#227D9B', // Account
+  profile: '#2898BD', // Account — Accent/Account (teal/600)
 };
 
 // Digitale is one variable family; each name below is an alias pinned to a
