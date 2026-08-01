@@ -37,6 +37,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "build": "expo export --platform web",
+    "typecheck": "node --stack-size=8000 ./node_modules/typescript/bin/tsc --noEmit",
     "seed:words": "tsx scripts/seed-words.ts",
     "words:check": "tsx scripts/check-words.ts",
     "words:apply": "tsx scripts/apply-words.ts",

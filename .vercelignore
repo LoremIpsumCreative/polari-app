@@ -1,9 +1,12 @@
-# We deploy the prebuilt static site only. Ignore everything at the repo root,
-# then re-include the built output and this deploy's config.
+# Vercel builds the web bundle itself now — see "build" in package.json
+# (expo export --platform web), wired up via buildCommand in vercel.json.
+# So the source tree MUST reach the builder; the old "/*" whitelist stripped
+# it and produced empty 404 deployments on every git push.
 #
-# NOTE: do NOT list bare names like "assets" here — .vercelignore matches at any
-# depth, so "assets" would also match dist/assets and drop every bundled image
-# and font. The whitelist below avoids that class of bug entirely.
-/*
-!dist
-!vercel.json
+# Only exclude what the build never needs. Note .vercelignore matches at any
+# depth, so avoid bare names like "assets" — that would also match dist/assets
+# and drop every bundled image and font.
+/dist
+/design
+*.psd
+*.fig
