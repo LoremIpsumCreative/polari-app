@@ -11,9 +11,19 @@
 
 const ASSET_SUFFIX = '_polari';
 
+// A few objects are named more loosely than the word slug they illustrate.
+// Rather than rename the artwork, map the short name onto the real slug here.
+// Keep this small: every entry is an exception someone has to remember.
+const SLUG_ALIASES: Record<string, string> = {
+  // "dilly_polari.png" illustrates the entry "Dilly, the" (slug `dilly-the`).
+  // There is no bare `dilly` word, so without this the art never renders.
+  dilly: 'dilly-the',
+};
+
 /** Word slug for a bucket object name, with or without the suffix. */
 export function slugFromAssetName(objectName: string): string {
-  return objectName.replace(/\.png$/i, '').replace(/_polari$/i, '');
+  const base = objectName.replace(/\.png$/i, '').replace(/_polari$/i, '');
+  return SLUG_ALIASES[base] ?? base;
 }
 
 /** Canonical bucket object name for a word slug. */
