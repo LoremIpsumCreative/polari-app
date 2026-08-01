@@ -13,6 +13,7 @@ import { useAuth } from '../../../src/lib/auth';
 import { FormError, PrimaryButton } from '../../../src/components/form';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
+import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
 const CATEGORIES = [
   { value: 'bug', label: '🐛 Bug' },
@@ -28,6 +29,8 @@ export default function FeedbackScreen() {
   const [message, setMessage] = useState('');
   const [contactEmail, setContactEmail] = useState(session?.user.email ?? '');
   const [error, setError] = useState<string | null>(null);
+  // The bar floats over the screen, so the scroll has to end above it by hand.
+  const tabInset = useTabBarInset();
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -71,7 +74,10 @@ export default function FeedbackScreen() {
   return (
     <View style={styles.screenBg}>
       <ScreenBackground />
-      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={[styles.content, { paddingBottom: tabInset + spacing.md }]}
+      >
         <Text style={styles.label}>What's it about?</Text>
         <View style={styles.chips}>
           {CATEGORIES.map((c) => (

@@ -12,8 +12,9 @@ import { useRouter } from 'expo-router';
 import { IconChevronLeft } from '@tabler/icons-react-native';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
-import { colors, radii, fonts } from '../../../src/lib/theme';
+import { colors, radii, fonts, spacing } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
+import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
 // Account/Change Password (Figma 2149:3060): back chip y52, title y90, the
 // form card at y187, and the Confirm button at y659.
@@ -59,6 +60,8 @@ export default function ChangePasswordScreen() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  // The bar floats over the screen, so the scroll has to end above it by hand.
+  const tabInset = useTabBarInset();
 
   const meetsRules = RULES.every((r) => r.ok(next));
 
@@ -107,7 +110,9 @@ export default function ChangePasswordScreen() {
   return (
     <View style={styles.screen}>
       <ScreenBackground />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={[styles.content, { paddingBottom: tabInset + spacing.md }]}
+      >
         <Pressable
           onPress={() => (router.canGoBack() ? router.back() : router.replace('/profile'))}
           style={({ pressed }) => [styles.backChip, pressed && styles.pressed]}
@@ -168,7 +173,9 @@ export default function ChangePasswordScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.canvas },
-  content: { paddingBottom: 140 },
+  // paddingBottom comes from useTabBarInset at the call site: the floating tab
+  // bar's height varies with the device's safe-area inset.
+  content: {},
 
   backChip: {
     alignSelf: 'flex-start',

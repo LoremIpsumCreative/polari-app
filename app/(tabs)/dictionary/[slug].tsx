@@ -8,6 +8,7 @@ import { CharacterFullScreen } from '../../../src/components/CharacterFullScreen
 import { WordDetailCard } from '../../../src/components/WordDetailCard';
 import { colors, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
+import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
 export default function WordDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -15,13 +16,18 @@ export default function WordDetailScreen() {
   const { artFor } = useCharacterArt();
   const word = slug ? bySlug.get(slug) : undefined;
   const [artFullScreen, setArtFullScreen] = useState(false);
+  // The bar floats over the screen, so the scroll has to end above it by hand.
+  const tabInset = useTabBarInset();
 
   return (
     <>
       <Stack.Screen options={{ title: word?.term ?? 'Word' }} />
       <View style={styles.screen}>
         <ScreenBackground />
-        <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={[styles.content, { paddingBottom: tabInset + spacing.md }]}
+        >
           {word ? (
             <>
               <Image
@@ -76,7 +82,9 @@ const styles = StyleSheet.create({
   // Frame 1885:2061: art 190x253 at y87, fullscreen icon at x343 y86, the
   // definition card inset 15 from each edge starting at y350.
   content: {
-    paddingBottom: spacing.xl + 56,
+    // paddingBottom is applied inline from useTabBarInset — the floating tab
+    // bar's height varies with the device's safe-area inset, so it cannot be a
+    // static value here.
   },
   hero: {
     alignSelf: 'center',

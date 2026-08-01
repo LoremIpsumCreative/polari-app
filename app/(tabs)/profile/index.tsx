@@ -19,6 +19,7 @@ import { SpaceHost } from '../../../src/components/illustrations/SpaceHost';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { AccountOption } from '../../../src/components/AccountOption';
+import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import { HEART_RED } from '../../../src/components/CollectionChrome';
 
 // Account/Main (Figma 2154:3235, expanded 2132:3432): a welcome banner at
@@ -49,6 +50,8 @@ function ProfileField({ label, value }: { label: string; value: string }) {
 export default function ProfileScreen() {
   const router = useRouter();
   const { session, signOut } = useAuth();
+  // The bar floats over the screen, so the scroll has to end above it by hand.
+  const tabInset = useTabBarInset();
   const [openSection, setOpenSection] = useState<'profile' | 'appearance' | null>(null);
   // Two-step confirm (RN Alert is a no-op on web, so an inline confirm state
   // works everywhere)
@@ -137,7 +140,10 @@ export default function ProfileScreen() {
   return (
     <View style={styles.screenBg}>
       <ScreenBackground />
-      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={[styles.content, { paddingBottom: tabInset + spacing.md }]}
+      >
         <Text style={styles.banner}>
           Bonyo, <Text style={styles.bannerName}>{firstName}</Text>
         </Text>
@@ -269,7 +275,8 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 27,
     paddingTop: 116,
-    paddingBottom: 120,
+    // paddingBottom comes from useTabBarInset at the call site: the floating
+    // tab bar's height varies with the device's safe-area inset.
   },
   // Signed-out gate: rows from y186, Sign In at y608, prompt at y673.
   gateRows: { marginTop: 186, marginHorizontal: 27, gap: 8 },

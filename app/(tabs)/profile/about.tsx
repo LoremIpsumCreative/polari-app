@@ -8,6 +8,7 @@ import {
 } from '@tabler/icons-react-native';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
+import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
 const auntie = require('../../../assets/characters/auntie.png');
 
@@ -80,10 +81,15 @@ const SOURCES: Source[] = [
 
 export default function AboutScreen() {
   const router = useRouter();
+  // The bar floats over the screen, so the scroll has to end above it by hand.
+  const tabInset = useTabBarInset();
   return (
     <View style={styles.screenBg}>
       <ScreenBackground />
-      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={[styles.content, { paddingBottom: tabInset + spacing.md }]}
+      >
         <Pressable
           onPress={() => (router.canGoBack() ? router.back() : router.replace('/profile'))}
           style={({ pressed }) => [styles.backChip, pressed && styles.pressed]}
@@ -157,7 +163,9 @@ const styles = StyleSheet.create({
   // Wrapper so the sparkle pattern stays fixed behind the scrolling content.
   screenBg: { flex: 1 },
   container: { flex: 1, backgroundColor: colors.canvas },
-  content: { paddingBottom: spacing.xl + 56 },
+  // paddingBottom comes from useTabBarInset at the call site: the floating tab
+  // bar's height varies with the device's safe-area inset.
+  content: {},
 
   backChip: {
     alignSelf: 'flex-start',

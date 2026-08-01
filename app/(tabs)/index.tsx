@@ -24,6 +24,7 @@ import { useCharacterArt } from '../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../src/components/CharacterFullScreen';
 import { WordDetailCard } from '../../src/components/WordDetailCard';
 import { ScreenBackground } from '../../src/components/ScreenBackground';
+import { useTabBarInset } from '../../src/components/AnimatedTabBar';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
 import { getUnlockedDate, setUnlockedToday, todayKey } from '../../src/lib/dailyUnlock';
@@ -42,6 +43,8 @@ export default function TodayScreen() {
   const { artFor } = useCharacterArt();
   const { width } = useWindowDimensions();
   const s = Math.min(width, 430) / DESIGN_WIDTH;
+  // The bar floats over the screen, so the scroll has to end above it by hand.
+  const tabInset = useTabBarInset();
 
   // 0 = today, 1 = yesterday, … capped at the app's epoch so "previous"
   // never wraps into future words nobody has seen yet.
@@ -219,7 +222,7 @@ export default function TodayScreen() {
       <ScreenBackground />
       <ScrollView
         style={styles.container}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingBottom: tabInset + spacing.xl }]}
         {...panResponder.panHandlers}
       >
         <Animated.View style={{ transform: [{ translateX: transition }] }}>
@@ -334,8 +337,9 @@ const styles = StyleSheet.create({
     // y350. The 87 also keeps content clear of the status bar on device.
     paddingHorizontal: 14,
     paddingTop: 87,
-    // Clear the floating day-selector pill and the navbar bubble
-    paddingBottom: spacing.xl + 96,
+    // paddingBottom comes from useTabBarInset at the call site — it has to
+    // clear the floating day-selector pill and the navbar, whose height varies
+    // with the device's safe-area inset.
   },
   center: {
     flex: 1,
