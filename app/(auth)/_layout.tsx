@@ -33,9 +33,10 @@ export default function AuthLayout() {
         ),
       }}
     >
-      <Stack.Screen name="sign-in" options={{ title: 'Sign in' }} />
-      <Stack.Screen name="sign-up" options={{ title: 'Create account' }} />
-      <Stack.Screen name="forgot-password" options={{ title: 'Reset password' }} />
+      {/* Sign In, Create Account and Forgot Password moved into the profile
+          stack — their frames draw the tab bar and an "Account" back chip,
+          neither of which this group can render. Password recovery stays
+          because it is opened cold from an email link. */}
       <Stack.Screen name="reset-password" options={{ title: 'Choose a new password' }} />
     </Stack>
   );

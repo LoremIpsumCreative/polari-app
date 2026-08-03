@@ -14,7 +14,7 @@ export function FavouriteButton({ wordId }: { wordId: string }) {
   function handlePress() {
     if (!session) {
       // Favouriting needs an account — send signed-out users to sign-in
-      router.push('/sign-in');
+      router.push('/profile/sign-in');
       return;
     }
     toggleFavourite(wordId);

@@ -14,6 +14,18 @@ export default function ProfileLayout() {
         name="change-password"
         options={{ title: 'Change Password', headerShown: false }}
       />
+      {/* The account-entry frames (2444:2697, 2444:2758) show the tab bar and
+          an "Account" back chip, so they belong to this stack rather than the
+          (auth) group — which renders outside the tabs and has no bar. */}
+      <Stack.Screen name="sign-in" options={{ title: 'Sign In', headerShown: false }} />
+      <Stack.Screen
+        name="create-account"
+        options={{ title: 'Create Account', headerShown: false }}
+      />
+      <Stack.Screen
+        name="forgot-password"
+        options={{ title: 'Forgot Password', headerShown: false }}
+      />
     </Stack>
   );
 }

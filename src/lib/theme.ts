@@ -21,6 +21,11 @@ export const colors = {
   relatedSoft: '#F4FCFF', // teal/50
   chipGrey: '#44546F', // neutral/700 — part-of-speech chip
   fieldBorder: '#C8CCD4', // neutral/250 — fieldset row + pill hairlines
+  // The account forms draw two distinct hairlines, both read off the 393x852
+  // exports as exact 1px runs rather than antialiased blends: the form card's
+  // edge and, one step lighter, the notched pill fields inside it.
+  cardBorder: '#A4ACB9', // neutral/300 — Create Account / Change Password card edge
+  pillBorder: '#B0B7C2', // neutral/350 — notched pill field outline
   // Curated-bundle card edges: the blue one reuses `primary`, these two are
   // the teal/700 and green/700 stops the Button/Bundles variants use.
   tealEdge: '#227D9B', // teal/700
@@ -104,7 +109,10 @@ export const spacing = {
 };
 
 // On web the app is capped to a smartphone-sized column; the tab bar has to
-// know the same width so it can pin to the viewport and still line up with it.
+// know the same width so it lines up with it. Note the bar does NOT pin to the
+// viewport — 37a1f83 moved it to the foot of the DESIGN_HEIGHT column, because
+// pinning floated it over the middle of the design on a short window and hid
+// whatever the frame puts near the bottom. A window under 852 scrolls to it.
 export const PHONE_MAX_WIDTH = 430;
 // The mockups' frame. 393x852 is the logical resolution of iPhone 15/16 Pro,
 // so the Figma template, the localhost preview and the device all agree — the
