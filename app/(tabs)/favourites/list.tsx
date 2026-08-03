@@ -88,7 +88,7 @@ export default function FavouritesListScreen() {
                 definition card.
               </Text>
             ) : (
-              <Pressable onPress={() => router.push('/sign-in')} accessibilityRole="button">
+              <Pressable onPress={() => router.push('/profile/sign-in')} accessibilityRole="button">
                 <Text style={[styles.emptyCaption, styles.signInLink, { fontSize: 14 * s }]}>
                   Sign in
                 </Text>

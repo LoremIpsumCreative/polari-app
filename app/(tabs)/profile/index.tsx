@@ -119,14 +119,17 @@ export default function ProfileScreen() {
 
         <Pressable
           style={({ pressed }) => [styles.gateSignIn, pressed && styles.pressed]}
-          onPress={() => router.push('/sign-in')}
+          onPress={() => router.push('/profile/sign-in')}
           accessibilityRole="button"
         >
           <Text style={styles.gateSignInText}>Sign In</Text>
         </Pressable>
         <Text style={styles.gateCreate}>
           Don’t have an account yet?{' '}
-          <Text style={styles.gateCreateAccent} onPress={() => router.push('/sign-up')}>
+          <Text
+            style={styles.gateCreateAccent}
+            onPress={() => router.push('/profile/create-account')}
+          >
             Create one.
           </Text>
         </Text>

@@ -1,55 +1,27 @@
 import { useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { IconChevronLeft } from '@tabler/icons-react-native';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
-import { colors, radii, fonts, spacing } from '../../../src/lib/theme';
+import { colors, fonts, spacing } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
+import {
+  BackChip,
+  FieldsetInput,
+  FormCard,
+  FormError,
+  FormNotice,
+  PasswordRules,
+  PillButton,
+  ScreenTitle,
+  meetsPasswordRules,
+} from '../../../src/components/form';
 
-// Account/Change Password (Figma 2149:3060): back chip y52, title y90, the
-// form card at y187, and the Confirm button at y659.
-
-const RULES: { label: string; ok: (pw: string) => boolean }[] = [
-  { label: 'At least 8 characters', ok: (pw) => pw.length >= 8 },
-  { label: 'At least 1 lowercase letter', ok: (pw) => /[a-z]/.test(pw) },
-  { label: 'At least 1 uppercase letter', ok: (pw) => /[A-Z]/.test(pw) },
-  { label: 'At least 1 number or symbol', ok: (pw) => /[^A-Za-z]/.test(pw) },
-];
-
-function PasswordField({
-  label,
-  value,
-  onChangeText,
-}: {
-  label: string;
-  value: string;
-  onChangeText: (t: string) => void;
-}) {
-  return (
-    <View style={styles.field}>
-      <Text style={styles.fieldLabel}>{label}</Text>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={onChangeText}
-        secureTextEntry
-        autoCapitalize="none"
-        autoCorrect={false}
-        accessibilityLabel={label}
-      />
-    </View>
-  );
-}
+// Account/Change Password (Figma 2444:2636 — 2149:3060 is Forgot Password;
+// the CSV had them swapped): card y186..519 with CURRENT
+// PASSWORD at y209, the FORGOT PASSWORD? link at y264, then NEW PASSWORD
+// y332 and REENTER NEW PASSWORD y389 before the checklist. Confirm at y659.
 
 export default function ChangePasswordScreen() {
   const router = useRouter();
@@ -63,11 +35,10 @@ export default function ChangePasswordScreen() {
   // The bar floats over the screen, so the scroll has to end above it by hand.
   const tabInset = useTabBarInset();
 
-  const meetsRules = RULES.every((r) => r.ok(next));
-
   async function handleConfirm() {
     setError(null);
-    if (!meetsRules) {
+    setDone(false);
+    if (!meetsPasswordRules(next)) {
       setError('Your new password does not meet the requirements below.');
       return;
     }
@@ -112,60 +83,58 @@ export default function ChangePasswordScreen() {
       <ScreenBackground />
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: tabInset + spacing.md }]}
+        keyboardShouldPersistTaps="handled"
       >
-        <Pressable
-          onPress={() => (router.canGoBack() ? router.back() : router.replace('/profile'))}
-          style={({ pressed }) => [styles.backChip, pressed && styles.pressed]}
-          accessibilityRole="button"
-          accessibilityLabel="Back to Account"
-        >
-          <IconChevronLeft size={10} color={colors.text} />
-          <Text style={styles.backChipText}>Account</Text>
-        </Pressable>
+        <BackChip />
+        <ScreenTitle>Change Password</ScreenTitle>
 
-        <Text style={styles.title}>Change Password</Text>
-
-        <View style={styles.card}>
-          <PasswordField label="CURRENT PASSWORD" value={current} onChangeText={setCurrent} />
+        <FormCard>
+          <FieldsetInput
+            label="CURRENT PASSWORD"
+            value={current}
+            onChangeText={setCurrent}
+            secureTextEntry
+            autoCapitalize="none"
+            autoComplete="current-password"
+          />
           <Pressable
-            onPress={() => router.push('/forgot-password')}
+            onPress={() => router.push('/profile/forgot-password')}
             accessibilityRole="button"
             style={styles.forgotWrap}
           >
             <Text style={styles.forgot}>FORGOT PASSWORD?</Text>
           </Pressable>
 
-          <PasswordField label="NEW PASSWORD" value={next} onChangeText={setNext} />
-          <PasswordField label="REENTER NEW PASSWORD" value={reenter} onChangeText={setReenter} />
+          <FieldsetInput
+            label="NEW PASSWORD"
+            value={next}
+            onChangeText={setNext}
+            secureTextEntry
+            autoCapitalize="none"
+            autoComplete="new-password"
+          />
+          <View style={styles.gap} />
+          <FieldsetInput
+            label="REENTER NEW PASSWORD"
+            value={reenter}
+            onChangeText={setReenter}
+            secureTextEntry
+            autoCapitalize="none"
+            autoComplete="new-password"
+          />
 
-          <View style={styles.rules}>
-            <Text style={styles.rulesTitle}>Your password must include:</Text>
-            {RULES.map((r) => (
-              <Text
-                key={r.label}
-                style={[styles.rule, next.length > 0 && r.ok(next) && styles.ruleMet]}
-              >
-                · {r.label}
-              </Text>
-            ))}
-          </View>
-        </View>
+          <PasswordRules value={next} />
+        </FormCard>
 
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-        {done ? <Text style={styles.done}>Password changed.</Text> : null}
+        <FormError message={error} />
+        <FormNotice message={done ? 'Password changed.' : null} />
 
-        <Pressable
+        <PillButton
+          title="Confirm"
           onPress={handleConfirm}
-          disabled={busy}
-          style={({ pressed }) => [styles.confirm, (pressed || busy) && styles.pressed]}
-          accessibilityRole="button"
-        >
-          {busy ? (
-            <ActivityIndicator color={colors.onPrimary} />
-          ) : (
-            <Text style={styles.confirmText}>Confirm</Text>
-          )}
-        </Pressable>
+          loading={busy}
+          style={styles.cta}
+        />
       </ScrollView>
     </View>
   );
@@ -177,107 +146,20 @@ const styles = StyleSheet.create({
   // bar's height varies with the device's safe-area inset.
   content: {},
 
-  backChip: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 52,
-    marginLeft: 17,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: radii.pill,
-    backgroundColor: colors.inset,
-  },
-  backChipText: { fontFamily: fonts.semibold, fontSize: 10, letterSpacing: 0.3, color: colors.text },
-  pressed: { opacity: 0.7 },
+  gap: { height: 12 },
 
-  title: {
-    marginTop: 7,
-    fontFamily: fonts.display,
-    fontSize: 36,
-    lineHeight: 40,
-    color: colors.text,
-    textAlign: 'center',
-  },
-
-  // Form card x27 y187 w340, fields inset 14.
-  card: {
-    marginTop: 57,
-    marginHorizontal: 27,
-    paddingHorizontal: 14,
-    paddingVertical: 18,
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.fieldBorder,
-  },
-  field: { gap: 6 },
-  fieldLabel: {
-    marginLeft: 10,
-    fontFamily: fonts.bold,
-    fontSize: 8,
-    letterSpacing: 0.3,
-    color: colors.textFaint,
-  },
-  input: {
-    height: 49,
-    borderRadius: 999,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.metaText,
-    paddingHorizontal: 16,
-    fontFamily: fonts.bold,
-    fontSize: 12,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-  forgotWrap: { alignSelf: 'flex-end', marginTop: 8, marginBottom: 22 },
+  // Link y264..274, then a 55 break before NEW PASSWORD at y332 — the frame
+  // treats the current-password row as its own group.
+  forgotWrap: { alignSelf: 'flex-end', marginTop: 11, marginBottom: 54 },
   forgot: {
     fontFamily: fonts.bold,
     fontSize: 10,
+    lineHeight: 13,
     letterSpacing: 0.3,
     color: colors.text,
     textDecorationLine: 'underline',
   },
 
-  rules: { marginTop: 20, gap: 4 },
-  rulesTitle: { fontFamily: fonts.bold, fontSize: 10, letterSpacing: 0.3, color: colors.textFaint },
-  rule: {
-    marginLeft: 12,
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    color: colors.textFaint,
-  },
-  ruleMet: { color: colors.correct },
-
-  error: {
-    marginTop: 18,
-    marginHorizontal: 27,
-    fontFamily: fonts.semibold,
-    fontSize: 12,
-    color: colors.danger,
-    textAlign: 'center',
-  },
-  done: {
-    marginTop: 18,
-    marginHorizontal: 27,
-    fontFamily: fonts.semibold,
-    fontSize: 12,
-    color: colors.correct,
-    textAlign: 'center',
-  },
-
-  // Confirm button x76 y659 w243 h50.
-  confirm: {
-    alignSelf: 'center',
-    marginTop: 60,
-    width: 243,
-    height: 50,
-    borderRadius: 999,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  confirmText: { fontFamily: fonts.bold, fontSize: 14, letterSpacing: 0.3, color: colors.onPrimary },
+  // Card bottom y519 → CTA top y659.
+  cta: { marginTop: 139 },
 });

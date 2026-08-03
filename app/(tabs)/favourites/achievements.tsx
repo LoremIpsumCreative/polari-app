@@ -95,7 +95,7 @@ export default function AchievementsScreen() {
                 Sign in to earn achievements
               </Text>
             </View>
-            <Pressable onPress={() => router.push('/sign-in')} accessibilityRole="button">
+            <Pressable onPress={() => router.push('/profile/sign-in')} accessibilityRole="button">
               <Text style={[styles.gateLink, { fontSize: 14 * s }]}>Sign in</Text>
             </Pressable>
           </View>
