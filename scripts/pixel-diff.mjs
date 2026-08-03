@@ -10,26 +10,33 @@
 // Flags:
 //   --route    app path to screenshot (served from --url, default localhost:3000)
 //   --url      dev server origin (default http://localhost:3000)
-//   --figma    path to the Figma export PNG (export at scale 1 → 394 wide)
+//   --figma    path to the Figma export PNG (export at scale 1 → 393 wide)
 //   --out      basename for outputs: writes <out>.render.png and <out>.diff.png
-//   --width    viewport width (default 394 — the design space; app scale = 1)
-//   --height   viewport height (default 900)
-//   --wait     ms of virtual time to advance before capture (default 2500)
+//   --width    viewport width (default 393 — the design space; app scale = 1)
+//   --height   viewport height (default 852)
+//   --wait     ms to settle after load before capture (default 2500)
 //   --tol      per-channel delta that counts as "changed" (default 32)
 //   --cols/--rows  heatmap grid (default 8 × 12)
 //
-// No new dependencies: machine Chrome for the screenshot, pngjs (already a
-// transitive dep) for the compare.
+// WHY PUPPETEER AND NOT `chrome --screenshot`:
+//   The old version shelled out to Chrome with --window-size=393,852. That sets
+//   the capture size but NOT the layout viewport: Chrome laid the page out at
+//   500px and cropped the shot to 393. Proof — a marker pinned to `right:0`
+//   never appeared in the capture, and this app's Create Account card rendered
+//   at x62, which is exactly (500-430)/2 + 27, its position in a 430 column
+//   centred in a 500 viewport. At a true 393 viewport it sits at x27. So every
+//   number this script printed compared a 500-wide layout against a 393 export.
+//   puppeteer-core drives the same installed Chrome over CDP, where
+//   setViewport genuinely resizes the layout viewport. Nothing is downloaded.
 //
 // Caveat: entrance animations and auto-advancing screens (quiz landing, the
-// countdown) may not settle under virtual time — for those, screenshot a
-// steady state or raise --wait. Static screens (Today, Dictionary, question,
-// results) are the sweet spot.
+// countdown) may not settle — for those, raise --wait. Static screens (Today,
+// Dictionary, question, results) are the sweet spot.
 
-import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { PNG } from 'pngjs';
+import puppeteer from 'puppeteer-core';
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
@@ -42,8 +49,8 @@ const route = arg('route', '/');
 const url = arg('url', 'http://localhost:3000');
 const figmaPath = arg('figma', null);
 const out = arg('out', 'design/diffs/diff');
-const width = Number(arg('width', 394));
-const height = Number(arg('height', 900));
+const width = Number(arg('width', 393));
+const height = Number(arg('height', 852));
 const wait = Number(arg('wait', 2500));
 const tol = Number(arg('tol', 32));
 const cols = Number(arg('cols', 8));
@@ -64,23 +71,40 @@ if (!existsSync(CHROME)) {
 mkdirSync(dirname(resolve(out)), { recursive: true });
 const renderPath = `${out}.render.png`;
 
-// 1. Screenshot the route with headless Chrome. --virtual-time-budget advances
-//    timers/network by `wait` then captures, which keeps it deterministic.
+// 1. Screenshot the route over CDP, where the viewport is the layout viewport.
+//    `clip` pins the capture to the design frame so a taller document still
+//    yields exactly width×height anchored top-left, matching the export.
 const target = url.replace(/\/$/, '') + route;
 console.log(`▶ rendering ${target} at ${width}×${height} …`);
-execFileSync(
-  CHROME,
-  [
-    '--headless=new',
-    '--hide-scrollbars',
-    '--force-device-scale-factor=1',
-    `--window-size=${width},${height}`,
-    `--virtual-time-budget=${wait}`,
-    `--screenshot=${resolve(renderPath)}`,
-    target,
-  ],
-  { stdio: ['ignore', 'ignore', 'ignore'] }
-);
+
+const browser = await puppeteer.launch({
+  executablePath: CHROME,
+  headless: true,
+  defaultViewport: { width, height, deviceScaleFactor: 1 },
+  args: ['--hide-scrollbars', '--force-device-scale-factor=1'],
+});
+try {
+  const page = await browser.newPage();
+  await page.setViewport({ width, height, deviceScaleFactor: 1 });
+  await page.goto(target, { waitUntil: 'networkidle2', timeout: 60_000 });
+
+  // Assert the layout really is the width we asked for — the failure this
+  // script exists to avoid is silently diffing a differently-sized layout.
+  const actual = await page.evaluate(() => window.innerWidth);
+  if (actual !== width) {
+    console.error(`✗ layout viewport is ${actual}px, expected ${width}px — refusing to diff.`);
+    await browser.close();
+    process.exit(2);
+  }
+
+  await new Promise((r) => setTimeout(r, wait));
+  await page.screenshot({
+    path: resolve(renderPath),
+    clip: { x: 0, y: 0, width, height },
+  });
+} finally {
+  await browser.close();
+}
 if (!existsSync(renderPath)) {
   console.error('Chrome produced no screenshot — is the dev server up at ' + url + ' ?');
   process.exit(1);
@@ -169,6 +193,19 @@ console.log(`\n  render → ${renderPath}`);
 console.log(`  diff   → ${diffPath}  (magenta = changed)\n`);
 
 // Exit code encodes severity so CI / a script can branch without parsing text.
-process.exit(pct < 2 ? 0 : 1);
+//
+// The threshold is 8, not the 2 this used to carry. A screen that matches its
+// frame *exactly* still scores 2-3% here: Figma's text rasteriser and Chrome's
+// disagree on glyph edges, and every 1px stroke antialiases differently. That
+// floor is measured on the Account forms, whose cards, field tops and CTAs are
+// each confirmed pixel-exact against their frames by DOM measurement — they
+// score 1.74% (Forgot Password), 2.99% (Create Account) and 3.33% (Change
+// Password, which also carries a known stale button label in its export).
+//
+// 8 leaves headroom above that floor for text-heavy screens. Read the heatmap,
+// not just the number: real drift shows as a contiguous band of 2+ cells,
+// whereas rasterisation noise spreads evenly as · and 0.
+const fail = Number(arg('fail', 8));
+process.exit(pct < fail ? 0 : 1);
 
 void rmSync; // reserved for future --clean
