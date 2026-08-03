@@ -218,10 +218,13 @@ const styles = StyleSheet.create({
   },
   section: { gap: 16 },
   sectionTitle: { fontFamily: fonts.bold, fontSize: 14, letterSpacing: 0.3, color: colors.text },
+  // The frame sets this paragraph in 10 lines on a 16px pitch, glyphs measuring
+  // 12 ascender-to-descender. At 11/15 it wrapped to 9 tighter lines, which
+  // pulled every section below it up the page.
   sectionBody: {
     fontFamily: fonts.regular,
-    fontSize: 11,
-    lineHeight: 15,
+    fontSize: 12,
+    lineHeight: 16,
     letterSpacing: 0.3,
     color: colors.text,
   },

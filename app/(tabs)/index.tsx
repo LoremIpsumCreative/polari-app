@@ -185,8 +185,9 @@ export default function TodayScreen() {
             <Path
               d="M2.46633 14.0717 C1.17916 6.72769 6.83023 0 14.2862 0 L274.645 0 C282.124 0 287.781 6.76697 286.455 14.1274 L271.684 96.1274 C270.654 101.842 265.681 106 259.874 106 L28.6583 106 C22.8301 106 17.8446 101.812 16.8384 96.0717 L2.46633 14.0717 Z"
               transform="translate(53, 177)"
-              fill="#579DFF"
-              fillOpacity={0.11}
+              // Flat, not #579DFF at 11% — that composites over the canvas to
+              // #D7E0EE, a grey-lavender, where the frame is this pale blue.
+              fill="#DCEAFE"
             />
           </Svg>
 
