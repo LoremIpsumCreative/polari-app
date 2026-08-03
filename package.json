@@ -1,6 +1,6 @@
 {
   "name": "polari-app",
-  "version": "1.0.0",
+  "version": "0.16.0",
   "main": "expo-router/entry",
   "dependencies": {
     "@shopify/flash-list": "2.0.2",
@@ -29,6 +29,7 @@
     "@types/react": "~19.2.2",
     "dotenv": "^17.4.2",
     "papaparse": "^5.5.4",
+    "puppeteer-core": "^25.4.0",
     "tsx": "^4.22.5",
     "typescript": "~6.0.3"
   },
@@ -45,7 +46,8 @@
     "art:check": "tsx scripts/check-art.ts",
     "art:ack": "tsx scripts/check-art.ts --ack",
     "figma:check": "tsx scripts/check-figma.ts",
-    "figma:diff": "node scripts/pixel-diff.mjs"
+    "figma:diff": "node scripts/pixel-diff.mjs",
+    "rls:audit": "tsx scripts/rls-audit.ts"
   },
   "private": true
 }
