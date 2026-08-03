@@ -10,11 +10,11 @@ import {
   View,
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
-import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
+import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
 import { useWords } from '../../../src/lib/words';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { QUIZ_MODES, type QuizModeId } from '../../../src/lib/quizModes';
-import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
+import { colors, fonts, DESIGN_WIDTH, DESIGN_HEIGHT } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import { Blob, FLAME, ModeGlyph } from '../../../src/components/quizLandingArt';
@@ -43,20 +43,30 @@ const FAN_LAYOUT = [
   { mode: 'life', x: 316, bottom: DESIGN_H - (644 + 96) },
 ] as const;
 
-// The two spotlight beams, verbatim from the Figma vectors. Vector 8 sits
-// behind Vector 7, and each fades to nothing over the stage colour.
+// The two spotlight beams, verbatim from the Figma vectors (1696:655 behind
+// 1696:654). Each fades to nothing over the stage colour.
+//
+// The gradient vectors are Figma's own userSpaceOnUse coordinates, in the
+// beam's local space — i.e. the numbers straight off the exported SVG. They
+// used to be hand-converted to normalised objectBoundingBox values and the
+// conversion was wrong in both beams (beam8 read 0.53,-0.02 → 1.34,0.90 where
+// the true axis is 45.5,52.5 → 348.5,751 over a 376x757.5 box, so 0.12,0.07 →
+// 0.93,0.99). That pointed the fade the wrong way across the beam and is why
+// the lit band died halfway down the stage. Keeping userSpaceOnUse means the
+// values can be diffed against the SVG export directly, with no arithmetic in
+// between to get wrong again.
 const BEAMS = [
   {
     id: 'beam8',
-    d: 'M54 0 L373.5 351.5 L376 757.5 L168 757.5 L0 0 L54 0 Z',
-    tx: 20.5, ty: 0, from: '#F8E6A0', at: 0.636,
-    v: { x1: 0.5294, y1: -0.0186, x2: 1.3353, y2: 0.9035 },
+    d: 'M54 0L373.5 351.5L376 757.5H168L0 0H54Z',
+    tx: 23.5, ty: 0, from: '#F8E6A0', at: 0.636376,
+    v: { x1: 45.5, y1: 52.5, x2: 348.5, y2: 751 },
   },
   {
     id: 'beam7',
-    d: 'M396 772 L0 772 L248.989 0 L337.5 0 L396 426 L396 772 Z',
-    tx: -2.5, ty: 1, from: '#FCEFBB', at: 0.599,
-    v: { x1: 1.3916, y1: 0.097, x2: 1.0557, y2: 1.1326 },
+    d: 'M396 772H0L248.989 0H337.5L396 426V772Z',
+    tx: 0.5, ty: 1, from: '#FCEFBB', at: 0.598506,
+    v: { x1: 293.5, y1: 32, x2: 160.5, y2: 831.5 },
   },
 ] as const;
 
@@ -183,15 +193,16 @@ export default function QuizIntroScreen() {
       <Svg
         pointerEvents="none"
         style={styles.beams}
-        width={394 * s}
-        height={855 * s}
-        viewBox="0 0 394 855"
+        width={DESIGN_WIDTH * s}
+        height={DESIGN_HEIGHT * s}
+        viewBox={`0 0 ${DESIGN_WIDTH} ${DESIGN_HEIGHT}`}
       >
         <Defs>
           {BEAMS.map((b) => (
             <LinearGradient
               key={b.id}
               id={b.id}
+              gradientUnits="userSpaceOnUse"
               x1={b.v.x1}
               y1={b.v.y1}
               x2={b.v.x2}
@@ -202,14 +213,13 @@ export default function QuizIntroScreen() {
             </LinearGradient>
           ))}
         </Defs>
+        {/* The translate lives on a G, not the Path, so the gradient's
+            userSpaceOnUse coordinates resolve in the beam's own space — the
+            same space the exported SVG defines them in. */}
         {BEAMS.map((b) => (
-          <Path
-            key={b.id}
-            d={b.d}
-            transform={`translate(${b.tx}, ${b.ty})`}
-            fill={`url(#${b.id})`}
-            opacity={0.83}
-          />
+          <G key={b.id} transform={`translate(${b.tx}, ${b.ty})`}>
+            <Path d={b.d} fill={`url(#${b.id})`} opacity={0.83} />
+          </G>
         ))}
       </Svg>
 
@@ -248,6 +258,9 @@ export default function QuizIntroScreen() {
       {/* Bottom wash to near-black (Figma "gradient overlay", y 469–855) */}
       <Svg style={styles.wash} width="100%" height="100%" pointerEvents="none">
         <Defs>
+          {/* Fractions of the wash layer, which is the bottom 41.2% of the
+              stage (y501–852) — not of the whole screen. So these land the
+              fade at y522 and full black at y677. */}
           <LinearGradient id="wash" x1="0.721" y1="0.0597" x2="0.721" y2="0.5017">
             <Stop offset="0" stopColor={colors.stageDeep} stopOpacity={0} />
             <Stop offset="1" stopColor={colors.stageDeep} stopOpacity={1} />
@@ -438,8 +451,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.stage,
     overflow: 'hidden',
   },
-  // 352 / 855 of the frame, anchored to the bottom.
-  wash: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '41.2%' },
+  // Figma 1141:351: x0 y503, 393x352 — so it overhangs the 852 frame by 3 and
+  // is clipped. Top-anchored at 503/852 rather than bottom-anchored, because
+  // the gradient's own stops are fractions of a 352-tall box; pinning it to the
+  // bottom made the box 349 and shifted them.
+  wash: { position: 'absolute', left: 0, right: 0, top: '59.04%', height: '41.31%' },
   beams: { position: 'absolute', top: 0, alignSelf: 'center' },
   headingPanel: { position: 'absolute' },
   heading: {

@@ -171,18 +171,20 @@ export default function CollectionsHub() {
         <Pressable
           style={({ pressed }) => [
             styles.signIn,
-            { left: 80 * s, top: 608 * s, width: 199 * s, height: 50 * s },
+            // Frame: x105 w184, which centres on the 393 column. The old
+            // 80/199 sat 17 left of centre and ran 15 wide.
+            { left: 105 * s, top: 608 * s, width: 184 * s, height: 50 * s },
             pressed && styles.pressed,
           ]}
-          onPress={() => router.push('/sign-in')}
+          onPress={() => router.push('/profile/sign-in')}
           accessibilityRole="button"
         >
           <Text style={[styles.signInText, { fontSize: 14 * s }]}>Sign In</Text>
         </Pressable>
         <Text style={[styles.createLink, { top: 673 * s, fontSize: 14 * s }]}>
           Don’t have an account yet?{' '}
-          <Text style={styles.createLinkAccent} onPress={() => router.push('/sign-up')}>
-            Create one.
+          <Text style={styles.createLinkAccent} onPress={() => router.push('/profile/create-account')}>
+            Create one
           </Text>
         </Text>
       </View>
@@ -236,7 +238,8 @@ const styles = StyleSheet.create({
   signInText: { fontFamily: fonts.bold, color: colors.onPrimary, letterSpacing: 0.3 },
   pressed: { opacity: 0.85 },
   createLink: { position: 'absolute', fontFamily: fonts.regular, color: colors.text },
-  createLinkAccent: { color: colors.primary },
+  // The frame underlines it and carries no full stop.
+  createLinkAccent: { color: colors.primary, textDecorationLine: 'underline' },
   sat: { position: 'absolute' },
   satCircle: {
     backgroundColor: colors.inset,
