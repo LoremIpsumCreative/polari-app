@@ -1,5 +1,6 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  AccessibilityInfo,
   Animated,
   Easing,
   Image,
@@ -126,6 +127,54 @@ const HERO_SHADOW = (s: number) =>
 const GOLD_INK = '#F5CD47';
 const MODE_INK = '#6E5DC6';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Entrance choreography — Figma frame 1114:158, 5.17s one-shot.
+//
+// Start times and durations are absolute seconds off the frame's own timeline,
+// so this table can be read straight against the Figma motion export rather
+// than back-calculated from nested delays. Everything is expressed as
+// "begin at t, run for d", and Animated.parallel of delay+timing pairs
+// reproduces that exactly.
+//
+// Two layers in the export are deliberately not implemented: "Text Container"
+// and "Quiz Type Sign" fade in at 2.49s while their parents (LandingPrompt at
+// -200px, TypeSign at -192px) are still off-screen, so their motion is never
+// visible. Animating them would cost work and change nothing on screen.
+//
+// The beams settle at 0.83, not 1 — that is the layer opacity in the frame.
+const T = {
+  beam8: { at: 300, dur: 930 },
+  beam7: { at: 1230, dur: 940 },
+  hero: { at: 2180, dur: 530, fromY: 12 },
+  prompt: { at: 2790, dur: 640, fromY: -200 },
+  // The sign swings: rotation leads the slide, both landing together on 3.53s.
+  signRotate: { at: 2420, dur: 1110, from: -20, mid: -7.88 },
+  signSlide: { at: 3140, dur: 390, fromX: -192 },
+  buttons: [
+    { at: 3720, fade: 250, move: 450, fromX: 72, fromY: 76 },
+    { at: 3830, fade: 250, move: 450, fromX: 0, fromY: 101 },
+    { at: 3970, fade: 250, move: 450, fromX: -72, fromY: 76 },
+  ],
+} as const;
+
+// CSS ease-out / ease-in, and the overshoot Figma reports on the mode buttons
+// as cubic-bezier(0.45, 1.45, 0.8, 1) — the >1 control point is what makes
+// them pop past their resting place and settle back.
+const EASE_OUT = Easing.bezier(0, 0, 0.58, 1);
+const EASE_OUT_BACK = Easing.bezier(0.45, 1.45, 0.8, 1);
+
+/** "Hold still until `at`, then run for `dur`" — one row of the table above. */
+function cue(
+  value: Animated.Value,
+  toValue: number,
+  { at, dur, easing = EASE_OUT }: { at: number; dur: number; easing?: typeof EASE_OUT }
+) {
+  return Animated.sequence([
+    Animated.delay(at),
+    Animated.timing(value, { toValue, duration: dur, easing, useNativeDriver: false }),
+  ]);
+}
+
 export default function QuizIntroScreen() {
   const router = useRouter();
   const { words, loading } = useWords();
@@ -133,45 +182,94 @@ export default function QuizIntroScreen() {
   const s = useDesignScale();
   const tabInset = useTabBarInset();
 
-  const heroOpacity = useRef(new Animated.Value(0)).current;
-  const uiOpacity = useRef(new Animated.Value(0)).current;
+  // One driver per animated layer in the frame. Each runs 0 -> 1 and the views
+  // interpolate their own opacity/offset off it, so the table above stays the
+  // single description of the timing.
+  const beam8 = useRef(new Animated.Value(0)).current;
+  const beam7 = useRef(new Animated.Value(0)).current;
+  const hero = useRef(new Animated.Value(0)).current;
+  const prompt = useRef(new Animated.Value(0)).current;
+  const signRotate = useRef(new Animated.Value(0)).current;
+  const signSlide = useRef(new Animated.Value(0)).current;
+  const btn0 = useRef(new Animated.Value(0)).current;
+  const btn1 = useRef(new Animated.Value(0)).current;
+  const btn2 = useRef(new Animated.Value(0)).current;
+  const btnFade0 = useRef(new Animated.Value(0)).current;
+  const btnFade1 = useRef(new Animated.Value(0)).current;
+  const btnFade2 = useRef(new Animated.Value(0)).current;
+  const btns = [btn0, btn1, btn2];
+  const btnFades = [btnFade0, btnFade1, btnFade2];
+
   const running = useRef<Animated.CompositeAnimation | null>(null);
   const [done, setDone] = useState(false);
+  // Honour the OS setting. Read once on mount and keep listening, because it
+  // can be toggled from Control Centre while the app is open.
+  const reduceMotion = useRef(false);
   // Picking a mode opens its How to Play card (frame 1904:3022 and siblings)
   // rather than dropping straight into the round.
   const [chosen, setChosen] = useState<QuizModeId | null>(null);
 
+  const drivers = useMemo(
+    () => [beam8, beam7, hero, prompt, signRotate, signSlide, btn0, btn1, btn2, btnFade0, btnFade1, btnFade2],
+    [beam8, beam7, hero, prompt, signRotate, signSlide, btn0, btn1, btn2, btnFade0, btnFade1, btnFade2]
+  );
+
+  /** Jump the whole stage to its resting state. Used by the tap-to-skip, and
+   *  as the entire "animation" when Reduce Motion is on. */
+  const settle = useCallback(() => {
+    for (const d of drivers) d.setValue(1);
+    setDone(true);
+  }, [drivers]);
+
+  useEffect(() => {
+    let alive = true;
+    const set = (on: boolean) => {
+      if (alive) reduceMotion.current = on;
+    };
+    AccessibilityInfo.isReduceMotionEnabled().then(set);
+    const sub = AccessibilityInfo.addEventListener('reduceMotionChanged', set);
+    return () => {
+      alive = false;
+      sub.remove();
+    };
+  }, []);
+
   const playEntrance = useCallback(() => {
+    // Reduce Motion: present the finished screen rather than a faster version
+    // of the same movement. Nothing slides, fades or swings.
+    if (reduceMotion.current) {
+      settle();
+      return;
+    }
     setDone(false);
-    heroOpacity.setValue(0);
-    uiOpacity.setValue(0);
-    const sequence = Animated.sequence([
-      Animated.delay(100),
-      Animated.timing(heroOpacity, {
-        toValue: 1,
-        duration: 450,
-        easing: Easing.out(Easing.quad),
-        useNativeDriver: false,
-      }),
-      Animated.timing(uiOpacity, {
-        toValue: 1,
-        duration: 350,
-        easing: Easing.out(Easing.quad),
-        useNativeDriver: false,
-      }),
-    ]);
+    for (const d of drivers) d.setValue(0);
+
+    const sequence = Animated.parallel(
+      [
+      cue(beam8, 1, T.beam8),
+      cue(beam7, 1, T.beam7),
+      cue(hero, 1, T.hero),
+      cue(prompt, 1, T.prompt),
+      cue(signRotate, 1, T.signRotate),
+      cue(signSlide, 1, T.signSlide),
+        ...T.buttons.flatMap((b, i) => [
+          cue(btnFades[i], 1, { at: b.at, dur: b.fade }),
+          cue(btns[i], 1, { at: b.at, dur: b.move, easing: EASE_OUT_BACK }),
+        ]),
+      ],
+      // Each layer's cue is independent; one finishing must not curtail the rest.
+      { stopTogether: false }
+    );
     running.current = sequence;
     sequence.start(({ finished }) => {
       if (finished) setDone(true);
     });
-  }, [heroOpacity, uiOpacity]);
+  }, [settle, drivers, beam8, beam7, hero, prompt, signRotate, signSlide]);
 
   function skipEntrance() {
     if (done) return;
     running.current?.stop();
-    heroOpacity.setValue(1);
-    uiOpacity.setValue(1);
-    setDone(true);
+    settle();
   }
 
   // Replay the entrance on focus, and clear any mode the player had opened —
@@ -190,38 +288,52 @@ export default function QuizIntroScreen() {
   return (
     <Pressable style={styles.stage} onPress={skipEntrance} accessibilityLabel="Quiz stage">
       {/* Spotlight beams raking down from the top edge */}
-      <Svg
-        pointerEvents="none"
-        style={styles.beams}
-        width={DESIGN_WIDTH * s}
-        height={DESIGN_HEIGHT * s}
-        viewBox={`0 0 ${DESIGN_WIDTH} ${DESIGN_HEIGHT}`}
-      >
-        <Defs>
-          {BEAMS.map((b) => (
-            <LinearGradient
-              key={b.id}
-              id={b.id}
-              gradientUnits="userSpaceOnUse"
-              x1={b.v.x1}
-              y1={b.v.y1}
-              x2={b.v.x2}
-              y2={b.v.y2}
-            >
-              <Stop offset={b.at} stopColor={b.from} stopOpacity={1} />
-              <Stop offset="1" stopColor={colors.stage} stopOpacity={0} />
-            </LinearGradient>
-          ))}
-        </Defs>
-        {/* The translate lives on a G, not the Path, so the gradient's
-            userSpaceOnUse coordinates resolve in the beam's own space — the
-            same space the exported SVG defines them in. */}
-        {BEAMS.map((b) => (
-          <G key={b.id} transform={`translate(${b.tx}, ${b.ty})`}>
-            <Path d={b.d} fill={`url(#${b.id})`} opacity={0.83} />
-          </G>
-        ))}
-      </Svg>
+      {/* One Svg per beam inside its own Animated.View, with the fade on the
+          View rather than on the Path. Figma puts the opacity on the layer, so
+          this mirrors the frame; it also keeps the animation on a plain view
+          property, which behaves the same on native and web, instead of
+          relying on Animated driving an SVG element's prop. */}
+      {BEAMS.map((b, i) => (
+        <Animated.View
+          key={b.id}
+          pointerEvents="none"
+          style={[
+            styles.beams,
+            {
+              opacity: (i === 0 ? beam8 : beam7).interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 0.83],
+              }),
+            },
+          ]}
+        >
+          <Svg
+            width={DESIGN_WIDTH * s}
+            height={DESIGN_HEIGHT * s}
+            viewBox={`0 0 ${DESIGN_WIDTH} ${DESIGN_HEIGHT}`}
+          >
+            <Defs>
+              <LinearGradient
+                id={b.id}
+                gradientUnits="userSpaceOnUse"
+                x1={b.v.x1}
+                y1={b.v.y1}
+                x2={b.v.x2}
+                y2={b.v.y2}
+              >
+                <Stop offset={b.at} stopColor={b.from} stopOpacity={1} />
+                <Stop offset="1" stopColor={colors.stage} stopOpacity={0} />
+              </LinearGradient>
+            </Defs>
+            {/* The translate lives on a G, not the Path, so the gradient's
+                userSpaceOnUse coordinates resolve in the beam's own space —
+                the same space the exported SVG defines them in. */}
+            <G transform={`translate(${b.tx}, ${b.ty})`}>
+              <Path d={b.d} fill={`url(#${b.id})`} />
+            </G>
+          </Svg>
+        </Animated.View>
+      ))}
 
       {/* The frame gives her two drop shadows, one thrown each way. RN caps a
           view at one shadow, and on an image with alpha only a silhouette
@@ -234,7 +346,15 @@ export default function QuizIntroScreen() {
             top: 262 * s,
             width: 241 * s,
             height: 507 * s,
-            opacity: heroOpacity,
+            opacity: hero,
+            transform: [
+              {
+                translateY: hero.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [T.hero.fromY * s, 0],
+                }),
+              },
+            ],
             overflow: 'hidden',
           },
           HERO_SHADOW(s),
@@ -286,7 +406,20 @@ export default function QuizIntroScreen() {
       <Animated.View
         style={[
           styles.headingPanel,
-          { left: 29 * s, top: 97 * s, width: 336 * s, height: 87 * s, opacity: uiOpacity },
+          {
+            left: 29 * s,
+            top: 97 * s,
+            width: 336 * s,
+            height: 87 * s,
+            transform: [
+              {
+                translateY: prompt.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [T.prompt.fromY * s, 0],
+                }),
+              },
+            ],
+          },
           BLOB_SHADOW(s),
         ]}
       >
@@ -305,7 +438,33 @@ export default function QuizIntroScreen() {
         />
       ) : null}
 
-      <Animated.View style={[StyleSheet.absoluteFill, { opacity: uiOpacity }]} pointerEvents="none">
+      <Animated.View
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            transform: [
+              {
+                translateX: signSlide.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [T.signSlide.fromX * s, 0],
+                }),
+              },
+              {
+                rotate: signRotate.interpolate({
+                  // Figma swings it -20deg -> -7.88deg -> 0: a decaying settle
+                  // rather than a straight tween, so the midpoint is kept.
+                  inputRange: [0, 0.5, 1],
+                  outputRange: [`${T.signRotate.from}deg`, `${T.signRotate.mid}deg`, '0deg'],
+                }),
+              },
+            ],
+            // Pivot at the foot of the pole (x81+6, y754) so the sign plants
+            // into the ground instead of rotating about the screen's centre.
+            transformOrigin: [`${87 * s}px`, `${BAR_TOP * s}px`, 0],
+          },
+        ]}
+        pointerEvents="none"
+      >
         <View
           style={{
             position: 'absolute',
@@ -346,18 +505,36 @@ export default function QuizIntroScreen() {
       </Animated.View>
 
       {/* Mode fan with per-mode high-score badges */}
-      <Animated.View style={[StyleSheet.absoluteFill, { opacity: uiOpacity }]} pointerEvents="box-none">
+      <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
         <View style={[styles.fanHost, { width: 394 * s }]} pointerEvents="box-none">
-          {FAN_LAYOUT.map(({ mode, x, bottom }) => {
+          {FAN_LAYOUT.map(({ mode, x, bottom }, i) => {
             const m = QUIZ_MODES[mode];
             const best = bestFor(mode);
+            const spec = T.buttons[i];
             return (
-              <View
+              <Animated.View
                 key={mode}
                 style={[
                   styles.modeSlot,
                   { left: x * s, bottom: bottom * s, width: 65 * s },
                   chosen && chosen !== mode && styles.modeSlotDimmed,
+                  {
+                    opacity: btnFades[i],
+                    transform: [
+                      {
+                        translateX: btns[i].interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [spec.fromX * s, 0],
+                        }),
+                      },
+                      {
+                        translateY: btns[i].interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [spec.fromY * s, 0],
+                        }),
+                      },
+                    ],
+                  },
                 ]}
                 pointerEvents="box-none"
               >
@@ -390,11 +567,11 @@ export default function QuizIntroScreen() {
                 <Text style={[styles.modeLabel, { marginTop: 5 * s, fontSize: 10 * s }]}>
                   {m.label}
                 </Text>
-              </View>
+              </Animated.View>
             );
           })}
         </View>
-      </Animated.View>
+      </View>
 
       {chosen ? (
         <>
