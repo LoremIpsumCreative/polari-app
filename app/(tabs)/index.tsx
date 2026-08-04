@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Animated,
+  Easing,
   Image,
   PanResponder,
   Pressable,
@@ -28,6 +29,7 @@ import { useTabBarInset } from '../../src/components/AnimatedTabBar';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
 import { getUnlockedDate, setUnlockedToday, todayKey } from '../../src/lib/dailyUnlock';
+import { useReducedMotion } from '../../src/lib/reducedMotion';
 import { colors, fonts, spacing, DESIGN_WIDTH } from '../../src/lib/theme';
 
 const presentArt = require('../../assets/present.png');
@@ -35,6 +37,23 @@ const presentArt = require('../../assets/present.png');
 const SWIPE_THRESHOLD = 48;
 // The present screen's geometry lives in the Figma frame's 394-wide space
 // (node 1114:1124) and scales with the device width.
+
+// Today/New Word (Figma 1837:762): the present bounces once, then rests, on a
+// 3.0s loop. Figma bakes the easing into samples taken every 100ms and plays
+// them linear, so interpolating these arrays reproduces the curve exactly
+// rather than approximating it with a bezier.
+//
+// Only the wrapper moves. The export's summary also lists width/height/offset
+// tracks on the inner `present_polari` rectangle, but the file's own tracks for
+// it are flat (238->238, 250.526->250.526, 0->0), so there is no second,
+// compounding deformation to apply.
+const BOUNCE = {
+  duration: 3004.586,
+  stops: [0, 0.03328, 0.06656, 0.09985, 0.13313, 0.16641, 0.19969, 0.23298, 0.26626, 0.29954, 0.33282, 0.36611, 1],
+  y: [0, 18.697, -23.596, -35.813, -41.823, -45, -44.515, -40.495, 3.784, 9.604, -0.598, 0, 0],
+  scaleX: [1, 1.196, 1.007, 0.944, 0.961, 0.971, 0.969, 0.957, 1.147, 1.101, 0.994, 1, 1],
+  scaleY: [1, 0.843, 1.006, 1.059, 1.041, 1.03, 1.032, 1.045, 0.887, 0.919, 1.005, 1, 1],
+};
 
 export default function TodayScreen() {
   const { session } = useAuth();
@@ -56,21 +75,55 @@ export default function TodayScreen() {
   // present to tap open. null = still reading the stored unlock date.
   const [unlocked, setUnlocked] = useState<boolean | null>(null);
   const presentFade = useRef(new Animated.Value(1)).current;
+  // Drives the whole 3s cycle; the keyframe tables above carry the shape.
+  const bounce = useRef(new Animated.Value(0)).current;
+  const bouncing = useRef<Animated.CompositeAnimation | null>(null);
+  const reduceMotion = useReducedMotion();
+
+  const stopBounce = useCallback(() => {
+    bouncing.current?.stop();
+    bouncing.current = null;
+    bounce.setValue(0);
+  }, [bounce]);
+
+  const startBounce = useCallback(() => {
+    // Reduce Motion: the present simply sits there. Looping movement is the
+    // clearest case for honouring the setting, since it never stops on its own.
+    if (reduceMotion.current) return;
+    bounce.setValue(0);
+    const loop = Animated.loop(
+      Animated.timing(bounce, {
+        toValue: 1,
+        duration: BOUNCE.duration,
+        // Linear on purpose: the easing already lives in the sampled values.
+        easing: Easing.linear,
+        useNativeDriver: false,
+      })
+    );
+    bouncing.current = loop;
+    loop.start();
+  }, [bounce, reduceMotion]);
   useFocusEffect(
     // Re-checked on every focus so the gift comes back after midnight even if
     // the app never re-mounted.
     useCallback(() => {
       let live = true;
       getUnlockedDate().then((d) => {
-        if (live) setUnlocked(d === todayKey());
+        if (!live) return;
+        const wrapped = d !== todayKey();
+        setUnlocked(!wrapped);
+        if (wrapped) startBounce();
       });
       return () => {
         live = false;
+        stopBounce();
       };
-    }, [])
+    }, [startBounce, stopBounce])
   );
 
   function openPresent() {
+    // Tap interrupts the bounce and hands over to Today/Definition.
+    stopBounce();
     setUnlockedToday();
     Animated.timing(presentFade, {
       toValue: 0,
@@ -191,12 +244,47 @@ export default function TodayScreen() {
             />
           </Svg>
 
-          <Image
-            source={presentArt}
-            resizeMode="contain"
-            style={{ position: 'absolute', left: 72 * s, top: 341 * s, width: 250 * s, height: 238 * s }}
-            accessibilityIgnoresInvertColors
-          />
+          {/* The bounce rides the wrapper so the art itself stays untouched.
+              Scale is about the centre, which is what Figma applies, and the
+              translate is in unscaled units — RN composes the transform array
+              the same way CSS does, scaling first and then moving. */}
+          <Animated.View
+            pointerEvents="none"
+            style={{
+              position: 'absolute',
+              left: 72 * s,
+              top: 341 * s,
+              width: 250 * s,
+              height: 238 * s,
+              transform: [
+                {
+                  translateY: bounce.interpolate({
+                    inputRange: [...BOUNCE.stops],
+                    outputRange: BOUNCE.y.map((v) => v * s),
+                  }),
+                },
+                {
+                  scaleX: bounce.interpolate({
+                    inputRange: [...BOUNCE.stops],
+                    outputRange: [...BOUNCE.scaleX],
+                  }),
+                },
+                {
+                  scaleY: bounce.interpolate({
+                    inputRange: [...BOUNCE.stops],
+                    outputRange: [...BOUNCE.scaleY],
+                  }),
+                },
+              ],
+            }}
+          >
+            <Image
+              source={presentArt}
+              resizeMode="contain"
+              style={{ width: '100%', height: '100%' }}
+              accessibilityIgnoresInvertColors
+            />
+          </Animated.View>
 
           <Text style={[styles.presentHeadline, { top: 198 * s, fontSize: 34 * s, lineHeight: 34 * s }]}>
             A <Text style={styles.presentHighlight}>new word</Text> is ready{'\n'}to be opened!

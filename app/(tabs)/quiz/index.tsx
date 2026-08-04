@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
-  AccessibilityInfo,
   Animated,
   Easing,
   Image,
@@ -17,6 +16,7 @@ import { useQuizStats } from '../../../src/lib/quizScores';
 import { QUIZ_MODES, type QuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts, DESIGN_WIDTH, DESIGN_HEIGHT } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
+import { useReducedMotion } from '../../../src/lib/reducedMotion';
 import { Blob, FLAME, ModeGlyph } from '../../../src/components/quizLandingArt';
 import { IconX } from '@tabler/icons-react-native';
 
@@ -200,9 +200,7 @@ export default function QuizIntroScreen() {
 
   const running = useRef<Animated.CompositeAnimation | null>(null);
   const [done, setDone] = useState(false);
-  // Honour the OS setting. Read once on mount and keep listening, because it
-  // can be toggled from Control Centre while the app is open.
-  const reduceMotion = useRef(false);
+  const reduceMotion = useReducedMotion();
   // Picking a mode opens its How to Play card (frame 1904:3022 and siblings)
   // rather than dropping straight into the round.
   const [chosen, setChosen] = useState<QuizModeId | null>(null);
@@ -218,19 +216,6 @@ export default function QuizIntroScreen() {
     for (const d of drivers) d.setValue(1);
     setDone(true);
   }, [drivers]);
-
-  useEffect(() => {
-    let alive = true;
-    const set = (on: boolean) => {
-      if (alive) reduceMotion.current = on;
-    };
-    AccessibilityInfo.isReduceMotionEnabled().then(set);
-    const sub = AccessibilityInfo.addEventListener('reduceMotionChanged', set);
-    return () => {
-      alive = false;
-      sub.remove();
-    };
-  }, []);
 
   const playEntrance = useCallback(() => {
     // Reduce Motion: present the finished screen rather than a faster version

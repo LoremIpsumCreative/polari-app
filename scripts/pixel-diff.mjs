@@ -17,6 +17,7 @@
 //   --wait     ms to settle after load before capture (default 2500)
 //   --tol      per-channel delta that counts as "changed" (default 32)
 //   --cols/--rows  heatmap grid (default 8 × 12)
+//   --reduced-motion  emulate prefers-reduced-motion: reduce before loading
 //
 // WHY PUPPETEER AND NOT `chrome --screenshot`:
 //   The old version shelled out to Chrome with --window-size=393,852. That sets
@@ -29,9 +30,12 @@
 //   puppeteer-core drives the same installed Chrome over CDP, where
 //   setViewport genuinely resizes the layout viewport. Nothing is downloaded.
 //
-// Caveat: entrance animations and auto-advancing screens (quiz landing, the
-// countdown) may not settle — for those, raise --wait. Static screens (Today,
-// Dictionary, question, results) are the sweet spot.
+// Animated screens: pass --reduced-motion rather than fishing for a --wait that
+// happens to land on a still moment. Today's present loops forever and the quiz
+// landing plays a 5.2s entrance, so an unfrozen capture compares whatever phase
+// it caught: Today reads 5.6% at rest and 15.9% caught at the top of its bounce,
+// from identical code. The frames themselves are drawn at rest, so freezing the
+// app the same way is the like-for-like comparison.
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -55,6 +59,12 @@ const wait = Number(arg('wait', 2500));
 const tol = Number(arg('tol', 32));
 const cols = Number(arg('cols', 8));
 const rows = Number(arg('rows', 12));
+// Screens that loop cannot be diffed against a still frame: whatever phase the
+// capture lands on is the phase you compare, and the number swings wildly with
+// it. The app honours prefers-reduced-motion by presenting the finished, at-rest
+// screen, which is also what the Figma frame draws — so emulating the setting
+// gives a deterministic capture to compare. Use it for any animated route.
+const reducedMotion = process.argv.includes('--reduced-motion');
 
 if (!figmaPath || !existsSync(figmaPath)) {
   console.error(
@@ -86,6 +96,11 @@ const browser = await puppeteer.launch({
 try {
   const page = await browser.newPage();
   await page.setViewport({ width, height, deviceScaleFactor: 1 });
+  if (reducedMotion) {
+    await page.emulateMediaFeatures([
+      { name: 'prefers-reduced-motion', value: 'reduce' },
+    ]);
+  }
   await page.goto(target, { waitUntil: 'networkidle2', timeout: 60_000 });
 
   // Assert the layout really is the width we asked for — the failure this

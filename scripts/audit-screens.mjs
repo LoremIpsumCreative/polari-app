@@ -37,6 +37,11 @@ const url = arg('url', 'http://localhost:3000');
 const only = arg('only', null);
 const withAuth = process.argv.includes('--auth');
 
+// Routes whose screens animate. They are captured with reduced motion emulated
+// so the comparison is against a settled screen rather than an arbitrary frame
+// of a loop or entrance — see the note in pixel-diff.mjs.
+const ANIMATED = new Set(['/', '/quiz']);
+
 // [export path, route, needs session/state]
 const MAP = [
   ['Today/New Word.png', '/', false],
@@ -114,7 +119,8 @@ for (const [png, route, blocked] of MAP) {
     const stdout = execFileSync(
       process.execPath,
       ['scripts/pixel-diff.mjs', `--route=${route}`, `--figma=${figma}`, `--out=${out}`,
-       `--url=${url}`, `--width=${fw}`, `--height=${fh}`],
+       `--url=${url}`, `--width=${fw}`, `--height=${fh}`,
+       ...(ANIMATED.has(route) ? ['--reduced-motion'] : [])],
       { encoding: 'utf8' }
     );
     pct = stdout.match(/overall change: ([\d.]+)%/)?.[1] ?? '?';
