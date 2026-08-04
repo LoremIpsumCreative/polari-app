@@ -17,7 +17,6 @@ import { useQuizStats } from '../../../src/lib/quizScores';
 import { QUIZ_MODES, type QuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts, DESIGN_WIDTH, DESIGN_HEIGHT } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
-import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import { Blob, FLAME, ModeGlyph } from '../../../src/components/quizLandingArt';
 import { IconX } from '@tabler/icons-react-native';
 
@@ -180,7 +179,6 @@ export default function QuizIntroScreen() {
   const { words, loading } = useWords();
   const { bestFor } = useQuizStats();
   const s = useDesignScale();
-  const tabInset = useTabBarInset();
 
   // One driver per animated layer in the frame. Each runs 0 -> 1 and the views
   // interpolate their own opacity/offset off it, so the table above stays the
@@ -389,19 +387,6 @@ export default function QuizIntroScreen() {
         <Rect x="0" y="0" width="100%" height="100%" fill="url(#wash)" />
       </Svg>
 
-      {/* Sparkle dot above the signpost */}
-      <View
-        style={{
-          position: 'absolute',
-          left: 79 * s,
-          bottom: 125 * s + tabInset,
-          width: 12 * s,
-          height: 11 * s,
-          borderRadius: 6 * s,
-          backgroundColor: '#F8E6A0',
-        }}
-      />
-
       {/* Headline blob (Figma Group 111) */}
       <Animated.View
         style={[
@@ -465,6 +450,16 @@ export default function QuizIntroScreen() {
         ]}
         pointerEvents="none"
       >
+        {/* Pole, read off the Quiz/TypeSign component (2524:2875). It is two
+            tones, not one: an 8-wide shaft carrying a vertical gradient from
+            #F0C63D down to #D0A003, capped by a 12-wide rounded #F8E6A0 finial
+            whose top 5px clear the signboard.
+
+            That cap used to be a free-standing circle rendered outside the sign
+            group and anchored to the tab-bar inset, while the pole was anchored
+            to the design foot — so the two drifted apart, and the circle hung
+            in mid-air on its own through the entrance. It belongs here, moving
+            with the sign. */}
         <View
           style={{
             position: 'absolute',
@@ -472,9 +467,23 @@ export default function QuizIntroScreen() {
             bottom: (DESIGN_H - 754) * s,
             width: 12 * s,
             height: 137 * s,
-            backgroundColor: GOLD_INK,
           }}
-        />
+        >
+          <Svg width={12 * s} height={137 * s} viewBox="0 0 12 137">
+            <Defs>
+              {/* Fitted to the component's own pixels: the shaft reads
+                  #F0C63D at y80 and #D0A003 at its foot. Sampling above y80
+                  picks up the signboard's gold edge overlapping the pole, not
+                  the pole itself, which is what made a naive fit run too pale. */}
+              <LinearGradient id="pole" gradientUnits="userSpaceOnUse" x1="0" y1="80" x2="0" y2="137">
+                <Stop offset="0" stopColor="#F0C63D" />
+                <Stop offset="1" stopColor="#D0A003" />
+              </LinearGradient>
+            </Defs>
+            <Rect x="2" y="0" width="8" height="137" fill="url(#pole)" />
+            <Rect x="0" y="0" width="12" height="12" rx="6" fill="#F8E6A0" />
+          </Svg>
+        </View>
         <View
           style={[
             {
