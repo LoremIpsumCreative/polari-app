@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import Svg, { Ellipse, Path } from 'react-native-svg';
 import { colors, fonts, DESIGN_WIDTH, DESIGN_HEIGHT } from '../lib/theme';
 import { ScreenBackground } from './ScreenBackground';
 import { useReducedMotion } from '../lib/reducedMotion';
 import { useWallpapers } from '../lib/wallpapers';
-import { HERO_SHAPES, HERO_VIEWBOX } from './launchArt';
+
+const logo = require('../../assets/logo.png');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // App launch, in two parts.
@@ -52,15 +52,6 @@ const TITLE_SCALE = [
   1.171, 1.129, 1.091, 1.062, 1.039, 1.022, 1.015, 1.015,
 ];
 
-// Hero shapes rise 20px and fade, staggered. The written timeline says "200px
-// on both axes"; the file says translate 0px 20px, so it is a small lift.
-const SHAPE_CUES = [
-  { from: 0.53235, to: 0.61113 },
-  { from: 0.59764, to: 0.67641 },
-  { from: 0.66393, to: 0.7427 },
-  { from: 0.72856, to: 0.80733 },
-];
-const UNION_CUE = { from: 0.82354, to: 0.94672 };
 const WORDS_FADE = { from: 0.50368, to: 0.77208 };
 
 const EASE_IN_OUT = Easing.bezier(0.42, 0, 0.58, 1);
@@ -204,56 +195,26 @@ export function LaunchScreen({ onOpen }: { onOpen: () => void }) {
         ))}
       </Animated.View>
 
-      {/* The lockup: hero shapes behind the Polari wordmark. */}
+      {/* The lockup ships as one flat asset (assets/logo.png), so the shapes,
+          wordmark and dark outline stay exactly as drawn. It used to be
+          recomposed here from the frame's separate shape paths plus the
+          wordmark set in Mouse Memoirs, which did not match the real logo.
+          The trade-off: the begin animation's staggered shape assembly is gone,
+          because those shapes are baked into this asset — the lockup now
+          arrives as a whole on the title's multi-bounce. */}
       <View style={styles.hero} pointerEvents="none">
-        <Animated.View
-          style={{
-            transform: [
-              {
-                scale: begin.interpolate({
-                  inputRange: TITLE_STOPS,
-                  outputRange: TITLE_SCALE,
-                }),
-              },
-            ],
-          }}
-        >
-          <View style={styles.heroArt}>
-            {HERO_SHAPES.map((shape, i) => {
-              const cue = shape.id === 'union' ? UNION_CUE : SHAPE_CUES[i];
-              return (
-                <Animated.View
-                  key={shape.id}
-                  style={[
-                    StyleSheet.absoluteFill,
-                    {
-                      opacity: between(begin, cue.from, cue.to, [0, 1]),
-                      transform:
-                        shape.id === 'union'
-                          ? []
-                          : [{ translateY: between(begin, cue.from, cue.to, [20, 0]) }],
-                    },
-                  ]}
-                >
-                  <Svg width="100%" height="100%" viewBox={HERO_VIEWBOX}>
-                    {shape.tag === 'ellipse' ? (
-                      <Ellipse
-                        cx={shape.cx}
-                        cy={shape.cy}
-                        rx={shape.rx}
-                        ry={shape.ry}
-                        fill={shape.fill}
-                      />
-                    ) : (
-                      <Path d={shape.d} fill={shape.fill} />
-                    )}
-                  </Svg>
-                </Animated.View>
-              );
-            })}
-          </View>
-          <Text style={styles.title}>Polari</Text>
-        </Animated.View>
+        <Animated.Image
+          source={logo}
+          resizeMode="contain"
+          style={[
+            styles.logo,
+            {
+              transform: [
+                { scale: begin.interpolate({ inputRange: TITLE_STOPS, outputRange: TITLE_SCALE }) },
+              ],
+            },
+          ]}
+        />
       </View>
 
       {/* Phase 2: the Open button pops in over the finished lockup. */}
@@ -305,24 +266,18 @@ const styles = StyleSheet.create({
   },
 
   // Hero box 278x141, centred on the frame with a +115.5 vertical offset.
+  // Centred on the frame's lockup centre (x196.5, y541.5). Height follows the
+  // asset's own 570x315 aspect so nothing is squashed.
   hero: {
     position: 'absolute',
     left: (DESIGN_WIDTH - 278) / 2,
-    top: DESIGN_HEIGHT / 2 + 115.5 - 141 / 2,
+    top: DESIGN_HEIGHT / 2 + 115.5 - (278 * 315) / 570 / 2,
     width: 278,
-    height: 141,
+    height: (278 * 315) / 570,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  heroArt: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
-  title: {
-    fontFamily: fonts.display,
-    fontSize: 134.6,
-    lineHeight: 118,
-    letterSpacing: -2.692,
-    color: colors.text,
-    textAlign: 'center',
-  },
+  logo: { width: '100%', height: '100%' },
 
   // continue button: y713, h50, radius 999, 2px #053876 under-edge.
   openWrap: { position: 'absolute', left: 0, right: 0, top: 713, alignItems: 'center' },
