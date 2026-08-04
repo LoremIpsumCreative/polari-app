@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
@@ -12,6 +13,7 @@ import { colors, DESIGN_HEIGHT, PHONE_MAX_WIDTH } from '../src/lib/theme';
 // Resolves to fontAssets.web.ts on web and fontAssets.ts on native.
 import { fontAssets } from '../src/lib/fontAssets';
 import { installWebFonts } from '../src/lib/webFontFaces';
+import { LaunchScreen } from '../src/components/LaunchScreen';
 
 // Digitale's weight axis has to be pinned per face, which only CSS can express,
 // so web declares its own @font-face rules. Run at module scope so the rules are
@@ -27,14 +29,23 @@ installWebFonts();
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts(fontAssets);
+  // Component state is exactly the right lifetime here: it resets on a cold
+  // start, which is when the launch sequence is meant to play, and survives
+  // navigation within a session, which is when it must not.
+  const [launched, setLaunched] = useState(false);
 
   if (!fontsLoaded) return null;
 
+  // The app mounts underneath the launch screen rather than after it, so the
+  // dictionary and artwork are already fetched by the time Open is tapped.
   const app = (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="(auth)" />
-    </Stack>
+    <>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(auth)" />
+      </Stack>
+      {launched ? null : <LaunchScreen onOpen={() => setLaunched(true)} />}
+    </>
   );
 
   return (

@@ -226,6 +226,28 @@ async function main() {
     record('storage', 'signed-in user cannot upload to characters', !!authUp.error,
       authUp.error?.message ?? 'UPLOAD ACCEPTED');
 
+    // The wallpapers bucket backs the launch screen's carousel. Same shape:
+    // listable and publicly readable, but closed to writes.
+    const listPaper = await anon.storage.from('character wallpapers').list('', { limit: 5 });
+    record('storage', 'anon can list character wallpapers',
+      !listPaper.error && (listPaper.data?.length ?? 0) > 0,
+      listPaper.error?.message ?? `${listPaper.data?.length} object(s)`);
+
+    const paperUp = await anon.storage
+      .from('character wallpapers')
+      .upload(`rls-audit-${stamp}.png`, png, { contentType: 'image/png' });
+    record('storage', 'anon cannot upload wallpapers', !!paperUp.error,
+      paperUp.error?.message ?? 'UPLOAD ACCEPTED');
+
+    const paperVictim = (listPaper.data ?? [])[0]?.name;
+    if (paperVictim) {
+      await anon.storage.from('character wallpapers').remove([paperVictim]);
+      const { data: after } = await admin.storage.from('character wallpapers').list('', { limit: 100 });
+      const survived = (after as { name: string }[] | null)?.some((o) => o.name === paperVictim);
+      record('storage', 'anon cannot delete wallpapers', !!survived,
+        survived ? 'object intact' : `DELETED ${paperVictim}`);
+    }
+
     const existing = (listArt.data ?? [])[0]?.name;
     if (existing) {
       const del = await anon.storage.from('characters').remove([existing]);
