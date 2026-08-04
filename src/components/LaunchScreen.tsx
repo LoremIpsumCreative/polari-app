@@ -124,7 +124,9 @@ export function LaunchScreen({ onOpen }: { onOpen: () => void }) {
         setPaperIndex((i) => (i + 1) % wallpapers.length);
         crossFade.setValue(0);
       });
-    }, 4000);
+      // 8s between changes: the cross-fade itself is 900ms, so each wallpaper
+      // holds for about seven seconds before the next one starts arriving.
+    }, 8000);
     return () => clearInterval(id);
   }, [phase, wallpapers.length, crossFade, reduceMotion]);
 
