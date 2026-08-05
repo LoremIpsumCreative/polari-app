@@ -112,6 +112,22 @@ try {
     process.exit(2);
   }
 
+  // Dismiss the launch screen. It mounts over the whole app on every cold
+  // start, and a headless capture is always a cold start — so without this
+  // every route diffs against the launch sequence rather than the screen under
+  // it. It made all eleven screens jump at once, including ones previously
+  // measured pixel-exact, which is the signature of a global overlay rather
+  // than real drift.
+  await page.evaluate(() => {
+    const open = [...document.querySelectorAll('*')].find(
+      (e) => e.children.length === 0 && e.textContent.trim() === 'Open'
+    );
+    open?.closest('[role="button"],button,div')?.dispatchEvent(
+      new MouseEvent('click', { bubbles: true })
+    );
+  }).catch(() => {});
+  await new Promise((r) => setTimeout(r, 400));
+
   await new Promise((r) => setTimeout(r, wait));
   await page.screenshot({
     path: resolve(renderPath),

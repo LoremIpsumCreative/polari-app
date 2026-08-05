@@ -32,7 +32,7 @@ function arg(name, fallback) {
   return hit ? hit.slice(name.length + 3) : fallback;
 }
 
-const SCREENS = arg('screens', '/Users/brentondoherty/Projects/Polari/Screens/2026-08-03');
+const SCREENS = arg('screens', '/Users/brentondoherty/Projects/Polari/Screens/2026-08-05');
 const url = arg('url', 'http://localhost:3000');
 const only = arg('only', null);
 const withAuth = process.argv.includes('--auth');
@@ -80,6 +80,7 @@ const MAP = [
   ['Quiz/Results/1 Min.png', '/quiz/results', 'finished game'],
   ['Quiz/Results/High Score (All Quiz Modes).png', '/quiz/results', 'finished game'],
 
+  ['Account/Sign In.png', '/profile/sign-in', false],
   ['Account/Create Account.png', '/profile/create-account', false],
   ['Account/Create Account Success.png', '/profile/create-account', 'post-submit state'],
   ['Account/Forgot Password.png', '/profile/forgot-password', false],
