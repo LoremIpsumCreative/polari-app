@@ -545,8 +545,8 @@
     "usage_status": null,
     "related_slugs": null
   },
-  "black-market-queen-bmq": {
-    "term": "Black market queen (BMQ)",
+  "black-market-queen": {
+    "term": "Black Market Queen",
     "entry_type": "phrase",
     "part_of_speech": "Noun",
     "pronunciation": "blak MAR-kit kween",
@@ -1820,7 +1820,7 @@
     "related_slugs": "bona"
   },
   "farting-crackers": {
-    "term": "Farting crackers",
+    "term": "Farting Crackers",
     "entry_type": "phrase",
     "part_of_speech": "Noun",
     "pronunciation": "FAR-ting KRAK-erz",
@@ -1859,7 +1859,7 @@
     "related_slugs": null
   },
   "feele-omi": {
-    "term": "Feele omi",
+    "term": "Feele Omi",
     "entry_type": "phrase",
     "part_of_speech": "Noun",
     "pronunciation": "FEE-lee OH-mee",
@@ -2080,7 +2080,7 @@
     "related_slugs": null
   },
   "gardy-loo": {
-    "term": "Gardy loo",
+    "term": "Gardy Loo",
     "entry_type": "phrase",
     "part_of_speech": "Interjection",
     "pronunciation": "GAR-dee loo",
