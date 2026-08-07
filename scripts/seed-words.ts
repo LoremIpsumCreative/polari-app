@@ -6,22 +6,11 @@
 // updates prefer `npm run words:check` + `npm run words:apply`, which also record
 // a change log and handle deletions. This seeder never deletes.
 
-import { config } from 'dotenv';
-
-import { createClient } from '@supabase/supabase-js';
+import { adminClient } from './lib/supabase';
 import { fetchSheetWords } from './lib/dictionary';
-config({ path: '.env.local' });
 
 async function main() {
-  const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error('Missing EXPO_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.local');
-  }
-
-  const supabase = createClient(supabaseUrl, serviceRoleKey, {
-    auth: { persistSession: false },
-  });
+  const supabase = adminClient();
 
   const { words: current, culturalFields } = await fetchSheetWords();
 

@@ -5,7 +5,7 @@ import IconBook2 from '@tabler/icons-react-native/IconBook2';
 import IconQuote from '@tabler/icons-react-native/IconQuote';
 import IconWorldSearch from '@tabler/icons-react-native/IconWorldSearch';
 import type { Word } from '../types/database';
-import { fonts } from '../lib/theme';
+import { colors, fonts } from '../lib/theme';
 import { useCharacterArt } from '../lib/remoteArt';
 
 // The visual card snapshotted and shared as an image — a pixel match of the
@@ -25,14 +25,14 @@ const FIELD = { x: 52, y: 104, w: 460, h: 819 };
 const frameArt = require('../../assets/share/frame.png');
 const qrArt = require('../../assets/share/qr-polari.png');
 
-const STAGE = '#0E1D31';
-const FIELD_BG = '#E7E9EC';
-const BODY = '#172B4D';
-const SLATE = '#626F86'; // POS/pronunciation + row meta
-const MUTED = '#44546F'; // footer CTA
-const LABEL = '#758195';
-const LINE = '#C8CCD4';
-const BOX = '#F8F9FA';
+const STAGE = colors.ink;
+const FIELD_BG = colors.canvas;
+const BODY = colors.text;
+const SLATE = colors.metaText; // POS/pronunciation + row meta
+const MUTED = colors.chipGrey; // footer CTA
+const LABEL = colors.label;
+const LINE = colors.fieldBorder;
+const BOX = colors.inset;
 const ROW_ICON = '#B3B9C4';
 
 function stripEmphasis(text: string): string {
@@ -92,7 +92,7 @@ export const ShareWordCard = forwardRef<View, Props>(function ShareWordCard(
       <Svg style={StyleSheet.absoluteFill} width={CARD_WIDTH} height={CARD_HEIGHT}>
         <Defs>
           <LinearGradient id="shareStage" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#44546F" />
+            <Stop offset="0" stopColor={colors.chipGrey} />
             <Stop offset="1" stopColor={STAGE} />
           </LinearGradient>
         </Defs>
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 8,
     alignSelf: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     borderRadius: 999,
     paddingHorizontal: 20,
     paddingVertical: 8,
@@ -216,15 +216,15 @@ const styles = StyleSheet.create({
     color: BODY,
   },
   badge: {
-    backgroundColor: '#F4F9FF',
+    backgroundColor: colors.primarySoft,
     borderWidth: 1,
-    borderColor: '#0C66E4',
+    borderColor: colors.primary,
     borderRadius: 999,
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
   badgeText: {
-    color: '#0C66E4',
+    color: colors.primary,
     fontSize: 10,
     fontFamily: fonts.bold,
     letterSpacing: 0.3,
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: LINE,
     borderRadius: 8,
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -5,
     left: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     paddingHorizontal: 4,
   },
   fieldLabel: {

@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     // The Today canvas is one step lighter than the app background (Figma 1114:1023)
-    backgroundColor: '#E7E9EC',
+    backgroundColor: colors.canvas,
   },
   presentScreen: {
     flex: 1,

@@ -33,7 +33,7 @@ type Line = {
 
 // The speech bubbles are vectors rather than art: a rounded card with a tail
 // notched out of its left edge, pointing back at the quizmaster.
-const BUBBLE_FILL = '#F8F9FA';
+const BUBBLE_FILL = colors.inset;
 const BUBBLE_STROKE = '#000000';
 const BUBBLE_STROKE_WIDTH = 3;
 
@@ -65,8 +65,8 @@ const BLOB = {
   d: 'M8.81752 34.0051C7.70336 24.7855 14.6463 16.5573 23.9218 16.1045L175.209 8.71947C184.623 8.25991 192.393 15.997 191.973 25.4132L189.291 85.5524C188.892 94.5066 181.216 101.386 172.271 100.806L28.9177 91.5069C21.2325 91.0083 14.9929 85.1057 14.069 77.46L8.81752 34.0051Z',
 };
 
-const ACCENT = '#0C66E4';
-const BODY_INK = '#121212';
+const ACCENT = colors.primary;
+const BODY_INK = colors.stageDeep;
 
 // Title boxes are the headings' RENDER bounds — they include the 10px outline
 // stroke, and sit centred on the heading group's own box.
@@ -218,7 +218,7 @@ export default function QuizResultsScreen() {
       >
         <Defs>
           <LinearGradient id="wash" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#121212" stopOpacity={0} />
+            <Stop offset="0" stopColor={colors.stageDeep} stopOpacity={0} />
             <Stop offset="1" stopColor="#3C2000" stopOpacity={0.49} />
           </LinearGradient>
         </Defs>
@@ -252,7 +252,7 @@ export default function QuizResultsScreen() {
         <Svg style={StyleSheet.absoluteFill} width={142 * s} height={110 * s}>
           <Defs>
             <LinearGradient id="scoreBorder" x1="0" y1="0" x2="1" y2="1">
-              <Stop offset="0" stopColor="#352C63" />
+              <Stop offset="0" stopColor={colors.progressBorder} />
               <Stop offset="1" stopColor="#6C59C9" />
             </LinearGradient>
           </Defs>
@@ -262,7 +262,7 @@ export default function QuizResultsScreen() {
             width={133 * s}
             height={101 * s}
             rx={16 * s}
-            fill="#FFFFFF"
+            fill={colors.surface}
             stroke="url(#scoreBorder)"
             strokeWidth={9 * s}
           />
@@ -352,11 +352,11 @@ export default function QuizResultsScreen() {
         >
           <Defs>
             <LinearGradient id="blobFill" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor="#493B8B" />
-              <Stop offset="1" stopColor="#352C63" />
+              <Stop offset="0" stopColor={colors.quizPurpleDark} />
+              <Stop offset="1" stopColor={colors.progressBorder} />
             </LinearGradient>
             <LinearGradient id="blobEdge" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor="#FFF7D6" />
+              <Stop offset="0" stopColor={colors.spotlight} />
               <Stop offset="1" stopColor="#F7DA75" />
             </LinearGradient>
           </Defs>
@@ -392,12 +392,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // Sits under the SVG's gradient border, so it only ever reads as the
     // shadow caster's silhouette.
-    backgroundColor: '#493B8B',
+    backgroundColor: colors.quizPurpleDark,
     shadowColor: '#000000',
     shadowOpacity: 0.37,
     elevation: 6,
   },
-  score: { fontFamily: fonts.extrabold, color: '#352C63', letterSpacing: 1 },
+  score: { fontFamily: fonts.extrabold, color: colors.progressBorder, letterSpacing: 1 },
   bubbleLine: { position: 'absolute', textAlign: 'center' },
   reviewNote: {
     position: 'absolute',
@@ -411,18 +411,18 @@ const styles = StyleSheet.create({
     right: 0,
     textAlign: 'center',
     fontFamily: fonts.display,
-    color: '#FFFFFF',
+    color: colors.onPrimary,
     letterSpacing: 0.5,
   },
   finish: {
     position: 'absolute',
     // purple/800, the same stop the Play Again blob opens on — the pill was a
     // near-black navy, which the frames never show.
-    backgroundColor: '#493B8B',
+    backgroundColor: colors.quizPurpleDark,
     borderRadius: 999,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  finishText: { fontFamily: fonts.bold, color: '#FFFFFF', letterSpacing: 0.3 },
+  finishText: { fontFamily: fonts.bold, color: colors.onPrimary, letterSpacing: 0.3 },
   pressed: { opacity: 0.85 },
 });

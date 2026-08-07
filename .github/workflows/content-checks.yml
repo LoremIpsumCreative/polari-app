@@ -1,0 +1,99 @@
+name: Content checks
+
+# Watches the two content sources that live outside the repo and records what
+# changed. Neither job writes to Supabase and neither needs a secret: the sheet
+# is fetched as public CSV, and the art bucket is listed with the app's public
+# anon key.
+#
+# These were two separate workflow files with the same checkout, the same Node
+# setup and the same commit-and-push block copied between them — including the
+# Node version, which had to be remembered in two places. They are one file with
+# two jobs now; the jobs stay independent so a failure in one still lets the
+# other report.
+
+on:
+  schedule:
+    - cron: '0 20 * * *' # daily, ~06:00 AEST
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  # Both jobs commit to main, so they must not race each other or a second run.
+  group: content-checks
+  cancel-in-progress: false
+
+jobs:
+  dictionary:
+    name: Dictionary change check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          # Matches engines.node in package.json — the SDK 57 minimum.
+          node-version: '22.13.x'
+          cache: npm
+      - run: npm ci
+
+      # words:check exits 1 when there are pending changes, so this step "fails"
+      # on purpose; continue-on-error lets the job carry on and branch on it.
+      - name: Check the Google Sheet for changes
+        id: check
+        continue-on-error: true
+        run: npm run words:check
+
+      - name: Commit the change log when there are pending changes
+        if: steps.check.outcome == 'failure'
+        run: |
+          if git diff --quiet -- dictionary-changes.md; then
+            echo "Change log identical to last run — nothing new to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add dictionary-changes.md
+            git commit -m "Dictionary changes detected in the Google Sheet"
+            # Rebase before pushing: the checkout is pinned to the SHA that
+            # triggered the run, so anything landing on main meanwhile would
+            # make this a non-fast-forward and the push would be rejected.
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+  art:
+    name: Character art check
+    runs-on: ubuntu-latest
+    # Serialised behind the dictionary job: both push to main, and two jobs
+    # racing to commit is how you get a rejected non-fast-forward push.
+    needs: dictionary
+    if: '!cancelled()'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          # Take current main rather than the triggering SHA: the dictionary job
+          # runs first and may have just committed to it.
+          ref: main
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.13.x'
+          cache: npm
+      - run: npm ci
+
+      # Art is live the moment it is uploaded, so the snapshot advances in the
+      # same commit — this is a log, not a queue awaiting approval.
+      - name: Check the bucket and acknowledge any changes
+        run: npm run art:ack
+
+      - name: Commit the art log when something changed
+        run: |
+          if git diff --quiet -- art-changes.md scripts/art-snapshot.json; then
+            echo "No art changes."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add art-changes.md scripts/art-snapshot.json
+            git commit -m "Character art changes detected in the bucket"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

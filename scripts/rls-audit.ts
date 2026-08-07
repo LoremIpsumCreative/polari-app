@@ -15,22 +15,11 @@
 // The script is read-mostly and cleans up after itself: the users it creates are
 // deleted in a finally block, and cascading FKs take their rows with them.
 
-import { config } from 'dotenv';
-
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient } from '@supabase/supabase-js';
 import { randomUUID } from 'node:crypto';
-config({ path: '.env.local' });
+import { adminClient, anonClient } from './lib/supabase';
 
-const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
-const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-if (!url || !anonKey || !serviceKey) {
-  throw new Error(
-    'Need EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_ANON_KEY and SUPABASE_SERVICE_ROLE_KEY in .env.local',
-  );
-}
-
-const admin = createClient(url, serviceKey, { auth: { persistSession: false } });
+const admin = adminClient();
 
 type Result = { area: string; check: string; pass: boolean; detail: string };
 const results: Result[] = [];
@@ -81,13 +70,13 @@ async function main() {
         email_confirm: true,
       });
       if (error || !data.user) throw new Error(`could not create test user: ${error?.message}`);
-      const client = createClient(url!, anonKey!, { auth: { persistSession: false } });
+      const client = anonClient();
       const { error: signInError } = await client.auth.signInWithPassword({ email, password });
       if (signInError) throw new Error(`could not sign in test user: ${signInError.message}`);
       users.push({ id: data.user.id, email, password, client });
     }
     const [A, B] = users;
-    const anon = createClient(url!, anonKey!, { auth: { persistSession: false } });
+    const anon = anonClient();
 
     // Seed a row for B under B's own session, so A has something real to hunt.
     const { data: words } = await anon.from('words').select('id').limit(1);

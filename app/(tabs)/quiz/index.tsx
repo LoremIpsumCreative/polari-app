@@ -121,7 +121,7 @@ const HERO_SHADOW = (s: number) =>
   });
 
 const GOLD_INK = '#F5CD47';
-const MODE_INK = '#6E5DC6';
+const MODE_INK = colors.quizPurple;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Entrance choreography — Figma frame 1114:158, 5.17s one-shot.
@@ -517,7 +517,7 @@ export default function QuizIntroScreen() {
             w={SIGN_VIEW.w}
             h={SIGN_VIEW.h}
             s={s}
-            edgeFrom="#FFF7D6"
+            edgeFrom={colors.spotlight}
             edgeTo="#F7DA75"
             offsetX={SIGN_VIEW.dx}
             offsetY={SIGN_VIEW.dy}
@@ -673,7 +673,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     fontFamily: fonts.display,
-    color: '#FFFFFF',
+    color: colors.onPrimary,
     textAlign: 'center',
   },
   headingAccent: { color: GOLD_INK },
@@ -699,10 +699,10 @@ const styles = StyleSheet.create({
   },
   scoreBadgeText: {
     fontFamily: fonts.bold,
-    color: '#FFF6F5',
+    color: colors.incorrectSoft,
   },
   modeCircle: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -720,7 +720,7 @@ const styles = StyleSheet.create({
   },
   howToCard: {
     position: 'absolute',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     paddingHorizontal: 32,
     paddingTop: 42,
     paddingBottom: 32,
@@ -749,7 +749,7 @@ const styles = StyleSheet.create({
   howToStartText: { fontFamily: fonts.bold, letterSpacing: 0.3, color: colors.onPrimary },
   modeLabel: {
     fontFamily: fonts.bold,
-    color: '#FFF6F5',
+    color: colors.incorrectSoft,
     textAlign: 'center',
   },
 });

@@ -49,11 +49,11 @@ const CD = {
     y: 312,
     w: 235,
     h: 200.5,
-    fill: '#DCDFE4',
+    fill: colors.background,
     // "Vector 9" — a tapered, hand-drawn card, not a plain rounded rect.
     d: 'M210.228 0.896026 L23.3402 7.65578 C10.8703 8.10682 1.54222 19.2675 3.31138 31.6195 L24.9186 182.477 C26.3999 192.82 35.2587 200.5 45.7065 200.5 L190.547 200.5 C201.101 200.5 210.016 192.667 211.373 182.201 L231.812 24.5829 C233.481 11.7142 223.195 0.426974 210.228 0.896026 Z',
   },
-  pill: { x: 138.5, y: 357.5, w: 118, h: 30, fill: '#44546F' },
+  pill: { x: 138.5, y: 357.5, w: 118, h: 30, fill: colors.chipGrey },
   numberTop: 397.5, // cap line 405.5
   numberSize: 100,
   numberLine: 88,
@@ -532,7 +532,7 @@ export default function QuizPlayScreen() {
                   <Path
                     key={`link-${w.id}`}
                     d={`M${x0} ${y0} C${x0 + bow} ${y0} ${x1 - bow} ${y1} ${x1} ${y1}`}
-                    stroke="#758195"
+                    stroke={colors.label}
                     strokeWidth={2 * s}
                     strokeOpacity={0.7}
                     fill="none"
@@ -668,7 +668,7 @@ export default function QuizPlayScreen() {
 
 const styles = StyleSheet.create({
   // The question frames use a lighter canvas than the app default.
-  screen: { flex: 1, backgroundColor: '#E7E9EC' },
+  screen: { flex: 1, backgroundColor: colors.canvas },
   center: {
     flex: 1,
     alignItems: 'center',
@@ -698,16 +698,16 @@ const styles = StyleSheet.create({
   },
   cdPill: {
     position: 'absolute',
-    backgroundColor: '#44546F',
+    backgroundColor: colors.chipGrey,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cdPillText: { fontFamily: fonts.bold, color: '#FFFFFF' },
+  cdPillText: { fontFamily: fonts.bold, color: colors.onPrimary },
   cdNumber: {
     position: 'absolute',
     textAlign: 'center',
     fontFamily: fonts.extrabold,
-    color: '#44546F',
+    color: colors.chipGrey,
   },
 
   // Header
