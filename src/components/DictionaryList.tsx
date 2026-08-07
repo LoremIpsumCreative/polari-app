@@ -1,7 +1,7 @@
 import { useMemo, useRef, type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { FlashList, type FlashListRef } from '@shopify/flash-list';
-import { IconChevronRight } from '@tabler/icons-react-native';
+import IconChevronRight from '@tabler/icons-react-native/IconChevronRight';
 import { colors, fonts } from '../lib/theme';
 import type { Word } from '../types/database';
 import { useTabBarInset } from './AnimatedTabBar';

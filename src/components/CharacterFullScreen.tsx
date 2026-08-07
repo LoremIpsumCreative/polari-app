@@ -1,5 +1,5 @@
 import { Image, Modal, Pressable, StyleSheet, View } from 'react-native';
-import { IconX } from '@tabler/icons-react-native';
+import IconX from '@tabler/icons-react-native/IconX';
 import type { ImageSourcePropType } from 'react-native';
 import { colors, spacing } from '../lib/theme';
 

@@ -1,7 +1,9 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter, type Href } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
-import { IconHeart, IconPhoto, IconTrophy } from '@tabler/icons-react-native';
+import IconHeart from '@tabler/icons-react-native/IconHeart';
+import IconPhoto from '@tabler/icons-react-native/IconPhoto';
+import IconTrophy from '@tabler/icons-react-native/IconTrophy';
 import { useAuth } from '../../../src/lib/auth';
 import { HEART_RED, TROPHY_GOLD } from '../../../src/components/CollectionChrome';
 import { colors, fonts } from '../../../src/lib/theme';

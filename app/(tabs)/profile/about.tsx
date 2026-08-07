@@ -1,11 +1,9 @@
 import { Image, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import {
-  IconBinoculars,
-  IconChevronLeft,
-  IconExternalLink,
-  IconUser,
-} from '@tabler/icons-react-native';
+import IconBinoculars from '@tabler/icons-react-native/IconBinoculars';
+import IconChevronLeft from '@tabler/icons-react-native/IconChevronLeft';
+import IconExternalLink from '@tabler/icons-react-native/IconExternalLink';
+import IconUser from '@tabler/icons-react-native/IconUser';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';

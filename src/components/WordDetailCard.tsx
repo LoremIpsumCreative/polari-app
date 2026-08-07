@@ -1,18 +1,16 @@
 import { useState, type ComponentType } from 'react';
 import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import { useRouter } from 'expo-router';
-import {
-  IconBook2,
-  IconChartBar,
-  IconInfoCircle,
-  IconLink,
-  IconNotes,
-  IconQuote,
-  IconSend,
-  IconStack2,
-  IconWorldSearch,
-  type IconProps,
-} from '@tabler/icons-react-native';
+import IconBook2 from '@tabler/icons-react-native/IconBook2';
+import IconChartBar from '@tabler/icons-react-native/IconChartBar';
+import IconInfoCircle from '@tabler/icons-react-native/IconInfoCircle';
+import IconLink from '@tabler/icons-react-native/IconLink';
+import IconNotes from '@tabler/icons-react-native/IconNotes';
+import IconQuote from '@tabler/icons-react-native/IconQuote';
+import IconSend from '@tabler/icons-react-native/IconSend';
+import IconStack2 from '@tabler/icons-react-native/IconStack2';
+import IconWorldSearch from '@tabler/icons-react-native/IconWorldSearch';
+import type { IconProps } from '../lib/icons';
 import type { Word, UsageStatus } from '../types/database';
 import { colors, radii, spacing, fonts } from '../lib/theme';
 import { useWords } from '../lib/words';

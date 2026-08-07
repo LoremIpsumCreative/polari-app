@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { IconHeart, IconHeartFilled } from '@tabler/icons-react-native';
+import IconHeart from '@tabler/icons-react-native/IconHeart';
+import IconHeartFilled from '@tabler/icons-react-native/IconHeartFilled';
 import { useAuth } from '../../../src/lib/auth';
 import { useFavourites } from '../../../src/lib/favourites';
 import { useWords } from '../../../src/lib/words';

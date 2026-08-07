@@ -1,6 +1,6 @@
 import { Pressable } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
-import { IconChevronLeft } from '@tabler/icons-react-native';
+import IconChevronLeft from '@tabler/icons-react-native/IconChevronLeft';
 import { colors, headerOptions } from '../../src/lib/theme';
 
 export default function AuthLayout() {

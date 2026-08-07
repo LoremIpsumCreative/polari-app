@@ -1,7 +1,9 @@
 import { forwardRef } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
-import { IconBook2, IconQuote, IconWorldSearch } from '@tabler/icons-react-native';
+import IconBook2 from '@tabler/icons-react-native/IconBook2';
+import IconQuote from '@tabler/icons-react-native/IconQuote';
+import IconWorldSearch from '@tabler/icons-react-native/IconWorldSearch';
 import type { Word } from '../types/database';
 import { fonts } from '../lib/theme';
 import { useCharacterArt } from '../lib/remoteArt';

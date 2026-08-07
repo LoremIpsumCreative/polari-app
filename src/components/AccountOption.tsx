@@ -1,6 +1,8 @@
 import type { ComponentType, ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { IconChevronDown, IconChevronUp, type IconProps } from '@tabler/icons-react-native';
+import IconChevronDown from '@tabler/icons-react-native/IconChevronDown';
+import IconChevronUp from '@tabler/icons-react-native/IconChevronUp';
+import type { IconProps } from '../lib/icons';
 import { colors, fonts } from '../lib/theme';
 
 // Button/Account Option (Figma 2154:3240 and siblings) — the row every Account

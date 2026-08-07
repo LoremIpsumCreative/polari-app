@@ -9,7 +9,7 @@ import { colors, fonts, DESIGN_WIDTH, DESIGN_HEIGHT } from '../../../src/lib/the
 import { useDesignScale } from '../../../src/lib/designScale';
 import { useReducedMotion } from '../../../src/lib/reducedMotion';
 import { Blob, FLAME, ModeGlyph } from '../../../src/components/quizLandingArt';
-import { IconX } from '@tabler/icons-react-native';
+import IconX from '@tabler/icons-react-native/IconX';
 
 const quizmasterArt = require('../../../assets/quiz/quizmaster.png');
 

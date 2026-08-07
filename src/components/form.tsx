@@ -9,7 +9,7 @@ import {
   type TextInputProps,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { IconCaretLeftFilled } from '@tabler/icons-react-native';
+import IconCaretLeftFilled from '@tabler/icons-react-native/IconCaretLeftFilled';
 import { colors, radii, spacing, fonts } from '../lib/theme';
 import { ScreenBackground } from './ScreenBackground';
 

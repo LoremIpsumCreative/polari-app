@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import { IconHeart, IconHeartFilled } from '@tabler/icons-react-native';
+import IconHeart from '@tabler/icons-react-native/IconHeart';
+import IconHeartFilled from '@tabler/icons-react-native/IconHeartFilled';
 import { useAuth } from '../lib/auth';
 import { useFavourites } from '../lib/favourites';
 import { colors, radii } from '../lib/theme';

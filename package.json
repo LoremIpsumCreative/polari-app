@@ -50,7 +50,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "build": "expo export --platform web",
-    "typecheck": "node --stack-size=8000 ./node_modules/typescript/bin/tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

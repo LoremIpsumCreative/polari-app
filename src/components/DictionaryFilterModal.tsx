@@ -1,18 +1,16 @@
 import { useState, type ReactNode } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import {
-  IconAbc,
-  IconChartBar,
-  IconChevronDown,
-  IconChevronUp,
-  IconHeart,
-  IconHeartFilled,
-  IconMessage,
-  IconMessages,
-  IconPhoto,
-  IconTag,
-  IconWorld,
-} from '@tabler/icons-react-native';
+import IconAbc from '@tabler/icons-react-native/IconAbc';
+import IconChartBar from '@tabler/icons-react-native/IconChartBar';
+import IconChevronDown from '@tabler/icons-react-native/IconChevronDown';
+import IconChevronUp from '@tabler/icons-react-native/IconChevronUp';
+import IconHeart from '@tabler/icons-react-native/IconHeart';
+import IconHeartFilled from '@tabler/icons-react-native/IconHeartFilled';
+import IconMessage from '@tabler/icons-react-native/IconMessage';
+import IconMessages from '@tabler/icons-react-native/IconMessages';
+import IconPhoto from '@tabler/icons-react-native/IconPhoto';
+import IconTag from '@tabler/icons-react-native/IconTag';
+import IconWorld from '@tabler/icons-react-native/IconWorld';
 import { colors, fonts } from '../lib/theme';
 import { HEART_RED } from './CollectionChrome';
 import {

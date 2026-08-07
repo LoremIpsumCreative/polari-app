@@ -13,7 +13,9 @@ import {
 } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
-import { IconArrowsMaximize, IconChevronLeft, IconChevronRight } from '@tabler/icons-react-native';
+import IconArrowsMaximize from '@tabler/icons-react-native/IconArrowsMaximize';
+import IconChevronLeft from '@tabler/icons-react-native/IconChevronLeft';
+import IconChevronRight from '@tabler/icons-react-native/IconChevronRight';
 import { useWords } from '../../src/lib/words';
 import { daysSinceEpoch, wordOfTheDay } from '../../src/lib/wordOfTheDay';
 import { useCharacterArt } from '../../src/lib/remoteArt';

@@ -1,18 +1,16 @@
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import {
-  IconBinoculars,
-  IconColorSwatch,
-  IconDeviceMobile,
-  IconLogout,
-  IconMail,
-  IconMoon,
-  IconSun,
-  IconTrash,
-  IconUser,
-  IconUserCheck,
-} from '@tabler/icons-react-native';
+import IconBinoculars from '@tabler/icons-react-native/IconBinoculars';
+import IconColorSwatch from '@tabler/icons-react-native/IconColorSwatch';
+import IconDeviceMobile from '@tabler/icons-react-native/IconDeviceMobile';
+import IconLogout from '@tabler/icons-react-native/IconLogout';
+import IconMail from '@tabler/icons-react-native/IconMail';
+import IconMoon from '@tabler/icons-react-native/IconMoon';
+import IconSun from '@tabler/icons-react-native/IconSun';
+import IconTrash from '@tabler/icons-react-native/IconTrash';
+import IconUser from '@tabler/icons-react-native/IconUser';
+import IconUserCheck from '@tabler/icons-react-native/IconUserCheck';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';

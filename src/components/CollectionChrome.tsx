@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { IconChevronLeft, IconSearch } from '@tabler/icons-react-native';
+import IconChevronLeft from '@tabler/icons-react-native/IconChevronLeft';
+import IconSearch from '@tabler/icons-react-native/IconSearch';
 import { colors, fonts } from '../lib/theme';
 import { useTabBarInset } from './AnimatedTabBar';
 

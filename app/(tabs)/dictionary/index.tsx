@@ -9,7 +9,9 @@ import {
   View,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { IconAdjustmentsHorizontal, IconMoodSad, IconSearch } from '@tabler/icons-react-native';
+import IconAdjustmentsHorizontal from '@tabler/icons-react-native/IconAdjustmentsHorizontal';
+import IconMoodSad from '@tabler/icons-react-native/IconMoodSad';
+import IconSearch from '@tabler/icons-react-native/IconSearch';
 import { useWords } from '../../../src/lib/words';
 import { useFavourites } from '../../../src/lib/favourites';
 import { useCharacterArt } from '../../../src/lib/remoteArt';

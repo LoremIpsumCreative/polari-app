@@ -1,7 +1,25 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "paths": {
+      // Icons are imported one file at a time rather than from the package
+      // barrel — see src/lib/icons.ts. Runtime resolution is fine on its own
+      // (the "./*" export maps to dist/esm/icons/<Name>.mjs), but the types
+      // are not: that same export points at "./dist/icons/*.d.ts" while the
+      // declarations actually sit a directory deeper, in dist/icons/icons/.
+      // Without this mapping every icon resolves to an implicit `any`
+      // (TS7016) and the deep imports would quietly cost type safety.
+      "@tabler/icons-react-native/*": [
+        "./node_modules/@tabler/icons-react-native/dist/icons/icons/*"
+      ]
+    }
   },
-  "exclude": ["node_modules", "supabase/functions"]
+  // `dist` holds the output of `expo export` — a single ~7.8 MB bundled JS
+  // file. Expo's base config sets allowJs, and nothing excluded dist, so every
+  // typecheck pulled the build output into the program and checked it. That is
+  // what exhausted the call stack and forced `--stack-size=8000` onto the
+  // typecheck script; it also made the result depend on whether anyone had run
+  // a build, since a clean tree has no dist to trip over.
+  "exclude": ["node_modules", "supabase/functions", "dist", "ios", "android", ".expo"]
 }

@@ -1,19 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { ComponentType } from 'react';
-import {
-  IconBook2,
-  IconCrown,
-  IconFlame,
-  IconHeart,
-  IconHearts,
-  IconMasksTheater,
-  IconMicrophone2,
-  IconSparkles,
-  IconStar,
-  IconTargetArrow,
-  IconTrophy,
-  type IconProps,
-} from '@tabler/icons-react-native';
+import IconBook2 from '@tabler/icons-react-native/IconBook2';
+import IconCrown from '@tabler/icons-react-native/IconCrown';
+import IconFlame from '@tabler/icons-react-native/IconFlame';
+import IconHeart from '@tabler/icons-react-native/IconHeart';
+import IconHearts from '@tabler/icons-react-native/IconHearts';
+import IconMasksTheater from '@tabler/icons-react-native/IconMasksTheater';
+import IconMicrophone2 from '@tabler/icons-react-native/IconMicrophone2';
+import IconSparkles from '@tabler/icons-react-native/IconSparkles';
+import IconStar from '@tabler/icons-react-native/IconStar';
+import IconTargetArrow from '@tabler/icons-react-native/IconTargetArrow';
+import IconTrophy from '@tabler/icons-react-native/IconTrophy';
+import type { IconProps } from './icons';
 import { supabase } from './supabase';
 import { useAuth } from './auth';
 import { useStreaks } from './streaks';

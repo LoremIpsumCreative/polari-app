@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { IconArrowsMaximize } from '@tabler/icons-react-native';
+import IconArrowsMaximize from '@tabler/icons-react-native/IconArrowsMaximize';
 import { useWords } from '../../../src/lib/words';
 import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../../src/components/CharacterFullScreen';
