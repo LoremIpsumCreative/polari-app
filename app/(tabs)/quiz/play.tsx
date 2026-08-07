@@ -3,8 +3,6 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 import IconChevronLeft from '@tabler/icons-react-native/IconChevronLeft';
-import IconFlame from '@tabler/icons-react-native/IconFlame';
-import IconTrophy from '@tabler/icons-react-native/IconTrophy';
 import { useWords } from '../../../src/lib/words';
 import { useProgress } from '../../../src/lib/progress';
 import { useQuizStats } from '../../../src/lib/quizScores';
@@ -14,6 +12,8 @@ import { QUIZ_MODES, isQuizModeId, type QuizModeId } from '../../../src/lib/quiz
 import { colors, fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
+import { QuizCountdown } from '../../../src/components/quiz/QuizCountdown';
+import { QuizStatHeader } from '../../../src/components/quiz/QuizStatHeader';
 
 // All geometry lives in the Figma frames' 393-wide design space and is scaled
 // by the device width, so the screens reproduce the mockups proportionally.
@@ -31,33 +31,6 @@ const PAIR_STYLES = [
   { fill: '#F9F7FF', ink: '#6E5DC6' }, // Match/3 — Purple/700
   { fill: '#F4FCFF', ink: '#227D9B' }, // Match/4 — Teal/700
 ] as const;
-
-// Countdown screen, rebuilt to the current frames (Quiz/*_Countdown panes in
-// section 1353:769). It is a LIGHT screen now — the dark stage, spotlight wash
-// and blurb panel are gone. What remains: the mode title, a hand-drawn grey
-// card, and the count inside it under a navy "Quiz starts in:" pill.
-//
-// Tops are cap lines solved back through the fonts' metrics (Digitale: asc
-// 0.97em, desc 0.27em, cap 0.71em; Mouse Memoirs: 0.9375 / 0.2125 / 0.71925).
-const CD = {
-  backChip: { x: 17, y: 51.5, w: 80, h: 31 },
-  titleTop: 107, // matches the question screen's Mode Text
-  titleSize: 60,
-  titleLine: 52.8,
-  card: {
-    x: 80,
-    y: 312,
-    w: 235,
-    h: 200.5,
-    fill: colors.background,
-    // "Vector 9" — a tapered, hand-drawn card, not a plain rounded rect.
-    d: 'M210.228 0.896026 L23.3402 7.65578 C10.8703 8.10682 1.54222 19.2675 3.31138 31.6195 L24.9186 182.477 C26.3999 192.82 35.2587 200.5 45.7065 200.5 L190.547 200.5 C201.101 200.5 210.016 192.667 211.373 182.201 L231.812 24.5829 C233.481 11.7142 223.195 0.426974 210.228 0.896026 Z',
-  },
-  pill: { x: 138.5, y: 357.5, w: 118, h: 30, fill: colors.chipGrey },
-  numberTop: 397.5, // cap line 405.5
-  numberSize: 100,
-  numberLine: 88,
-};
 
 export default function QuizPlayScreen() {
   const router = useRouter();
@@ -160,98 +133,16 @@ export default function QuizPlayScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, mode.timer, remaining]);
 
-  // ── Countdown screen (light, per the current frames) ──
   if (phase === 'countdown') {
     return (
-      <View style={styles.screen}>
-        <ScreenBackground />
-        <Pressable
-          style={[
-            styles.cdBackChip,
-            {
-              left: CD.backChip.x * s,
-              top: CD.backChip.y * s,
-              width: CD.backChip.w * s,
-              height: CD.backChip.h * s,
-            },
-          ]}
-          onPress={() => router.replace('/quiz')}
-          accessibilityRole="button"
-          accessibilityLabel="Back to quizzes"
-        >
-          <IconChevronLeft size={10 * s} color={colors.text} />
-          <Text style={[styles.cdBackText, { fontSize: 10 * s }]}>Quizzes</Text>
-        </Pressable>
-
-        <Text
-          style={[
-            styles.cdTitle,
-            { top: CD.titleTop * s, fontSize: CD.titleSize * s, lineHeight: CD.titleLine * s },
-          ]}
-        >
-          {isReview ? 'Review' : mode.label}
-        </Text>
-
-        <View style={[styles.headerStats, { top: 210.5 * s, gap: 57 * s }]}>
-          <View style={styles.statGroup}>
-            <IconFlame size={10 * s} color={colors.textFaint} />
-            <Text style={[styles.statLabel, { fontSize: 10 * s }]}>STREAK:</Text>
-            <Text style={[styles.statValue, { fontSize: 14 * s }]}>
-              {String(modeId === 'ten' && !isReview ? stats.ten_run_current : 0).padStart(2, '0')}
-            </Text>
-          </View>
-          {!isReview ? (
-            <View style={styles.statGroup}>
-              <IconTrophy size={10 * s} color={colors.textFaint} />
-              <Text style={[styles.statLabel, { fontSize: 10 * s }]}>HIGH SCORE:</Text>
-              <Text style={[styles.statValue, { fontSize: 14 * s }]}>
-                {String(bestFor(modeId)).padStart(2, '0')}
-              </Text>
-            </View>
-          ) : null}
-        </View>
-
-        {/* The count sits in a hand-drawn card, under its label pill */}
-        <Svg
-          style={{ position: 'absolute', left: CD.card.x * s, top: CD.card.y * s }}
-          width={CD.card.w * s}
-          height={CD.card.h * s}
-          viewBox={`0 0 ${CD.card.w} ${CD.card.h}`}
-          pointerEvents="none"
-        >
-          <Path d={CD.card.d} fill={CD.card.fill} />
-        </Svg>
-
-        <View
-          style={[
-            styles.cdPill,
-            {
-              left: CD.pill.x * s,
-              top: CD.pill.y * s,
-              width: CD.pill.w * s,
-              height: CD.pill.h * s,
-              borderRadius: (CD.pill.h * s) / 2,
-            },
-          ]}
-        >
-          <Text style={[styles.cdPillText, { fontSize: 14 * s }]}>Quiz starts in:</Text>
-        </View>
-
-        <Text
-          style={[
-            styles.cdNumber,
-            {
-              top: CD.numberTop * s,
-              left: CD.pill.x * s,
-              width: CD.pill.w * s,
-              fontSize: CD.numberSize * s,
-              lineHeight: CD.numberLine * s,
-            },
-          ]}
-        >
-          {Math.max(count, 1)}
-        </Text>
-      </View>
+      <QuizCountdown
+        scale={s}
+        title={isReview ? 'Review' : mode.label}
+        count={count}
+        streak={modeId === 'ten' && !isReview ? stats.ten_run_current : 0}
+        highScore={isReview ? null : bestFor(modeId)}
+        onBack={() => router.replace('/quiz')}
+      />
     );
   }
 
@@ -464,24 +355,7 @@ export default function QuizPlayScreen() {
         </View>
       ) : null}
 
-      <View style={[styles.headerStats, { top: 210.5 * s, gap: 57 * s }]}>
-        <View style={styles.statGroup}>
-          <IconFlame size={10 * s} color={colors.textFaint} />
-          <Text style={[styles.statLabel, { fontSize: 10 * s }]}>{leftPill.label}</Text>
-          <Text style={[styles.statValue, { fontSize: 14 * s }]}>
-            {String(leftPill.value).padStart(2, '0')}
-          </Text>
-        </View>
-        {highScore !== null ? (
-          <View style={styles.statGroup}>
-            <IconTrophy size={10 * s} color={colors.textFaint} />
-            <Text style={[styles.statLabel, { fontSize: 10 * s }]}>HIGH SCORE:</Text>
-            <Text style={[styles.statValue, { fontSize: 14 * s }]}>
-              {String(highScore).padStart(2, '0')}
-            </Text>
-          </View>
-        ) : null}
-      </View>
+      <QuizStatHeader scale={s} streak={leftPill.value} highScore={highScore} />
 
       {prompt}
 
@@ -678,37 +552,6 @@ const styles = StyleSheet.create({
   dimText: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 15 },
 
   // Countdown (light screen, per the current frames)
-  cdBackChip: {
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    backgroundColor: colors.inset,
-    borderRadius: 999,
-  },
-  cdBackText: { fontFamily: fonts.bold, color: colors.text },
-  cdTitle: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    fontFamily: fonts.display,
-    color: colors.text,
-  },
-  cdPill: {
-    position: 'absolute',
-    backgroundColor: colors.chipGrey,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cdPillText: { fontFamily: fonts.bold, color: colors.onPrimary },
-  cdNumber: {
-    position: 'absolute',
-    textAlign: 'center',
-    fontFamily: fonts.extrabold,
-    color: colors.chipGrey,
-  },
 
   // Header
   backChip: {
@@ -728,15 +571,6 @@ const styles = StyleSheet.create({
     color: colors.text,
     textAlign: 'center',
   },
-  headerStats: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  statGroup: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   backText: { fontFamily: fonts.bold, color: colors.text, letterSpacing: 0.3 },
   modeChip: {
     position: 'absolute',
@@ -762,8 +596,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.progressTrack,
     paddingHorizontal: 14,
   },
-  statLabel: { fontFamily: fonts.semibold, color: colors.textFaint, letterSpacing: 0.3 },
-  statValue: { fontFamily: fonts.bold, color: colors.textFaint, letterSpacing: 0.3 },
 
   // Prompt
   prompt: { position: 'absolute', fontFamily: fonts.semibold, color: colors.text, lineHeight: 30 },
