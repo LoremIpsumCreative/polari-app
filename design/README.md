@@ -60,10 +60,17 @@ to a grid cell, so a cheap model reads a table, not an image.
 
 ## What is *not* here, and why
 
-A variable-font → static-instance cutter is **not needed**: the full static
-Digitale family (`.otf`/`.woff2`, all weights incl. the Semibold/Bold italics)
-is committed under `assets/fonts/`, so native loads real cuts and web pins the
-variable axis in CSS (`src/lib/webFontFaces.web.ts`). Nothing to generate.
+A variable-font → static-instance cutter is **not needed**: the static Digitale
+cuts the app actually renders (Regular/Semibold/Bold/Extrabold plus the
+Regular/Semibold/Bold italics) are committed as `.otf` under `assets/fonts/`,
+so native loads real cuts, while web serves the variable `.woff2` from
+`public/fonts/` and pins the axis in CSS (`src/lib/webFontFaces.web.ts`).
+Nothing to generate.
+
+Only the weights in `src/lib/fontAssets.ts` are kept. The unused cuts (Thin,
+Extralight, Light and their italics) and the duplicate `.woff2` copies under
+`assets/fonts/` were removed — recover them from git history if a design ever
+calls for them.
 
 `design/exports/`, `design/renders/` and `design/diffs/` are reproducible and
 git-ignored — only the scripts and the snapshot are tracked.

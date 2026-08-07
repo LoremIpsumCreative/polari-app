@@ -32,7 +32,24 @@ function arg(name, fallback) {
   return hit ? hit.slice(name.length + 3) : fallback;
 }
 
-const SCREENS = arg('screens', '/Users/brentondoherty/Projects/Polari/Screens/2026-08-05');
+// No default: the export folder is a dated Figma dump living outside the repo,
+// so its path is per-machine and per-drop. Defaulting it to one person's disk
+// made the script silently unrunnable for everyone else — it resolved, found
+// nothing, and reported every screen as a miss. Fail loudly instead.
+const SCREENS = arg('screens', process.env.POLARI_SCREENS ?? null);
+if (!SCREENS) {
+  console.error(
+    'Missing --screens.\n\n' +
+      '  node scripts/audit-screens.mjs --screens="/path/to/Screens/2026-08-05"\n\n' +
+      'Or set POLARI_SCREENS once in your shell to skip the flag.'
+  );
+  process.exit(2);
+}
+if (!existsSync(SCREENS)) {
+  console.error(`--screens path does not exist: ${SCREENS}`);
+  process.exit(2);
+}
+
 const url = arg('url', 'http://localhost:3000');
 const only = arg('only', null);
 const withAuth = process.argv.includes('--auth');

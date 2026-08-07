@@ -47,6 +47,7 @@
     "art:ack": "tsx scripts/check-art.ts --ack",
     "figma:check": "tsx scripts/check-figma.ts",
     "figma:diff": "node scripts/pixel-diff.mjs",
+    "figma:audit": "node scripts/audit-screens.mjs",
     "rls:audit": "tsx scripts/rls-audit.ts"
   },
   "private": true

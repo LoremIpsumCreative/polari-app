@@ -176,7 +176,7 @@ polari-app/
 │   └── types/database.ts       ◄─ generated Supabase types
 ├── assets/
 │   ├── characters/             ◄─ bundled artwork fallbacks
-│   ├── fonts/                  ◄─ Digitale: woff2 web · otf native
+│   ├── fonts/                  ◄─ Digitale otf + MouseMemoirs ttf (native only)
 │   ├── quiz/                   ◄─ quiz-stage artwork
 │   └── share/                  ◄─ share-card frame + QR assets
 ├── scripts/                    ◄─ dictionary + artwork check/apply tooling
@@ -184,8 +184,8 @@ polari-app/
 │   ├── migrations/             ◄─ schema, RLS, cultural + learning data
 │   └── functions/              ◄─ account-deletion edge function
 ├── .github/workflows/          ◄─ scheduled dictionary + artwork monitors
+├── public/fonts/               ◄─ variable woff2 served to web via CSS @font-face
 ├── app.json                    ◄─ Expo configuration
-├── metro.config.js             ◄─ woff2 asset support
 ├── vercel.json                 ◄─ static SPA deployment + route fallback
 └── README.md
 ```
