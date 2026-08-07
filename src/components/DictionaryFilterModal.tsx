@@ -13,7 +13,7 @@ import {
   IconTag,
   IconWorld,
 } from '@tabler/icons-react-native';
-import { colors, fonts, radii } from '../lib/theme';
+import { colors, fonts } from '../lib/theme';
 import { HEART_RED } from './CollectionChrome';
 import {
   EMPTY_FILTERS,

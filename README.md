@@ -231,4 +231,3 @@ to `index.html` so deep links such as `/dictionary/queen` remain valid.
 ---
 
 <p align="center"><sub>Queer history · one word at a time · bona to vada you.</sub></p>
-

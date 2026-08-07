@@ -1,0 +1,6 @@
+# Bulk reformats. Skip with:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+# (GitHub applies this file automatically.)
+
+# Reformat the tree with Prettier
+2c0afb9da98d08c393dbc8437ff27448e560550e

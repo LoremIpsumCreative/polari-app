@@ -1,0 +1,27 @@
+dist
+ios
+android
+.expo
+node_modules
+package-lock.json
+
+# Generated from the Supabase schema.
+src/types/database.ts
+
+# One inlined SVG export on a single 150k-character line. Reformatting it would
+# not make it readable, and the file is regenerated, not edited.
+src/components/launchAnimationSvg.ts
+
+# Machine-written snapshots — reformatting them would produce a spurious diff on
+# the next check run.
+scripts/*-snapshot.json
+
+# Written by check-words.ts / check-art.ts / apply-words.ts and committed by the
+# scheduled workflows. Formatting them here would lose the race every time: the
+# bot rewrites them in its own layout, and format:check would then fail on a
+# commit no human made.
+art-changes.md
+dictionary-changes.md
+
+# Local, per-machine editor state — untracked, so it must not gate CI either.
+.claude/settings.local.json

@@ -1,0 +1,60 @@
+name: Verify
+
+# The gate the repo did not have. The two existing workflows watch *content* —
+# a Google Sheet and an art bucket — so until now nothing checked that the code
+# itself compiles. A push that broke the build stayed green.
+#
+# Deliberately no secrets: every step here works from the source tree alone, so
+# it runs on forks and on Dependabot branches without special handling.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+
+concurrency:
+  # Supersede an in-flight run when new commits land on the same ref — the older
+  # result is about to be irrelevant.
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          # SDK 57's documented minimum. Kept in step with the `engines` field
+          # in package.json, which is what enforces it locally.
+          node-version: '22.13.x'
+          cache: npm
+
+      - run: npm ci
+
+      # Ordered cheapest-first so an obvious break fails in seconds rather than
+      # after a full bundle. Each step runs even if an earlier one failed, so
+      # one push surfaces every problem instead of one per re-run.
+      - name: Typecheck
+        if: '!cancelled()'
+        run: npm run typecheck
+
+      - name: Lint
+        if: '!cancelled()'
+        run: npm run lint
+
+      - name: Formatting
+        if: '!cancelled()'
+        run: npm run format:check
+
+      - name: Unused files, exports and dependencies
+        if: '!cancelled()'
+        run: npm run unused
+
+      # The real proof: the web bundle is what Vercel deploys, so a build that
+      # fails here would have failed the deployment.
+      - name: Build web bundle
+        if: '!cancelled()'
+        run: npm run build

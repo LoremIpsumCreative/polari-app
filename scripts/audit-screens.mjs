@@ -41,7 +41,7 @@ if (!SCREENS) {
   console.error(
     'Missing --screens.\n\n' +
       '  node scripts/audit-screens.mjs --screens="/path/to/Screens/2026-08-05"\n\n' +
-      'Or set POLARI_SCREENS once in your shell to skip the flag.'
+      'Or set POLARI_SCREENS once in your shell to skip the flag.',
   );
   process.exit(2);
 }
@@ -108,7 +108,6 @@ const MAP = [
   ['Account/Main/Deletion Confirmation.png', '/profile', 'session + modal'],
 ];
 
-const runnable = MAP.filter(([, , blocked]) => !blocked || withAuth);
 const results = [];
 const skipped = [];
 
@@ -136,10 +135,17 @@ for (const [png, route, blocked] of MAP) {
   try {
     const stdout = execFileSync(
       process.execPath,
-      ['scripts/pixel-diff.mjs', `--route=${route}`, `--figma=${figma}`, `--out=${out}`,
-       `--url=${url}`, `--width=${fw}`, `--height=${fh}`,
-       ...(ANIMATED.has(route) ? ['--reduced-motion'] : [])],
-      { encoding: 'utf8' }
+      [
+        'scripts/pixel-diff.mjs',
+        `--route=${route}`,
+        `--figma=${figma}`,
+        `--out=${out}`,
+        `--url=${url}`,
+        `--width=${fw}`,
+        `--height=${fh}`,
+        ...(ANIMATED.has(route) ? ['--reduced-motion'] : []),
+      ],
+      { encoding: 'utf8' },
     );
     pct = stdout.match(/overall change: ([\d.]+)%/)?.[1] ?? '?';
     heat = stdout;
@@ -150,20 +156,28 @@ for (const [png, route, blocked] of MAP) {
   }
   // Densest heatmap cell — a contiguous hot band means real drift, not text noise.
   const grid = heat.split('\n').filter((l) => /^ {4}[·\d# ]+$/.test(l));
-  const hot = grid.join('').split(/\s+/).filter((c) => /^[2-9#]$/.test(c)).length;
+  const hot = grid
+    .join('')
+    .split(/\s+/)
+    .filter((c) => /^[2-9#]$/.test(c)).length;
   results.push([name, route, pct, hot]);
   console.log(`  ${String(pct).padStart(6)}%  hot=${String(hot).padStart(2)}  ${name}`);
 }
 
-console.log(`\n${'='.repeat(72)}\nAUDIT — ${results.length} screens diffed at 393×852\n${'='.repeat(72)}`);
+console.log(
+  `\n${'='.repeat(72)}\nAUDIT — ${results.length} screens diffed at 393×852\n${'='.repeat(72)}`,
+);
 console.log('  A screen that matches exactly scores 2-3% (Figma vs Chrome text raster).');
 console.log('  "hot" = heatmap cells at ≥20% change; a cluster means real drift.\n');
 for (const [name, route, pct, hot] of [...results].sort((a, b) => Number(b[2]) - Number(a[2]))) {
   const flag = Number(pct) >= 8 || hot >= 4 ? '  ← LOOK' : '';
-  console.log(`  ${String(pct).padStart(6)}%  hot=${String(hot).padStart(2)}  ${name.padEnd(46)} ${route}${flag}`);
+  console.log(
+    `  ${String(pct).padStart(6)}%  hot=${String(hot).padStart(2)}  ${name.padEnd(46)} ${route}${flag}`,
+  );
 }
 if (skipped.length) {
   console.log(`\n  Not reachable cold (${skipped.length}):`);
-  for (const [name, route, why] of skipped) console.log(`    ${name.padEnd(48)} ${route}  — ${why}`);
+  for (const [name, route, why] of skipped)
+    console.log(`    ${name.padEnd(48)} ${route}  — ${why}`);
 }
 console.log();

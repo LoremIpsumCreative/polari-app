@@ -13,11 +13,7 @@ import {
 } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
-import {
-  IconArrowsMaximize,
-  IconChevronLeft,
-  IconChevronRight,
-} from '@tabler/icons-react-native';
+import { IconArrowsMaximize, IconChevronLeft, IconChevronRight } from '@tabler/icons-react-native';
 import { useWords } from '../../src/lib/words';
 import { daysSinceEpoch, wordOfTheDay } from '../../src/lib/wordOfTheDay';
 import { useCharacterArt } from '../../src/lib/remoteArt';
@@ -49,7 +45,10 @@ const SWIPE_THRESHOLD = 48;
 // compounding deformation to apply.
 const BOUNCE = {
   duration: 3004.586,
-  stops: [0, 0.03328, 0.06656, 0.09985, 0.13313, 0.16641, 0.19969, 0.23298, 0.26626, 0.29954, 0.33282, 0.36611, 1],
+  stops: [
+    0, 0.03328, 0.06656, 0.09985, 0.13313, 0.16641, 0.19969, 0.23298, 0.26626, 0.29954, 0.33282,
+    0.36611, 1,
+  ],
   y: [0, 18.697, -23.596, -35.813, -41.823, -45, -44.515, -40.495, 3.784, 9.604, -0.598, 0, 0],
   scaleX: [1, 1.196, 1.007, 0.944, 0.961, 0.971, 0.969, 0.957, 1.147, 1.101, 0.994, 1, 1],
   scaleY: [1, 0.843, 1.006, 1.059, 1.041, 1.03, 1.032, 1.045, 0.887, 0.919, 1.005, 1, 1],
@@ -97,7 +96,7 @@ export default function TodayScreen() {
         // Linear on purpose: the easing already lives in the sampled values.
         easing: Easing.linear,
         useNativeDriver: false,
-      })
+      }),
     );
     bouncing.current = loop;
     loop.start();
@@ -117,7 +116,7 @@ export default function TodayScreen() {
         live = false;
         stopBounce();
       };
-    }, [startBounce, stopBounce])
+    }, [startBounce, stopBounce]),
   );
 
   function openPresent() {
@@ -183,7 +182,7 @@ export default function TodayScreen() {
         if (gesture.dx > SWIPE_THRESHOLD) goBackADay();
         else if (gesture.dx < -SWIPE_THRESHOLD) goForwardADay();
       },
-    })
+    }),
   ).current;
 
   if (loading) {
@@ -197,7 +196,7 @@ export default function TodayScreen() {
   if (error || !word) {
     return (
       <View style={styles.center}>
-        <Text style={styles.errorText}>Nanti luck — today's word wouldn't load.</Text>
+        <Text style={styles.errorText}>Nanti luck — today&apos;s word wouldn&apos;t load.</Text>
         <Pressable style={styles.retryButton} onPress={refetch}>
           <Text style={styles.retryText}>Try again</Text>
         </Pressable>
@@ -285,7 +284,9 @@ export default function TodayScreen() {
             />
           </Animated.View>
 
-          <Text style={[styles.presentHeadline, { top: 198 * s, fontSize: 34 * s, lineHeight: 34 * s }]}>
+          <Text
+            style={[styles.presentHeadline, { top: 198 * s, fontSize: 34 * s, lineHeight: 34 * s }]}
+          >
             A <Text style={styles.presentHighlight}>new word</Text> is ready{'\n'}to be opened!
           </Text>
           <Text style={[styles.presentTap, { top: 613 * s, fontSize: 16 * s }]}>Tap to open</Text>
@@ -342,10 +343,7 @@ export default function TodayScreen() {
               accessibilityState={{ disabled: dayOffset >= maxOffset }}
               hitSlop={12}
             >
-              <IconChevronLeft
-                size={20}
-                color={dayOffset >= maxOffset ? '#D9D9D9' : colors.text}
-              />
+              <IconChevronLeft size={20} color={dayOffset >= maxOffset ? '#D9D9D9' : colors.text} />
             </Pressable>
             <Text style={styles.dateLabel}>{dateLabel}</Text>
             <Pressable
@@ -387,7 +385,6 @@ export default function TodayScreen() {
           </Text>
         </Pressable>
       ) : null}
-
     </View>
   );
 }

@@ -9,7 +9,7 @@ import { useQuizStats } from '../../../src/lib/quizScores';
 import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { nextQuestion, QUIZ_LENGTH, type QuizQuestion } from '../../../src/lib/quiz';
 import { QUIZ_MODES, isQuizModeId, type QuizModeId } from '../../../src/lib/quizModes';
-import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
+import { colors, fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
@@ -73,7 +73,7 @@ export default function QuizPlayScreen() {
 
   const pickFrom = useMemo(
     () => (isReview ? words.filter((w) => new Set(dueWordIds).has(w.id)) : undefined),
-    [isReview, words, dueWordIds]
+    [isReview, words, dueWordIds],
   );
 
   // ── Game state ──
@@ -166,7 +166,12 @@ export default function QuizPlayScreen() {
         <Pressable
           style={[
             styles.cdBackChip,
-            { left: CD.backChip.x * s, top: CD.backChip.y * s, width: CD.backChip.w * s, height: CD.backChip.h * s },
+            {
+              left: CD.backChip.x * s,
+              top: CD.backChip.y * s,
+              width: CD.backChip.w * s,
+              height: CD.backChip.h * s,
+            },
           ]}
           onPress={() => router.replace('/quiz')}
           accessibilityRole="button"
@@ -188,9 +193,7 @@ export default function QuizPlayScreen() {
         <View style={[styles.headerStats, { top: 210.5 * s, gap: 57 * s }]}>
           <View style={styles.statGroup}>
             <IconFlame size={10 * s} color={colors.textFaint} />
-            <Text style={[styles.statLabel, { fontSize: 10 * s }]}>
-              STREAK:
-            </Text>
+            <Text style={[styles.statLabel, { fontSize: 10 * s }]}>STREAK:</Text>
             <Text style={[styles.statValue, { fontSize: 14 * s }]}>
               {String(modeId === 'ten' && !isReview ? stats.ten_run_current : 0).padStart(2, '0')}
             </Text>
@@ -265,8 +268,9 @@ export default function QuizPlayScreen() {
 
   const matchCorrectCount = isMatch
     ? q.words.reduce(
-        (n, w, i) => n + (matchPairs[i] !== null && q.defs[matchPairs[i] as number] === w.definition ? 1 : 0),
-        0
+        (n, w, i) =>
+          n + (matchPairs[i] !== null && q.defs[matchPairs[i] as number] === w.definition ? 1 : 0),
+        0,
       )
     : 0;
   const wasCorrect = isMatch
@@ -306,7 +310,9 @@ export default function QuizPlayScreen() {
   function handleMatchDef(defIndex: number) {
     if (matchDone || matchSel === null || q.kind !== 'match') return;
     const nextPairs = matchPairs.map((v) => (v === defIndex ? null : v));
-    const nextColors = pairColor.map((c, i) => (nextPairs[i] === null && i !== matchSel ? null : c));
+    const nextColors = pairColor.map((c, i) =>
+      nextPairs[i] === null && i !== matchSel ? null : c,
+    );
     nextPairs[matchSel] = defIndex;
     if (nextColors[matchSel] === null) nextColors[matchSel] = nextColor(nextColors);
     setMatchSel(null);
@@ -363,18 +369,11 @@ export default function QuizPlayScreen() {
   }
 
   // ── Header (per-mode: progress + stat pills, Figma 1114:368 / 1353:578 / 1353:680) ──
-  const questionNo = Math.min(sc.answered + (answered ? 0 : 1), mode.questionLimit ?? QUIZ_LENGTH);
   const progress =
     modeId === 'ten'
       ? Math.min(1, sc.answered / (mode.questionLimit ?? QUIZ_LENGTH))
       : modeId === 'timed'
         ? remaining / (mode.countdownSeconds ?? 60)
-        : null;
-  const progressLabel =
-    modeId === 'ten'
-      ? `Question ${questionNo} of ${mode.questionLimit ?? QUIZ_LENGTH}`
-      : modeId === 'timed'
-        ? `${remaining} seconds remaining`
         : null;
   // STREAK is the longest continuous run of right answers, so it reads the
   // best-run accumulator rather than the live run or the total correct. For
@@ -385,15 +384,21 @@ export default function QuizPlayScreen() {
 
   const prompt =
     q.kind === 'meaning' ? (
-      <Text style={[styles.prompt, { left: 36 * s, top: 323 * s, width: 323 * s, fontSize: 22 * s }]}>
+      <Text
+        style={[styles.prompt, { left: 36 * s, top: 323 * s, width: 323 * s, fontSize: 22 * s }]}
+      >
         What does the word <Text style={styles.promptTerm}>{q.word.term}</Text> mean?
       </Text>
     ) : q.kind === 'reverse' ? (
-      <Text style={[styles.prompt, { left: 36 * s, top: 323 * s, width: 323 * s, fontSize: 22 * s }]}>
+      <Text
+        style={[styles.prompt, { left: 36 * s, top: 323 * s, width: 323 * s, fontSize: 22 * s }]}
+      >
         What word also means <Text style={styles.promptTerm}>{q.word.definition}</Text>?
       </Text>
     ) : q.kind === 'character' ? (
-      <Text style={[styles.prompt, { left: 36 * s, top: 244 * s, width: 323 * s, fontSize: 22 * s }]}>
+      <Text
+        style={[styles.prompt, { left: 36 * s, top: 244 * s, width: 323 * s, fontSize: 22 * s }]}
+      >
         Which word does this character bring to life?
       </Text>
     ) : (
@@ -421,7 +426,10 @@ export default function QuizPlayScreen() {
           the old lilac mode chip, "QUESTION n OF m" label and boxed stat
           pills. */}
       <Pressable
-        style={[styles.backChip, { left: 17 * s, top: 51.5 * s, height: 31 * s, paddingHorizontal: 14 * s }]}
+        style={[
+          styles.backChip,
+          { left: 17 * s, top: 51.5 * s, height: 31 * s, paddingHorizontal: 14 * s },
+        ]}
         onPress={() => router.replace('/quiz')}
         accessibilityRole="button"
         accessibilityLabel="Back to quizzes"
@@ -478,7 +486,13 @@ export default function QuizPlayScreen() {
       {q.kind === 'character' ? (
         <Image
           source={artFor(q.word.slug)}
-          style={{ position: 'absolute', left: 132 * s, top: 299 * s, width: 131 * s, height: 175 * s }}
+          style={{
+            position: 'absolute',
+            left: 132 * s,
+            top: 299 * s,
+            width: 131 * s,
+            height: 175 * s,
+          }}
           resizeMode="contain"
           accessibilityLabel="Mystery Polari character"
         />
@@ -565,7 +579,9 @@ export default function QuizPlayScreen() {
                     styles.tile,
                     matchTile,
                     { left: 217 * s, top: (280 + j * 90) * s },
-                    defPal ? { backgroundColor: defPal.fill, borderColor: defPal.ink, borderWidth: 1 } : null,
+                    defPal
+                      ? { backgroundColor: defPal.fill, borderColor: defPal.ink, borderWidth: 1 }
+                      : null,
                   ]}
                 >
                   <Text
@@ -586,7 +602,12 @@ export default function QuizPlayScreen() {
           })}
         </View>
       ) : (
-        <View style={[styles.grid, { left: 21 * s, top: 490 * s, width: 354 * s, columnGap: 18 * s, rowGap: 18 * s }]}>
+        <View
+          style={[
+            styles.grid,
+            { left: 21 * s, top: 490 * s, width: 354 * s, columnGap: 18 * s, rowGap: 18 * s },
+          ]}
+        >
           {q.options.map((option, index) => {
             const isCorrect = index === q.correctIndex;
             const isSelected = index === selectedIndex;
@@ -646,7 +667,12 @@ export default function QuizPlayScreen() {
 const styles = StyleSheet.create({
   // The question frames use a lighter canvas than the app default.
   screen: { flex: 1, backgroundColor: '#E7E9EC' },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background },
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.background,
+  },
   dimText: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 15 },
 
   // Countdown (light screen, per the current frames)
@@ -717,13 +743,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modeChipText: { fontFamily: fonts.display, color: colors.quizInk },
-  progressLabel: {
-    position: 'absolute',
-    fontFamily: fonts.semibold,
-    color: colors.metaText,
-    letterSpacing: 0.7,
-    textTransform: 'uppercase',
-  },
   progressTrack: {
     position: 'absolute',
     backgroundColor: colors.progressTrack,
@@ -747,7 +766,12 @@ const styles = StyleSheet.create({
   // Prompt
   prompt: { position: 'absolute', fontFamily: fonts.semibold, color: colors.text, lineHeight: 30 },
   promptTerm: { fontFamily: fonts.bold, color: colors.primary },
-  promptMatch: { position: 'absolute', alignSelf: 'center', fontFamily: fonts.semibold, color: colors.text },
+  promptMatch: {
+    position: 'absolute',
+    alignSelf: 'center',
+    fontFamily: fonts.semibold,
+    color: colors.text,
+  },
 
   // Answer tiles (2-column grid)
   grid: { position: 'absolute', flexDirection: 'row', flexWrap: 'wrap' },
@@ -759,8 +783,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tileCorrect: { backgroundColor: colors.correctSoft, borderColor: colors.correct, borderWidth: 1 },
-  tileWrong: { backgroundColor: colors.incorrectSoft, borderColor: colors.incorrect, borderWidth: 1 },
-  tileText: { fontFamily: fonts.regular, color: colors.text, letterSpacing: 0.3, textAlign: 'center' },
+  tileWrong: {
+    backgroundColor: colors.incorrectSoft,
+    borderColor: colors.incorrect,
+    borderWidth: 1,
+  },
+  tileText: {
+    fontFamily: fonts.regular,
+    color: colors.text,
+    letterSpacing: 0.3,
+    textAlign: 'center',
+  },
   tileTextCorrect: { color: colors.correct, fontFamily: fonts.bold },
   tileTextWrong: { color: colors.incorrect, fontFamily: fonts.bold },
 

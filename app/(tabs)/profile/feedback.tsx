@@ -1,12 +1,5 @@
 import { useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import Constants from 'expo-constants';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
@@ -78,7 +71,7 @@ export default function FeedbackScreen() {
         style={styles.container}
         contentContainerStyle={[styles.content, { paddingBottom: tabInset + spacing.md }]}
       >
-        <Text style={styles.label}>What's it about?</Text>
+        <Text style={styles.label}>What&apos;s it about?</Text>
         <View style={styles.chips}>
           {CATEGORIES.map((c) => (
             <Pressable

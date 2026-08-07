@@ -13,10 +13,7 @@ import { IconAdjustmentsHorizontal, IconMoodSad, IconSearch } from '@tabler/icon
 import { useWords } from '../../../src/lib/words';
 import { useFavourites } from '../../../src/lib/favourites';
 import { useCharacterArt } from '../../../src/lib/remoteArt';
-import {
-  DictionaryFilterModal,
-  FilterChip,
-} from '../../../src/components/DictionaryFilterModal';
+import { DictionaryFilterModal, FilterChip } from '../../../src/components/DictionaryFilterModal';
 import { HEART_RED } from '../../../src/components/CollectionChrome';
 import {
   EMPTY_FILTERS,
@@ -118,7 +115,7 @@ export default function DictionaryScreen() {
   if (error) {
     return (
       <View style={styles.center}>
-        <Text style={styles.errorText}>Nanti luck — the dictionary wouldn't load.</Text>
+        <Text style={styles.errorText}>Nanti luck — the dictionary wouldn&apos;t load.</Text>
         <Pressable style={styles.retryButton} onPress={refetch}>
           <Text style={styles.retryText}>Try again</Text>
         </Pressable>

@@ -7,7 +7,7 @@ import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { isQuizModeId } from '../../../src/lib/quizModes';
-import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
+import { colors, fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 
 // End-of-quiz screens, rebuilt to the revised Figma frames (1114:482 /
@@ -16,7 +16,6 @@ import { useDesignScale } from '../../../src/lib/designScale';
 // border, the quizmaster with a speech bubble, and a blob "Play Again?" over a
 // small "Finish" pill. Geometry lives in the mockups' 393-wide design space,
 // whose content runs to y858 with the tab bar's top edge at y757.
-const BAR_TOP = 757;
 
 const stageArt = require('../../../assets/quiz/results-stage.png');
 
@@ -286,7 +285,11 @@ export default function QuizResultsScreen() {
 
       {/* Speech bubble, padded so the 3px stroke isn't clipped by the viewport */}
       <Svg
-        style={{ position: 'absolute', left: (v.bubbleBox.x - 2) * s, top: (v.bubbleBox.y - 2) * s }}
+        style={{
+          position: 'absolute',
+          left: (v.bubbleBox.x - 2) * s,
+          top: (v.bubbleBox.y - 2) * s,
+        }}
         width={(bubble.w + 4) * s}
         height={(bubble.h + 4) * s}
         viewBox={`-2 -2 ${bubble.w + 4} ${bubble.h + 4}`}

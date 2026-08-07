@@ -15,7 +15,6 @@ import {
 } from '@tabler/icons-react-native';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
-import { SpaceHost } from '../../../src/components/illustrations/SpaceHost';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { AccountOption } from '../../../src/components/AccountOption';
@@ -207,9 +206,7 @@ export default function ProfileScreen() {
         <View style={styles.group}>
           <AccountOption label="Sign Out" Icon={IconLogout} onPress={signOut} />
           <Pressable onPress={() => setConfirmingDelete(true)} disabled={deleting}>
-            <Text style={styles.deleteAccount}>
-              {deleting ? 'Deleting…' : 'Delete Account'}
-            </Text>
+            <Text style={styles.deleteAccount}>{deleting ? 'Deleting…' : 'Delete Account'}</Text>
           </Pressable>
           {deleteError ? <Text style={styles.deleteError}>{deleteError}</Text> : null}
         </View>
@@ -237,7 +234,11 @@ export default function ProfileScreen() {
             <View style={styles.confirmActions}>
               <Pressable
                 onPress={() => setConfirmingDelete(false)}
-                style={({ pressed }) => [styles.confirmButton, styles.keepButton, pressed && styles.pressed]}
+                style={({ pressed }) => [
+                  styles.confirmButton,
+                  styles.keepButton,
+                  pressed && styles.pressed,
+                ]}
                 accessibilityRole="button"
               >
                 <View style={styles.keepBadge}>
@@ -249,7 +250,11 @@ export default function ProfileScreen() {
               <Pressable
                 onPress={handleDeleteAccount}
                 disabled={deleting}
-                style={({ pressed }) => [styles.confirmButton, styles.deleteButton, pressed && styles.pressed]}
+                style={({ pressed }) => [
+                  styles.confirmButton,
+                  styles.deleteButton,
+                  pressed && styles.pressed,
+                ]}
                 accessibilityRole="button"
               >
                 <View style={styles.deleteBadge}>

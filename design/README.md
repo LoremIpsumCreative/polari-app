@@ -25,7 +25,7 @@ npm run figma:check     # assert every tracked screen's node-id still resolves
    (`node -e "…JSON.stringify(j,null,2)"`), commit.
 
 `git diff scripts/figma-snapshot.json` then shows exactly which node moved,
-resized or recoloured. No live re-dump needed to *see* the change, and any
+resized or recoloured. No live re-dump needed to _see_ the change, and any
 model reads the local file (cheap, greppable) instead of re-fetching from Figma.
 
 A screen whose id went stale after a redesign is recorded as `missing` and
@@ -58,7 +58,7 @@ to a grid cell, so a cheap model reads a table, not an image.
 - Entrance animations / auto-advancing screens may not settle under virtual
   time; screenshot a steady state or raise `--wait`.
 
-## What is *not* here, and why
+## What is _not_ here, and why
 
 A variable-font → static-instance cutter is **not needed**: the static Digitale
 cuts the app actually renders (Regular/Semibold/Bold/Extrabold plus the

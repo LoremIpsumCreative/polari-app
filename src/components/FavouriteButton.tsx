@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { IconHeart, IconHeartFilled } from '@tabler/icons-react-native';
 import { useAuth } from '../lib/auth';
 import { useFavourites } from '../lib/favourites';
-import { colors, radii, spacing } from '../lib/theme';
+import { colors, radii } from '../lib/theme';
 
 export function FavouriteButton({ wordId }: { wordId: string }) {
   const router = useRouter();

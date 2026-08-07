@@ -100,7 +100,14 @@ const SCREENS = [
 ];
 
 const hex = (c) =>
-  '#' + [c.r, c.g, c.b].map((v) => Math.round(v * 255).toString(16).padStart(2, '0')).join('');
+  '#' +
+  [c.r, c.g, c.b]
+    .map((v) =>
+      Math.round(v * 255)
+        .toString(16)
+        .padStart(2, '0'),
+    )
+    .join('');
 
 function paint(node, key) {
   try {
@@ -115,9 +122,10 @@ function paint(node, key) {
       return o < 1 ? hex(p.color) + '@' + Math.round(o * 100) / 100 : hex(p.color);
     }
     if (p.type === 'IMAGE') return 'img';
-    if (p.type.startsWith('GRADIENT')) return 'grad:' + p.gradientStops.map((s) => hex(s.color)).join('/');
+    if (p.type.startsWith('GRADIENT'))
+      return 'grad:' + p.gradientStops.map((s) => hex(s.color)).join('/');
     return p.type;
-  } catch (e) {
+  } catch {
     return undefined;
   }
 }
@@ -149,14 +157,14 @@ for (const [name, id] of SCREENS) {
       rec.stroke = st;
       try {
         rec.sw = node.strokeWeight;
-      } catch (e) {}
+      } catch {}
     }
     if (node.type === 'TEXT') {
       rec.text = node.characters.slice(0, 48);
       rec.fs = node.fontSize;
       try {
         rec.font = node.fontName.family + ' ' + node.fontName.style;
-      } catch (e) {}
+      } catch {}
     }
     nodes.push(rec);
     // Recurse into layout containers only. Instances are recorded as a single
