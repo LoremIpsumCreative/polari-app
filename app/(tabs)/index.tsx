@@ -10,7 +10,6 @@ import {
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
@@ -30,7 +29,8 @@ import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
 import { getUnlockedDate, setUnlockedToday, todayKey } from '../../src/lib/dailyUnlock';
 import { useReducedMotion } from '../../src/lib/reducedMotion';
-import { colors, fonts, spacing, DESIGN_WIDTH } from '../../src/lib/theme';
+import { colors, fonts, spacing } from '../../src/lib/theme';
+import { useDesignScale } from '../../src/lib/designScale';
 
 const presentArt = require('../../assets/present.png');
 
@@ -60,8 +60,7 @@ export default function TodayScreen() {
   const { recordEngagement, celebration, dismissCelebration } = useStreaks();
   const { words, loading, error, refetch } = useWords();
   const { artFor } = useCharacterArt();
-  const { width } = useWindowDimensions();
-  const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const s = useDesignScale();
   // The bar floats over the screen, so the scroll has to end above it by hand.
   const tabInset = useTabBarInset();
 

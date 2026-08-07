@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAchievements, type Achievement } from '../../../src/lib/achievements';
@@ -13,7 +12,8 @@ import {
   CollectionHeader,
   CollectionPanel,
 } from '../../../src/components/CollectionChrome';
-import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
+import { colors, fonts } from '../../../src/lib/theme';
+import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 // 3 columns of cards inside the 363 panel: 19 inset, 12 gutters (Figma frame
@@ -67,8 +67,7 @@ function AchievementCard({ a, s }: { a: Achievement; s: number }) {
 export default function AchievementsScreen() {
   const router = useRouter();
   const { achievements, signedIn } = useAchievements();
-  const { width } = useWindowDimensions();
-  const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const s = useDesignScale();
   const [search, setSearch] = useState('');
 
   const visible = useMemo(() => {

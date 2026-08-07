@@ -1,11 +1,12 @@
 import { memo, useEffect, useRef, useState } from 'react';
-import { Animated, Platform, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Animated, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // Type-only deep import: expo-router 57 vendors react-navigation's bottom-tabs
 // and doesn't re-export its types from the package root.
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs/types';
 import Svg, { Path } from 'react-native-svg';
 import { colors, fonts, tabAccents, DESIGN_WIDTH } from '../lib/theme';
+import { useDesignFrame, useDesignScale } from '../lib/designScale';
 import { NavIcon, navIconSize, isNavIconName, type NavIconName } from './navIcons';
 
 // Figma "Navbar 2.0" (node 1766:3478). The bar is a single boolean shape 394x101
@@ -63,8 +64,7 @@ export const TAB_CONTENT_CLEARANCE = TAB_BUBBLE_OVERHANG + 20;
 // bar's top edge (y754 of 855), which is exactly what this returns.
 export function useTabBarInset() {
   const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
-  return BAR_HEIGHT * (Math.min(width, 430) / DESIGN_WIDTH) + insets.bottom;
+  return BAR_HEIGHT * useDesignScale() + insets.bottom;
 }
 
 const TAB_ICONS: Record<string, NavIconName> = {
@@ -219,9 +219,14 @@ const TabItem = memo(function TabItem({
 // the bar no longer opens a satellite fan of its own.
 export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
-  const [barWidth, setBarWidth] = useState(width);
-  const s = Math.min(width, 430) / DESIGN_WIDTH;
+  // The same scale the frame and every screen use, so the bar is exactly as
+  // wide as the design box it sits in and its notch lines up with the bubble.
+  const frame = useDesignFrame();
+  const s = frame.scale;
+  // Seeded from the frame rather than the viewport: on a letterboxed viewport
+  // those differ, and the seed is what the notch and bubble are placed against
+  // for the first frame, before onLayout reports the real width.
+  const [barWidth, setBarWidth] = useState(frame.width);
 
   const barHeight = BAR_HEIGHT * s;
   const slotWidth = barWidth / state.routes.length;

@@ -108,12 +108,14 @@ export const spacing = {
   xl: 32,
 };
 
-// On web the app is capped to a smartphone-sized column; the tab bar has to
-// know the same width so it lines up with it. Note the bar does NOT pin to the
-// viewport — 37a1f83 moved it to the foot of the DESIGN_HEIGHT column, because
-// pinning floated it over the middle of the design on a short window and hid
-// whatever the frame puts near the bottom. A window under 852 scrolls to it.
-export const PHONE_MAX_WIDTH = 430;
+// Caps the design frame's width so a wide browser window gets a phone-sized
+// column instead of a stretched one. 440 is the widest logical iPhone (16 Pro
+// Max), so no handset is capped and every one of them fills its screen edge to
+// edge; at 430 the Pro Max rendered with a 5px dead strip down each side.
+//
+// On a desktop window the frame's HEIGHT term binds long before this does — see
+// designScale — so raising the cap costs nothing there either.
+export const PHONE_MAX_WIDTH = 440;
 // The mockups' frame. 393x852 is the logical resolution of iPhone 15/16 Pro,
 // so the Figma template, the localhost preview and the device all agree — the
 // old 394 matched no real device and was where the drift started.

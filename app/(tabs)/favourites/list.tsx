@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { IconHeart, IconHeartFilled } from '@tabler/icons-react-native';
@@ -18,7 +17,8 @@ import {
   CollectionPanel,
   HEART_RED,
 } from '../../../src/components/CollectionChrome';
-import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
+import { colors, fonts } from '../../../src/lib/theme';
+import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 const favouretteArt = require('../../../assets/collections/favourette.png');
@@ -32,8 +32,7 @@ export default function FavouritesListScreen() {
   const { session } = useAuth();
   const { favouriteWordIds, toggleFavourite } = useFavourites();
   const { words } = useWords();
-  const { width } = useWindowDimensions();
-  const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const s = useDesignScale();
 
   const [search, setSearch] = useState('');
   const scrollRef = useRef<ScrollView>(null);

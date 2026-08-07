@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { AuthProvider } from '../src/lib/auth';
@@ -9,7 +9,8 @@ import { RemoteArtProvider } from '../src/lib/remoteArt';
 import { FavouritesProvider } from '../src/lib/favourites';
 import { StreaksProvider } from '../src/lib/streaks';
 import { ProgressProvider } from '../src/lib/progress';
-import { colors, DESIGN_HEIGHT, PHONE_MAX_WIDTH } from '../src/lib/theme';
+import { colors } from '../src/lib/theme';
+import { useDesignFrame } from '../src/lib/designScale';
 // Resolves to fontAssets.web.ts on web and fontAssets.ts on native.
 import { fontAssets } from '../src/lib/fontAssets';
 import { installWebFonts } from '../src/lib/webFontFaces';
@@ -20,15 +21,25 @@ import { LaunchScreen } from '../src/components/LaunchScreen';
 // in the document before anything renders.
 installWebFonts();
 
-// PHONE_MAX_WIDTH caps the app at a smartphone-sized column on web so wide
-// browser windows don't stretch the layout; native devices are already
-// phone-sized. DESIGN_HEIGHT is the mockups' frame height — below it the
-// screens fold in on themselves, so the column never renders shorter and a
-// short window scrolls instead. Both live in the theme because the tab bar
-// pins itself to the viewport and has to agree on the column width.
+// The app is one fixed-aspect drawing: every screen places its children
+// absolutely in the mockups' 393x852 space. So the root's whole job is to work
+// out where that frame lands on this device and draw the navigator into exactly
+// that box — see useDesignFrame. Everything inside then shares one scale and
+// stays in register.
+//
+// The box is centred horizontally and anchored to the BOTTOM. Bottom-anchoring
+// is what keeps the tab bar (frame y751-852) flush with the physical bottom
+// edge; the slack goes to the top, where the frames draw nothing but the status
+// bar. The surrounding gutter is painted in the canvas colour so the letterbox
+// reads as part of the app rather than as a cropped page.
+//
+// This replaces a `minHeight: 852` column applied on web only. That column
+// could not be shorter than the design, so any viewport under 852 tall scrolled
+// — taking the tab bar with it, below the fold.
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts(fontAssets);
+  const frame = useDesignFrame();
   // Component state is exactly the right lifetime here: it resets on a cold
   // start, which is when the launch sequence is meant to play, and survives
   // navigation within a session, which is when it must not.
@@ -56,13 +67,11 @@ export default function RootLayout() {
         <FavouritesProvider>
           <StreaksProvider>
             <ProgressProvider>
-            {Platform.OS === 'web' ? (
-              <View style={styles.gutter}>
-                <View style={styles.phoneFrame}>{app}</View>
+            <View style={styles.gutter}>
+              <View style={[styles.phoneFrame, { width: frame.width, height: frame.height }]}>
+                {app}
               </View>
-            ) : (
-              app
-            )}
+            </View>
           </ProgressProvider>
           </StreaksProvider>
         </FavouritesProvider>
@@ -77,17 +86,16 @@ const styles = StyleSheet.create({
   gutter: {
     flex: 1,
     alignItems: 'center',
-    // Matches the column's own minimum so the canvas colour covers the whole
-    // scrollable document — otherwise a short window scrolls past the gutter
-    // and the bare page background shows below it.
-    minHeight: DESIGN_HEIGHT,
+    // Bottom-anchored, so the frame's foot — and the tab bar sitting on it —
+    // meets the physical bottom of the screen.
+    justifyContent: 'flex-end',
     backgroundColor: colors.canvas,
   },
   phoneFrame: {
-    flex: 1,
-    width: '100%',
-    maxWidth: PHONE_MAX_WIDTH,
-    minHeight: DESIGN_HEIGHT,
+    // Sized from useDesignFrame at the call site. Deliberately NOT flex: the
+    // box has to be exactly the design's aspect for the absolute coordinates
+    // inside it to land where the frames put them.
+    overflow: 'hidden',
     backgroundColor: colors.canvas,
   },
 });
