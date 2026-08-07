@@ -1,10 +1,11 @@
-import { Image, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter, type Href } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 import { IconHeart, IconPhoto, IconTrophy } from '@tabler/icons-react-native';
 import { useAuth } from '../../../src/lib/auth';
 import { HEART_RED, TROPHY_GOLD } from '../../../src/components/CollectionChrome';
-import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
+import { colors, fonts } from '../../../src/lib/theme';
+import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
 const favourette = require('../../../assets/collections/hub-favourette.png');
@@ -34,8 +35,7 @@ const SATELLITES: {
 export default function CollectionsHub() {
   const router = useRouter();
   const { session } = useAuth();
-  const { width } = useWindowDimensions();
-  const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const s = useDesignScale();
 
   // The trio scene (Hero Images, 1825:2862): three tinted spotlight panes at
   // 20% behind the shopper, trophy-winner and photographer. Each pane and two

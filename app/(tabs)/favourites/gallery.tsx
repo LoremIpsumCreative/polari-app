@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Text,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { COMING_SOON_ART } from '../../../src/lib/characterArt';
@@ -17,7 +16,8 @@ import {
   CollectionHeader,
   CollectionPanel,
 } from '../../../src/components/CollectionChrome';
-import { colors, fonts, DESIGN_WIDTH } from '../../../src/lib/theme';
+import { colors, fonts } from '../../../src/lib/theme';
+import { useDesignScale } from '../../../src/lib/designScale';
 import type { ImageSourcePropType } from 'react-native';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
@@ -37,8 +37,7 @@ export default function GalleryScreen() {
   const router = useRouter();
   const { bySlug } = useWords();
   const { artFor, castSlugs } = useCharacterArt();
-  const { width } = useWindowDimensions();
-  const s = Math.min(width, 430) / DESIGN_WIDTH;
+  const s = useDesignScale();
   const [search, setSearch] = useState('');
   const [fullScreen, setFullScreen] = useState<{
     source: ImageSourcePropType;
