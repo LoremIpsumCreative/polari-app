@@ -58,7 +58,7 @@ function renderChangesFile(diff: Diff): string {
   }
 
   out.push(
-    `**Summary:** ${diff.added.length} added · ${diff.updated.length} updated · ${diff.removed.length} removed`
+    `**Summary:** ${diff.added.length} added · ${diff.updated.length} updated · ${diff.removed.length} removed`,
   );
   out.push('');
   out.push('Run `npm run words:apply` to upload this batch to the app.');
@@ -112,7 +112,7 @@ async function main() {
     writeSnapshot(current);
     snapshot = current;
     console.log(
-      `No snapshot found — initialised baseline from the sheet (${Object.keys(current).length} words). No changes to report yet.`
+      `No snapshot found — initialised baseline from the sheet (${Object.keys(current).length} words). No changes to report yet.`,
     );
   }
 
@@ -125,7 +125,7 @@ async function main() {
   }
 
   console.log(
-    `Dictionary changes detected: ${diff.added.length} added, ${diff.updated.length} updated, ${diff.removed.length} removed.`
+    `Dictionary changes detected: ${diff.added.length} added, ${diff.updated.length} updated, ${diff.removed.length} removed.`,
   );
   console.log('Wrote dictionary-changes.md. Review it, then run `npm run words:apply` to upload.');
   process.exit(1);

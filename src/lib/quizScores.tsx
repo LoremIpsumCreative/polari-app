@@ -56,7 +56,7 @@ export function useQuizStats() {
       setStats(next);
       return next;
     },
-    [userId]
+    [userId],
   );
 
   const bestFor = (mode: QuizModeId) =>
@@ -99,7 +99,7 @@ export function useHighScore() {
         .insert({ user_id: userId, score, total_questions: totalQuestions });
       await refresh();
     },
-    [userId, refresh]
+    [userId, refresh],
   );
 
   return { highScore, saveAttempt, signedIn: !!userId };

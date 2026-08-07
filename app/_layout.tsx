@@ -63,19 +63,19 @@ export default function RootLayout() {
     <AuthProvider>
       <WordsProvider>
         <RemoteArtProvider>
-        <CollectionsProvider>
-        <FavouritesProvider>
-          <StreaksProvider>
-            <ProgressProvider>
-            <View style={styles.gutter}>
-              <View style={[styles.phoneFrame, { width: frame.width, height: frame.height }]}>
-                {app}
-              </View>
-            </View>
-          </ProgressProvider>
-          </StreaksProvider>
-        </FavouritesProvider>
-        </CollectionsProvider>
+          <CollectionsProvider>
+            <FavouritesProvider>
+              <StreaksProvider>
+                <ProgressProvider>
+                  <View style={styles.gutter}>
+                    <View style={[styles.phoneFrame, { width: frame.width, height: frame.height }]}>
+                      {app}
+                    </View>
+                  </View>
+                </ProgressProvider>
+              </StreaksProvider>
+            </FavouritesProvider>
+          </CollectionsProvider>
         </RemoteArtProvider>
       </WordsProvider>
     </AuthProvider>

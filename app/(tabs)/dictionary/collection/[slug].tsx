@@ -39,7 +39,7 @@ export default function CollectionScreen() {
 
   const words = useMemo(
     () => (collection?.wordIds ?? []).map((id) => wordsById.get(id)).filter((w): w is Word => !!w),
-    [collection, wordsById]
+    [collection, wordsById],
   );
 
   return (

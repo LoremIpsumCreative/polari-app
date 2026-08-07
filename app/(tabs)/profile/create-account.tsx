@@ -94,8 +94,8 @@ export default function CreateAccountScreen() {
           <FormCard style={styles.successCard}>
             <Text style={styles.successHeading}>Your account has been created</Text>
             <Text style={styles.successBody}>
-              We&apos;ve sent a confirmation link to {email.trim()}. Tap it, then come back
-              and sign in.
+              We&apos;ve sent a confirmation link to {email.trim()}. Tap it, then come back and sign
+              in.
             </Text>
             <OutlinePillButton
               title="Open Email"

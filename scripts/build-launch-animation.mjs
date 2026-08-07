@@ -47,7 +47,7 @@ const arg = (name, fallback) => {
 
 const SRC = arg(
   'svg',
-  '/Users/brentondoherty/Projects/Polari/Screens/2026-08-07/App Launch/Startup Animation with Button.svg'
+  '/Users/brentondoherty/Projects/Polari/Screens/2026-08-07/App Launch/Startup Animation with Button.svg',
 );
 const OUT_DIR = resolve(ROOT, arg('out', 'assets/launch'));
 const FPS = Number(arg('fps', 30));
@@ -85,7 +85,7 @@ writeFileSync(
      html,body{margin:0;padding:0;background:transparent}
      #wrap{position:absolute;left:0;top:0;width:${w}px;height:${h}px}
      svg{display:block}
-   </style><div id="wrap">${svg}</div>`
+   </style><div id="wrap">${svg}</div>`,
 );
 
 const browser = await puppeteer.launch({
@@ -108,7 +108,9 @@ if (!Number.isFinite(duration)) {
 }
 
 const frames = Math.round((duration / 1000) * FPS);
-console.log(`SVG ${w}x${h} · ${(duration / 1000).toFixed(3)}s · ${frames} frames @ ${FPS}fps · ${SCALE}x`);
+console.log(
+  `SVG ${w}x${h} · ${(duration / 1000).toFixed(3)}s · ${frames} frames @ ${FPS}fps · ${SCALE}x`,
+);
 
 for (let i = 0; i < frames; i++) {
   // The last frame samples just inside the end: at exactly `duration` an
@@ -132,7 +134,8 @@ await page.evaluate((t) => {
 await page.screenshot({ path: `${OUT_DIR}/startup-final.png`, omitBackground: true });
 await browser.close();
 
-const ff = (args) => execFileSync('ffmpeg', ['-hide_banner', '-v', 'error', '-y', ...args], { stdio: 'inherit' });
+const ff = (args) =>
+  execFileSync('ffmpeg', ['-hide_banner', '-v', 'error', '-y', ...args], { stdio: 'inherit' });
 const input = ['-framerate', String(FPS), '-i', `${tmp}/f%05d.png`];
 
 // HEVC with alpha. -pix_fmt bgra is what makes videotoolbox emit the alpha
@@ -140,16 +143,37 @@ const input = ['-framerate', String(FPS), '-i', `${tmp}/f%05d.png`];
 console.log('encoding startup.mov (HEVC + alpha) …');
 ff([
   ...input,
-  '-c:v', 'hevc_videotoolbox', '-alpha_quality', '0.9', '-q:v', '65',
-  '-pix_fmt', 'bgra', '-tag:v', 'hvc1', '-allow_sw', '1',
-  '-movflags', '+faststart', `${OUT_DIR}/startup.mov`,
+  '-c:v',
+  'hevc_videotoolbox',
+  '-alpha_quality',
+  '0.9',
+  '-q:v',
+  '65',
+  '-pix_fmt',
+  'bgra',
+  '-tag:v',
+  'hvc1',
+  '-allow_sw',
+  '1',
+  '-movflags',
+  '+faststart',
+  `${OUT_DIR}/startup.mov`,
 ]);
 
 console.log('encoding startup.webm (VP9 + alpha) …');
 ff([
   ...input,
-  '-c:v', 'libvpx-vp9', '-pix_fmt', 'yuva420p', '-crf', '32', '-b:v', '0',
-  '-row-mt', '1', `${OUT_DIR}/startup.webm`,
+  '-c:v',
+  'libvpx-vp9',
+  '-pix_fmt',
+  'yuva420p',
+  '-crf',
+  '32',
+  '-b:v',
+  '0',
+  '-row-mt',
+  '1',
+  `${OUT_DIR}/startup.webm`,
 ]);
 
 // ── Web: the SVG itself, as a module ────────────────────────────────────────
@@ -187,7 +211,7 @@ webSvg = webSvg.replace(
     tag
       .replace(/\swidth="[^"]*"/, ' width="100%"')
       .replace(/\sheight="[^"]*"/, ' height="100%"')
-      .replace(/\spreserveAspectRatio="[^"]*"/, '') + ''
+      .replace(/\spreserveAspectRatio="[^"]*"/, '') + '',
 );
 
 writeFileSync(
@@ -199,11 +223,11 @@ writeFileSync(
     `export const LAUNCH_ANIM_MS = ${duration};\n\n` +
     `/** The animation's frame in design units: ${w}x${h}. */\n` +
     `export const LAUNCH_ANIM_SIZE = { w: ${w}, h: ${h} } as const;\n\n` +
-    `export const LAUNCH_ANIM_SVG = ${JSON.stringify(webSvg)};\n`
+    `export const LAUNCH_ANIM_SVG = ${JSON.stringify(webSvg)};\n`,
 );
 
 rmSync(tmp, { recursive: true, force: true });
 console.log(
   `\nwrote ${OUT_DIR}/startup.mov, startup.webm, startup-final.png\n` +
-    `      src/components/launchAnimationSvg.ts`
+    `      src/components/launchAnimationSvg.ts`,
 );

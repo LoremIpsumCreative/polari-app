@@ -42,7 +42,7 @@ for (const [name, screen] of Object.entries(snap.screens)) {
   const size = screen.size ? `${screen.size[0]}×${screen.size[1]}` : '?';
   rows.push(
     `  ✓ ${name.padEnd(22)} ${size.padEnd(9)} ${String(nodes.length).padStart(2)} nodes · ` +
-      `${instances} instances · ${texts} text`
+      `${instances} instances · ${texts} text`,
   );
 }
 
@@ -53,7 +53,7 @@ if (stale.length) {
   console.error(
     `\n${stale.length} screen(s) have stale node-ids: ${stale.join(', ')}\n` +
       `Re-discover their frames in Figma, update SCREENS in figma-snapshot.fig.js, ` +
-      `regenerate the snapshot, and commit.\n`
+      `regenerate the snapshot, and commit.\n`,
   );
   process.exit(1);
 }

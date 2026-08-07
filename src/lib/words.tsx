@@ -55,7 +55,7 @@ export function WordsProvider({ children }: { children: ReactNode }) {
       refetch: fetchWords,
       bySlug: new Map(words.map((w) => [w.slug, w])),
     }),
-    [words, loading, error, fetchWords]
+    [words, loading, error, fetchWords],
   );
 
   return <WordsContext.Provider value={value}>{children}</WordsContext.Provider>;

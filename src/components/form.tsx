@@ -189,10 +189,7 @@ export function PrimaryButton({
 }) {
   return (
     <Pressable
-      style={({ pressed }) => [
-        styles.button,
-        (pressed || disabled || loading) && styles.pressed,
-      ]}
+      style={({ pressed }) => [styles.button, (pressed || disabled || loading) && styles.pressed]}
       onPress={onPress}
       disabled={disabled || loading}
     >

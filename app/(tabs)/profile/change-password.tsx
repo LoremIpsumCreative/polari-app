@@ -129,12 +129,7 @@ export default function ChangePasswordScreen() {
         <FormError message={error} />
         <FormNotice message={done ? 'Password changed.' : null} />
 
-        <PillButton
-          title="Confirm"
-          onPress={handleConfirm}
-          loading={busy}
-          style={styles.cta}
-        />
+        <PillButton title="Confirm" onPress={handleConfirm} loading={busy} style={styles.cta} />
       </ScrollView>
     </View>
   );

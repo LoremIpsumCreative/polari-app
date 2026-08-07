@@ -36,7 +36,7 @@ const ProgressContext = createContext<ProgressContextValue | null>(null);
 
 export function applyReview(
   prev: Pick<WordProgress, 'mastery' | 'ease' | 'reps' | 'lapses' | 'interval_days'>,
-  correct: boolean
+  correct: boolean,
 ): Omit<WordProgress, 'word_id'> {
   if (!correct) {
     return {
@@ -50,7 +50,11 @@ export function applyReview(
   }
   const reps = prev.reps + 1;
   const intervalDays =
-    prev.interval_days <= 0 ? 1 : prev.interval_days === 1 ? 3 : Math.round(prev.interval_days * prev.ease);
+    prev.interval_days <= 0
+      ? 1
+      : prev.interval_days === 1
+        ? 3
+        : Math.round(prev.interval_days * prev.ease);
   const due = new Date();
   due.setDate(due.getDate() + intervalDays);
   return {
@@ -100,7 +104,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           .from('user_word_progress')
           .upsert(
             { user_id: userId, ...next, last_reviewed_at: new Date().toISOString() },
-            { onConflict: 'user_id,word_id' }
+            { onConflict: 'user_id,word_id' },
           )
           .then(({ error }) => {
             if (error) console.warn('progress save failed', error.message);
@@ -110,7 +114,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         return copy;
       });
     },
-    [userId]
+    [userId],
   );
 
   const dueWordIds = useMemo(() => {
@@ -123,7 +127,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<ProgressContextValue>(
     () => ({ progress, dueWordIds, recordAnswer }),
-    [progress, dueWordIds, recordAnswer]
+    [progress, dueWordIds, recordAnswer],
   );
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;

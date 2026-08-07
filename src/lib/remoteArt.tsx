@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { ImageSourcePropType } from 'react-native';
 import { supabase } from './supabase';
 import { CHARACTER_SLUGS, characterArtFor } from './characterArt';
@@ -59,7 +52,7 @@ export function RemoteArtProvider({ children }: { children: ReactNode }) {
       hasArt: (slug) => remote.has(slug) || CHARACTER_SLUGS.includes(slug),
       castSlugs: [...new Set([...remote.keys(), ...CHARACTER_SLUGS])],
     }),
-    [remote]
+    [remote],
   );
 
   return <RemoteArtContext.Provider value={value}>{children}</RemoteArtContext.Provider>;

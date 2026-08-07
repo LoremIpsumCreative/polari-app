@@ -1,17 +1,8 @@
 import { useMemo, useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAchievements, type Achievement } from '../../../src/lib/achievements';
-import {
-  CollectionHeader,
-  CollectionPanel,
-} from '../../../src/components/CollectionChrome';
+import { CollectionHeader, CollectionPanel } from '../../../src/components/CollectionChrome';
 import { colors, fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
@@ -44,7 +35,11 @@ function AchievementCard({ a, s }: { a: Achievement; s: number }) {
         <View
           style={[
             styles.barFill,
-            { width: Math.max(0.08, Math.min(1, pct)) * 55 * s, height: 6 * s, borderRadius: 12 * s },
+            {
+              width: Math.max(0.08, Math.min(1, pct)) * 55 * s,
+              height: 6 * s,
+              borderRadius: 12 * s,
+            },
           ]}
         />
       </View>
@@ -81,11 +76,7 @@ export default function AchievementsScreen() {
   return (
     <View style={styles.screen}>
       <ScreenBackground />
-      <CollectionHeader
-        title="Achievements"
-        search={search}
-        onSearch={setSearch}
-      />
+      <CollectionHeader title="Achievements" search={search} onSearch={setSearch} />
       <CollectionPanel s={s}>
         {!signedIn ? (
           <View style={{ padding: 20 * s, flex: 1 }}>
@@ -114,7 +105,10 @@ export default function AchievementsScreen() {
             {Array.from({ length: fillers }).map((_, i) => (
               <View
                 key={`filler-${i}`}
-                style={[styles.card, { width: cardWidth(s), height: CARD_H * s, borderRadius: 12 * s }]}
+                style={[
+                  styles.card,
+                  { width: cardWidth(s), height: CARD_H * s, borderRadius: 12 * s },
+                ]}
               />
             ))}
           </ScrollView>
@@ -129,7 +123,11 @@ const styles = StyleSheet.create({
   card: { backgroundColor: colors.progressTrack, alignItems: 'center' },
   cardIcon: { alignItems: 'center', justifyContent: 'center' },
   cardIconEarned: { backgroundColor: colors.primarySoft },
-  cardIconLocked: { backgroundColor: colors.inset, borderWidth: 0.5, borderColor: colors.fieldBorder },
+  cardIconLocked: {
+    backgroundColor: colors.inset,
+    borderWidth: 0.5,
+    borderColor: colors.fieldBorder,
+  },
   bar: {
     borderWidth: 0.5,
     borderColor: colors.inactive,

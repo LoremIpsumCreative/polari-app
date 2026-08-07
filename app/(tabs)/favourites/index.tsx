@@ -27,9 +27,36 @@ const SATELLITES: {
   w: number;
   iconX: number;
 }[] = [
-  { key: 'favourites', label: 'Favourites', href: '/favourites/list', Icon: IconHeart, tint: HEART_RED, x: 62, w: 64, iconX: 4.5 },
-  { key: 'achievements', label: 'Achievements', href: '/favourites/achievements', Icon: IconTrophy, tint: TROPHY_GOLD, x: 156, w: 83, iconX: 14 },
-  { key: 'gallery', label: 'Gallery', href: '/favourites/gallery', Icon: IconPhoto, tint: colors.related, x: 269, w: 64, iconX: 4.5 },
+  {
+    key: 'favourites',
+    label: 'Favourites',
+    href: '/favourites/list',
+    Icon: IconHeart,
+    tint: HEART_RED,
+    x: 62,
+    w: 64,
+    iconX: 4.5,
+  },
+  {
+    key: 'achievements',
+    label: 'Achievements',
+    href: '/favourites/achievements',
+    Icon: IconTrophy,
+    tint: TROPHY_GOLD,
+    x: 156,
+    w: 83,
+    iconX: 14,
+  },
+  {
+    key: 'gallery',
+    label: 'Gallery',
+    href: '/favourites/gallery',
+    Icon: IconPhoto,
+    tint: colors.related,
+    x: 269,
+    w: 64,
+    iconX: 4.5,
+  },
 ];
 
 export default function CollectionsHub() {
@@ -130,7 +157,13 @@ export default function CollectionsHub() {
       <Image
         source={favourette}
         resizeMode="contain"
-        style={{ position: 'absolute', left: 55 * s, top: 291 * s, width: 102 * s, height: 264 * s }}
+        style={{
+          position: 'absolute',
+          left: 55 * s,
+          top: 291 * s,
+          width: 102 * s,
+          height: 264 * s,
+        }}
         accessibilityIgnoresInvertColors
       />
 
@@ -163,7 +196,12 @@ export default function CollectionsHub() {
     return (
       <View style={styles.screen}>
         <ScreenBackground />
-        <Text style={[styles.gateCopy, { left: 66 * s, top: 89 * s, width: 264 * s, fontSize: 16 * s, lineHeight: 20 * s }]}>
+        <Text
+          style={[
+            styles.gateCopy,
+            { left: 66 * s, top: 89 * s, width: 264 * s, fontSize: 16 * s, lineHeight: 20 * s },
+          ]}
+        >
           Sign in or create an account to save favourites, earn achievements and access the
           character gallery
         </Text>
@@ -183,7 +221,10 @@ export default function CollectionsHub() {
         </Pressable>
         <Text style={[styles.createLink, { top: 673 * s, fontSize: 14 * s }]}>
           Don’t have an account yet?{' '}
-          <Text style={styles.createLinkAccent} onPress={() => router.push('/profile/create-account')}>
+          <Text
+            style={styles.createLinkAccent}
+            onPress={() => router.push('/profile/create-account')}
+          >
             Create one
           </Text>
         </Text>

@@ -1,12 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { IconHeart, IconHeartFilled } from '@tabler/icons-react-native';
 import { useAuth } from '../../../src/lib/auth';
@@ -59,111 +52,118 @@ export default function FavouritesListScreen() {
   return (
     <View style={styles.screen}>
       <ScreenBackground />
-      <CollectionHeader
-        title="Favourites"
-        search={search}
-        onSearch={setSearch}
-      />
+      <CollectionHeader title="Favourites" search={search} onSearch={setSearch} />
 
       <CollectionPanel s={s}>
         <View style={styles.panelRow}>
-        {!session || !hasFavourites ? (
-          <View style={{ padding: 20 * s, flex: 1 }}>
-            <View style={[styles.row, styles.emptyRow, { height: 40 * s, borderRadius: 8 * s }]}>
-              <Text style={[styles.emptyRowText, { fontSize: 12 * s }]}>
-                {session ? 'No favourites yet' : 'Sign in to save favourites'}
-              </Text>
-              <IconHeart size={13 * s} color={colors.inactive} />
-            </View>
-            <Image
-              source={favouretteArt}
-              resizeMode="contain"
-              style={{ alignSelf: 'center', marginTop: 60 * s, width: 180 * s, height: 325 * s }}
-              accessibilityIgnoresInvertColors
-            />
-            {session ? (
-              <Text style={[styles.emptyCaption, { fontSize: 14 * s, lineHeight: 20 * s }]}>
-                Save your favourite Polari words and phrases by tapping the heart icon on a word
-                definition card.
-              </Text>
-            ) : (
-              <Pressable onPress={() => router.push('/profile/sign-in')} accessibilityRole="button">
-                <Text style={[styles.emptyCaption, styles.signInLink, { fontSize: 14 * s }]}>
-                  Sign in
+          {!session || !hasFavourites ? (
+            <View style={{ padding: 20 * s, flex: 1 }}>
+              <View style={[styles.row, styles.emptyRow, { height: 40 * s, borderRadius: 8 * s }]}>
+                <Text style={[styles.emptyRowText, { fontSize: 12 * s }]}>
+                  {session ? 'No favourites yet' : 'Sign in to save favourites'}
                 </Text>
-              </Pressable>
-            )}
-          </View>
-        ) : (
-          <ScrollView
-            ref={scrollRef}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ padding: 20 * s, paddingBottom: 32 * s }}
-          >
-            {[...groups.entries()].map(([letter, items]) => (
-              <View
-                key={letter}
-                onLayout={(e) => {
-                  sectionYs.current[letter] = e.nativeEvent.layout.y;
-                }}
-              >
-                <Text style={[styles.letterHeader, { fontSize: 10 * s, paddingVertical: 8 * s, paddingLeft: 14 * s }]}>
-                  {letter}
-                </Text>
-                {items.map((w) => (
-                  <Pressable
-                    key={w.id}
-                    onPress={() => router.push(`/dictionary/${w.slug}`)}
-                    style={({ pressed }) => [
-                      styles.row,
-                      { height: 40 * s, borderRadius: 8 * s, marginBottom: 8 * s },
-                      pressed && styles.rowPressed,
-                    ]}
-                    accessibilityRole="link"
-                    accessibilityLabel={`Read the entry for ${w.term}`}
-                  >
-                    <Text style={[styles.rowTerm, { fontSize: 12 * s }]} numberOfLines={1}>
-                      {w.term}
-                    </Text>
-                    <Pressable
-                      onPress={() => toggleFavourite(w.id)}
-                      hitSlop={10}
-                      accessibilityRole="button"
-                      accessibilityLabel={`Remove ${w.term} from favourites`}
-                    >
-                      <IconHeartFilled size={14 * s} color={HEART_RED} />
-                    </Pressable>
-                  </Pressable>
-                ))}
+                <IconHeart size={13 * s} color={colors.inactive} />
               </View>
-            ))}
-          </ScrollView>
-        )}
-        <View style={[styles.rail, { paddingVertical: 13 * s, width: 19 * s }]}>
-          {ALPHABET.map((letter) => {
-            const active = groups.has(letter);
-            return (
-              <Pressable
-                key={letter}
-                disabled={!active}
-                onPress={() => {
-                  const y = sectionYs.current[letter];
-                  if (y !== undefined) scrollRef.current?.scrollTo({ y, animated: true });
-                }}
-                hitSlop={4}
-              >
-                <Text
-                  style={[styles.railLetter, { fontSize: 10 * s }, !active && styles.railLetterInactive]}
-                >
-                  {letter}
+              <Image
+                source={favouretteArt}
+                resizeMode="contain"
+                style={{ alignSelf: 'center', marginTop: 60 * s, width: 180 * s, height: 325 * s }}
+                accessibilityIgnoresInvertColors
+              />
+              {session ? (
+                <Text style={[styles.emptyCaption, { fontSize: 14 * s, lineHeight: 20 * s }]}>
+                  Save your favourite Polari words and phrases by tapping the heart icon on a word
+                  definition card.
                 </Text>
-              </Pressable>
-            );
-          })}
-        </View>
+              ) : (
+                <Pressable
+                  onPress={() => router.push('/profile/sign-in')}
+                  accessibilityRole="button"
+                >
+                  <Text style={[styles.emptyCaption, styles.signInLink, { fontSize: 14 * s }]}>
+                    Sign in
+                  </Text>
+                </Pressable>
+              )}
+            </View>
+          ) : (
+            <ScrollView
+              ref={scrollRef}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ padding: 20 * s, paddingBottom: 32 * s }}
+            >
+              {[...groups.entries()].map(([letter, items]) => (
+                <View
+                  key={letter}
+                  onLayout={(e) => {
+                    sectionYs.current[letter] = e.nativeEvent.layout.y;
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.letterHeader,
+                      { fontSize: 10 * s, paddingVertical: 8 * s, paddingLeft: 14 * s },
+                    ]}
+                  >
+                    {letter}
+                  </Text>
+                  {items.map((w) => (
+                    <Pressable
+                      key={w.id}
+                      onPress={() => router.push(`/dictionary/${w.slug}`)}
+                      style={({ pressed }) => [
+                        styles.row,
+                        { height: 40 * s, borderRadius: 8 * s, marginBottom: 8 * s },
+                        pressed && styles.rowPressed,
+                      ]}
+                      accessibilityRole="link"
+                      accessibilityLabel={`Read the entry for ${w.term}`}
+                    >
+                      <Text style={[styles.rowTerm, { fontSize: 12 * s }]} numberOfLines={1}>
+                        {w.term}
+                      </Text>
+                      <Pressable
+                        onPress={() => toggleFavourite(w.id)}
+                        hitSlop={10}
+                        accessibilityRole="button"
+                        accessibilityLabel={`Remove ${w.term} from favourites`}
+                      >
+                        <IconHeartFilled size={14 * s} color={HEART_RED} />
+                      </Pressable>
+                    </Pressable>
+                  ))}
+                </View>
+              ))}
+            </ScrollView>
+          )}
+          <View style={[styles.rail, { paddingVertical: 13 * s, width: 19 * s }]}>
+            {ALPHABET.map((letter) => {
+              const active = groups.has(letter);
+              return (
+                <Pressable
+                  key={letter}
+                  disabled={!active}
+                  onPress={() => {
+                    const y = sectionYs.current[letter];
+                    if (y !== undefined) scrollRef.current?.scrollTo({ y, animated: true });
+                  }}
+                  hitSlop={4}
+                >
+                  <Text
+                    style={[
+                      styles.railLetter,
+                      { fontSize: 10 * s },
+                      !active && styles.railLetterInactive,
+                    ]}
+                  >
+                    {letter}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
         </View>
       </CollectionPanel>
-
     </View>
   );
 }

@@ -193,8 +193,23 @@ export function LaunchScreen({ onOpen }: { onOpen: () => void }) {
 }
 
 const styles = StyleSheet.create({
-  screen: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: colors.canvas },
-  paper: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%' },
+  screen: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: colors.canvas,
+  },
+  paper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: '100%',
+    height: '100%',
+  },
 
   // Explicit stacking. Sibling order alone is enough on web, but on iOS a
   // late-mounted absolute sibling can end up painting over one declared before

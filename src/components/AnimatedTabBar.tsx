@@ -45,7 +45,7 @@ const LABEL_SIZE = 10;
 // symmetrically at any screen size.
 const TAB_PITCH = 76;
 const TAB_CENTRE_RATIOS = [-2, -1, 0, 1, 2].map(
-  (k) => (DESIGN_WIDTH / 2 + k * TAB_PITCH) / DESIGN_WIDTH
+  (k) => (DESIGN_WIDTH / 2 + k * TAB_PITCH) / DESIGN_WIDTH,
 );
 
 // A near-invisible pane behind every other layer: 1% #D9D9D9 over an 11px
@@ -261,13 +261,7 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
 
       <View style={[styles.blurPane, { height: BLUR_HEIGHT * s }]} pointerEvents="none" />
 
-      <NotchedBar
-        cx={notchX}
-        initialCx={initialCx}
-        width={barWidth}
-        height={barHeight}
-        s={s}
-      />
+      <NotchedBar cx={notchX} initialCx={initialCx} width={barWidth} height={barHeight} s={s} />
 
       <Animated.View
         pointerEvents="none"
@@ -344,7 +338,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(217, 217, 217, 0.01)',
     // backdropFilter is a web-only CSS property; native would need expo-blur,
     // and at 1% tint the pane is invisible there rather than wrong.
-    ...Platform.select({ web: { backdropFilter: `blur(${BLUR_RADIUS}px)` } as object, default: {} }),
+    ...Platform.select({
+      web: { backdropFilter: `blur(${BLUR_RADIUS}px)` } as object,
+      default: {},
+    }),
   },
   safeAreaFill: {
     position: 'absolute',

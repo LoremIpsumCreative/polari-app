@@ -45,9 +45,7 @@ export function AccountOption({
           <Icon size={14} color={disabled ? colors.inactive : colors.textFaint} />
         </View>
         <Text style={[styles.label, disabled && styles.labelDisabled]}>{label}</Text>
-        {chevron ? (
-          <Chevron size={12} color={disabled ? colors.inactive : colors.text} />
-        ) : null}
+        {chevron ? <Chevron size={12} color={disabled ? colors.inactive : colors.text} /> : null}
       </Pressable>
       {expanded && children ? <View style={styles.body}>{children}</View> : null}
     </View>

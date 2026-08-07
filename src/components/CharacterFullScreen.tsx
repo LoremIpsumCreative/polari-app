@@ -18,7 +18,11 @@ export function CharacterFullScreen({
 }) {
   return (
     <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
-      <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close full screen view">
+      <Pressable
+        style={styles.backdrop}
+        onPress={onClose}
+        accessibilityLabel="Close full screen view"
+      >
         <Image source={source} style={styles.art} resizeMode="contain" accessibilityLabel={label} />
         <View style={styles.closeButton}>
           <IconX size={26} color={colors.text} />

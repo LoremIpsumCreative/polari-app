@@ -97,7 +97,7 @@ export function partOfSpeechOptions(words: Word[]): string[] {
 export function matchesFilters(
   word: Word,
   f: DictionaryFilters,
-  ctx: { isFavourite: (id: string) => boolean; hasArtwork: (slug: string) => boolean }
+  ctx: { isFavourite: (id: string) => boolean; hasArtwork: (slug: string) => boolean },
 ): boolean {
   // Words and Phrases are additive: neither selected means no type filter,
   // both selected is the same as neither.

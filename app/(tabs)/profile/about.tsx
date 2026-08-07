@@ -25,28 +25,23 @@ type Section = { title: string; body: string };
 const SECTIONS: Section[] = [
   {
     title: 'What is Polari?',
-    body:
-      'Polari is a form of cant slang — a coded way of speaking — used in Britain through the twentieth century, above all by gay men, drag performers and people of the theatre. It stitched together Italianate words brought by sailors and showfolk, Romani, Yiddish, Cockney back-slang and rhyming slang, and the lingo of fairgrounds and circuses. To vada a bona omi — to clock a handsome man — was to speak a language the straight world around you could not follow.',
+    body: 'Polari is a form of cant slang — a coded way of speaking — used in Britain through the twentieth century, above all by gay men, drag performers and people of the theatre. It stitched together Italianate words brought by sailors and showfolk, Romani, Yiddish, Cockney back-slang and rhyming slang, and the lingo of fairgrounds and circuses. To vada a bona omi — to clock a handsome man — was to speak a language the straight world around you could not follow.',
   },
   {
     title: 'Why a secret language?',
-    body:
-      'For most of Polari’s life, sex between men was a crime in Britain. A careless word in the wrong company could mean arrest, blackmail, the loss of a job or a family. Polari let queer people find each other, gossip, flirt and warn one another in plain sight — camp code hiding in a sentence. It flourished in theatre dressing rooms, merchant navy messes, West End bars and street markets from the 1900s to the 1960s.',
+    body: 'For most of Polari’s life, sex between men was a crime in Britain. A careless word in the wrong company could mean arrest, blackmail, the loss of a job or a family. Polari let queer people find each other, gossip, flirt and warn one another in plain sight — camp code hiding in a sentence. It flourished in theatre dressing rooms, merchant navy messes, West End bars and street markets from the 1900s to the 1960s.',
   },
   {
     title: 'Fame, then fade',
-    body:
-      'In the late 1960s the BBC radio show Round the Horne beamed Polari into millions of homes through Julian and Sandy — two outrageously camp characters played by Hugh Paddick and Kenneth Williams. The joke’s cover was blown just as it became less needed: the partial decriminalisation of homosexuality in 1967 began easing the danger that had made a secret language necessary. Within a generation, Polari had largely fallen out of use — remembered by elders, recorded by scholars, and at real risk of being lost.',
+    body: 'In the late 1960s the BBC radio show Round the Horne beamed Polari into millions of homes through Julian and Sandy — two outrageously camp characters played by Hugh Paddick and Kenneth Williams. The joke’s cover was blown just as it became less needed: the partial decriminalisation of homosexuality in 1967 began easing the danger that had made a secret language necessary. Within a generation, Polari had largely fallen out of use — remembered by elders, recorded by scholars, and at real risk of being lost.',
   },
   {
     title: 'A living inheritance',
-    body:
-      'Polari never entirely died. Naff, camp, butch, zhuzh and a clutch of other words slipped into everyday English. Drag and ballroom culture carry its spirit, and its echoes turn up everywhere from Drag Race to Polari-blessed Bibles performed by the Sisters of Perpetual Indulgence. Learning it now is an act of remembrance and of joy: keeping faith with the people who needed it, and delighting in how fabulous they made survival sound.',
+    body: 'Polari never entirely died. Naff, camp, butch, zhuzh and a clutch of other words slipped into everyday English. Drag and ballroom culture carry its spirit, and its echoes turn up everywhere from Drag Race to Polari-blessed Bibles performed by the Sisters of Perpetual Indulgence. Learning it now is an act of remembrance and of joy: keeping faith with the people who needed it, and delighting in how fabulous they made survival sound.',
   },
   {
     title: 'A note on the words themselves',
-    body:
-      'Polari grew up in criminalised, working-class and sexual worlds — bars, docks, cottages and stage doors. Some entries in this dictionary are bawdy, blunt or tied to practices that were dangerous precisely because they were policed. We present them in their historical context, without sanitising and without judgement. They are part of the record of how a community lived.',
+    body: 'Polari grew up in criminalised, working-class and sexual worlds — bars, docks, cottages and stage doors. Some entries in this dictionary are bawdy, blunt or tied to practices that were dangerous precisely because they were policed. We present them in their historical context, without sanitising and without judgement. They are part of the record of how a community lived.',
   },
 ];
 
@@ -101,7 +96,12 @@ export default function AboutScreen() {
         </Pressable>
 
         {/* Auntie bleeds off the left edge behind the heading block. */}
-        <Image source={auntie} style={styles.auntie} resizeMode="contain" accessibilityIgnoresInvertColors />
+        <Image
+          source={auntie}
+          style={styles.auntie}
+          resizeMode="contain"
+          accessibilityIgnoresInvertColors
+        />
 
         <View style={styles.heading}>
           <Text style={styles.title}>About Polari</Text>
@@ -128,9 +128,9 @@ export default function AboutScreen() {
             <Text style={styles.sourcesTitle}>Further Reading</Text>
           </View>
           <Text style={styles.sourcesNote}>
-            This app stands on the work of the scholars, archivists and elders who recorded
-            Polari before it could vanish. Definitions are drawn from the community record;
-            errors are ours, not theirs.
+            This app stands on the work of the scholars, archivists and elders who recorded Polari
+            before it could vanish. Definitions are drawn from the community record; errors are
+            ours, not theirs.
           </Text>
           {SOURCES.map((src) => (
             <Pressable
@@ -179,7 +179,12 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
     backgroundColor: colors.inset,
   },
-  backChipText: { fontFamily: fonts.semibold, fontSize: 10, letterSpacing: 0.3, color: colors.text },
+  backChipText: {
+    fontFamily: fonts.semibold,
+    fontSize: 10,
+    letterSpacing: 0.3,
+    color: colors.text,
+  },
   pressed: { opacity: 0.7 },
 
   // auntie 1: x0 y115, 119x195, running off the left edge.
@@ -278,7 +283,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  authorName: { fontFamily: fonts.semibold, fontSize: 11, letterSpacing: 0.3, color: colors.primary },
+  authorName: {
+    fontFamily: fonts.semibold,
+    fontSize: 11,
+    letterSpacing: 0.3,
+    color: colors.primary,
+  },
   sourceDetail: {
     fontFamily: fonts.regular,
     fontSize: 10,

@@ -1,12 +1,5 @@
 import { useRef, useState } from 'react';
-import {
-  Modal,
-  Pressable,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import type { Word } from '../types/database';
 import { ShareWordCard, CARD_WIDTH, CARD_HEIGHT } from './ShareWordCard';
 import { shareWordCard } from '../lib/share';

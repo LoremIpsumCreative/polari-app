@@ -7,10 +7,10 @@
 // a change log and handle deletions. This seeder never deletes.
 
 import { config } from 'dotenv';
-config({ path: '.env.local' });
 
 import { createClient } from '@supabase/supabase-js';
 import { fetchSheetWords } from './lib/dictionary';
+config({ path: '.env.local' });
 
 async function main() {
   const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;

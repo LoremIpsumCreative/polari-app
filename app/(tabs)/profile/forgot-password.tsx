@@ -69,9 +69,7 @@ export default function ForgotPasswordScreen() {
         <FormError message={error} />
         <FormNotice
           message={
-            sent
-              ? `If an account exists for ${email.trim()}, a reset link is on its way.`
-              : null
+            sent ? `If an account exists for ${email.trim()}, a reset link is on its way.` : null
           }
         />
 

@@ -49,9 +49,7 @@ export default function WordDetailScreen() {
             </>
           ) : (
             <View style={styles.center}>
-              <Text style={styles.missingText}>
-                {loading ? 'Loading…' : 'Word not found.'}
-              </Text>
+              <Text style={styles.missingText}>{loading ? 'Loading…' : 'Word not found.'}</Text>
             </View>
           )}
         </ScrollView>

@@ -75,22 +75,106 @@ export function useAchievements() {
 
     const defs: Omit<Achievement, 'earned'>[] = [
       // Streaks
-      { id: 'streak-3', title: 'Warming up', description: 'Keep a 3-day streak', Icon: IconFlame, target: 3, current: longestStreak },
-      { id: 'streak-7', title: 'Regular haunt', description: 'Keep a 7-day streak', Icon: IconFlame, target: 7, current: longestStreak },
-      { id: 'streak-30', title: 'Fixture on the scene', description: 'Keep a 30-day streak', Icon: IconCrown, target: 30, current: longestStreak },
+      {
+        id: 'streak-3',
+        title: 'Warming up',
+        description: 'Keep a 3-day streak',
+        Icon: IconFlame,
+        target: 3,
+        current: longestStreak,
+      },
+      {
+        id: 'streak-7',
+        title: 'Regular haunt',
+        description: 'Keep a 7-day streak',
+        Icon: IconFlame,
+        target: 7,
+        current: longestStreak,
+      },
+      {
+        id: 'streak-30',
+        title: 'Fixture on the scene',
+        description: 'Keep a 30-day streak',
+        Icon: IconCrown,
+        target: 30,
+        current: longestStreak,
+      },
       // Words seen
-      { id: 'words-25', title: 'Getting the lingo', description: 'Meet 25 words', Icon: IconBook2, target: 25, current: wordsLearned },
-      { id: 'words-100', title: 'Omi of letters', description: 'Meet 100 words', Icon: IconBook2, target: 100, current: wordsLearned },
+      {
+        id: 'words-25',
+        title: 'Getting the lingo',
+        description: 'Meet 25 words',
+        Icon: IconBook2,
+        target: 25,
+        current: wordsLearned,
+      },
+      {
+        id: 'words-100',
+        title: 'Omi of letters',
+        description: 'Meet 100 words',
+        Icon: IconBook2,
+        target: 100,
+        current: wordsLearned,
+      },
       // Favourites
-      { id: 'fav-1', title: 'First crush', description: 'Save your first favourite', Icon: IconHeart, target: 1, current: favs },
-      { id: 'fav-10', title: 'Cabinet of curiosities', description: 'Save 10 favourites', Icon: IconHearts, target: 10, current: favs },
+      {
+        id: 'fav-1',
+        title: 'First crush',
+        description: 'Save your first favourite',
+        Icon: IconHeart,
+        target: 1,
+        current: favs,
+      },
+      {
+        id: 'fav-10',
+        title: 'Cabinet of curiosities',
+        description: 'Save 10 favourites',
+        Icon: IconHearts,
+        target: 10,
+        current: favs,
+      },
       // Quiz
-      { id: 'quiz-1', title: 'Opening night', description: 'Finish your first quiz', Icon: IconMicrophone2, target: 1, current: quiz.attempts },
-      { id: 'quiz-7', title: 'Sharp ear', description: 'Score 7 or better in a quiz', Icon: IconTargetArrow, target: 7, current: quiz.best },
-      { id: 'quiz-perfect', title: 'Fantabulosa!', description: 'Score a perfect round', Icon: IconStar, target: 1, current: quiz.perfects },
+      {
+        id: 'quiz-1',
+        title: 'Opening night',
+        description: 'Finish your first quiz',
+        Icon: IconMicrophone2,
+        target: 1,
+        current: quiz.attempts,
+      },
+      {
+        id: 'quiz-7',
+        title: 'Sharp ear',
+        description: 'Score 7 or better in a quiz',
+        Icon: IconTargetArrow,
+        target: 7,
+        current: quiz.best,
+      },
+      {
+        id: 'quiz-perfect',
+        title: 'Fantabulosa!',
+        description: 'Score a perfect round',
+        Icon: IconStar,
+        target: 1,
+        current: quiz.perfects,
+      },
       // Mastery (spaced repetition)
-      { id: 'known-10', title: 'Ten in the bank', description: 'Master 10 words in review', Icon: IconSparkles, target: 10, current: known },
-      { id: 'known-50', title: 'Walking dictionary', description: 'Master 50 words in review', Icon: IconMasksTheater, target: 50, current: known },
+      {
+        id: 'known-10',
+        title: 'Ten in the bank',
+        description: 'Master 10 words in review',
+        Icon: IconSparkles,
+        target: 10,
+        current: known,
+      },
+      {
+        id: 'known-50',
+        title: 'Walking dictionary',
+        description: 'Master 50 words in review',
+        Icon: IconMasksTheater,
+        target: 50,
+        current: known,
+      },
     ];
 
     const achievements: Achievement[] = defs.map((d) => ({

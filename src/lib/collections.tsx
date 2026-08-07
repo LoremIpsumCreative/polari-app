@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { supabase } from './supabase';
 import type { Collection } from '../types/database';
 
@@ -44,7 +37,7 @@ export function CollectionsProvider({ children }: { children: ReactNode }) {
         wordIdsByCollection.set(m.collection_id, list);
       }
       setCollections(
-        (cols ?? []).map((c) => ({ ...c, wordIds: wordIdsByCollection.get(c.id) ?? [] }))
+        (cols ?? []).map((c) => ({ ...c, wordIds: wordIdsByCollection.get(c.id) ?? [] })),
       );
       setLoading(false);
     })();
@@ -59,7 +52,7 @@ export function CollectionsProvider({ children }: { children: ReactNode }) {
       bySlug: new Map(collections.map((c) => [c.slug, c])),
       loading,
     }),
-    [collections, loading]
+    [collections, loading],
   );
 
   return <CollectionsContext.Provider value={value}>{children}</CollectionsContext.Provider>;

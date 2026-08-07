@@ -74,7 +74,7 @@ export function FavouritesProvider({ children }: { children: ReactNode }) {
         });
       }
     },
-    [userId, favouriteWordIds]
+    [userId, favouriteWordIds],
   );
 
   const value = useMemo<FavouritesContextValue>(
@@ -84,7 +84,7 @@ export function FavouritesProvider({ children }: { children: ReactNode }) {
       toggleFavourite,
       loading,
     }),
-    [favouriteWordIds, toggleFavourite, loading]
+    [favouriteWordIds, toggleFavourite, loading],
   );
 
   return <FavouritesContext.Provider value={value}>{children}</FavouritesContext.Provider>;

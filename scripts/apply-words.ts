@@ -12,7 +12,6 @@
 // Requires SUPABASE_SERVICE_ROLE_KEY in .env.local.
 
 import { config } from 'dotenv';
-config({ path: '.env.local' });
 
 import { createClient } from '@supabase/supabase-js';
 import { writeFileSync } from 'node:fs';
@@ -24,6 +23,7 @@ import {
   CHANGES_PATH,
   type WordMap,
 } from './lib/dictionary';
+config({ path: '.env.local' });
 
 async function main() {
   const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
@@ -46,7 +46,7 @@ async function main() {
   }
 
   console.log(
-    `Applying: ${diff.added.length} added, ${diff.updated.length} updated, ${diff.removed.length} removed…`
+    `Applying: ${diff.added.length} added, ${diff.updated.length} updated, ${diff.removed.length} removed…`,
   );
 
   // sort_order drives word-of-the-day rotation, so keep it stable across runs:
@@ -107,7 +107,7 @@ async function main() {
       '',
       '**No pending changes. ✅** Edit the sheet, then run `npm run words:check`.',
       '',
-    ].join('\n')
+    ].join('\n'),
   );
 
   console.log(`Done. ${rows.length} words are live and the snapshot is up to date.`);

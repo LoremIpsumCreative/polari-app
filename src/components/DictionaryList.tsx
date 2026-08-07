@@ -54,7 +54,10 @@ export function DictionaryListPanel({
   const letterIndex = useMemo(() => {
     const map = new Map<string, number>();
     words.forEach((w, i) => {
-      const letter = w.term.replace(/[^a-z]/gi, '').charAt(0).toUpperCase();
+      const letter = w.term
+        .replace(/[^a-z]/gi, '')
+        .charAt(0)
+        .toUpperCase();
       if (letter && !map.has(letter)) map.set(letter, i);
     });
     return map;
@@ -148,7 +151,12 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
 
-  pagination: { width: 19, alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 6 },
+  pagination: {
+    width: 19,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 6,
+  },
   paginationLetter: {
     fontFamily: fonts.bold,
     fontSize: 10,

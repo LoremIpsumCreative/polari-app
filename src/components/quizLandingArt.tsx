@@ -107,12 +107,7 @@ export function Blob({
           <Stop offset="1" stopColor={edgeTo} />
         </LinearGradient>
       </Defs>
-      <Path
-        d={d}
-        fill={`url(#${id}Fill)`}
-        stroke={`url(#${id}Edge)`}
-        strokeWidth={strokeWidth}
-      />
+      <Path d={d} fill={`url(#${id}Fill)`} stroke={`url(#${id}Edge)`} strokeWidth={strokeWidth} />
     </Svg>
   );
 }

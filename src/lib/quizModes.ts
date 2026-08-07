@@ -1,4 +1,9 @@
-import { IconListNumbers, IconClockHour4, IconHeart, type IconProps } from '@tabler/icons-react-native';
+import {
+  IconListNumbers,
+  IconClockHour4,
+  IconHeart,
+  type IconProps,
+} from '@tabler/icons-react-native';
 import type { ComponentType } from 'react';
 
 // The three quiz game modes (per quiz-conditions_polari.csv). Modes dictate the

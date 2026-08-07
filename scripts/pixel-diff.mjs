@@ -69,7 +69,7 @@ const reducedMotion = process.argv.includes('--reduced-motion');
 if (!figmaPath || !existsSync(figmaPath)) {
   console.error(
     `Missing --figma export.\nExport the frame at scale 1 (via the design MCP download_assets)\n` +
-      `to a PNG and pass it as --figma. Got: ${figmaPath}`
+      `to a PNG and pass it as --figma. Got: ${figmaPath}`,
   );
   process.exit(2);
 }
@@ -97,9 +97,7 @@ try {
   const page = await browser.newPage();
   await page.setViewport({ width, height, deviceScaleFactor: 1 });
   if (reducedMotion) {
-    await page.emulateMediaFeatures([
-      { name: 'prefers-reduced-motion', value: 'reduce' },
-    ]);
+    await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
   }
   await page.goto(target, { waitUntil: 'networkidle2', timeout: 60_000 });
 
@@ -118,14 +116,16 @@ try {
   // it. It made all eleven screens jump at once, including ones previously
   // measured pixel-exact, which is the signature of a global overlay rather
   // than real drift.
-  await page.evaluate(() => {
-    const open = [...document.querySelectorAll('*')].find(
-      (e) => e.children.length === 0 && e.textContent.trim() === 'Open'
-    );
-    open?.closest('[role="button"],button,div')?.dispatchEvent(
-      new MouseEvent('click', { bubbles: true })
-    );
-  }).catch(() => {});
+  await page
+    .evaluate(() => {
+      const open = [...document.querySelectorAll('*')].find(
+        (e) => e.children.length === 0 && e.textContent.trim() === 'Open',
+      );
+      open
+        ?.closest('[role="button"],button,div')
+        ?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    })
+    .catch(() => {});
   await new Promise((r) => setTimeout(r, 400));
 
   await new Promise((r) => setTimeout(r, wait));
@@ -149,7 +149,7 @@ if (render.width !== figma.width) {
   console.warn(
     `⚠ width mismatch: render ${render.width}px vs figma ${figma.width}px. ` +
       `Compare is still top-left anchored but columns won't align — ` +
-      `re-export the frame at scale 1 (=${width}px) for a true diff.`
+      `re-export the frame at scale 1 (=${width}px) for a true diff.`,
   );
 }
 const W = Math.min(render.width, figma.width);
@@ -173,7 +173,12 @@ for (let y = 0; y < H; y++) {
     const [r2, g2, b2, a2] = px(figma, x, y);
     // Treat a pixel transparent in BOTH as "no content" and skip it.
     const bothClear = a1 < 8 && a2 < 8;
-    const delta = Math.max(Math.abs(r1 - r2), Math.abs(g1 - g2), Math.abs(b1 - b2), Math.abs(a1 - a2));
+    const delta = Math.max(
+      Math.abs(r1 - r2),
+      Math.abs(g1 - g2),
+      Math.abs(b1 - b2),
+      Math.abs(a1 - a2),
+    );
     const isDiff = !bothClear && delta > tol;
     const o = (W * y + x) << 2;
     if (isDiff) {
@@ -189,8 +194,8 @@ for (let y = 0; y < H; y++) {
     }
     if (!bothClear) {
       counted++;
-      const cx = Math.min(cols - 1, (x * cols / W) | 0);
-      const cy = Math.min(rows - 1, (y * rows / H) | 0);
+      const cx = Math.min(cols - 1, ((x * cols) / W) | 0);
+      const cy = Math.min(rows - 1, ((y * rows) / H) | 0);
       cellTotal[cy][cx]++;
       if (isDiff) {
         changed++;

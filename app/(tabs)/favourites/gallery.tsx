@@ -1,21 +1,11 @@
 import { useMemo, useState } from 'react';
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { COMING_SOON_ART } from '../../../src/lib/characterArt';
 import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../../src/components/CharacterFullScreen';
 import { useWords } from '../../../src/lib/words';
-import {
-  CollectionHeader,
-  CollectionPanel,
-} from '../../../src/components/CollectionChrome';
+import { CollectionHeader, CollectionPanel } from '../../../src/components/CollectionChrome';
 import { colors, fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import type { ImageSourcePropType } from 'react-native';
@@ -62,11 +52,7 @@ export default function GalleryScreen() {
   return (
     <View style={styles.screen}>
       <ScreenBackground />
-      <CollectionHeader
-        title="Gallery"
-        search={search}
-        onSearch={setSearch}
-      />
+      <CollectionHeader title="Gallery" search={search} onSearch={setSearch} />
       <CollectionPanel s={s}>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -83,7 +69,9 @@ export default function GalleryScreen() {
               style={[styles.card, { width: cw, height: CARD_H * s, borderRadius: 12 * s }]}
             >
               <Pressable
-                onPress={() => setFullScreen({ source: c.art, label: `Illustration for ${c.term}` })}
+                onPress={() =>
+                  setFullScreen({ source: c.art, label: `Illustration for ${c.term}` })
+                }
                 accessibilityRole="imagebutton"
                 accessibilityLabel={`View ${c.term} full screen`}
               >

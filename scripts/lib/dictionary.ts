@@ -142,7 +142,7 @@ export async function fetchSheetWords(): Promise<SheetFetch> {
     ...new Set(
       (Object.keys(CULTURAL_COLUMNS) as (keyof typeof CULTURAL_COLUMNS)[])
         .filter((col) => headers.has(col))
-        .map((col) => CULTURAL_COLUMNS[col])
+        .map((col) => CULTURAL_COLUMNS[col]),
     ),
   ];
 
@@ -218,7 +218,7 @@ export type Diff = {
 export function diffWords(
   oldMap: WordMap,
   current: WordMap,
-  extraFields: readonly string[] = []
+  extraFields: readonly string[] = [],
 ): Diff {
   const added: Diff['added'] = [];
   const updated: Diff['updated'] = [];
@@ -245,5 +245,10 @@ export function diffWords(
     if (!current[slug]) removed.push({ slug, content: oldMap[slug] });
   }
 
-  return { added, updated, removed, hasChanges: !!(added.length || updated.length || removed.length) };
+  return {
+    added,
+    updated,
+    removed,
+    hasChanges: !!(added.length || updated.length || removed.length),
+  };
 }

@@ -13,13 +13,13 @@
 // e.g. antique-hq.png instead of antique-hp.png).
 
 import { config } from 'dotenv';
-config({ path: '.env.local' });
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { slugFromAssetName } from '../src/lib/characterAssetName';
+config({ path: '.env.local' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SNAPSHOT_PATH = join(HERE, 'art-snapshot.json');
@@ -83,11 +83,19 @@ async function main() {
   const [current, slugs] = await Promise.all([listBucket(), fetchWordSlugs()]);
   const before = readSnapshot();
 
-  const added = Object.keys(current).filter((n) => !before[n]).sort();
-  const updated = Object.keys(current)
-    .filter((n) => before[n] && (before[n].size !== current[n].size || before[n].updated_at !== current[n].updated_at))
+  const added = Object.keys(current)
+    .filter((n) => !before[n])
     .sort();
-  const removed = Object.keys(before).filter((n) => !current[n]).sort();
+  const updated = Object.keys(current)
+    .filter(
+      (n) =>
+        before[n] &&
+        (before[n].size !== current[n].size || before[n].updated_at !== current[n].updated_at),
+    )
+    .sort();
+  const removed = Object.keys(before)
+    .filter((n) => !current[n])
+    .sort();
   const orphans = Object.keys(current)
     .filter((n) => !slugs.has(slugFromAssetName(n)))
     .sort();
@@ -101,12 +109,19 @@ async function main() {
   } else {
     out.push(
       `**Summary:** ${added.length} added · ${updated.length} updated · ${removed.length} removed`,
-      ''
+      '',
     );
     if (added.length) out.push('## ➕ Added', '', ...added.map((n) => `- ${n}`), '');
     if (updated.length) out.push('## ✏️ Updated', '', ...updated.map((n) => `- ${n}`), '');
     if (removed.length)
-      out.push('## ❌ Removed', '', '_The app falls back to bundled or coming-soon art._', '', ...removed.map((n) => `- ${n}`), '');
+      out.push(
+        '## ❌ Removed',
+        '',
+        '_The app falls back to bundled or coming-soon art._',
+        '',
+        ...removed.map((n) => `- ${n}`),
+        '',
+      );
   }
   if (orphans.length) {
     out.push('## ⚠️ No matching word', '');
@@ -121,14 +136,15 @@ async function main() {
     console.log(
       hasChanges
         ? `Acknowledged: ${added.length} added, ${updated.length} updated, ${removed.length} removed.`
-        : 'No art changes.'
+        : 'No art changes.',
     );
-    if (orphans.length) console.log(`⚠️ ${orphans.length} file(s) match no word slug — see art-changes.md`);
+    if (orphans.length)
+      console.log(`⚠️ ${orphans.length} file(s) match no word slug — see art-changes.md`);
     process.exit(0);
   }
 
   console.log(
-    `Art changes: ${added.length} added, ${updated.length} updated, ${removed.length} removed. See art-changes.md`
+    `Art changes: ${added.length} added, ${updated.length} updated, ${removed.length} removed. See art-changes.md`,
   );
   if (orphans.length) console.log(`⚠️ ${orphans.length} file(s) match no word slug`);
   process.exit(1);

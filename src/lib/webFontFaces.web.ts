@@ -36,7 +36,7 @@ export function installWebFonts() {
   font-style:${italic ? 'italic' : 'normal'};
   font-variation-settings:'wght' ${weight};
   font-display:swap;
-}`
+}`,
   );
 
   rules.push(`@font-face{

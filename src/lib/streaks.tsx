@@ -74,7 +74,11 @@ export function StreaksProvider({ children }: { children: ReactNode }) {
       // Celebrate only a genuine increment we can see (prev loaded and smaller),
       // so reopening the app on a milestone day doesn't re-trigger the banner.
       setStats((prev) => {
-        if (prev && next.current_streak > prev.current_streak && MILESTONES.has(next.current_streak)) {
+        if (
+          prev &&
+          next.current_streak > prev.current_streak &&
+          MILESTONES.has(next.current_streak)
+        ) {
           setCelebration(next.current_streak);
         }
         return next;
@@ -92,7 +96,7 @@ export function StreaksProvider({ children }: { children: ReactNode }) {
       celebration,
       dismissCelebration: () => setCelebration(null),
     }),
-    [stats, recordEngagement, celebration]
+    [stats, recordEngagement, celebration],
   );
 
   return <StreaksContext.Provider value={value}>{children}</StreaksContext.Provider>;

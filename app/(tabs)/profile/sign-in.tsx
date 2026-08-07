@@ -90,12 +90,7 @@ export default function SignInScreen() {
 
         <FormError message={error} />
 
-        <PillButton
-          title="Sign In"
-          onPress={handleSignIn}
-          loading={busy}
-          style={styles.cta}
-        />
+        <PillButton title="Sign In" onPress={handleSignIn} loading={busy} style={styles.cta} />
 
         <Text style={styles.createLine}>
           Don&apos;t have an account yet?{' '}

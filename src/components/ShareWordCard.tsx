@@ -80,7 +80,7 @@ type Props = { word: Word; date?: Date };
 
 export const ShareWordCard = forwardRef<View, Props>(function ShareWordCard(
   { word, date = new Date() },
-  ref
+  ref,
 ) {
   const { artFor } = useCharacterArt();
 

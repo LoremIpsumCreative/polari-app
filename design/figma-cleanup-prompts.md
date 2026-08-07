@@ -18,10 +18,11 @@ Design space is 393×852 at 1×. Report every coordinate in frame-relative px at
 > two cream light beams raking down from the top of the stage.
 >
 > For **each** beam, report exactly:
+>
 > - the layer name and its x/y/width/height in frame coordinates
 > - the full fill definition: gradient type, every colour stop as `offset → hex
->   + opacity`, and the gradient handle positions (start and end) in normalised
->   0–1 coordinates
+>   - opacity`, and the gradient handle positions (start and end) in normalised
+>     0–1 coordinates
 > - the layer's own opacity and blend mode
 >
 > Then do the same for the dark overlay layer that washes the bottom of the
@@ -68,6 +69,7 @@ decides the fix.
 > three character illustrations with the coloured angular panels behind them.
 >
 > Report, in frame coordinates:
+>
 > - the x/y/width/height of the **group as a whole**
 > - the x/y/width/height of **each** of the three character images
 > - the x/y/width/height of **each** coloured panel behind them, plus its fill hex
@@ -113,6 +115,7 @@ is what a duplicated-and-not-relabelled frame looks like.
 >
 > Create a new 393×852 frame named **"Sign In"** in the Account section, built
 > from the same skeleton as `2444:2697` (Create Account):
+>
 > - the same back chip at x17 y52, reading "Account"
 > - the same centred display-face title at cap line y89, reading "Sign In"
 > - the same white card at x26 y186, width 342, 1px #A4ACB9 edge, 14px corner
@@ -176,8 +179,8 @@ The first round left two problems in the file. Run these before re-exporting.
 > form screens. Please correct it so it is consistent with `2444:2697`
 > (Create Account):
 >
-> 1. Its primary button is at x98 y608, 199 wide. That is the *signed-out
->    Account gate's* button, not this flow's. Move it to **x76 y659, 242×50** —
+> 1. Its primary button is at x98 y608, 199 wide. That is the _signed-out
+>    Account gate's_ button, not this flow's. Move it to **x76 y659, 242×50** —
 >    the same slot as Create Account's "continue button" (`2444:2720`).
 > 2. Move the "Create account prompt" text (`2664:2948`) down so it sits below
 >    the button — Create Account's flow puts it at roughly y723.

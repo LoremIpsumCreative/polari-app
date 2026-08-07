@@ -59,8 +59,7 @@ export default function ResetPasswordScreen() {
         <ScreenTitle>Link Expired</ScreenTitle>
         <FormCard>
           <Text style={styles.body}>
-            This reset link is invalid or has expired. Request a new one from the Account
-            screen.
+            This reset link is invalid or has expired. Request a new one from the Account screen.
           </Text>
         </FormCard>
       </View>

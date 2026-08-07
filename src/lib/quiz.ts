@@ -55,7 +55,7 @@ function termOptions(word: Word, pool: Word[]): { options: string[]; correctInde
 
 function buildMeaning(word: Word, pool: Word[]): QuizQuestion {
   const distractors = shuffle(
-    pool.filter((w) => w.id !== word.id && w.definition !== word.definition)
+    pool.filter((w) => w.id !== word.id && w.definition !== word.definition),
   )
     .slice(0, OPTIONS_PER_QUESTION - 1)
     .map((w) => w.definition);
@@ -78,14 +78,18 @@ function buildCharacter(word: Word, pool: Word[]): QuizQuestion | null {
 // pairs[i] = index into q.defs the player assigned to word i.
 export function isMatchComplete(
   q: Extract<QuizQuestion, { kind: 'match' }>,
-  pairs: (number | null)[]
+  pairs: (number | null)[],
 ): boolean {
   return q.words.every((w, i) => pairs[i] !== null && q.defs[pairs[i] as number] === w.definition);
 }
 
 const SINGLE_FORMATS = ['meaning', 'reverse', 'character'] as const;
 
-function buildSingle(fmt: (typeof SINGLE_FORMATS)[number], word: Word, pool: Word[]): QuizQuestion | null {
+function buildSingle(
+  fmt: (typeof SINGLE_FORMATS)[number],
+  word: Word,
+  pool: Word[],
+): QuizQuestion | null {
   switch (fmt) {
     case 'meaning':
       return buildMeaning(word, pool);
@@ -104,10 +108,10 @@ function buildSingle(fmt: (typeof SINGLE_FORMATS)[number], word: Word, pool: Wor
 export function nextQuestion(
   pool: Word[],
   used: Set<string>,
-  pickFrom?: Word[]
+  pickFrom?: Word[],
 ): QuizQuestion | null {
   const askable = (pickFrom && pickFrom.length > 0 ? pickFrom : pool).filter(
-    (w) => !used.has(w.id)
+    (w) => !used.has(w.id),
   );
   if (askable.length === 0) return null;
 
@@ -145,7 +149,7 @@ export function nextQuestion(
 export function generateQuiz(
   words: Word[],
   length: number = QUIZ_LENGTH,
-  from?: Word[]
+  from?: Word[],
 ): QuizQuestion[] {
   const used = new Set<string>();
   const screens: QuizQuestion[] = [];

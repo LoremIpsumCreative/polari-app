@@ -1,14 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import {
-  Animated,
-  Easing,
-  Image,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Animated, Easing, Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
 import { useWords } from '../../../src/lib/words';
@@ -59,13 +50,19 @@ const BEAMS = [
   {
     id: 'beam8',
     d: 'M54 0L373.5 351.5L376 757.5H168L0 0H54Z',
-    tx: 23.5, ty: 0, from: '#F8E6A0', at: 0.636376,
+    tx: 23.5,
+    ty: 0,
+    from: '#F8E6A0',
+    at: 0.636376,
     v: { x1: 45.5, y1: 52.5, x2: 348.5, y2: 751 },
   },
   {
     id: 'beam7',
     d: 'M396 772H0L248.989 0H337.5L396 426V772Z',
-    tx: 0.5, ty: 1, from: '#FCEFBB', at: 0.598506,
+    tx: 0.5,
+    ty: 1,
+    from: '#FCEFBB',
+    at: 0.598506,
     v: { x1: 293.5, y1: 32, x2: 160.5, y2: 831.5 },
   },
 ] as const;
@@ -166,7 +163,7 @@ const EASE_OUT_BACK = Easing.bezier(0.45, 1.45, 0.8, 1);
 function cue(
   value: Animated.Value,
   toValue: number,
-  { at, dur, easing = EASE_OUT }: { at: number; dur: number; easing?: typeof EASE_OUT }
+  { at, dur, easing = EASE_OUT }: { at: number; dur: number; easing?: typeof EASE_OUT },
 ) {
   return Animated.sequence([
     Animated.delay(at),
@@ -206,8 +203,34 @@ export default function QuizIntroScreen() {
   const [chosen, setChosen] = useState<QuizModeId | null>(null);
 
   const drivers = useMemo(
-    () => [beam8, beam7, hero, prompt, signRotate, signSlide, btn0, btn1, btn2, btnFade0, btnFade1, btnFade2],
-    [beam8, beam7, hero, prompt, signRotate, signSlide, btn0, btn1, btn2, btnFade0, btnFade1, btnFade2]
+    () => [
+      beam8,
+      beam7,
+      hero,
+      prompt,
+      signRotate,
+      signSlide,
+      btn0,
+      btn1,
+      btn2,
+      btnFade0,
+      btnFade1,
+      btnFade2,
+    ],
+    [
+      beam8,
+      beam7,
+      hero,
+      prompt,
+      signRotate,
+      signSlide,
+      btn0,
+      btn1,
+      btn2,
+      btnFade0,
+      btnFade1,
+      btnFade2,
+    ],
   );
 
   /** Jump the whole stage to its resting state. Used by the tap-to-skip, and
@@ -229,19 +252,19 @@ export default function QuizIntroScreen() {
 
     const sequence = Animated.parallel(
       [
-      cue(beam8, 1, T.beam8),
-      cue(beam7, 1, T.beam7),
-      cue(hero, 1, T.hero),
-      cue(prompt, 1, T.prompt),
-      cue(signRotate, 1, T.signRotate),
-      cue(signSlide, 1, T.signSlide),
+        cue(beam8, 1, T.beam8),
+        cue(beam7, 1, T.beam7),
+        cue(hero, 1, T.hero),
+        cue(prompt, 1, T.prompt),
+        cue(signRotate, 1, T.signRotate),
+        cue(signSlide, 1, T.signSlide),
         ...T.buttons.flatMap((b, i) => [
           cue(btnFades[i], 1, { at: b.at, dur: b.fade }),
           cue(btns[i], 1, { at: b.at, dur: b.move, easing: EASE_OUT_BACK }),
         ]),
       ],
       // Each layer's cue is independent; one finishing must not curtail the rest.
-      { stopTogether: false }
+      { stopTogether: false },
     );
     running.current = sequence;
     sequence.start(({ finished }) => {
@@ -265,7 +288,7 @@ export default function QuizIntroScreen() {
       return () => {
         running.current?.stop();
       };
-    }, [playEntrance])
+    }, [playEntrance]),
   );
 
   return (
@@ -460,7 +483,14 @@ export default function QuizIntroScreen() {
                   #F0C63D at y80 and #D0A003 at its foot. Sampling above y80
                   picks up the signboard's gold edge overlapping the pole, not
                   the pole itself, which is what made a naive fit run too pale. */}
-              <LinearGradient id="pole" gradientUnits="userSpaceOnUse" x1="0" y1="80" x2="0" y2="137">
+              <LinearGradient
+                id="pole"
+                gradientUnits="userSpaceOnUse"
+                x1="0"
+                y1="80"
+                x2="0"
+                y2="137"
+              >
                 <Stop offset="0" stopColor="#F0C63D" />
                 <Stop offset="1" stopColor="#D0A003" />
               </LinearGradient>
@@ -492,7 +522,12 @@ export default function QuizIntroScreen() {
             offsetX={SIGN_VIEW.dx}
             offsetY={SIGN_VIEW.dy}
           />
-          <Text style={[styles.signText, { left: 28 * s, top: 27 * s, width: 90 * s, fontSize: 14 * s, lineHeight: 14 * s }]}>
+          <Text
+            style={[
+              styles.signText,
+              { left: 28 * s, top: 27 * s, width: 90 * s, fontSize: 14 * s, lineHeight: 14 * s },
+            ]}
+          >
             Choose your quiz type
           </Text>
         </View>
@@ -533,7 +568,11 @@ export default function QuizIntroScreen() {
                 pointerEvents="box-none"
               >
                 <View style={[styles.scoreBadge, { width: 40 * s, height: 19 * s }]}>
-                  <Svg width={FLAME.w * s} height={FLAME.h * s} viewBox={`0 0 ${FLAME.w} ${FLAME.h}`}>
+                  <Svg
+                    width={FLAME.w * s}
+                    height={FLAME.h * s}
+                    viewBox={`0 0 ${FLAME.w} ${FLAME.h}`}
+                  >
                     <Path d={FLAME.d} fill="#F38A3F" />
                   </Svg>
                   <Text style={[styles.scoreBadgeText, { fontSize: 10 * s }]}>
