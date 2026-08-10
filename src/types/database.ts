@@ -138,16 +138,19 @@ export type Database = {
       }
       profiles: {
         Row: {
+          content_advisory_ack_at: string | null
           created_at: string
           display_name: string | null
           id: string
         }
         Insert: {
+          content_advisory_ack_at?: string | null
           created_at?: string
           display_name?: string | null
           id: string
         }
         Update: {
+          content_advisory_ack_at?: string | null
           created_at?: string
           display_name?: string | null
           id?: string

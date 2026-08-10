@@ -15,6 +15,7 @@ import { useDesignFrame } from '../src/lib/designScale';
 import { fontAssets } from '../src/lib/fontAssets';
 import { installWebFonts } from '../src/lib/webFontFaces';
 import { LaunchScreen } from '../src/components/LaunchScreen';
+import { ContentAdvisory } from '../src/components/ContentAdvisory';
 
 // Digitale's weight axis has to be pinned per face, which only CSS can express,
 // so web declares its own @font-face rules. Run at module scope so the rules are
@@ -44,6 +45,8 @@ export default function RootLayout() {
   // start, which is when the launch sequence is meant to play, and survives
   // navigation within a session, which is when it must not.
   const [launched, setLaunched] = useState(false);
+  // The advisory follows the launch sequence and gates the app behind itself.
+  const [advised, setAdvised] = useState(false);
 
   if (!fontsLoaded) return null;
 
@@ -56,6 +59,7 @@ export default function RootLayout() {
         <Stack.Screen name="(auth)" />
       </Stack>
       {launched ? null : <LaunchScreen onOpen={() => setLaunched(true)} />}
+      {launched && !advised ? <ContentAdvisory onAcknowledge={() => setAdvised(true)} /> : null}
     </>
   );
 

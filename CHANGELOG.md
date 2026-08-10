@@ -5,6 +5,15 @@ Versions follow [Semantic Versioning](https://semver.org). The project is
 pre-launch: `1.0.0` is reserved for the first App Store release, so every
 version below is `0.x` and the public API is not yet stable.
 
+## [v0.18.0](https://github.com/LoremIpsumCreative/polari-app/releases/tag/v0.18.0) — 2026-08-11
+
+The 2026-08-11 change request, batch 5.
+
+- **Content advisory** gates the app after the launch sequence: every cold start
+  when signed out, once per account when signed in.
+- The running **version** appears in the Account screen's top-right corner,
+  read from the manifest so the release bump is the only place it lives.
+
 ## [v0.17.0](https://github.com/LoremIpsumCreative/polari-app/releases/tag/v0.17.0) — 2026-08-11
 
 The 2026-08-11 change request, batches 1–4.
