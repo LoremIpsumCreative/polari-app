@@ -205,6 +205,44 @@ export type Database = {
         }
         Relationships: []
       }
+      suggested_edits: {
+        Row: {
+          created_at: string
+          field: string
+          id: string
+          resolved_at: string | null
+          suggestion: string
+          user_id: string | null
+          word_id: string
+        }
+        Insert: {
+          created_at?: string
+          field: string
+          id?: string
+          resolved_at?: string | null
+          suggestion: string
+          user_id?: string | null
+          word_id: string
+        }
+        Update: {
+          created_at?: string
+          field?: string
+          id?: string
+          resolved_at?: string | null
+          suggestion?: string
+          user_id?: string | null
+          word_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suggested_edits_word_id_fkey"
+            columns: ["word_id"]
+            isOneToOne: false
+            referencedRelation: "words"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_streaks: {
         Row: {
           current_streak: number

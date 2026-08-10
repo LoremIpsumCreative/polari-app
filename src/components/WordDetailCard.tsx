@@ -5,6 +5,7 @@ import IconBook2 from '@tabler/icons-react-native/IconBook2';
 import IconChartBar from '@tabler/icons-react-native/IconChartBar';
 import IconLink from '@tabler/icons-react-native/IconLink';
 import IconNotes from '@tabler/icons-react-native/IconNotes';
+import IconPencil from '@tabler/icons-react-native/IconPencil';
 import IconQuote from '@tabler/icons-react-native/IconQuote';
 import IconSend from '@tabler/icons-react-native/IconSend';
 import IconStack2 from '@tabler/icons-react-native/IconStack2';
@@ -15,6 +16,7 @@ import { colors, radii, spacing, fonts } from '../lib/theme';
 import { useWords } from '../lib/words';
 import { FavouriteButton } from './FavouriteButton';
 import { ShareWordModal } from './ShareWordModal';
+import { SuggestEditModal } from './SuggestEditModal';
 
 type Props = {
   word: Word;
@@ -69,6 +71,7 @@ function FieldRow({
 
 export function WordDetailCard({ word, style, compact = false }: Props) {
   const [shareVisible, setShareVisible] = useState(false);
+  const [suggestVisible, setSuggestVisible] = useState(false);
   const router = useRouter();
   const { bySlug } = useWords();
   const usage = (word.usage_status ?? null) as UsageStatus | null;
@@ -104,6 +107,23 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
 
       <Text style={styles.term}>{word.term}</Text>
       {word.pronunciation ? <Text style={styles.pron}>/{word.pronunciation}/</Text> : null}
+
+      {/* Suggest Edit sits between the pronunciation and the first row, right
+          aligned — the frames put it there on every card that shows one. */}
+      <Pressable
+        onPress={() => setSuggestVisible(true)}
+        style={({ pressed }) => [styles.suggestButton, pressed && styles.shareButtonPressed]}
+        accessibilityRole="button"
+        accessibilityLabel="Suggest an edit to this entry"
+        hitSlop={10}
+      >
+        <IconPencil size={16} color={colors.textMuted} />
+      </Pressable>
+      <SuggestEditModal
+        word={word}
+        visible={suggestVisible}
+        onClose={() => setSuggestVisible(false)}
+      />
 
       <View style={styles.fields}>
         <FieldRow label="definition" Icon={IconBook2}>
@@ -240,6 +260,9 @@ const styles = StyleSheet.create({
   shareButtonPressed: {
     opacity: 0.6,
   },
+  // Right-aligned in the gap the frames leave between the pronunciation and
+  // the first field row.
+  suggestButton: { alignSelf: 'flex-end', marginTop: 6, marginBottom: -6 },
   term: {
     color: colors.text,
     fontSize: 60,
