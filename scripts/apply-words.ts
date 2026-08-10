@@ -25,9 +25,9 @@ import {
 async function main() {
   const supabase = adminClient();
 
-  const { words: current, culturalFields } = await fetchSheetWords();
+  const { words: current, optionalFields } = await fetchSheetWords();
   const snapshot = readSnapshot() ?? ({} as WordMap);
-  const diff = diffWords(snapshot, current, culturalFields);
+  const diff = diffWords(snapshot, current, optionalFields);
 
   if (!diff.hasChanges) {
     console.log('No pending changes — nothing to apply.');
@@ -61,9 +61,9 @@ async function main() {
       example: c.example,
       notes_variants: c.notes_variants,
     };
-    // Cultural fields ride along only when their sheet column exists, so absent
+    // Optional fields ride along only when their sheet column exists, so absent
     // columns never blank out DB-seeded drafts.
-    for (const f of culturalFields) {
+    for (const f of optionalFields) {
       if (f === 'related_slugs') {
         row.related_slugs = c.related_slugs ? c.related_slugs.split(',') : null;
       } else {

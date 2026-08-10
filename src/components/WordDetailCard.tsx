@@ -3,7 +3,6 @@ import { Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import { useRouter } from 'expo-router';
 import IconBook2 from '@tabler/icons-react-native/IconBook2';
 import IconChartBar from '@tabler/icons-react-native/IconChartBar';
-import IconInfoCircle from '@tabler/icons-react-native/IconInfoCircle';
 import IconLink from '@tabler/icons-react-native/IconLink';
 import IconNotes from '@tabler/icons-react-native/IconNotes';
 import IconQuote from '@tabler/icons-react-native/IconQuote';
@@ -131,13 +130,6 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
           </FieldRow>
         ) : null}
       </View>
-
-      {word.sensitivity_note ? (
-        <View style={styles.sensitiveRow}>
-          <IconInfoCircle size={15} color={colors.textFaint} />
-          <Text style={styles.sensitiveText}>{stripEmphasis(word.sensitivity_note)}</Text>
-        </View>
-      ) : null}
 
       {usage ? (
         <View style={styles.usageWrap}>
@@ -308,20 +300,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
     textTransform: 'uppercase',
     lineHeight: 8,
-  },
-  sensitiveRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: spacing.sm,
-    paddingHorizontal: spacing.sm,
-    marginTop: spacing.sm + 4,
-  },
-  sensitiveText: {
-    flex: 1,
-    color: colors.textFaint,
-    fontFamily: fonts.italic,
-    fontSize: 12,
-    lineHeight: 17,
   },
   // Boxed fieldset row per frame 1042-205: leading chart icon, options inside,
   // label patch sitting on the border like the other rows.

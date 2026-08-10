@@ -25,26 +25,32 @@ type SheetRow = {
   Pronunciation: string;
   Definition: string;
   Origin: string;
-  Example: string;
+  'In Use'?: string;
+  Example?: string; // legacy alias for In Use
   'Notes/Variants': string;
-  // Optional cultural columns — the sync only touches these DB fields once the
+  // Optional columns — the sync only touches these DB fields once the
   // corresponding column exists in the sheet, so DB-seeded drafts survive until
   // the sheet takes ownership.
   Culture?: string;
   'Cultural Context'?: string; // legacy alias for Culture
   Usage?: string;
-  'Sensitivity Note'?: string;
+  Flagged?: string;
   Related?: string;
 };
 
-// Sheet header -> DB field for the optional cultural layer. "Culture" is the
-// canonical header (per the Figma card's CULTURE row); "Cultural Context" is
-// kept as an alias so either header works.
-export const CULTURAL_COLUMNS = {
+// Sheet header -> DB field for the columns the sheet owns optionally. "Culture"
+// and "In Use" are the canonical headers (per the Figma card's CULTURE and
+// IN USE rows); "Cultural Context" and "Example" are kept as aliases so either
+// spelling works while the sheet is being renamed.
+//
+// The sheet's "Flag Theme" and "Flag Checked" are deliberately absent: they are
+// editorial bookkeeping that stays in the sheet. Only "Flagged" reaches the app,
+// where it drives both the dictionary list's flag and the card's 18+ badge.
+export const OPTIONAL_COLUMNS = {
   Culture: 'cultural_context',
   'Cultural Context': 'cultural_context',
   Usage: 'usage_status',
-  'Sensitivity Note': 'sensitivity_note',
+  Flagged: 'flagged',
   Related: 'related_slugs',
 } as const;
 
@@ -61,15 +67,15 @@ export const CONTENT_FIELDS = [
   'notes_variants',
 ] as const;
 
-// Cultural fields, diffed/applied only when their sheet columns exist.
-export const CULTURAL_FIELDS = [
+// Optional fields, diffed/applied only when their sheet columns exist.
+export const OPTIONAL_FIELDS = [
   'cultural_context',
   'usage_status',
-  'sensitivity_note',
+  'flagged',
   'related_slugs',
 ] as const;
 
-export type ContentField = (typeof CONTENT_FIELDS)[number] | (typeof CULTURAL_FIELDS)[number];
+export type ContentField = (typeof CONTENT_FIELDS)[number] | (typeof OPTIONAL_FIELDS)[number];
 export type WordContent = {
   term: string;
   entry_type: 'word' | 'phrase';
@@ -79,10 +85,10 @@ export type WordContent = {
   origin: string | null;
   example: string | null;
   notes_variants: string | null;
-  // Present only when the sheet has the cultural columns.
+  // Present only when the sheet has the optional columns.
   cultural_context?: string | null;
   usage_status?: string | null;
-  sensitivity_note?: string | null;
+  flagged?: boolean;
   related_slugs?: string | null; // comma-joined slugs, kept as a string for diffing
 };
 /** slug -> content, the canonical shape used everywhere. */
@@ -111,11 +117,19 @@ function normaliseUsage(value: string | null): string | null {
   return null;
 }
 
+// The sheet spells the flag however a person found convenient. Anything that
+// reads as a yes counts; a blank cell, "no", "false" and "0" all read as false,
+// which is also what an entry that has never been looked at should be.
+function normaliseFlag(value: string | null): boolean {
+  if (!value) return false;
+  return ['true', 'yes', 'y', '1', 'x', '✓', 'flagged'].includes(value.trim().toLowerCase());
+}
+
 export type SheetFetch = {
   words: WordMap;
-  // Which cultural sheet columns exist. A field is only diffed/applied when its
+  // Which optional sheet columns exist. A field is only diffed/applied when its
   // column is present, so the sheet takes ownership column-by-column.
-  culturalFields: (typeof CULTURAL_FIELDS)[number][];
+  optionalFields: (typeof OPTIONAL_FIELDS)[number][];
 };
 
 /**
@@ -138,11 +152,11 @@ export async function fetchSheetWords(): Promise<SheetFetch> {
 
   const headers = new Set(meta.fields ?? []);
   // De-dupe because Culture and Cultural Context both map to cultural_context.
-  const culturalFields = [
+  const optionalFields = [
     ...new Set(
-      (Object.keys(CULTURAL_COLUMNS) as (keyof typeof CULTURAL_COLUMNS)[])
+      (Object.keys(OPTIONAL_COLUMNS) as (keyof typeof OPTIONAL_COLUMNS)[])
         .filter((col) => headers.has(col))
-        .map((col) => CULTURAL_COLUMNS[col]),
+        .map((col) => OPTIONAL_COLUMNS[col]),
     ),
   ];
 
@@ -165,16 +179,15 @@ export async function fetchSheetWords(): Promise<SheetFetch> {
         pronunciation: clean(row.Pronunciation),
         definition: clean(row.Definition)!,
         origin: clean(row.Origin),
-        example: clean(row.Example),
+        example: clean(row['In Use'] ?? row.Example),
         notes_variants: clean(row['Notes/Variants']),
       };
-      if (culturalFields.includes('cultural_context'))
+      if (optionalFields.includes('cultural_context'))
         content.cultural_context = clean(row.Culture ?? row['Cultural Context']);
-      if (culturalFields.includes('usage_status'))
+      if (optionalFields.includes('usage_status'))
         content.usage_status = normaliseUsage(clean(row.Usage));
-      if (culturalFields.includes('sensitivity_note'))
-        content.sensitivity_note = clean(row['Sensitivity Note']);
-      if (culturalFields.includes('related_slugs')) {
+      if (optionalFields.includes('flagged')) content.flagged = normaliseFlag(clean(row.Flagged));
+      if (optionalFields.includes('related_slugs')) {
         const related = clean(row.Related);
         content.related_slugs = related
           ? related
@@ -187,7 +200,7 @@ export async function fetchSheetWords(): Promise<SheetFetch> {
       map[slug] = content;
     });
 
-  return { words: map, culturalFields };
+  return { words: map, optionalFields };
 }
 
 export function readSnapshot(): WordMap | null {
@@ -202,7 +215,8 @@ export function writeSnapshot(map: WordMap): void {
   writeFileSync(SNAPSHOT_PATH, JSON.stringify(sorted, null, 2) + '\n');
 }
 
-export type FieldChange = { field: ContentField; from: string | null; to: string | null };
+export type FieldValue = string | boolean | null;
+export type FieldChange = { field: ContentField; from: FieldValue; to: FieldValue };
 export type Diff = {
   added: { slug: string; content: WordContent }[];
   updated: { slug: string; content: WordContent; changes: FieldChange[] }[];
@@ -210,9 +224,20 @@ export type Diff = {
   hasChanges: boolean;
 };
 
+// A field the sheet has only just taken ownership of is absent from the
+// snapshot, which was written before the column existed. For text, reading that
+// absence as "was empty" is both true and useful. For the flag it would read as
+// null -> false on every unflagged word and report the entire dictionary as
+// changed on the first run after the column lands, burying the ~110 words that
+// genuinely are flagged. Absence normalises to the column's own default instead.
+function forDiff(field: ContentField, value: FieldValue | undefined): FieldValue {
+  if (field === 'flagged') return value ?? false;
+  return value ?? null;
+}
+
 /**
  * Compare the last-applied snapshot (old) against the live sheet (current).
- * extraFields: cultural fields whose sheet columns exist this fetch — only those
+ * extraFields: optional fields whose sheet columns exist this fetch — only those
  * are compared, so absent columns never read as deletions of DB content.
  */
 export function diffWords(
@@ -234,9 +259,9 @@ export function diffWords(
     }
     const changes: FieldChange[] = [];
     for (const field of fields) {
-      if ((before[field] ?? null) !== (now[field] ?? null)) {
-        changes.push({ field, from: before[field] ?? null, to: now[field] ?? null });
-      }
+      const was = forDiff(field, before[field]);
+      const is = forDiff(field, now[field]);
+      if (was !== is) changes.push({ field, from: was, to: is });
     }
     if (changes.length) updated.push({ slug, content: now, changes });
   }

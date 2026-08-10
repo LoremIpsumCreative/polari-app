@@ -12,7 +12,7 @@ import { fetchSheetWords } from './lib/dictionary';
 async function main() {
   const supabase = adminClient();
 
-  const { words: current, culturalFields } = await fetchSheetWords();
+  const { words: current, optionalFields } = await fetchSheetWords();
 
   // sort_order drives word-of-the-day rotation, so it must stay stable across re-runs even if
   // the sheet gets reordered or has rows inserted in the middle — only brand-new slugs get a
@@ -38,9 +38,9 @@ async function main() {
       example: c.example,
       notes_variants: c.notes_variants,
     };
-    // Cultural fields ride along only when their sheet column exists (see
+    // Optional fields ride along only when their sheet column exists (see
     // scripts/lib/dictionary.ts), so absent columns never blank out DB drafts.
-    for (const f of culturalFields) {
+    for (const f of optionalFields) {
       if (f === 'related_slugs') {
         row.related_slugs = c.related_slugs ? c.related_slugs.split(',') : null;
       } else {

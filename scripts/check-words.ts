@@ -16,12 +16,16 @@ import {
   writeSnapshot,
   CHANGES_PATH,
   type Diff,
+  type FieldValue,
   type WordContent,
   diffWords,
 } from './lib/dictionary';
 import { writeFileSync } from 'node:fs';
 
-function fmt(value: string | null): string {
+function fmt(value: FieldValue): string {
+  // "flagged" is the one boolean in the set, and this file is read by a person
+  // deciding whether to upload a batch — Yes/No says more than true/false.
+  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
   return value === null || value === '' ? '_(empty)_' : value.replace(/\n/g, ' ');
 }
 
@@ -102,7 +106,7 @@ function renderChangesFile(diff: Diff): string {
 }
 
 async function main() {
-  const { words: current, culturalFields } = await fetchSheetWords();
+  const { words: current, optionalFields } = await fetchSheetWords();
   let snapshot = readSnapshot();
 
   // First run with no snapshot: establish a baseline from the current sheet and
@@ -116,7 +120,7 @@ async function main() {
     );
   }
 
-  const diff = diffWords(snapshot, current, culturalFields);
+  const diff = diffWords(snapshot, current, optionalFields);
   writeFileSync(CHANGES_PATH, renderChangesFile(diff));
 
   if (!diff.hasChanges) {
