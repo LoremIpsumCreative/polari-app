@@ -5,6 +5,24 @@ Versions follow [Semantic Versioning](https://semver.org). The project is
 pre-launch: `1.0.0` is reserved for the first App Store release, so every
 version below is `0.x` and the public API is not yet stable.
 
+## [v0.17.0](https://github.com/LoremIpsumCreative/polari-app/releases/tag/v0.17.0) — 2026-08-11
+
+The 2026-08-11 change request, batches 1–4.
+
+- Read the sheet's renamed **In Use** column. `Example` no longer resolves, so
+  without this the next sync would have blanked the "in use" text on 292 words.
+- **Flagged** column reaches the app: a red flag on flagged rows in the
+  dictionary and curated lists, and an 18+ mark on their definition cards.
+- Sensitivity note comes off the card — its sheet column is gone and the 18+
+  mark carries that signal now. The DB column is left in place.
+- Quiz matching board **marks its answers**: a tick or cross straddling each
+  tile's top edge once the board is finished. Tiles corrected to the current
+  frames (155x72 from y290) — they were 10px out.
+- **High Score** now shows on the first signed-in game of a mode, not only when
+  a stored best is beaten. Signed-out players still never see it.
+- **Suggest Edit** on every definition card, writing to a new write-only
+  `suggested_edits` table, with a daily digest of what is waiting.
+
 ## [v0.15.1](https://github.com/LoremIpsumCreative/polari-app/releases/tag/v0.15.1) — 2026-08-02
 
 Content sync — dictionary and character artwork

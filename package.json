@@ -1,6 +1,6 @@
 {
   "name": "polari-app",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "main": "expo-router/entry",
   "engines": {
     "node": ">=22.13.0"
@@ -60,6 +60,7 @@
     "seed:words": "tsx scripts/seed-words.ts",
     "words:check": "tsx scripts/check-words.ts",
     "words:apply": "tsx scripts/apply-words.ts",
+    "suggestions:check": "tsx scripts/check-suggestions.ts",
     "art:check": "tsx scripts/check-art.ts",
     "art:ack": "tsx scripts/check-art.ts --ack",
     "figma:check": "tsx scripts/check-figma.ts",
