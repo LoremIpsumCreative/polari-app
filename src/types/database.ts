@@ -289,6 +289,7 @@ export type Database = {
           difficulty: number | null
           entry_type: string
           example: string | null
+          flagged: boolean
           id: string
           notes_variants: string | null
           origin: string | null
@@ -311,6 +312,7 @@ export type Database = {
           difficulty?: number | null
           entry_type: string
           example?: string | null
+          flagged?: boolean
           id?: string
           notes_variants?: string | null
           origin?: string | null
@@ -333,6 +335,7 @@ export type Database = {
           difficulty?: number | null
           entry_type?: string
           example?: string | null
+          flagged?: boolean
           id?: string
           notes_variants?: string | null
           origin?: string | null
