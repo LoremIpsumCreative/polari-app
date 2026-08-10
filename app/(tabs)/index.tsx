@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  ActivityIndicator,
   Animated,
   Easing,
   Image,
@@ -23,6 +22,8 @@ import { CharacterFullScreen } from '../../src/components/CharacterFullScreen';
 import { WordDetailCard } from '../../src/components/WordDetailCard';
 import { ScreenBackground } from '../../src/components/ScreenBackground';
 import { FlaggedBadge, FLAGGED_BADGE_OFFSET } from '../../src/components/FlaggedBadge';
+import { LoadFailedScreen, LoadingScreen } from '../../src/components/LoadingScreen';
+import { PresentOpenAnimation } from '../../src/components/PresentOpenAnimation';
 import { useTabBarInset } from '../../src/components/AnimatedTabBar';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
@@ -75,6 +76,8 @@ export default function TodayScreen() {
   // Today's word arrives gift-wrapped: the first visit each day shows a
   // present to tap open. null = still reading the stored unlock date.
   const [unlocked, setUnlocked] = useState<boolean | null>(null);
+  // The beat between the tap and the word: the present playing its lid off.
+  const [opening, setOpening] = useState(false);
   const presentFade = useRef(new Animated.Value(1)).current;
   // Drives the whole 3s cycle; the keyframe tables above carry the shape.
   const bounce = useRef(new Animated.Value(0)).current;
@@ -123,18 +126,26 @@ export default function TodayScreen() {
   );
 
   function openPresent() {
-    // Tap interrupts the bounce and hands over to Today/Definition.
+    if (opening) return;
+    // Tap interrupts the bounce and hands over to the lid coming off; the word
+    // itself waits until that has played (finishOpening).
     stopBounce();
     setUnlockedToday();
+    setOpening(true);
+  }
+
+  // The lid has settled — fade the whole beat out and show Today/Definition.
+  const finishOpening = useCallback(() => {
     Animated.timing(presentFade, {
       toValue: 0,
       duration: 260,
       useNativeDriver: false,
     }).start(() => {
       setUnlocked(true);
+      setOpening(false);
       presentFade.setValue(1);
     });
-  }
+  }, [presentFade]);
 
   const viewedDate = useMemo(() => {
     const d = new Date();
@@ -188,112 +199,110 @@ export default function TodayScreen() {
     }),
   ).current;
 
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator color={colors.primary} size="large" />
-      </View>
-    );
-  }
+  const veiled = (child: React.ReactNode) => (
+    <View style={styles.screen}>
+      <ScreenBackground />
+      {child}
+    </View>
+  );
 
-  if (error || !word) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.errorText}>Nanti luck — today&apos;s word wouldn&apos;t load.</Text>
-        <Pressable style={styles.retryButton} onPress={refetch}>
-          <Text style={styles.retryText}>Try again</Text>
-        </Pressable>
-      </View>
-    );
-  }
+  if (loading) return veiled(<LoadingScreen />);
 
-  if (unlocked === null) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator color={colors.primary} size="large" />
-      </View>
-    );
-  }
+  // Checked before the unlock read, so a failed fetch says so at once instead
+  // of sitting under the veil until the stored date comes back.
+  if (error || !word) return veiled(<LoadFailedScreen onRetry={refetch} />);
+
+  // Still reading the stored unlock date — the same wait, so the same veil.
+  if (unlocked === null) return veiled(<LoadingScreen />);
 
   // First visit of the day: the word is wrapped (Figma "New Word", 1114:1124)
   if (!unlocked) {
     return (
       <Animated.View style={[styles.screen, { opacity: presentFade }]}>
         <ScreenBackground />
-        <Pressable
-          style={styles.presentScreen}
-          onPress={openPresent}
-          accessibilityRole="button"
-          accessibilityLabel="Open today's word"
-        >
-          {/* A single vibrant blue blob behind the headline (Rectangle 52,
+        {opening ? (
+          // Everything that asked for the tap steps aside: the design's opened
+          // frame is the present on the bare background, nothing else.
+          <PresentOpenAnimation onEnd={finishOpening} />
+        ) : (
+          <Pressable
+            style={styles.presentScreen}
+            onPress={openPresent}
+            accessibilityRole="button"
+            accessibilityLabel="Open today's word"
+          >
+            {/* A single vibrant blue blob behind the headline (Rectangle 52,
               #579DFF, path verbatim from Figma 1837:762). The dark diamond that
               used to sit behind the present was removed in the redesign. */}
-          <Svg
-            pointerEvents="none"
-            style={styles.presentShapes}
-            width={394 * s}
-            height={853 * s}
-            viewBox="0 0 394 853"
-          >
-            <Path
-              d="M2.46633 14.0717 C1.17916 6.72769 6.83023 0 14.2862 0 L274.645 0 C282.124 0 287.781 6.76697 286.455 14.1274 L271.684 96.1274 C270.654 101.842 265.681 106 259.874 106 L28.6583 106 C22.8301 106 17.8446 101.812 16.8384 96.0717 L2.46633 14.0717 Z"
-              transform="translate(53, 177)"
-              // Flat, not #579DFF at 11% — that composites over the canvas to
-              // #D7E0EE, a grey-lavender, where the frame is this pale blue.
-              fill="#DCEAFE"
-            />
-          </Svg>
+            <Svg
+              pointerEvents="none"
+              style={styles.presentShapes}
+              width={394 * s}
+              height={853 * s}
+              viewBox="0 0 394 853"
+            >
+              <Path
+                d="M2.46633 14.0717 C1.17916 6.72769 6.83023 0 14.2862 0 L274.645 0 C282.124 0 287.781 6.76697 286.455 14.1274 L271.684 96.1274 C270.654 101.842 265.681 106 259.874 106 L28.6583 106 C22.8301 106 17.8446 101.812 16.8384 96.0717 L2.46633 14.0717 Z"
+                transform="translate(53, 177)"
+                // Flat, not #579DFF at 11% — that composites over the canvas to
+                // #D7E0EE, a grey-lavender, where the frame is this pale blue.
+                fill="#DCEAFE"
+              />
+            </Svg>
 
-          {/* The bounce rides the wrapper so the art itself stays untouched.
+            {/* The bounce rides the wrapper so the art itself stays untouched.
               Scale is about the centre, which is what Figma applies, and the
               translate is in unscaled units — RN composes the transform array
               the same way CSS does, scaling first and then moving. */}
-          <Animated.View
-            pointerEvents="none"
-            style={{
-              position: 'absolute',
-              left: 72 * s,
-              top: 341 * s,
-              width: 250 * s,
-              height: 238 * s,
-              transform: [
-                {
-                  translateY: bounce.interpolate({
-                    inputRange: [...BOUNCE.stops],
-                    outputRange: BOUNCE.y.map((v) => v * s),
-                  }),
-                },
-                {
-                  scaleX: bounce.interpolate({
-                    inputRange: [...BOUNCE.stops],
-                    outputRange: [...BOUNCE.scaleX],
-                  }),
-                },
-                {
-                  scaleY: bounce.interpolate({
-                    inputRange: [...BOUNCE.stops],
-                    outputRange: [...BOUNCE.scaleY],
-                  }),
-                },
-              ],
-            }}
-          >
-            <Image
-              source={presentArt}
-              resizeMode="contain"
-              style={{ width: '100%', height: '100%' }}
-              accessibilityIgnoresInvertColors
-            />
-          </Animated.View>
+            <Animated.View
+              pointerEvents="none"
+              style={{
+                position: 'absolute',
+                left: 72 * s,
+                top: 341 * s,
+                width: 250 * s,
+                height: 238 * s,
+                transform: [
+                  {
+                    translateY: bounce.interpolate({
+                      inputRange: [...BOUNCE.stops],
+                      outputRange: BOUNCE.y.map((v) => v * s),
+                    }),
+                  },
+                  {
+                    scaleX: bounce.interpolate({
+                      inputRange: [...BOUNCE.stops],
+                      outputRange: [...BOUNCE.scaleX],
+                    }),
+                  },
+                  {
+                    scaleY: bounce.interpolate({
+                      inputRange: [...BOUNCE.stops],
+                      outputRange: [...BOUNCE.scaleY],
+                    }),
+                  },
+                ],
+              }}
+            >
+              <Image
+                source={presentArt}
+                resizeMode="contain"
+                style={{ width: '100%', height: '100%' }}
+                accessibilityIgnoresInvertColors
+              />
+            </Animated.View>
 
-          <Text
-            style={[styles.presentHeadline, { top: 198 * s, fontSize: 34 * s, lineHeight: 34 * s }]}
-          >
-            A <Text style={styles.presentHighlight}>new word</Text> is ready{'\n'}to be opened!
-          </Text>
-          <Text style={[styles.presentTap, { top: 613 * s, fontSize: 16 * s }]}>Tap to open</Text>
-        </Pressable>
+            <Text
+              style={[
+                styles.presentHeadline,
+                { top: 198 * s, fontSize: 34 * s, lineHeight: 34 * s },
+              ]}
+            >
+              A <Text style={styles.presentHighlight}>new word</Text> is ready{'\n'}to be opened!
+            </Text>
+            <Text style={[styles.presentTap, { top: 613 * s, fontSize: 16 * s }]}>Tap to open</Text>
+          </Pressable>
+        )}
       </Animated.View>
     );
   }
@@ -432,14 +441,6 @@ const styles = StyleSheet.create({
     // clear the floating day-selector pill and the navbar, whose height varies
     // with the device's safe-area inset.
   },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.md,
-    padding: spacing.lg,
-    backgroundColor: colors.background,
-  },
   hero: {
     width: 190,
     height: 253,
@@ -502,20 +503,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: colors.text,
     letterSpacing: 0.3,
-  },
-  errorText: {
-    fontFamily: 'Digitale-Regular',
-    fontSize: 16,
-    color: colors.danger,
-  },
-  retryButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 999,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-  },
-  retryText: {
-    color: colors.onPrimary,
-    fontFamily: 'Digitale-Semibold',
   },
 });
