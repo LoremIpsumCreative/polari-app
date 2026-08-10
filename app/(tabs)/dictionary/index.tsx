@@ -1,13 +1,5 @@
 import { useMemo, useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import IconAdjustmentsHorizontal from '@tabler/icons-react-native/IconAdjustmentsHorizontal';
 import IconMoodSad from '@tabler/icons-react-native/IconMoodSad';
@@ -27,6 +19,7 @@ import {
 import { useCollections } from '../../../src/lib/collections';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
+import { LoadFailedScreen, LoadingScreen } from '../../../src/components/LoadingScreen';
 import { DictionaryListPanel } from '../../../src/components/DictionaryList';
 
 // Geometry is read straight off the Figma frame (Dictionary/Dictionary Main,
@@ -106,21 +99,11 @@ export default function DictionaryScreen() {
   // The filter button's badge counts the narrowing filters actually applied.
   const activeFilters = countActiveFilters(filters);
 
-  if (loading) {
+  if (loading || error) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator color={colors.primary} size="large" />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.errorText}>Nanti luck — the dictionary wouldn&apos;t load.</Text>
-        <Pressable style={styles.retryButton} onPress={refetch}>
-          <Text style={styles.retryText}>Try again</Text>
-        </Pressable>
+      <View style={styles.container}>
+        <ScreenBackground />
+        {error ? <LoadFailedScreen onRetry={refetch} /> : <LoadingScreen />}
       </View>
     );
   }
@@ -363,21 +346,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.md,
-    padding: spacing.lg,
-    backgroundColor: colors.canvas,
-  },
-  errorText: { fontFamily: fonts.regular, fontSize: 16, color: colors.danger },
-  retryButton: {
-    backgroundColor: colors.primary,
-    borderRadius: radii.pill,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-  },
-  retryText: { color: colors.onPrimary, fontFamily: fonts.semibold },
   pressedSoft: { opacity: 0.7 },
 });
