@@ -2,6 +2,7 @@ import { useMemo, useRef, type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { FlashList, type FlashListRef } from '@shopify/flash-list';
 import IconChevronRight from '@tabler/icons-react-native/IconChevronRight';
+import IconFlagFilled from '@tabler/icons-react-native/IconFlagFilled';
 import { colors, fonts } from '../lib/theme';
 import type { Word } from '../types/database';
 import { useTabBarInset } from './AnimatedTabBar';
@@ -28,6 +29,20 @@ export function DefinitionRow({ word, onPress }: { word: Word; onPress: () => vo
           {word.definition}
         </Text>
       </View>
+      {/* Flagged entries carry a red flag just inside the chevron (Dictionary
+          Main 1871:1178 and Curated List 1885:1496 both place it there). Same
+          red as the quiz's incorrect marker — it is the one "careful" ink the
+          palette has. */}
+      {word.flagged ? (
+        <IconFlagFilled
+          size={12}
+          color={colors.incorrect}
+          accessibilityLabel="Flagged entry"
+          // The row's uniform 12px gap leaves the glyph 2px right of the frame;
+          // the icon's own box is wider than its ink, which the gap can't know.
+          style={styles.rowFlag}
+        />
+      ) : null}
       <IconChevronRight size={12} color={colors.text} />
     </Pressable>
   );
@@ -135,6 +150,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   rowPressed: { backgroundColor: colors.primarySoft },
+  rowFlag: { marginRight: 2 },
   rowText: { flex: 1, gap: 3 },
   rowTerm: {
     fontFamily: fonts.bold,
