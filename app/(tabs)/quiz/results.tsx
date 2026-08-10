@@ -173,16 +173,16 @@ export default function QuizResultsScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, isReview, ready]);
 
-  // "High Score!" means a record was broken, so it needs a stored best to beat
-  // — a first-ever game has nothing to beat and gets the ordinary result
-  // screen. Signed-out players never see it either.
+  // "High Score!" is for setting a mark, not only for beating one: the first
+  // time a mode is played there is nothing stored to beat, and that game is
+  // still the best score there has ever been. `score > previousBest` covers
+  // both, since an unplayed mode reads as 0.
+  //
+  // Signed out is still excluded, and has to be: stats live server-side, so a
+  // signed-out player has no stored best at all and would otherwise be told
+  // they set a record after every single game.
   const isNewBest =
-    !isReview &&
-    saved &&
-    session != null &&
-    score > 0 &&
-    (previousBest.current ?? 0) > 0 &&
-    score > (previousBest.current ?? 0);
+    !isReview && saved && session != null && score > 0 && score > (previousBest.current ?? 0);
 
   const variant: Variant = isNewBest
     ? 'highScore'
