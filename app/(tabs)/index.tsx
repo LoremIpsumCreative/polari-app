@@ -22,6 +22,7 @@ import { useCharacterArt } from '../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../src/components/CharacterFullScreen';
 import { WordDetailCard } from '../../src/components/WordDetailCard';
 import { ScreenBackground } from '../../src/components/ScreenBackground';
+import { FlaggedBadge, FLAGGED_BADGE_OFFSET } from '../../src/components/FlaggedBadge';
 import { useTabBarInset } from '../../src/components/AnimatedTabBar';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
@@ -332,6 +333,9 @@ export default function TodayScreen() {
           >
             <IconArrowsMaximize size={22} color={colors.textFaint} />
           </Pressable>
+          {word.flagged ? (
+            <FlaggedBadge style={{ top: spacing.xs + FLAGGED_BADGE_OFFSET, right: spacing.xs }} />
+          ) : null}
           <WordDetailCard word={word} compact />
 
           {/* Day selector sits in flow under the card (Figma 1114:1023, y920) */}

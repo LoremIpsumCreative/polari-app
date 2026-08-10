@@ -6,6 +6,7 @@ import { useWords } from '../../../src/lib/words';
 import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../../src/components/CharacterFullScreen';
 import { WordDetailCard } from '../../../src/components/WordDetailCard';
+import { FlaggedBadge, FLAGGED_BADGE_OFFSET } from '../../../src/components/FlaggedBadge';
 import { colors, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
@@ -45,6 +46,9 @@ export default function WordDetailScreen() {
               >
                 <IconArrowsMaximize size={22} color={colors.textFaint} />
               </Pressable>
+              {word.flagged ? (
+                <FlaggedBadge style={{ top: 86 + FLAGGED_BADGE_OFFSET, right: 31 }} />
+              ) : null}
               <WordDetailCard word={word} style={styles.card} />
             </>
           ) : (
