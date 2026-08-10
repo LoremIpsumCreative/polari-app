@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Circle, G, Path } from 'react-native-svg';
 import IconChevronLeft from '@tabler/icons-react-native/IconChevronLeft';
 import { useWords } from '../../../src/lib/words';
 import { useProgress } from '../../../src/lib/progress';
@@ -17,6 +17,18 @@ import { QuizStatHeader } from '../../../src/components/quiz/QuizStatHeader';
 
 // All geometry lives in the Figma frames' 393-wide design space and is scaled
 // by the device width, so the screens reproduce the mockups proportionally.
+
+// The matching board's two columns. Both current frames — Selections
+// (1353:439) and Answers (2068:2584) — put 155x72 tiles at x22 / x217 on a 90px
+// pitch from y290. The 82-tall tile at y280 this replaces came from an earlier
+// export and left the whole board sitting 10px high with tiles 10px too deep.
+const MATCH_TILE = { width: 155, height: 72, left: [22, 217], top: 290, pitch: 90 };
+// Answers state (2068:2584): a 20px ring centred on each tile's TOP EDGE, so it
+// straddles the border half in and half out. Dashed, filled with the soft tint,
+// and carrying a tick when that pair came out right or a cross when it did not.
+// Ink and fill are the answer-feedback tokens the multiple-choice tiles already
+// use, which is where the frame takes them from.
+const MATCH_BADGE = { radius: 9, stroke: 2, dash: '3.1,3.1' };
 
 // Match-pair palette in pairing order: yellow, blue, purple, teal. Taken from
 // the Quiz/MatchAnswerTile variants, whose fills and inks are bound to the
@@ -301,13 +313,27 @@ export default function QuizPlayScreen() {
     );
 
   const tileBase = { width: 168 * s, minHeight: 62 * s, borderRadius: 8 * s, padding: 12 * s };
-  // The match variant's own tile: taller, narrower, absolutely placed.
+  // The match variant's own tile: narrower, absolutely placed. Geometry comes
+  // from MATCH_TILE so the tiles, the connectors that meet their edges and the
+  // badges that straddle their top borders can never drift apart.
   const matchTile = {
     position: 'absolute' as const,
-    width: 155 * s,
-    height: 82 * s,
+    width: MATCH_TILE.width * s,
+    height: MATCH_TILE.height * s,
     borderRadius: 8 * s,
     padding: 12 * s,
+  };
+  const matchRowTop = (i: number) => MATCH_TILE.top + i * MATCH_TILE.pitch;
+  // Whether the pair a given row belongs to came out right. A word tile is
+  // judged on what the player attached to it; a definition tile on whichever
+  // word claimed it — so both halves of a pair always agree, which is what the
+  // frame shows.
+  const wordRight = (i: number) =>
+    q.kind === 'match' && q.defs[matchPairs[i] as number] === q.words[i].definition;
+  const defRight = (j: number) => {
+    if (q.kind !== 'match') return false;
+    const owner = matchPairs.findIndex((p) => p === j);
+    return owner !== -1 && q.words[owner].definition === q.defs[j];
   };
 
   return (
@@ -397,10 +423,11 @@ export default function QuizPlayScreen() {
               {q.words.map((w, i) => {
                 const target = q.defs.indexOf(w.definition);
                 if (target < 0) return null;
-                const x0 = 177 * s;
-                const x1 = 217 * s;
-                const y0 = (321 + i * 90) * s;
-                const y1 = (321 + target * 90) * s;
+                const x0 = (MATCH_TILE.left[0] + MATCH_TILE.width) * s;
+                const x1 = MATCH_TILE.left[1] * s;
+                // Meet each tile at its vertical centre, whatever its height.
+                const y0 = (matchRowTop(i) + MATCH_TILE.height / 2) * s;
+                const y1 = (matchRowTop(target) + MATCH_TILE.height / 2) * s;
                 const bow = 26 * s;
                 return (
                   <Path
@@ -430,7 +457,7 @@ export default function QuizPlayScreen() {
                   style={[
                     styles.tile,
                     matchTile,
-                    { left: 22 * s, top: (280 + i * 90) * s },
+                    { left: MATCH_TILE.left[0] * s, top: matchRowTop(i) * s },
                     wordPal
                       ? { backgroundColor: wordPal.fill, borderColor: wordPal.ink, borderWidth: 1 }
                       : sel
@@ -454,7 +481,7 @@ export default function QuizPlayScreen() {
                   style={[
                     styles.tile,
                     matchTile,
-                    { left: 217 * s, top: (280 + j * 90) * s },
+                    { left: MATCH_TILE.left[1] * s, top: matchRowTop(j) * s },
                     defPal
                       ? { backgroundColor: defPal.fill, borderColor: defPal.ink, borderWidth: 1 }
                       : null,
@@ -466,9 +493,12 @@ export default function QuizPlayScreen() {
                       { fontSize: 14 * s },
                       defPal && { color: defPal.ink, fontFamily: fonts.bold },
                     ]}
-                    // The frame's tile is a fixed 82 tall, so a long entry has
-                    // to clamp rather than spill past its own edges.
-                    numberOfLines={4}
+                    // The frame's tile is a fixed 72 tall, so a long entry has
+                    // to clamp rather than spill past its own edges. Three lines
+                    // is what fits inside the 12px padding at this size; the
+                    // previous 4 already overflowed the taller tile it was set
+                    // for.
+                    numberOfLines={3}
                   >
                     {q.defs[j]}
                   </Text>
@@ -476,6 +506,58 @@ export default function QuizPlayScreen() {
               </View>
             );
           })}
+
+          {/* Drawn last so the rings sit over the tile borders they straddle. */}
+          {matchDone ? (
+            <Svg
+              pointerEvents="none"
+              style={StyleSheet.absoluteFill}
+              width={394 * s}
+              height={852 * s}
+            >
+              {q.words.flatMap((w, i) =>
+                [wordRight(i), defRight(i)].map((right, col) => {
+                  const cx = (MATCH_TILE.left[col] + MATCH_TILE.width / 2) * s;
+                  const cy = matchRowTop(i) * s;
+                  const ink = right ? colors.correct : colors.incorrect;
+                  return (
+                    // Scaled as a group so the glyphs can be drawn in the
+                    // frame's own units rather than pre-multiplied by hand.
+                    <G
+                      key={`badge-${w.id}-${col}`}
+                      transform={`translate(${cx} ${cy}) scale(${s})`}
+                    >
+                      <Circle
+                        r={MATCH_BADGE.radius}
+                        fill={right ? colors.correctSoft : colors.incorrectSoft}
+                        stroke={ink}
+                        strokeWidth={MATCH_BADGE.stroke}
+                        strokeDasharray={MATCH_BADGE.dash}
+                      />
+                      {right ? (
+                        <Path
+                          d="M-3.6 0.4 L-1.2 2.9 L3.8 -2.9"
+                          stroke={ink}
+                          strokeWidth={MATCH_BADGE.stroke}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          fill="none"
+                        />
+                      ) : (
+                        <Path
+                          d="M-2.9 -2.9 L2.9 2.9 M2.9 -2.9 L-2.9 2.9"
+                          stroke={ink}
+                          strokeWidth={MATCH_BADGE.stroke}
+                          strokeLinecap="round"
+                          fill="none"
+                        />
+                      )}
+                    </G>
+                  );
+                }),
+              )}
+            </Svg>
+          ) : null}
         </View>
       ) : (
         <View
