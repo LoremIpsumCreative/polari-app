@@ -10,6 +10,7 @@
     "notes_variants": "Alt: habdabs",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "ac-dc": {
@@ -23,6 +24,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "acting-dickey": {
@@ -36,6 +38,7 @@
     "notes_variants": "(read-as-spelled)",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "affair": {
@@ -49,6 +52,7 @@
     "notes_variants": "Plural: affairs",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "ajax": {
@@ -58,10 +62,11 @@
     "pronunciation": "AY-jaks",
     "definition": "Nearby, next to, adjacent, over there",
     "origin": "Possibly a shortening of \"adjacent\"",
-    "example": "\"Vada the omi ajax — bona, isn't he?\"",
+    "example": "\"Vada the omi ajax - bona, isn't he?\"",
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "alamo": {
@@ -69,12 +74,13 @@
     "entry_type": "word",
     "part_of_speech": "Interjection",
     "pronunciation": "AL-uh-moh",
-    "definition": "\"I'm hot for you!\" — exclamation of attraction",
+    "definition": "\"I'm hot for you!\" - exclamation of attraction",
     "origin": "Unclear",
     "example": "\"Alamo! Have you clocked the eek on that?\"",
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "almond-rocks": {
@@ -88,6 +94,7 @@
     "notes_variants": "Often shortened to \"almonds\" in Cockney; usually plural only",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "and-no-flies": {
@@ -97,10 +104,11 @@
     "pronunciation": "and noh flyz",
     "definition": "\"Honestly!\"",
     "origin": "Unclear",
-    "example": "\"And no flies — he never paid me back!\"",
+    "example": "\"And no flies - he never paid me back!\"",
     "notes_variants": "Also \"no flies\" alone",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "antique-hp": {
@@ -114,6 +122,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "any-road-up": {
@@ -127,6 +136,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "aqua": {
@@ -140,6 +150,7 @@
     "notes_variants": "Alt: acqua",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "aris": {
@@ -153,6 +164,7 @@
     "notes_variants": "Alt/related: harris, arry, arriss",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "arva": {
@@ -166,6 +178,7 @@
     "notes_variants": "Also \"harva\"",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "aspro": {
@@ -179,6 +192,7 @@
     "notes_variants": "Alt: aspra",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "aunt-nell-s": {
@@ -192,6 +206,7 @@
     "notes_variants": "\"Aunt nelly fake\" = earring",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "aunt-nelly-fakes": {
@@ -205,6 +220,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "auntie": {
@@ -218,6 +234,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "bagaga": {
@@ -231,6 +248,7 @@
     "notes_variants": "Alt: bagadga",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "baloney": {
@@ -244,6 +262,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "barkey": {
@@ -257,6 +276,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "barnet": {
@@ -270,6 +290,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "barney": {
@@ -283,6 +304,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "basket": {
@@ -296,6 +318,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "bat": {
@@ -309,6 +332,7 @@
     "notes_variants": "Also (v.) to dance on stage",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "battyfang": {
@@ -322,6 +346,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "beak": {
@@ -335,6 +360,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "beancove": {
@@ -348,6 +374,7 @@
     "notes_variants": "Also \"bencove\" = friend (separate word)",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bedroom": {
@@ -361,6 +388,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "bencove": {
@@ -374,6 +402,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "beone": {
@@ -387,6 +416,7 @@
     "notes_variants": "Many variants: bianc, beyonek, beyong, bionk",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "betty-bracelets": {
@@ -396,10 +426,11 @@
     "pronunciation": "BET-ee BRAYS-lets",
     "definition": "The police",
     "origin": "Camp personification; \"bracelets\" = handcuffs",
-    "example": "\"Scarper — Betty Bracelets!\"",
+    "example": "\"Scarper - Betty Bracelets!\"",
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "beverada": {
@@ -413,6 +444,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "bevvy": {
@@ -426,6 +458,7 @@
     "notes_variants": "\"Bevvied\" = drunk; \"bevvy omee\" = drunkard",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "bibi": {
@@ -439,6 +472,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "bijou": {
@@ -452,6 +486,7 @@
     "notes_variants": "Often + \"-ette\" suffix, e.g. \"bijou drinkette\"",
     "cultural_context": "Small or little; from French 'bijou' (jewel). Now used more widely, but Polari gave it its camp lilt.",
     "usage_status": "current",
+    "flagged": true,
     "related_slugs": null
   },
   "billingsgate": {
@@ -465,6 +500,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "billy-doo": {
@@ -478,6 +514,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bimbo": {
@@ -491,6 +528,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bimph": {
@@ -504,6 +542,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bins": {
@@ -517,6 +556,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bitaine": {
@@ -530,6 +570,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "bitch": {
@@ -543,6 +584,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "black-market-queen": {
@@ -556,6 +598,7 @@
     "notes_variants": "Abbreviated BMQ",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "blag": {
@@ -569,6 +612,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "blaz-queen": {
@@ -582,6 +626,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "blow": {
@@ -595,6 +640,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "blue": {
@@ -608,6 +654,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "bod": {
@@ -621,6 +668,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bodega": {
@@ -634,6 +682,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bold": {
@@ -647,6 +696,7 @@
     "notes_variants": "Famously used in *Round the Horne*",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "bolus": {
@@ -660,6 +710,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "bona": {
@@ -671,8 +722,9 @@
     "origin": "From Italian *buono* or Sabir *bona*",
     "example": "\"How bona to vada your dolly old eke!\"",
     "notes_variants": "Comparative \"more bona\"; variants bene, boner, bonar",
-    "cultural_context": "The all-purpose Polari 'good', as in 'bona to vada your dolly old eek' — lovely to see your dear old face.",
+    "cultural_context": "The all-purpose Polari 'good', as in 'bona to vada your dolly old eek' - lovely to see your dear old face.",
     "usage_status": "rare",
+    "flagged": false,
     "related_slugs": "fantabulosa,dolly"
   },
   "bona-lavs": {
@@ -686,6 +738,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bona-nochy": {
@@ -699,6 +752,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bonaroo": {
@@ -712,6 +766,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bones-the": {
@@ -725,6 +780,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bosh": {
@@ -738,6 +794,7 @@
     "notes_variants": "\"Bosh-faker\" = fiddle player",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "boyno": {
@@ -751,6 +808,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "brandy": {
@@ -764,6 +822,7 @@
     "notes_variants": "\"Put on the brandy\" = lubricate for anal sex",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "bull": {
@@ -771,12 +830,13 @@
     "entry_type": "word",
     "part_of_speech": "Noun",
     "pronunciation": "bull",
-    "definition": "A masculine woman",
+    "definition": "A Masculine woman",
     "origin": "English slang",
     "example": null,
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "bungery": {
@@ -790,6 +850,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "butch": {
@@ -797,12 +858,13 @@
     "entry_type": "word",
     "part_of_speech": "Adjective",
     "pronunciation": "buch",
-    "definition": "Very masculine, strong; also masculine lesbian or man",
+    "definition": "Very Masculine, strong; also Masculine lesbian or man",
     "origin": "Possibly US slang nicknaming tough men \"Butch\"",
     "example": "\"He's a butch number, isn't he.\"",
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "buvare": {
@@ -816,6 +878,7 @@
     "notes_variants": "Variants: beware, bevare, bivare",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "cabouche": {
@@ -829,6 +892,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "cackle": {
@@ -842,6 +906,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "cackling-fart": {
@@ -855,6 +920,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "camisa": {
@@ -868,6 +934,7 @@
     "notes_variants": "Variants: mish, commission, camisha",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "camp": {
@@ -881,6 +948,7 @@
     "notes_variants": null,
     "cultural_context": "Possibly from Polari via French 'se camper' (to pose). Central to the aesthetic Polari belonged to, and now a mainstream word for theatrical, exaggerated queer style.",
     "usage_status": "current",
+    "flagged": true,
     "related_slugs": "drag,queen"
   },
   "camp-name": {
@@ -894,6 +962,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "capella": {
@@ -907,6 +976,7 @@
     "notes_variants": "Variants: kapella, capolla, capelli",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "carnish": {
@@ -920,6 +990,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "carnish-ken": {
@@ -933,6 +1004,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "caroon": {
@@ -946,6 +1018,7 @@
     "notes_variants": "\"Medza caroon\" = half-crown",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "carsey": {
@@ -959,6 +1032,7 @@
     "notes_variants": "Survives in British slang as \"khazi\"",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "cartso": {
@@ -972,6 +1046,7 @@
     "notes_variants": "\"Kerterver cartzo\" = venereal disease",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "catever": {
@@ -985,6 +1060,7 @@
     "notes_variants": "Many variants: caterver, cativa, cottiva",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "cats": {
@@ -998,6 +1074,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "chant": {
@@ -1011,6 +1088,7 @@
     "notes_variants": "\"Chanting crib\" = venue where performers sing",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "charper": {
@@ -1024,6 +1102,7 @@
     "notes_variants": "\"Charpering omee\" = policeman",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "charpering-carsey": {
@@ -1037,6 +1116,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "charpering-omee": {
@@ -1050,6 +1130,7 @@
     "notes_variants": "Variants: sharpy, sharping omee",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "charver": {
@@ -1058,11 +1139,12 @@
     "part_of_speech": "Verb",
     "pronunciation": "CHAR-vuh",
     "definition": "To have sex with",
-    "origin": "Disputed — possibly Romani or Ligurian source",
+    "origin": "Disputed - possibly Romani or Ligurian source",
     "example": null,
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "chavvy": {
@@ -1076,6 +1158,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "chenter": {
@@ -1089,6 +1172,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "chicken": {
@@ -1102,6 +1186,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "chinker": {
@@ -1115,6 +1200,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "chovie": {
@@ -1128,6 +1214,7 @@
     "notes_variants": "\"Crocus chovey\" = pharmacy",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "clevie": {
@@ -1141,6 +1228,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "clobber": {
@@ -1154,6 +1242,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "cod": {
@@ -1167,6 +1256,7 @@
     "notes_variants": "Comparative \"more cod\"",
     "cultural_context": "Tacky, mock or bad. The camp art of reading something to filth long predates the word 'shade'.",
     "usage_status": "rare",
+    "flagged": false,
     "related_slugs": null
   },
   "cods": {
@@ -1180,6 +1270,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "corybungus": {
@@ -1193,6 +1284,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "cottage": {
@@ -1206,6 +1298,7 @@
     "notes_variants": "\"Cottaging\" = looking for/having sex there",
     "cultural_context": "A 'cottage' was a public toilet used as a meeting place when queer life was pushed underground. Polari was the password that kept these worlds hidden.",
     "usage_status": "historical",
+    "flagged": true,
     "related_slugs": "trade"
   },
   "cottaging": {
@@ -1219,6 +1312,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "cove": {
@@ -1232,6 +1326,7 @@
     "notes_variants": "\"Badge cove\" = pensioner",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "crib": {
@@ -1245,6 +1340,7 @@
     "notes_variants": "\"Mumming crib\" = theatre",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "crimper": {
@@ -1258,6 +1354,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "crocus": {
@@ -1271,6 +1368,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "cull": {
@@ -1284,6 +1382,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "dacha": {
@@ -1297,6 +1396,7 @@
     "notes_variants": "Building block for multiples, e.g. \"setter daiture\" = 70",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "daffy": {
@@ -1310,6 +1410,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "dally": {
@@ -1323,6 +1424,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "dander": {
@@ -1336,6 +1438,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "darkey": {
@@ -1349,6 +1452,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "deaner": {
@@ -1362,6 +1466,7 @@
     "notes_variants": "Many variants: denare, denari",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "dhobie": {
@@ -1375,6 +1480,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "diddle": {
@@ -1388,6 +1494,7 @@
     "notes_variants": "\"Diddle cove\" = barman; \"diddle ken\" = bar",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "dilly-boy": {
@@ -1401,6 +1508,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "dilly-the": {
@@ -1408,12 +1516,13 @@
     "entry_type": "phrase",
     "part_of_speech": "Noun",
     "pronunciation": "thuh DIL-ee",
-    "definition": "Piccadilly Circus, London — historic cruising/sex-work spot",
+    "definition": "Piccadilly Circus, London - historic cruising/sex-work spot",
     "origin": "Shortening of \"Piccadilly\"",
     "example": "\"He's working the Dilly tonight.\"",
     "notes_variants": "\"Dilly boy\" = male sex worker there",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "dinarly": {
@@ -1427,6 +1536,7 @@
     "notes_variants": "Many variants: dinali, dinarla",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "dish": {
@@ -1440,6 +1550,7 @@
     "notes_variants": "\"Dish the dirt\" = to gossip",
     "cultural_context": "An attractive person. One of many Polari words that slipped quietly into mainstream and gay slang.",
     "usage_status": "current",
+    "flagged": false,
     "related_slugs": null
   },
   "dizzy": {
@@ -1453,6 +1564,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "do-the-rights": {
@@ -1466,6 +1578,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "dog-and-bone": {
@@ -1479,6 +1592,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "dolly": {
@@ -1490,8 +1604,9 @@
     "origin": "Unclear",
     "example": "\"What a dolly little number.\"",
     "notes_variants": "Comparative \"dollier\"",
-    "cultural_context": "Pretty, sweet or nice — as in 'your dolly old eek'. A term of endearment in the camp register.",
+    "cultural_context": "Pretty, sweet or nice - as in 'your dolly old eek'. A term of endearment in the camp register.",
     "usage_status": "rare",
+    "flagged": false,
     "related_slugs": "bona"
   },
   "dona": {
@@ -1505,6 +1620,7 @@
     "notes_variants": "Many spellings: donner, doner, donna",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "doob-s": {
@@ -1518,6 +1634,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "dooey": {
@@ -1531,6 +1648,7 @@
     "notes_variants": "Variant: deuce",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "doss": {
@@ -1544,6 +1662,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "dowry": {
@@ -1557,6 +1676,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "drag": {
@@ -1570,6 +1690,7 @@
     "notes_variants": "\"Drag up\" = to put on drag",
     "cultural_context": "Theatrical cross-dressing. The drag scene was one of Polari's great strongholds, from music-hall to the modern drag revival.",
     "usage_status": "current",
+    "flagged": true,
     "related_slugs": null
   },
   "drogle": {
@@ -1583,6 +1704,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "dry-martini": {
@@ -1596,6 +1718,7 @@
     "notes_variants": "\"Dry\" alone = right (direction)",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "duchess": {
@@ -1609,6 +1732,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "ducky": {
@@ -1622,6 +1746,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "dyke": {
@@ -1635,6 +1760,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "ecaf": {
@@ -1648,6 +1774,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "eek": {
@@ -1661,6 +1788,7 @@
     "notes_variants": "\"Eek\" considered more familiar than \"ecaf\"",
     "cultural_context": "Face', from 'ecaf' (face backwards). You'd zhoosh your riah and slap on the eek before a night out.",
     "usage_status": "rare",
+    "flagged": false,
     "related_slugs": "slap"
   },
   "efink": {
@@ -1674,6 +1802,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "eine": {
@@ -1687,6 +1816,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "emag": {
@@ -1700,6 +1830,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "ends": {
@@ -1713,6 +1844,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "esong": {
@@ -1726,6 +1858,7 @@
     "notes_variants": "Also onk, vonka",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "ette": {
@@ -1739,6 +1872,7 @@
     "notes_variants": "E.g. \"publisherette\"",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "fab": {
@@ -1752,6 +1886,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "fabulosa": {
@@ -1765,6 +1900,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "fake": {
@@ -1778,6 +1914,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "fakement": {
@@ -1791,6 +1928,7 @@
     "notes_variants": "\"Twinkling fakement\" = star",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "famble": {
@@ -1804,6 +1942,7 @@
     "notes_variants": "\"Famble cheat\" = ring",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "fantabulosa": {
@@ -1813,10 +1952,11 @@
     "pronunciation": "fan-tab-yoo-LOH-suh",
     "definition": "Wonderful, marvellous (intensified \"fabulosa\")",
     "origin": "Blend of \"fantastic\" and \"fabulous\"",
-    "example": "\"Vada — absolutely fantabulosa!\"",
+    "example": "\"Vada - absolutely fantabulosa!\"",
     "notes_variants": null,
-    "cultural_context": "Fantastic' — a Polari flourish popularised by Kenneth Williams as Sandy on Round the Horne.",
+    "cultural_context": "Fantastic' - a Polari flourish popularised by Kenneth Williams as Sandy on Round the Horne.",
     "usage_status": "rare",
+    "flagged": false,
     "related_slugs": "bona"
   },
   "farting-crackers": {
@@ -1830,6 +1970,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "fatcha": {
@@ -1843,6 +1984,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "feele": {
@@ -1856,6 +1998,7 @@
     "notes_variants": "\"Filiome\" = young man",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "feele-omi": {
@@ -1869,6 +2012,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "femme": {
@@ -1882,6 +2026,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "ferricadooza": {
@@ -1895,6 +2040,7 @@
     "notes_variants": "Could refer to being arrested/reported to police",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "fish": {
@@ -1908,6 +2054,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "flash": {
@@ -1921,6 +2068,7 @@
     "notes_variants": "\"Flash ken\" = brothel (older Cant sense)",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "flattie": {
@@ -1934,6 +2082,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "flowery": {
@@ -1947,6 +2096,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "fogle": {
@@ -1960,6 +2110,7 @@
     "notes_variants": "\"Fogle-hunter\" = pickpocket",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "fogus": {
@@ -1973,6 +2124,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "fortuni": {
@@ -1986,6 +2138,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "frog": {
@@ -1999,6 +2152,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "fruit": {
@@ -2012,6 +2166,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "fungus": {
@@ -2025,6 +2180,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "funt": {
@@ -2038,6 +2194,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "gaff": {
@@ -2051,6 +2208,7 @@
     "notes_variants": "Also \"a fair,\" \"a brothel,\" \"a club\" in some sources",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "gajo": {
@@ -2064,6 +2222,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "gam": {
@@ -2077,6 +2236,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "gardy-loo": {
@@ -2090,6 +2250,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "gelt": {
@@ -2103,6 +2264,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "gildy": {
@@ -2116,6 +2278,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "gilly": {
@@ -2129,6 +2292,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "glaze": {
@@ -2142,6 +2306,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "glossy": {
@@ -2155,6 +2320,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "gonnif": {
@@ -2168,6 +2334,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "goolie": {
@@ -2181,6 +2348,7 @@
     "notes_variants": "\"Goolie ogle fakes\" = sunglasses",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "got-your-number": {
@@ -2194,6 +2362,7 @@
     "notes_variants": "Only attested in 2nd person",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "groin": {
@@ -2207,6 +2376,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "hambag": {
@@ -2220,6 +2390,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "hampstead-s": {
@@ -2233,6 +2404,7 @@
     "notes_variants": "Almost always plural",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "harris": {
@@ -2246,6 +2418,7 @@
     "notes_variants": "See aris",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "heartface": {
@@ -2259,6 +2432,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "hettie": {
@@ -2272,6 +2446,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "hilda-handcuffs": {
@@ -2285,6 +2460,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "hoofer": {
@@ -2298,6 +2474,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "hp": {
@@ -2311,6 +2488,7 @@
     "notes_variants": "\"Antique HP\" = old gay man",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "importuning": {
@@ -2324,6 +2502,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "irish": {
@@ -2337,6 +2516,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "it": {
@@ -2350,6 +2530,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "jarry": {
@@ -2363,6 +2544,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "jim-and-jack": {
@@ -2376,6 +2558,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "jogger": {
@@ -2389,6 +2572,7 @@
     "notes_variants": "\"Joggering omee\" = itinerant musician",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "journo": {
@@ -2402,6 +2586,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "jube-s": {
@@ -2415,6 +2600,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "kaffies": {
@@ -2428,6 +2614,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "kapello": {
@@ -2441,6 +2628,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "ken": {
@@ -2454,6 +2642,7 @@
     "notes_variants": "\"Carnish ken\" = restaurant; \"queer ken\" = prison",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "kenza": {
@@ -2467,6 +2656,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "kik": {
@@ -2480,6 +2670,7 @@
     "notes_variants": "\"Kik pipe\" = TV",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "kosher": {
@@ -2493,6 +2684,7 @@
     "notes_variants": "Mostly used in \"kosher omee\" = Jewish man",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "lag": {
@@ -2506,6 +2698,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "lallie": {
@@ -2519,6 +2712,7 @@
     "notes_variants": "Variants: lyle, lall",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lallie-tappers": {
@@ -2532,6 +2726,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lamor": {
@@ -2545,6 +2740,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lattie": {
@@ -2558,6 +2754,7 @@
     "notes_variants": "\"Lattie on water\" = a ship",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "lau": {
@@ -2571,6 +2768,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lav": {
@@ -2584,6 +2782,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lell": {
@@ -2597,6 +2796,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lepta": {
@@ -2610,6 +2810,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "letty": {
@@ -2623,6 +2824,7 @@
     "notes_variants": "Overlaps with \"lattie\" in some sources",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "libbage": {
@@ -2636,6 +2838,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lillies": {
@@ -2649,6 +2852,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "lills": {
@@ -2662,6 +2866,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lingo": {
@@ -2675,6 +2880,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lippy": {
@@ -2688,6 +2894,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lop": {
@@ -2701,6 +2908,7 @@
     "notes_variants": "\"Lopen\" = running",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lucoddy": {
@@ -2714,6 +2922,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "lupper-s": {
@@ -2727,6 +2936,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "mais-oui": {
@@ -2740,6 +2950,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "mangaree": {
@@ -2753,6 +2964,7 @@
     "notes_variants": "Many spellings: munjare, mungarly",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "manky": {
@@ -2766,6 +2978,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "manly-alice": {
@@ -2773,12 +2986,13 @@
     "entry_type": "phrase",
     "part_of_speech": "Noun",
     "pronunciation": "MAN-lee AL-iss",
-    "definition": "A masculine gay man",
+    "definition": "A Masculine gay man",
     "origin": "Unclear",
     "example": null,
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "maria": {
@@ -2792,6 +3006,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "martinis": {
@@ -2805,6 +3020,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "mary": {
@@ -2818,6 +3034,7 @@
     "notes_variants": "Variant: May-Ann",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "measures": {
@@ -2831,6 +3048,7 @@
     "notes_variants": "Variants: metzers, metzies, medzers",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "medzer": {
@@ -2844,6 +3062,7 @@
     "notes_variants": "\"Medzer caroon\" = half-crown",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "meese": {
@@ -2857,6 +3076,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "meshigener": {
@@ -2870,6 +3090,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "metzas": {
@@ -2883,6 +3104,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "mince": {
@@ -2896,6 +3118,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "minces": {
@@ -2909,6 +3132,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "minnie": {
@@ -2922,6 +3146,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "mogue": {
@@ -2935,6 +3160,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "molly": {
@@ -2948,6 +3174,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "moniker": {
@@ -2961,6 +3188,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "mother": {
@@ -2974,6 +3202,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "multi": {
@@ -2987,6 +3216,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "mummer": {
@@ -3000,6 +3230,7 @@
     "notes_variants": "\"Mumming crib\" = theatre",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "munge": {
@@ -3013,6 +3244,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "naff": {
@@ -3024,8 +3256,9 @@
     "origin": "Disputed; popular \"Not Available For Fucking\" backronym likely false folk etymology",
     "example": "\"His new clobber is dead naff.\"",
     "notes_variants": null,
-    "cultural_context": "Now everyday British English for tasteless, 'naff' began as Polari — one of several words (with camp and zhoosh) that escaped the subculture into the mainstream.",
+    "cultural_context": "Now everyday British English for tasteless, 'naff' began as Polari - one of several words (with camp and zhoosh) that escaped the subculture into the mainstream.",
     "usage_status": "current",
+    "flagged": true,
     "related_slugs": null
   },
   "nana": {
@@ -3039,6 +3272,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "nanti": {
@@ -3048,10 +3282,11 @@
     "pronunciation": "NAN-tee",
     "definition": "A general negator: no, none, nothing, don't (also spelled: nantee)",
     "origin": "From Sabir *nantee*, ultimately Italian *niente* (\"nothing\")",
-    "example": "\"Nanti polari!\" — don't talk!",
+    "example": "\"Nanti polari!\" - don't talk!",
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "national-handbag": {
@@ -3065,6 +3300,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "nelly": {
@@ -3078,6 +3314,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "nellyarda": {
@@ -3091,6 +3328,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "nishta": {
@@ -3104,6 +3342,7 @@
     "notes_variants": "Variants: nish, nishtoise",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "nob": {
@@ -3117,6 +3356,7 @@
     "notes_variants": "\"Nobbing the glazes\" = collecting through a window",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "nobber": {
@@ -3130,6 +3370,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "nochy": {
@@ -3143,6 +3384,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "number": {
@@ -3156,6 +3398,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "ogle": {
@@ -3169,6 +3412,7 @@
     "notes_variants": "\"Ogle riders\" = eyebrows/eyelashes",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "ogle-fakes": {
@@ -3182,6 +3426,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "ois": {
@@ -3195,6 +3440,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "omi": {
@@ -3208,6 +3454,7 @@
     "notes_variants": "Variants: omee, omey, homie",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "omi-palone": {
@@ -3216,11 +3463,12 @@
     "part_of_speech": "Noun",
     "pronunciation": "OH-mee puh-LOHN",
     "definition": "An effeminate or gay man (also spelled: omee-palone (HP))",
-    "origin": "Literally \"man-woman\" — see omi + palone",
+    "origin": "Literally \"man-woman\" - see omi + palone",
     "example": null,
     "notes_variants": "Abbreviated HP",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "oney": {
@@ -3234,6 +3482,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "onk": {
@@ -3247,6 +3496,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "orbs": {
@@ -3260,6 +3510,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "orderly-daughter": {
@@ -3273,6 +3524,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "otter": {
@@ -3286,6 +3538,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "oven": {
@@ -3295,10 +3548,11 @@
     "pronunciation": "UV-en",
     "definition": "A mouth",
     "origin": "Bodily metaphor",
-    "example": "\"Nanti pots in the cupboard\" — no teeth.",
+    "example": "\"Nanti pots in the cupboard\" - no teeth.",
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "oyster": {
@@ -3312,6 +3566,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "palare-pipe": {
@@ -3325,6 +3580,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "palaver": {
@@ -3338,6 +3594,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "palliass": {
@@ -3351,6 +3608,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "palone": {
@@ -3359,11 +3617,12 @@
     "part_of_speech": "Noun",
     "pronunciation": "puh-LOHN",
     "definition": "A woman (also spelled: polone, polony)",
-    "origin": "Disputed — possibly from 17th-c. \"blowen\" (prostitute) or Italian *pollone*",
+    "origin": "Disputed - possibly from 17th-c. \"blowen\" (prostitute) or Italian *pollone*",
     "example": "\"She's a dolly palone.\"",
     "notes_variants": "Many spellings: paloney, polonee",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "palone-omi": {
@@ -3372,11 +3631,12 @@
     "part_of_speech": "Noun",
     "pronunciation": "puh-LOHN OH-mee",
     "definition": "A lesbian",
-    "origin": "Literally \"woman-man\" — see palone + omi",
+    "origin": "Literally \"woman-man\" - see palone + omi",
     "example": null,
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "pannam": {
@@ -3390,6 +3650,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "park": {
@@ -3403,6 +3664,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "parnie": {
@@ -3416,6 +3678,7 @@
     "notes_variants": "Many variants: parney, panee",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "plate": {
@@ -3429,6 +3692,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "pogey": {
@@ -3442,6 +3706,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "polari": {
@@ -3453,8 +3718,9 @@
     "origin": "From Italian *parlare* (\"to speak\")",
     "example": "\"Nanti polari, dear, walls have ears.\"",
     "notes_variants": "Variants: palare, parlaree",
-    "cultural_context": "The name of the language itself — from Italian 'parlare', to talk. A magpie tongue of Italian, Romani, back-slang, rhyming slang and theatrical cant that let a hidden community speak in plain sight.",
+    "cultural_context": "The name of the language itself - from Italian 'parlare', to talk. A magpie tongue of Italian, Romani, back-slang, rhyming slang and theatrical cant that let a hidden community speak in plain sight.",
     "usage_status": "historical",
+    "flagged": false,
     "related_slugs": "bona,camp"
   },
   "polari-pipe": {
@@ -3468,6 +3734,7 @@
     "notes_variants": "Also \"dog and bone\"",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "pont": {
@@ -3481,6 +3748,7 @@
     "notes_variants": "Variant: ponce",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "pots": {
@@ -3494,6 +3762,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "prad": {
@@ -3507,6 +3776,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "pross": {
@@ -3520,6 +3790,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "quarter": {
@@ -3533,6 +3804,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "quartereen": {
@@ -3546,6 +3818,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "queen": {
@@ -3557,8 +3830,9 @@
     "origin": "Possibly from 18th-c. \"molly\" usage of \"queen\"",
     "example": "\"She's a real queen, isn't she.\"",
     "notes_variants": null,
-    "cultural_context": "A flamboyant gay man — reclaimed and everyday now, but rooted in the same camp world Polari came from.",
+    "cultural_context": "A flamboyant gay man - reclaimed and everyday now, but rooted in the same camp world Polari came from.",
     "usage_status": "current",
+    "flagged": true,
     "related_slugs": "camp,drag"
   },
   "queer-ken": {
@@ -3567,11 +3841,12 @@
     "part_of_speech": "Noun",
     "pronunciation": "kweer ken",
     "definition": "A prison",
-    "origin": "From Cant — see ken",
+    "origin": "From Cant - see ken",
     "example": null,
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "quong-s": {
@@ -3585,6 +3860,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "reef": {
@@ -3598,6 +3874,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "remould": {
@@ -3611,6 +3888,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "riah": {
@@ -3624,6 +3902,7 @@
     "notes_variants": "\"Riah shusher\" = hairdresser",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "riah-zhoosher": {
@@ -3637,6 +3916,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "rough-trade": {
@@ -3650,6 +3930,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "rozzer": {
@@ -3663,6 +3944,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "rum-cull": {
@@ -3676,6 +3958,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "salter": {
@@ -3689,6 +3972,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "savvy": {
@@ -3702,6 +3986,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "scarper": {
@@ -3715,6 +4000,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "schinwhars": {
@@ -3728,6 +4014,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "schlumph": {
@@ -3741,6 +4028,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "schmutter": {
@@ -3754,6 +4042,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "schonk": {
@@ -3767,6 +4056,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "schooner": {
@@ -3780,6 +4070,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "scotch": {
@@ -3793,6 +4084,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "scotches": {
@@ -3806,6 +4098,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "screech": {
@@ -3819,6 +4112,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "screeve": {
@@ -3832,6 +4126,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "sea-queen": {
@@ -3845,6 +4140,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "send-up": {
@@ -3858,6 +4154,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "setter": {
@@ -3871,6 +4168,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "sharda": {
@@ -3884,6 +4182,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "sharpy": {
@@ -3897,6 +4196,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "sharpy-polone": {
@@ -3910,6 +4210,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "she": {
@@ -3923,6 +4224,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "shush": {
@@ -3936,6 +4238,7 @@
     "notes_variants": "\"Shush bag\" = bag for stolen goods",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "shush-bag": {
@@ -3949,6 +4252,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "shyckle": {
@@ -3962,6 +4266,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "slang": {
@@ -3975,6 +4280,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "slap": {
@@ -3986,8 +4292,9 @@
     "origin": "From the idea of \"slapping on\" makeup",
     "example": "\"Put your slap on, we're going out.\"",
     "notes_variants": null,
-    "cultural_context": "Make-up — to 'slap on the eek' is to make up your face. Still heard among drag performers today.",
+    "cultural_context": "Make-up - to 'slap on the eek' is to make up your face. Still heard among drag performers today.",
     "usage_status": "current",
+    "flagged": false,
     "related_slugs": "eek"
   },
   "so": {
@@ -4001,6 +4308,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "soldi": {
@@ -4014,6 +4322,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "stamper-s": {
@@ -4027,6 +4336,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "stimpcovers": {
@@ -4040,6 +4350,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "stimps": {
@@ -4053,6 +4364,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "strange": {
@@ -4066,6 +4378,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "stretcher-case": {
@@ -4079,6 +4392,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "strides": {
@@ -4092,6 +4406,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "striller-s": {
@@ -4105,6 +4420,7 @@
     "notes_variants": "\"Strillers omee\" = pianist",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "switch": {
@@ -4118,6 +4434,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "tat": {
@@ -4131,6 +4448,7 @@
     "notes_variants": "\"Tatty\" = shabby",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "tbh": {
@@ -4144,6 +4462,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "thews": {
@@ -4157,6 +4476,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "thrummer": {
@@ -4170,6 +4490,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "tober": {
@@ -4183,6 +4504,7 @@
     "notes_variants": "\"Tober omee\" = rent collector/landlord",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "tod": {
@@ -4196,6 +4518,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "tootsie-trade": {
@@ -4209,6 +4532,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "tosheroon": {
@@ -4222,6 +4546,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "trade": {
@@ -4235,6 +4560,7 @@
     "notes_variants": null,
     "cultural_context": "A casual male sexual partner. The word survives in gay slang today; its Polari sense reaches back to a time when such encounters were illegal and coded language was a form of safety.",
     "usage_status": "current",
+    "flagged": true,
     "related_slugs": "cottage"
   },
   "tray": {
@@ -4248,6 +4574,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "treash": {
@@ -4261,6 +4588,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "troll": {
@@ -4274,6 +4602,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "two-and-eight": {
@@ -4287,6 +4616,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "vacaya": {
@@ -4300,6 +4630,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "vada": {
@@ -4313,6 +4644,7 @@
     "notes_variants": "\"Vardavision\" = television",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "vaggerie": {
@@ -4326,6 +4658,7 @@
     "notes_variants": "Alt: vagary",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "vardo": {
@@ -4339,6 +4672,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "vera-lynn": {
@@ -4352,6 +4686,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "voche": {
@@ -4365,6 +4700,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "vogue": {
@@ -4378,6 +4714,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "vogueress": {
@@ -4391,6 +4728,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": true,
     "related_slugs": null
   },
   "vonka": {
@@ -4404,6 +4742,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "wallop": {
@@ -4417,6 +4756,7 @@
     "notes_variants": "\"Walloper\" = dancer",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "walloper": {
@@ -4430,6 +4770,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "willets": {
@@ -4443,6 +4784,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "yeute": {
@@ -4456,6 +4798,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "yews": {
@@ -4469,6 +4812,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "zelda": {
@@ -4482,6 +4826,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "zhooshy": {
@@ -4495,6 +4840,7 @@
     "notes_variants": null,
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   },
   "zhuzh": {
@@ -4502,12 +4848,13 @@
     "entry_type": "word",
     "part_of_speech": "Verb, Noun",
     "pronunciation": "zhoosh",
-    "definition": "To style, primp, tart up (esp. hair); styling/ornamentation (also spelled: zhuzh)",
+    "definition": "To style, primp, tart up (esp. hair); styling/ornamentation (also spelled: zhoosh)",
     "origin": "Possibly from Romani *zhouzho* (\"clean, neat\") or onomatopoeic",
-    "example": "\"Just let me zhoosh my riah before we go in.\"",
-    "notes_variants": "\"Zhoosher\"/\"riah zhoosher\" = hairdresser",
+    "example": "\"Just let me zhuzh my riah before we go in.\"",
+    "notes_variants": "\"Zhuzher\"/\"riah zhuzher\" = hairdresser",
     "cultural_context": null,
     "usage_status": null,
+    "flagged": false,
     "related_slugs": null
   }
 }
