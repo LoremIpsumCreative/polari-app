@@ -11,6 +11,7 @@ import IconSun from '@tabler/icons-react-native/IconSun';
 import IconTrash from '@tabler/icons-react-native/IconTrash';
 import IconUser from '@tabler/icons-react-native/IconUser';
 import IconUserCheck from '@tabler/icons-react-native/IconUserCheck';
+import Constants from 'expo-constants';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
@@ -140,6 +141,12 @@ export default function ProfileScreen() {
   return (
     <View style={styles.screenBg}>
       <ScreenBackground />
+      {/* Account/Main puts the running version in the top-right corner, above
+          the greeting. Read from the manifest rather than written out, so the
+          release bump is the only place it lives. */}
+      <Text style={styles.version} accessibilityLabel={`App version ${APP_VERSION}`}>
+        Version {APP_VERSION}
+      </Text>
       <ScrollView
         style={styles.container}
         contentContainerStyle={[styles.content, { paddingBottom: tabInset + spacing.md }]}
@@ -270,9 +277,25 @@ export default function ProfileScreen() {
   );
 }
 
+// Falls back rather than throwing: a missing manifest should cost the corner
+// label, not the whole Account screen.
+const APP_VERSION = Constants.expoConfig?.version ?? '—';
+
 const styles = StyleSheet.create({
   // Wrapper so the sparkle pattern stays fixed behind the scrolling content.
   screenBg: { flex: 1 },
+  // Frame puts the ink at x307..366, y25..31 — right-aligned 27 in from the
+  // edge, above everything the screen scrolls.
+  version: {
+    position: 'absolute',
+    right: 27,
+    top: 22,
+    fontFamily: fonts.bold,
+    fontSize: 10,
+    letterSpacing: 0.3,
+    color: '#919BAB',
+    zIndex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
