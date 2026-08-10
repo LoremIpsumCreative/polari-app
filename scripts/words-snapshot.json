@@ -4484,19 +4484,6 @@
     "usage_status": null,
     "related_slugs": null
   },
-  "zhoosh": {
-    "term": "Zhoosh",
-    "entry_type": "word",
-    "part_of_speech": "Verb, Noun",
-    "pronunciation": "zhoosh",
-    "definition": "To style, primp, tart up (esp. hair); styling/ornamentation (also spelled: zhuzh)",
-    "origin": "Possibly from Romani *zhouzho* (\"clean, neat\") or onomatopoeic",
-    "example": "\"Just let me zhoosh my riah before we go in.\"",
-    "notes_variants": "\"Zhoosher\"/\"riah zhoosher\" = hairdresser",
-    "cultural_context": null,
-    "usage_status": null,
-    "related_slugs": null
-  },
   "zhooshy": {
     "term": "Zhooshy",
     "entry_type": "word",
@@ -4506,6 +4493,19 @@
     "origin": "From \"zhoosh\"",
     "example": null,
     "notes_variants": null,
+    "cultural_context": null,
+    "usage_status": null,
+    "related_slugs": null
+  },
+  "zhuzh": {
+    "term": "Zhuzh",
+    "entry_type": "word",
+    "part_of_speech": "Verb, Noun",
+    "pronunciation": "zhoosh",
+    "definition": "To style, primp, tart up (esp. hair); styling/ornamentation (also spelled: zhuzh)",
+    "origin": "Possibly from Romani *zhouzho* (\"clean, neat\") or onomatopoeic",
+    "example": "\"Just let me zhoosh my riah before we go in.\"",
+    "notes_variants": "\"Zhoosher\"/\"riah zhoosher\" = hairdresser",
     "cultural_context": null,
     "usage_status": null,
     "related_slugs": null

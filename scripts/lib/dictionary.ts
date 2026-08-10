@@ -112,7 +112,12 @@ const BLANK_CELL = /^[-–—]+$/;
 export function clean(value: string | undefined): string | null {
   const trimmed = value?.trim();
   if (!trimmed || BLANK_CELL.test(trimmed)) return null;
-  return trimmed;
+  // House style is the hyphen. The sheet is edited in a dozen places — Google
+  // Sheets autocorrects to an em dash, phones insert one, pasted text carries
+  // whatever it had — so the same sentence arrives punctuated three ways and
+  // each variant reads as a content change. Normalising here settles it once,
+  // rather than in every cell forever.
+  return trimmed.replace(/[–—]/g, '-');
 }
 
 // "Still heard" / "current" -> current, etc. Unknown values pass through null.
