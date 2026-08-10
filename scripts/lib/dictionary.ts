@@ -102,9 +102,17 @@ export function slugify(term: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
+// A cell holding nothing but dashes is a person writing "nothing here" by
+// hand — an em dash, an en dash, a plain hyphen, or a run of them. Only the em
+// dash was recognised, so cells filled with a bare "-" came through as literal
+// text: a single batch carried 343 of them, which would have put a NOTES or IN
+// USE row containing one hyphen on 343 cards.
+const BLANK_CELL = /^[-–—]+$/;
+
 export function clean(value: string | undefined): string | null {
   const trimmed = value?.trim();
-  return trimmed && trimmed !== '—' ? trimmed : null;
+  if (!trimmed || BLANK_CELL.test(trimmed)) return null;
+  return trimmed;
 }
 
 // "Still heard" / "current" -> current, etc. Unknown values pass through null.
