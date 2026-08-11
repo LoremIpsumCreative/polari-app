@@ -16,6 +16,7 @@ import { fontAssets } from '../src/lib/fontAssets';
 import { installWebFonts } from '../src/lib/webFontFaces';
 import { LaunchScreen } from '../src/components/LaunchScreen';
 import { ContentAdvisory } from '../src/components/ContentAdvisory';
+import { Analytics } from '../src/components/Analytics';
 
 // Digitale's weight axis has to be pinned per face, which only CSS can express,
 // so web declares its own @font-face rules. Run at module scope so the rules are
@@ -60,6 +61,8 @@ export default function RootLayout() {
       </Stack>
       {launched ? null : <LaunchScreen onOpen={() => setLaunched(true)} />}
       {launched && !advised ? <ContentAdvisory onAcknowledge={() => setAdvised(true)} /> : null}
+      {/* Web-only in practice: the native build resolves this to a no-op. */}
+      <Analytics />
     </>
   );
 
