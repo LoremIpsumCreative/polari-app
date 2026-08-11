@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
+import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from '../src/lib/auth';
 import { WordsProvider } from '../src/lib/words';
 import { CollectionsProvider } from '../src/lib/collections';
@@ -76,6 +77,7 @@ export default function RootLayout() {
                       {app}
                     </View>
                   </View>
+                  <Analytics />
                 </ProgressProvider>
               </StreaksProvider>
             </FavouritesProvider>
