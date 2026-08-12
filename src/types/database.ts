@@ -141,19 +141,25 @@ export type Database = {
           content_advisory_ack_at: string | null
           created_at: string
           display_name: string | null
+          display_name_normalised: string | null
           id: string
+          privacy_agreed_at: string | null
         }
         Insert: {
           content_advisory_ack_at?: string | null
           created_at?: string
           display_name?: string | null
+          display_name_normalised?: string | null
           id: string
+          privacy_agreed_at?: string | null
         }
         Update: {
           content_advisory_ack_at?: string | null
           created_at?: string
           display_name?: string | null
+          display_name_normalised?: string | null
           id?: string
+          privacy_agreed_at?: string | null
         }
         Relationships: []
       }

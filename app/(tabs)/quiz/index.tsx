@@ -77,16 +77,13 @@ const SIGN_BLOB =
 // 145x80 slot (left 3.29, top 2.03).
 const SIGN_VIEW = { w: 136.707, h: 76.6488, dx: 3.29, dy: 2.03 };
 
-// Her fill is a CROP: Figma shows only x 0-0.72002 and y 0-0.94004 of the
-// source. Rather than cut the file (and lose the rest of the art), the full
-// image is laid out oversized behind a 241x507 window, so the same region
-// shows through — which is exactly what the fill's transform describes.
-const HERO_CROP = {
-  x: 0.000296541751595214,
-  y: 0,
-  w: 241 / 0.7200165390968323,
-  h: 507 / 0.9400387406349182,
-};
+// She is exported at frame scale now — a 260x524 canvas whose artwork starts
+// 8px in from the left — so she is placed 1:1 rather than cropped. The old
+// export was the full 808x1300 illustration, which had to be laid out
+// oversized behind a 241x507 window to show just the region the frame used.
+// Offsetting the canvas by that 8px padding puts her head on y262 and lets her
+// bleed off the right edge, exactly as the frame draws her.
+const HERO = { left: 145, top: 262, w: 260, h: 524 };
 
 // Both purple blobs sit on a soft black shadow (blur 8.7, 25%). CSS drop-shadow
 // has no spread term, so the signpost's 3px spread is folded into its blur.
@@ -348,10 +345,10 @@ export default function QuizIntroScreen() {
         style={[
           {
             position: 'absolute',
-            left: 153 * s,
-            top: 262 * s,
-            width: 241 * s,
-            height: 507 * s,
+            left: HERO.left * s,
+            top: HERO.top * s,
+            width: HERO.w * s,
+            height: HERO.h * s,
             opacity: hero,
             transform: [
               {
@@ -369,13 +366,13 @@ export default function QuizIntroScreen() {
       >
         <Image
           source={quizmasterArt}
-          resizeMode="stretch"
+          resizeMode="contain"
           style={{
             position: 'absolute',
-            left: -HERO_CROP.x * HERO_CROP.w * s,
-            top: -HERO_CROP.y * HERO_CROP.h * s,
-            width: HERO_CROP.w * s,
-            height: HERO_CROP.h * s,
+            left: 0,
+            top: 0,
+            width: HERO.w * s,
+            height: HERO.h * s,
           }}
           accessibilityIgnoresInvertColors
         />

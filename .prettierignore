@@ -8,6 +8,9 @@ package-lock.json
 # Generated from the Supabase schema.
 src/types/database.ts
 
+# Generated from docs/legal/privacy-policy.md by scripts/build-privacy-policy.ts.
+src/content/privacyPolicy.ts
+
 # One inlined SVG export on a single 150k-character line. Reformatting it would
 # not make it readable, and the file is regenerated, not edited.
 src/components/launchAnimationSvg.ts
@@ -25,3 +28,7 @@ dictionary-changes.md
 
 # Local, per-machine editor state — untracked, so it must not gate CI either.
 .claude/settings.local.json
+
+# The published legal text, as reviewed and signed off outside the repo. The app
+# quotes it verbatim, so Prettier must not rewrite its wrapping or punctuation.
+docs/legal/

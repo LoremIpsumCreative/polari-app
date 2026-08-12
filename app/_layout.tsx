@@ -16,6 +16,9 @@ import { fontAssets } from '../src/lib/fontAssets';
 import { installWebFonts } from '../src/lib/webFontFaces';
 import { LaunchScreen } from '../src/components/LaunchScreen';
 import { ContentAdvisory } from '../src/components/ContentAdvisory';
+import { PrivacyGate } from '../src/components/PrivacyGate';
+import { CompleteProfileGate } from '../src/components/CompleteProfileGate';
+import { DisplayNameProvider } from '../src/lib/displayName';
 import { Analytics } from '../src/components/Analytics';
 
 // Digitale's weight axis has to be pinned per face, which only CSS can express,
@@ -48,6 +51,10 @@ export default function RootLayout() {
   const [launched, setLaunched] = useState(false);
   // The advisory follows the launch sequence and gates the app behind itself.
   const [advised, setAdvised] = useState(false);
+  // Then the privacy policy, then — signed in only — a display name. Each
+  // gate renders over the last, so they arrive in order without a router.
+  const [agreedPrivacy, setAgreedPrivacy] = useState(false);
+  const [namedSelf, setNamedSelf] = useState(false);
 
   if (!fontsLoaded) return null;
 
@@ -61,6 +68,14 @@ export default function RootLayout() {
       </Stack>
       {launched ? null : <LaunchScreen onOpen={() => setLaunched(true)} />}
       {launched && !advised ? <ContentAdvisory onAcknowledge={() => setAdvised(true)} /> : null}
+      {launched && advised && !agreedPrivacy ? (
+        <PrivacyGate onAgree={() => setAgreedPrivacy(true)} />
+      ) : null}
+      {/* Signed-out readers have no profile to complete; the gate returns
+          null for them rather than the layout having to know. */}
+      {launched && advised && agreedPrivacy && !namedSelf ? (
+        <CompleteProfileGate onDone={() => setNamedSelf(true)} />
+      ) : null}
       {/* Web-only in practice: the native build resolves this to a no-op. */}
       <Analytics />
     </>
@@ -72,15 +87,19 @@ export default function RootLayout() {
         <RemoteArtProvider>
           <CollectionsProvider>
             <FavouritesProvider>
-              <StreaksProvider>
-                <ProgressProvider>
-                  <View style={styles.gutter}>
-                    <View style={[styles.phoneFrame, { width: frame.width, height: frame.height }]}>
-                      {app}
+              <DisplayNameProvider>
+                <StreaksProvider>
+                  <ProgressProvider>
+                    <View style={styles.gutter}>
+                      <View
+                        style={[styles.phoneFrame, { width: frame.width, height: frame.height }]}
+                      >
+                        {app}
+                      </View>
                     </View>
-                  </View>
-                </ProgressProvider>
-              </StreaksProvider>
+                  </ProgressProvider>
+                </StreaksProvider>
+              </DisplayNameProvider>
             </FavouritesProvider>
           </CollectionsProvider>
         </RemoteArtProvider>

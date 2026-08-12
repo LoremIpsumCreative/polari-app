@@ -21,6 +21,8 @@ module.exports = defineConfig([
       // Generated from the Supabase schema — not hand-edited, so lint findings
       // here are noise that cannot be actioned without regenerating.
       'src/types/database.ts',
+      // Generated from docs/legal/privacy-policy.md — regenerate, do not edit.
+      'src/content/privacyPolicy.ts',
       // Deno, not Node: it imports via `npm:` specifiers and runs on Supabase's
       // edge runtime, so Node module resolution and globals both mis-report
       // here. Deno has its own check (`deno lint`/`deno check`).
