@@ -2,7 +2,7 @@
   "expo": {
     "name": "Polari",
     "slug": "polari-app",
-    "version": "0.18.0",
+    "version": "0.19.0",
     "scheme": "polariapp",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -34,7 +34,8 @@
       "expo-sharing",
       "expo-font",
       "expo-video",
-      "expo-status-bar"
+      "expo-status-bar",
+      "expo-asset"
     ]
   }
 }

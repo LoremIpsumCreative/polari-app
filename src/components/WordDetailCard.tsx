@@ -5,7 +5,7 @@ import IconBook2 from '@tabler/icons-react-native/IconBook2';
 import IconChartBar from '@tabler/icons-react-native/IconChartBar';
 import IconLink from '@tabler/icons-react-native/IconLink';
 import IconNotes from '@tabler/icons-react-native/IconNotes';
-import IconPencil from '@tabler/icons-react-native/IconPencil';
+import IconPencilExclamation from '@tabler/icons-react-native/IconPencilExclamation';
 import IconQuote from '@tabler/icons-react-native/IconQuote';
 import IconSend from '@tabler/icons-react-native/IconSend';
 import IconStack2 from '@tabler/icons-react-native/IconStack2';
@@ -117,7 +117,7 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
         accessibilityLabel="Suggest an edit to this entry"
         hitSlop={10}
       >
-        <IconPencil size={16} color={colors.textMuted} />
+        <IconPencilExclamation size={16} color={colors.textMuted} />
       </Pressable>
       <SuggestEditModal
         word={word}

@@ -14,13 +14,18 @@ import { ScreenBackground } from './ScreenBackground';
 // Signed out it appears on every cold start and stores nothing. Signed in it
 // appears once per account, recorded on the profile so that reading it on a
 // phone also settles it on the web.
-const CARD = { left: 38, top: 193, width: 317, height: 466, radius: 20 };
-const BUTTON = { left: 85, top: 585, width: 223, height: 50 };
+const CARD = { left: 38, top: 168, width: 317, height: 512, radius: 20 };
+const BUTTON = { left: 62, top: 610, width: 269, height: 50 };
 
+// The advisory now states an age and the button is an affirmation rather than an
+// acknowledgement — "I confirm that I am aged 15 or over" is a claim the reader
+// makes, so the wording of both has to agree on the same number.
 const BODY = [
-  'Polari reflects the language and lived realities of its time. This dictionary contains explicit sexual and anatomical language, along with historical terms that may now be considered derogatory or offensive.',
-  'It also includes references to sex work, violence, crime, policing and substance use. These terms are preserved for cultural and educational context.',
+  'Polari reflects the language and lived realities of its time. The dictionary contains explicit sexual and anatomical language, historical terms that may now be considered derogatory or offensive, and references to sex work, violence, crime, policing and substance use.',
+  'This material is included to preserve the language faithfully and provide cultural and educational context.',
 ];
+const AGE_STATEMENT = 'Polari is intended for audiences aged 15 and over.';
+const CONFIRM_LABEL = 'I confirm that I am aged 15 or over';
 
 export function ContentAdvisory({ onAcknowledge }: { onAcknowledge: () => void }) {
   const s = useDesignScale();
@@ -94,12 +99,19 @@ export function ContentAdvisory({ onAcknowledge }: { onAcknowledge: () => void }
             {p}
           </Text>
         ))}
+        {/* The age line is the operative sentence — the button asks the reader to
+            confirm it — so it is set bold rather than run in with the prose. */}
+        <Text
+          style={[styles.ageStatement, { marginTop: 18 * s, fontSize: 14 * s, lineHeight: 18 * s }]}
+        >
+          {AGE_STATEMENT}
+        </Text>
       </View>
 
       <Pressable
         onPress={acknowledge}
         accessibilityRole="button"
-        accessibilityLabel="I understand"
+        accessibilityLabel={CONFIRM_LABEL}
         style={({ pressed }) => [
           styles.button,
           {
@@ -113,7 +125,7 @@ export function ContentAdvisory({ onAcknowledge }: { onAcknowledge: () => void }
         ]}
       >
         <Text style={[styles.buttonLabel, { fontSize: 14 * s, letterSpacing: 0.3 * s }]}>
-          I understand
+          {CONFIRM_LABEL}
         </Text>
       </Pressable>
     </View>
@@ -138,6 +150,12 @@ const styles = StyleSheet.create({
   },
   body: {
     fontFamily: fonts.semibold,
+    color: colors.text,
+    textAlign: 'center',
+    letterSpacing: 0.3,
+  },
+  ageStatement: {
+    fontFamily: fonts.bold,
     color: colors.text,
     textAlign: 'center',
     letterSpacing: 0.3,

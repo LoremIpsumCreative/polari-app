@@ -5,6 +5,30 @@ Versions follow [Semantic Versioning](https://semver.org). The project is
 pre-launch: `1.0.0` is reserved for the first App Store release, so every
 version below is `0.x` and the public API is not yet stable.
 
+## [v0.19.0](https://github.com/LoremIpsumCreative/polari-app/releases/tag/v0.19.0) — 2026-08-12
+
+The 2026-08-12 change request.
+
+- **Account screens** get their background back. Three of them scrolled inside an
+  opaque view sitting on top of the sparkle pattern, hiding it completely, and
+  the Account screen was painting the wrong grey as well.
+- **Account rows** re-spaced to the frames — 8 apart inside a block, 24 between,
+  38 before Sign Out — and **App Info**, **Privacy Policy** and **Terms and
+  Conditions** added, disabled until there is something behind them.
+- **Profile fields** are editable in place. Changing your email no longer gates
+  the app: the new address shows straight away marked **Unverified**, with
+  **Resend Verification Email** beside Change Password.
+- **Content advisory** restated, and its button is now an affirmation — "I
+  confirm that I am aged 15 or over" — with the age mark on flagged entries
+  changed from 18+ to 15+ to agree with it.
+- **Suggest Edit** uses the pencil-with-exclamation mark on the definition card.
+- **Present animations** wait for their artwork. The box used to pop in partway
+  through its own bounce; both the wrapped present and the opening sequence are
+  now decoded behind the loading screen before either plays.
+- **Results screen** stops cropping the quizmaster — the poses are re-exported at
+  their frame sizes and drawn with `contain` — and the Play Again and Finish
+  controls return to the frame's lines, 24-30px higher than they sat.
+
 ## [v0.18.0](https://github.com/LoremIpsumCreative/polari-app/releases/tag/v0.18.0) — 2026-08-11
 
 The 2026-08-11 change request, batch 5.

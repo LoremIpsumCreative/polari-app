@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
-import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from '../src/lib/auth';
 import { WordsProvider } from '../src/lib/words';
 import { CollectionsProvider } from '../src/lib/collections';
@@ -17,6 +16,7 @@ import { fontAssets } from '../src/lib/fontAssets';
 import { installWebFonts } from '../src/lib/webFontFaces';
 import { LaunchScreen } from '../src/components/LaunchScreen';
 import { ContentAdvisory } from '../src/components/ContentAdvisory';
+import { Analytics } from '../src/components/Analytics';
 
 // Digitale's weight axis has to be pinned per face, which only CSS can express,
 // so web declares its own @font-face rules. Run at module scope so the rules are
@@ -61,6 +61,8 @@ export default function RootLayout() {
       </Stack>
       {launched ? null : <LaunchScreen onOpen={() => setLaunched(true)} />}
       {launched && !advised ? <ContentAdvisory onAcknowledge={() => setAdvised(true)} /> : null}
+      {/* Web-only in practice: the native build resolves this to a no-op. */}
+      <Analytics />
     </>
   );
 
@@ -77,7 +79,6 @@ export default function RootLayout() {
                       {app}
                     </View>
                   </View>
-                  <Analytics />
                 </ProgressProvider>
               </StreaksProvider>
             </FavouritesProvider>

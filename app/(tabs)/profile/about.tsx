@@ -160,7 +160,12 @@ export default function AboutScreen() {
 const styles = StyleSheet.create({
   // Wrapper so the sparkle pattern stays fixed behind the scrolling content.
   screenBg: { flex: 1 },
-  container: { flex: 1, backgroundColor: colors.canvas },
+  container: {
+    flex: 1,
+    // Transparent: this scrolls directly over <ScreenBackground />, so an
+    // opaque fill here hides the sparkle pattern behind it.
+    backgroundColor: 'transparent',
+  },
   // paddingBottom comes from useTabBarInset at the call site: the floating tab
   // bar's height varies with the device's safe-area inset.
   content: {},
