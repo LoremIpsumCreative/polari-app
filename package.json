@@ -1,6 +1,6 @@
 {
   "name": "polari-app",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "main": "expo-router/entry",
   "engines": {
     "node": ">=22.13.0"

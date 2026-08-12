@@ -80,8 +80,7 @@ const VARIANTS: Record<
     title: TITLE_HIGH,
     titleBox: { x: 59, y: 101, w: 277, h: 102 },
     pose: require('../../../assets/quiz/quizmaster-highscore.png'),
-    // 643x1227 art (aspect 0.5249): 409 tall makes it 215 wide.
-    poseBox: { x: 0, y: 360, w: 215, h: 409 },
+    poseBox: { x: 0, y: 360, w: 220, h: 409 },
     bubbleBox: { x: 141, y: 389, w: 180.6, h: 77 },
     lines: [
       { text: 'Congratulations!', x: 173.6, y: 405, w: 135.3, fs: 16, lead: true, color: ACCENT },
@@ -100,9 +99,7 @@ const VARIANTS: Record<
     title: TITLE_TIME,
     titleBox: { x: 53.9, y: 101.7, w: 285, h: 111 },
     pose: require('../../../assets/quiz/quizmaster-timesup.png'),
-    // 504x1140 art (aspect 0.4411): 380 tall makes it 168 wide. Still bled
-    // off the left edge, as the frame draws it.
-    poseBox: { x: -20, y: 377, w: 168, h: 380 },
+    poseBox: { x: 0, y: 377, w: 192, h: 380 },
     bubbleBox: { x: 154, y: 399, w: 179.2, h: 78 },
     lines: [
       { text: '1 Minute is Up!', x: 185.9, y: 418.7, w: 129.2, fs: 16, lead: true, color: ACCENT },
@@ -121,9 +118,7 @@ const VARIANTS: Record<
     title: TITLE_NORM,
     titleBox: { x: 92.5, y: 104.8, w: 210, h: 95 },
     pose: require('../../../assets/quiz/quizmaster-results.png'),
-    // Measured off Quiz/Results/10 Qs and 1 Life.png: the figure runs y375
-    // to y750 from x7. 449x1146 art (aspect 0.3916) at 376 tall is 147 wide.
-    poseBox: { x: 7, y: 375, w: 147, h: 376 },
+    poseBox: { x: 7, y: 375, w: 183, h: 382 },
     bubbleBox: { x: 144, y: 402, w: 180.6, h: 83.5 },
     lines: [
       { text: 'Quiz Complete!', x: 184.2, y: 424.3, w: 120.4, fs: 16, lead: true, color: ACCENT },
@@ -299,11 +294,12 @@ export default function QuizResultsScreen() {
         <Text style={[styles.score, { fontSize: 100 * s, lineHeight: 110 * s }]}>{score}</Text>
       </View>
 
-      {/* `contain`, never `cover`. cover scales the art until it fills the box
-          and throws away the overflow, so any box whose aspect differs from the
-          pose's crops the figure — which is what was cutting the quizmaster's
-          head and feet off. Each poseBox below is sized from its own asset's
-          aspect so contain fills the height exactly and nothing is lost. */}
+      {/* The poses are now exported at their frame size — 183x382, 220x409,
+          192x380 — so each poseBox is simply the art's own box. `contain`
+          rather than `cover` all the same: cover discards whatever overflows,
+          which is what cropped the old art's head and feet when its aspect and
+          the box's disagreed. With matching aspects the two render alike, and
+          contain cannot silently crop if an export drifts again. */}
       <Image
         source={v.pose}
         resizeMode="contain"
