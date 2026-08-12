@@ -23,7 +23,10 @@ import { WordDetailCard } from '../../src/components/WordDetailCard';
 import { ScreenBackground } from '../../src/components/ScreenBackground';
 import { FlaggedBadge, FLAGGED_BADGE_OFFSET } from '../../src/components/FlaggedBadge';
 import { LoadFailedScreen, LoadingScreen } from '../../src/components/LoadingScreen';
-import { PresentOpenAnimation } from '../../src/components/PresentOpenAnimation';
+import {
+  PresentOpenAnimation,
+  PRESENT_OPEN_ASSETS,
+} from '../../src/components/PresentOpenAnimation';
 import { useTabBarInset } from '../../src/components/AnimatedTabBar';
 import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
@@ -31,8 +34,14 @@ import { getUnlockedDate, setUnlockedToday, todayKey } from '../../src/lib/daily
 import { useReducedMotion } from '../../src/lib/reducedMotion';
 import { colors, fonts, spacing } from '../../src/lib/theme';
 import { useDesignScale } from '../../src/lib/designScale';
+import { useAssetsReady } from '../../src/lib/useAssetsReady';
 
 const presentArt = require('../../assets/present.png');
+
+// Both present animations, preloaded together behind the loading veil. The
+// wrapped box bounces on arrival and the lid comes off on tap, so a reader who
+// opens it immediately would otherwise hit a second undecoded image mid-beat.
+const PRESENT_ASSETS = [presentArt, ...PRESENT_OPEN_ASSETS] as const;
 
 const SWIPE_THRESHOLD = 48;
 // The present screen's geometry lives in the Figma frame's 394-wide space
@@ -76,6 +85,9 @@ export default function TodayScreen() {
   // Today's word arrives gift-wrapped: the first visit each day shows a
   // present to tap open. null = still reading the stored unlock date.
   const [unlocked, setUnlocked] = useState<boolean | null>(null);
+  // The present artwork has to be decoded before either animation runs, so the
+  // loading veil covers the fetch rather than the box popping in mid-bounce.
+  const presentAssets = useAssetsReady(PRESENT_ASSETS);
   // The beat between the tap and the word: the present playing its lid off.
   const [opening, setOpening] = useState(false);
   const presentFade = useRef(new Animated.Value(1)).current;
@@ -214,6 +226,11 @@ export default function TodayScreen() {
 
   // Still reading the stored unlock date — the same wait, so the same veil.
   if (unlocked === null) return veiled(<LoadingScreen />);
+
+  // Same veil again while the present decodes. 'failed' falls through rather
+  // than trapping the reader: a missing bitmap is a worse-looking screen, not
+  // a broken one, and the word underneath is the point of the page.
+  if (!unlocked && presentAssets === 'loading') return veiled(<LoadingScreen />);
 
   // First visit of the day: the word is wrapped (Figma "New Word", 1114:1124)
   if (!unlocked) {

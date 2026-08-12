@@ -9,6 +9,8 @@ import { useQuizStats } from '../../../src/lib/quizScores';
 import { isQuizModeId } from '../../../src/lib/quizModes';
 import { colors, fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
+import { useAssetsReady } from '../../../src/lib/useAssetsReady';
+import { LoadingScreen } from '../../../src/components/LoadingScreen';
 
 // End-of-quiz screens, rebuilt to the revised Figma frames (1114:482 /
 // 1114:520 / 1365:1425 in section 1353:936): a full-bleed golden stage, an
@@ -78,7 +80,8 @@ const VARIANTS: Record<
     title: TITLE_HIGH,
     titleBox: { x: 59, y: 101, w: 277, h: 102 },
     pose: require('../../../assets/quiz/quizmaster-highscore.png'),
-    poseBox: { x: 0, y: 360, w: 220, h: 409 },
+    // 643x1227 art (aspect 0.5249): 409 tall makes it 215 wide.
+    poseBox: { x: 0, y: 360, w: 215, h: 409 },
     bubbleBox: { x: 141, y: 389, w: 180.6, h: 77 },
     lines: [
       { text: 'Congratulations!', x: 173.6, y: 405, w: 135.3, fs: 16, lead: true, color: ACCENT },
@@ -97,7 +100,9 @@ const VARIANTS: Record<
     title: TITLE_TIME,
     titleBox: { x: 53.9, y: 101.7, w: 285, h: 111 },
     pose: require('../../../assets/quiz/quizmaster-timesup.png'),
-    poseBox: { x: -20, y: 377, w: 212, h: 380 },
+    // 504x1140 art (aspect 0.4411): 380 tall makes it 168 wide. Still bled
+    // off the left edge, as the frame draws it.
+    poseBox: { x: -20, y: 377, w: 168, h: 380 },
     bubbleBox: { x: 154, y: 399, w: 179.2, h: 78 },
     lines: [
       { text: '1 Minute is Up!', x: 185.9, y: 418.7, w: 129.2, fs: 16, lead: true, color: ACCENT },
@@ -116,7 +121,9 @@ const VARIANTS: Record<
     title: TITLE_NORM,
     titleBox: { x: 92.5, y: 104.8, w: 210, h: 95 },
     pose: require('../../../assets/quiz/quizmaster-results.png'),
-    poseBox: { x: 7, y: 375, w: 183, h: 382 },
+    // Measured off Quiz/Results/10 Qs and 1 Life.png: the figure runs y375
+    // to y750 from x7. 449x1146 art (aspect 0.3916) at 376 tall is 147 wide.
+    poseBox: { x: 7, y: 375, w: 147, h: 376 },
     bubbleBox: { x: 144, y: 402, w: 180.6, h: 83.5 },
     lines: [
       { text: 'Quiz Complete!', x: 184.2, y: 424.3, w: 120.4, fs: 16, lead: true, color: ACCENT },
@@ -132,6 +139,16 @@ const VARIANTS: Record<
     ],
   },
 };
+
+// The stage and every quizmaster pose, preloaded together. The screen arrives
+// straight from a finished game, so there is no earlier moment to fetch a 1.6MB
+// stage in — without this the gold washes in behind an already-placed figure.
+const RESULTS_ASSETS = [
+  stageArt,
+  VARIANTS.highScore.pose,
+  VARIANTS.timesUp.pose,
+  VARIANTS.results.pose,
+] as const;
 
 export default function QuizResultsScreen() {
   const router = useRouter();
@@ -151,6 +168,7 @@ export default function QuizResultsScreen() {
   const correct = Number(params.correct ?? 0);
   const answered = Number(params.answered ?? 0);
 
+  const artReady = useAssetsReady(RESULTS_ASSETS);
   const { session } = useAuth();
   const { ready, recordGame, bestFor } = useQuizStats();
 
@@ -192,13 +210,24 @@ export default function QuizResultsScreen() {
   const v = VARIANTS[variant];
   const bubble = BUBBLES[variant];
 
-  // Frame 1365:1425 places both controls outright: the Play Again banner at
-  // x195/y568 and the Finish pill at x213/y672, 151x50. They used to hang off
-  // the tab bar's top edge plus its inset, which drifted them ~25 low and left
-  // the pill almost touching the bar.
+  // Both controls are placed outright, measured off Quiz/Results/10 Qs and
+  // 1 Life.png: the Play Again banner's purple runs x202-374 / y544-601 and
+  // the Finish pill x214-362 / y642-691. The previous numbers (y568 and y672)
+  // sat both of them 24-30 low, which is what pushed Finish against the bar.
 
   const titleLabel =
     variant === 'highScore' ? 'High Score!' : variant === 'timesUp' ? 'Time’s Up!' : 'Results';
+
+  // Hold the veil until the stage and the poses are decoded, so the screen
+  // arrives whole. 'failed' falls through rather than stranding the reader
+  // behind it — a flat background still shows the score.
+  if (artReady === 'loading') {
+    return (
+      <View style={styles.screen}>
+        <LoadingScreen />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>
@@ -270,9 +299,14 @@ export default function QuizResultsScreen() {
         <Text style={[styles.score, { fontSize: 100 * s, lineHeight: 110 * s }]}>{score}</Text>
       </View>
 
+      {/* `contain`, never `cover`. cover scales the art until it fills the box
+          and throws away the overflow, so any box whose aspect differs from the
+          pose's crops the figure — which is what was cutting the quizmaster's
+          head and feet off. Each poseBox below is sized from its own asset's
+          aspect so contain fills the height exactly and nothing is lost. */}
       <Image
         source={v.pose}
-        resizeMode="cover"
+        resizeMode="contain"
         style={{
           position: 'absolute',
           left: v.poseBox.x * s,
@@ -333,8 +367,8 @@ export default function QuizResultsScreen() {
         style={({ pressed }) => [
           {
             position: 'absolute',
-            left: 195 * s,
-            top: 568 * s,
+            left: 202 * s,
+            top: 544 * s,
             width: BLOB.w * s,
             height: BLOB.h * s,
           },
@@ -370,7 +404,7 @@ export default function QuizResultsScreen() {
       <Pressable
         style={({ pressed }) => [
           styles.finish,
-          { left: 213 * s, top: 672 * s, width: 151 * s, height: 50 * s },
+          { left: 214 * s, top: 642 * s, width: 149 * s, height: 50 * s },
           pressed && styles.pressed,
         ]}
         onPress={() => router.replace('/quiz')}

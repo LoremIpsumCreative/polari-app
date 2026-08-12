@@ -14,6 +14,11 @@ import { useDesignScale } from '../lib/designScale';
 const baseArt = require('../../assets/present-open-base.png');
 const lidArt = require('../../assets/present-open-lid.png');
 
+// Exported so Today can preload the opening sequence at the same time as the
+// wrapped present. Both animations have to be decoded before either is shown —
+// otherwise the lid comes off over a box that has not painted yet.
+export const PRESENT_OPEN_ASSETS = [baseArt, lidArt] as const;
+
 // The exported composite, and where it lands in the 393x852 frame.
 //
 // NOTE: the Figma node for "Today/New Word Opened" (3360:5432) holds only the
