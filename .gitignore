@@ -45,3 +45,6 @@ yarn-error.*
 design/exports/
 design/renders/
 design/diffs/
+
+# Scratch crops from comparing exports against the app.
+crop-*.png
