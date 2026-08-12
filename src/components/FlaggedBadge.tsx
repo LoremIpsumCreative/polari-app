@@ -1,8 +1,8 @@
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
-import IconRating18Plus from '@tabler/icons-react-native/IconRating18Plus';
+import IconRating15Plus from './icons/IconRating15Plus';
 import { colors } from '../lib/theme';
 
-// The 18+ mark a flagged entry carries on its definition card (Figma
+// The 15+ mark a flagged entry carries on its definition card (Figma
 // Today/Definition - Flagged): a ~23px ring in the same grey as the full-screen
 // control above it, sitting 41.5px lower on the same axis.
 //
@@ -22,12 +22,13 @@ export function FlaggedBadge({ style }: { style?: StyleProp<ViewStyle> }) {
       pointerEvents="none"
       accessible
       accessibilityRole="image"
-      // Read out rather than left as decoration: whether an entry is adult
-      // content is exactly the sort of thing a screen-reader user is entitled
-      // to know before reading the card.
-      accessibilityLabel="Adult content"
+      // Read out rather than left as decoration: whether an entry carries
+      // mature content is exactly the sort of thing a screen-reader user is
+      // entitled to know before reading the card. The wording tracks the mark —
+      // if the number on the badge changes, this has to change with it.
+      accessibilityLabel="Rated 15 and over"
     >
-      <IconRating18Plus size={24} color={colors.metaText} />
+      <IconRating15Plus size={24} color={colors.metaText} />
     </View>
   );
 }

@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import IconBinoculars from '@tabler/icons-react-native/IconBinoculars';
 import IconColorSwatch from '@tabler/icons-react-native/IconColorSwatch';
 import IconDeviceMobile from '@tabler/icons-react-native/IconDeviceMobile';
+import IconFileText from '@tabler/icons-react-native/IconFileText';
+import IconInfoCircle from '@tabler/icons-react-native/IconInfoCircle';
 import IconLogout from '@tabler/icons-react-native/IconLogout';
 import IconMail from '@tabler/icons-react-native/IconMail';
 import IconMoon from '@tabler/icons-react-native/IconMoon';
+import IconShield from '@tabler/icons-react-native/IconShield';
 import IconSun from '@tabler/icons-react-native/IconSun';
 import IconTrash from '@tabler/icons-react-native/IconTrash';
 import IconUser from '@tabler/icons-react-native/IconUser';
@@ -32,15 +35,92 @@ const APPEARANCE_MODES = [
   { key: 'system', label: 'System', Icon: IconDeviceMobile, available: false },
 ];
 
-function ProfileField({ label, value }: { label: string; value: string }) {
+// A profile row the reader can edit in place: it reads as text until tapped,
+// then becomes the input it always looked like. Saving happens on submit or on
+// blur, because on a phone "done" and "tapped elsewhere" both mean finished.
+//
+// `status` is the small tag the frame floats above the email row (Verified /
+// Unverified); the other rows pass nothing and it collapses.
+function ProfileField({
+  label,
+  value,
+  onSave,
+  status,
+  keyboardType,
+  autoCapitalize = 'none',
+}: {
+  label: string;
+  value: string;
+  onSave?: (next: string) => Promise<string | null>;
+  status?: { text: string; tone: 'ok' | 'warn' };
+  keyboardType?: 'default' | 'email-address';
+  autoCapitalize?: 'none' | 'words';
+}) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(value);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const editable = !!onSave;
+
+  async function commit() {
+    if (!onSave) return;
+    const next = draft.trim();
+    setEditing(false);
+    // Nothing typed, or typed back to where it started: no round trip.
+    if (!next || next === value) {
+      setDraft(value);
+      setError(null);
+      return;
+    }
+    setSaving(true);
+    const message = await onSave(next);
+    setSaving(false);
+    setError(message);
+    // A rejected value must not linger in the box pretending it was accepted.
+    if (message) setDraft(value);
+  }
+
   return (
     <View style={styles.field}>
-      <Text style={styles.fieldLabel}>{label}</Text>
-      <View style={styles.fieldBox}>
-        <Text style={styles.fieldValue} numberOfLines={1}>
-          {value}
-        </Text>
+      <View style={styles.fieldHeadRow}>
+        <Text style={styles.fieldLabel}>{label}</Text>
+        {status ? (
+          <Text
+            style={[styles.fieldStatus, status.tone === 'ok' ? styles.statusOk : styles.statusWarn]}
+          >
+            {status.text}
+          </Text>
+        ) : null}
       </View>
+      <Pressable
+        style={styles.fieldBox}
+        onPress={editable ? () => setEditing(true) : undefined}
+        disabled={!editable || saving}
+        accessibilityRole={editable ? 'button' : undefined}
+        accessibilityLabel={editable ? `${label}: ${value}. Tap to edit.` : undefined}
+      >
+        {editing ? (
+          <TextInput
+            style={styles.fieldValue}
+            value={draft}
+            onChangeText={setDraft}
+            onBlur={commit}
+            onSubmitEditing={commit}
+            autoFocus
+            returnKeyType="done"
+            keyboardType={keyboardType}
+            autoCapitalize={autoCapitalize}
+            autoCorrect={false}
+            accessibilityLabel={label}
+          />
+        ) : (
+          <Text style={styles.fieldValue} numberOfLines={1}>
+            {saving ? 'Saving…' : value || '—'}
+          </Text>
+        )}
+      </Pressable>
+      {error ? <Text style={styles.fieldError}>{error}</Text> : null}
     </View>
   );
 }
@@ -56,6 +136,9 @@ export default function ProfileScreen() {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  // 'sent' is a confirmation the reader can see; it resets when a new address
+  // is requested, so the button never claims to have sent the current one.
+  const [resendState, setResendState] = useState<'idle' | 'sending' | 'sent'>('idle');
 
   async function handleDeleteAccount() {
     if (!confirmingDelete) {
@@ -138,6 +221,41 @@ export default function ProfileScreen() {
   const meta = (session.user.user_metadata ?? {}) as Record<string, string | undefined>;
   const firstName = meta.first_name ?? session.user.email?.split('@')[0] ?? '';
 
+  // Supabase keeps a requested address in `new_email` and leaves `email` on the
+  // confirmed one until the link is clicked. The frame shows the NEW address
+  // straight away, tagged Unverified — so read the pending value first and let
+  // the tag carry the caveat, rather than hiding the change until it lands.
+  const pendingEmail = (session.user as { new_email?: string }).new_email ?? null;
+  const shownEmail = pendingEmail ?? session.user.email ?? '';
+
+  async function saveMeta(patch: Record<string, string>) {
+    const { error } = await supabase.auth.updateUser({ data: patch });
+    // refreshSession pulls the updated user back into context so the row
+    // re-renders with what the server actually stored, not what was typed.
+    if (!error) await supabase.auth.refreshSession();
+    return error ? 'Could not save. Please try again.' : null;
+  }
+
+  async function saveEmail(next: string) {
+    if (!/^\S+@\S+\.\S+$/.test(next)) return 'Enter a valid email address.';
+    const { error } = await supabase.auth.updateUser({ email: next });
+    if (error) {
+      return error.message.toLowerCase().includes('already')
+        ? 'That email is already in use.'
+        : 'Could not update your email. Please try again.';
+    }
+    setResendState('idle');
+    await supabase.auth.refreshSession();
+    return null;
+  }
+
+  async function resendVerification() {
+    if (!pendingEmail) return;
+    setResendState('sending');
+    const { error } = await supabase.auth.resend({ type: 'email_change', email: pendingEmail });
+    setResendState(error ? 'idle' : 'sent');
+  }
+
   return (
     <View style={styles.screenBg}>
       <ScreenBackground />
@@ -163,15 +281,55 @@ export default function ProfileScreen() {
             expanded={openSection === 'profile'}
             onPress={() => setOpenSection((o) => (o === 'profile' ? null : 'profile'))}
           >
-            <ProfileField label="FIRST NAME" value={meta.first_name ?? '—'} />
-            <ProfileField label="LAST NAME" value={meta.last_name ?? '—'} />
-            <ProfileField label="EMAIL" value={session.user.email ?? '—'} />
-            <Pressable
-              onPress={() => router.push('/profile/change-password')}
-              accessibilityRole="button"
-            >
-              <Text style={styles.changePassword}>CHANGE PASSWORD</Text>
-            </Pressable>
+            <ProfileField
+              label="FIRST NAME"
+              value={meta.first_name ?? ''}
+              autoCapitalize="words"
+              onSave={(v) => saveMeta({ first_name: v })}
+            />
+            <ProfileField
+              label="LAST NAME"
+              value={meta.last_name ?? ''}
+              autoCapitalize="words"
+              onSave={(v) => saveMeta({ last_name: v })}
+            />
+            <ProfileField
+              label="EMAIL"
+              value={shownEmail}
+              keyboardType="email-address"
+              status={
+                pendingEmail
+                  ? { text: 'Unverified', tone: 'warn' }
+                  : { text: 'Verified', tone: 'ok' }
+              }
+              onSave={saveEmail}
+            />
+            <View style={styles.profileButtons}>
+              <Pressable
+                style={({ pressed }) => [styles.profileButton, pressed && styles.pressed]}
+                onPress={() => router.push('/profile/change-password')}
+                accessibilityRole="button"
+              >
+                <Text style={styles.profileButtonText}>Change Password</Text>
+              </Pressable>
+              {/* Only offered while a change is actually outstanding — there is
+                  nothing to resend once the address is confirmed. */}
+              {pendingEmail ? (
+                <Pressable
+                  style={({ pressed }) => [styles.profileButton, pressed && styles.pressed]}
+                  onPress={resendVerification}
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.profileButtonText}>
+                    {resendState === 'sending'
+                      ? 'Sending…'
+                      : resendState === 'sent'
+                        ? 'Email Sent'
+                        : 'Resend Verification Email'}
+                  </Text>
+                </Pressable>
+              ) : null}
+            </View>
           </AccountOption>
 
           <AccountOption
@@ -201,6 +359,10 @@ export default function ProfileScreen() {
             Icon={IconBinoculars}
             onPress={() => router.push('/profile/about')}
           />
+          {/* App Info, Privacy Policy and Terms are drawn in the frames but have
+              nothing behind them yet, so they render disabled rather than
+              leading somewhere empty. Give each an onPress to switch it on. */}
+          <AccountOption label="App Info" Icon={IconInfoCircle} disabled />
           <AccountOption
             label="Feedback"
             Icon={IconMail}
@@ -209,6 +371,13 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.group}>
+          <AccountOption label="Privacy Policy" Icon={IconShield} disabled />
+          <AccountOption label="Terms and Conditions" Icon={IconFileText} disabled />
+        </View>
+
+        {/* The frame parts the sign-out row further from the block above it
+            than the blocks are from each other — 38 rather than 24. */}
+        <View style={styles.signOutGroup}>
           <AccountOption label="Sign Out" Icon={IconLogout} onPress={signOut} />
           <Pressable onPress={() => setConfirmingDelete(true)} disabled={deleting}>
             <Text style={styles.deleteAccount}>{deleting ? 'Deleting…' : 'Delete Account'}</Text>
@@ -298,7 +467,12 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    // Transparent on purpose. This ScrollView sits directly over
+    // <ScreenBackground />, so any opaque fill here hides the sparkle pattern
+    // entirely — which is what it used to do, in the wrong grey as well
+    // (#DCDFE4 `background` rather than the #E7E9EC `canvas` every other screen
+    // uses). The canvas colour belongs to ScreenBackground; this just scrolls.
+    backgroundColor: 'transparent',
   },
   // Account container x27 y187: three groups 60 apart, rows 8 apart.
   content: {
@@ -307,8 +481,8 @@ const styles = StyleSheet.create({
     // paddingBottom comes from useTabBarInset at the call site: the floating
     // tab bar's height varies with the device's safe-area inset.
   },
-  // Signed-out gate: rows from y186, Sign In at y608, prompt at y673.
-  gateRows: { marginTop: 186, marginHorizontal: 27, gap: 8 },
+  // Signed-out gate: rows from y150, Sign In at y608, prompt at y673.
+  gateRows: { marginTop: 150, marginHorizontal: 27, gap: 8 },
   gateSignIn: {
     position: 'absolute',
     left: 98,
@@ -339,14 +513,18 @@ const styles = StyleSheet.create({
   gateCreateAccent: { color: colors.primary },
   banner: {
     marginLeft: 10,
-    marginBottom: 46,
+    // Puts the first row's top on y150, where the frame draws it.
+    marginBottom: 10,
     fontFamily: fonts.bold,
     fontSize: 20,
     letterSpacing: 0.3,
     color: colors.text,
   },
   bannerName: { color: colors.primary },
-  group: { gap: 8, marginBottom: 60 },
+  // Measured off Account/Main/Signed In.png: rows 50 tall sit 8 apart inside a
+  // block and 24 apart between blocks. It was a uniform 60.
+  group: { gap: 8, marginBottom: 24 },
+  signOutGroup: { gap: 8, marginBottom: 24, marginTop: 14 },
 
   field: { gap: 6 },
   fieldLabel: {
@@ -364,13 +542,28 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
   },
   fieldValue: { fontFamily: fonts.bold, fontSize: 12, letterSpacing: 0.3, color: colors.text },
-  changePassword: {
-    marginTop: 4,
+  // The label and the Verified/Unverified tag share a line, pushed apart.
+  fieldHeadRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  fieldStatus: { fontFamily: fonts.bold, fontSize: 9, letterSpacing: 0.3 },
+  statusOk: { color: colors.green },
+  statusWarn: { color: HEART_RED },
+  fieldError: { marginLeft: 10, fontFamily: fonts.semibold, fontSize: 9, color: HEART_RED },
+  // Change Password sits beside Resend Verification Email when an address is
+  // outstanding, so they are bordered pills on a wrapping row rather than the
+  // single underlined link this used to be.
+  profileButtons: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 },
+  profileButton: {
+    borderRadius: 8,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.metaText,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+  },
+  profileButtonText: {
     fontFamily: fonts.bold,
     fontSize: 10,
     letterSpacing: 0.3,
     color: colors.text,
-    textDecorationLine: 'underline',
   },
 
   modeRow: { flexDirection: 'row', gap: 8 },

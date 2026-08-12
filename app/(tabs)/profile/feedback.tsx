@@ -126,7 +126,9 @@ const styles = StyleSheet.create({
   screenBg: { flex: 1 },
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    // Transparent: this scrolls directly over <ScreenBackground />, so an
+    // opaque fill here hides the sparkle pattern behind it.
+    backgroundColor: 'transparent',
   },
   content: {
     padding: spacing.md,
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: spacing.sm,
     padding: spacing.xl,
-    backgroundColor: colors.background,
+    backgroundColor: colors.canvas,
   },
   label: {
     fontSize: 13,
