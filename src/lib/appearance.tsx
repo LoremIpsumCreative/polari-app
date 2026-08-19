@@ -10,6 +10,7 @@ import {
 import { Appearance, Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { paletteFor, tabAccentsFor, type Palette, type Scheme } from './palette';
+import { fonts } from './theme';
 
 // The Appearance section on the Account screen (Figma: Account/Main/Signed In -
 // Expanded) offers Light / Dark / System. `mode` is what the reader picked;
@@ -127,4 +128,20 @@ export function useColors(): Palette {
 export function useThemedStyles<T>(factory: (colors: Palette) => T): T {
   const colors = useColors();
   return useMemo(() => factory(colors), [factory, colors]);
+}
+
+/** The navigator header chrome, themed. `headerOptions` in lib/theme is the
+ *  static light version and is what these six layouts used before; the shape is
+ *  unchanged, only the palette it reads from. */
+export function useHeaderOptions() {
+  const colors = useColors();
+  return useMemo(
+    () => ({
+      headerStyle: { backgroundColor: colors.canvas },
+      headerShadowVisible: false,
+      headerTintColor: colors.text,
+      headerTitleStyle: { fontFamily: fonts.semibold, fontSize: 17, color: colors.text },
+    }),
+    [colors],
+  );
 }

@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../../src/lib/supabase';
-import { colors, fonts, spacing } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useThemedStyles } from '../../../src/lib/appearance';
+import { fonts, spacing } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import {
@@ -27,6 +29,7 @@ import {
 // renders outside the tabs and could not show either.
 
 export default function CreateAccountScreen() {
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -193,40 +196,41 @@ export default function CreateAccountScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.canvas },
-  // paddingBottom comes from useTabBarInset at the call site: the floating tab
-  // bar's height varies with the device's safe-area inset.
-  content: {},
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.canvas },
+    // paddingBottom comes from useTabBarInset at the call site: the floating tab
+    // bar's height varies with the device's safe-area inset.
+    content: {},
 
-  // Field siblings sit 13 apart, the name/credentials break 29.
-  gap: { height: 12 },
-  groupGap: { height: 28 },
+    // Field siblings sit 13 apart, the name/credentials break 29.
+    gap: { height: 12 },
+    groupGap: { height: 28 },
 
-  // Card bottom y583 → CTA top y659.
-  cta: { marginTop: 75 },
+    // Card bottom y583 → CTA top y659.
+    cta: { marginTop: 75 },
 
-  // Success card y186..376: padding, heading, body, then Open Email at y307.
-  // The frame sets the body against a literal "{email}" token, so a long real
-  // address can wrap to a fourth line and grow the card — the CTA below then
-  // travels with it rather than overlapping.
-  successCard: { paddingTop: 18, paddingBottom: 18, alignItems: 'center' },
-  // Card bottom y376 → CTA top y659.
-  successCta: { marginTop: 283 },
-  successHeading: {
-    fontFamily: fonts.bold,
-    fontSize: 16,
-    lineHeight: 20,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  successBody: {
-    marginTop: 12,
-    marginBottom: 34,
-    fontFamily: fonts.regular,
-    fontSize: 16,
-    lineHeight: 18,
-    color: colors.text,
-    textAlign: 'center',
-  },
-});
+    // Success card y186..376: padding, heading, body, then Open Email at y307.
+    // The frame sets the body against a literal "{email}" token, so a long real
+    // address can wrap to a fourth line and grow the card — the CTA below then
+    // travels with it rather than overlapping.
+    successCard: { paddingTop: 18, paddingBottom: 18, alignItems: 'center' },
+    // Card bottom y376 → CTA top y659.
+    successCta: { marginTop: 283 },
+    successHeading: {
+      fontFamily: fonts.bold,
+      fontSize: 16,
+      lineHeight: 20,
+      color: colors.text,
+      textAlign: 'center',
+    },
+    successBody: {
+      marginTop: 12,
+      marginBottom: 34,
+      fontFamily: fonts.regular,
+      fontSize: 16,
+      lineHeight: 18,
+      color: colors.text,
+      textAlign: 'center',
+    },
+  });

@@ -4,7 +4,9 @@ import IconBinoculars from '@tabler/icons-react-native/IconBinoculars';
 import IconChevronLeft from '@tabler/icons-react-native/IconChevronLeft';
 import IconExternalLink from '@tabler/icons-react-native/IconExternalLink';
 import IconUser from '@tabler/icons-react-native/IconUser';
-import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../../src/lib/appearance';
+import { radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
@@ -73,6 +75,8 @@ const SOURCES: Source[] = [
 ];
 
 export default function AboutScreen() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   // The bar floats over the screen, so the scroll has to end above it by hand.
   const tabInset = useTabBarInset();
@@ -157,146 +161,147 @@ export default function AboutScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  // Wrapper so the sparkle pattern stays fixed behind the scrolling content.
-  screenBg: { flex: 1 },
-  container: {
-    flex: 1,
-    // Transparent: this scrolls directly over <ScreenBackground />, so an
-    // opaque fill here hides the sparkle pattern behind it.
-    backgroundColor: 'transparent',
-  },
-  // paddingBottom comes from useTabBarInset at the call site: the floating tab
-  // bar's height varies with the device's safe-area inset.
-  content: {},
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    // Wrapper so the sparkle pattern stays fixed behind the scrolling content.
+    screenBg: { flex: 1 },
+    container: {
+      flex: 1,
+      // Transparent: this scrolls directly over <ScreenBackground />, so an
+      // opaque fill here hides the sparkle pattern behind it.
+      backgroundColor: 'transparent',
+    },
+    // paddingBottom comes from useTabBarInset at the call site: the floating tab
+    // bar's height varies with the device's safe-area inset.
+    content: {},
 
-  backChip: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 52,
-    marginLeft: 17,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: radii.pill,
-    backgroundColor: colors.inset,
-  },
-  backChipText: {
-    fontFamily: fonts.semibold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-  pressed: { opacity: 0.7 },
+    backChip: {
+      alignSelf: 'flex-start',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      marginTop: 52,
+      marginLeft: 17,
+      paddingHorizontal: 14,
+      paddingVertical: 9,
+      borderRadius: radii.pill,
+      backgroundColor: colors.inset,
+    },
+    backChipText: {
+      fontFamily: fonts.semibold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
+    pressed: { opacity: 0.7 },
 
-  // auntie 1: x0 y115, 119x195, running off the left edge.
-  auntie: { position: 'absolute', left: 0, top: 115, width: 119, height: 195 },
+    // auntie 1: x0 y115, 119x195, running off the left edge.
+    auntie: { position: 'absolute', left: 0, top: 115, width: 119, height: 195 },
 
-  // The heading block sits to the right of her, from x134.
-  heading: { marginLeft: 134, marginRight: 22, marginTop: 7 },
-  title: { fontFamily: fonts.display, fontSize: 36, lineHeight: 40, color: colors.text },
-  ledeTitle: {
-    marginTop: 47,
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-  ledeBody: {
-    marginTop: 11,
-    fontFamily: fonts.regular,
-    fontSize: 11,
-    lineHeight: 14,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
+    // The heading block sits to the right of her, from x134.
+    heading: { marginLeft: 134, marginRight: 22, marginTop: 7 },
+    title: { fontFamily: fonts.display, fontSize: 36, lineHeight: 40, color: colors.text },
+    ledeTitle: {
+      marginTop: 47,
+      fontFamily: fonts.bold,
+      fontSize: 14,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
+    ledeBody: {
+      marginTop: 11,
+      fontFamily: fonts.regular,
+      fontSize: 11,
+      lineHeight: 14,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
 
-  // Prose card x23 y285 w349, and Further Reading below it.
-  card: {
-    marginTop: 63,
-    marginHorizontal: 23,
-    paddingHorizontal: 24,
-    paddingVertical: 32,
-    gap: 30,
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.fieldBorder,
-  },
-  section: { gap: 16 },
-  sectionTitle: { fontFamily: fonts.bold, fontSize: 14, letterSpacing: 0.3, color: colors.text },
-  // The frame sets this paragraph in 10 lines on a 16px pitch, glyphs measuring
-  // 12 ascender-to-descender. At 11/15 it wrapped to 9 tighter lines, which
-  // pulled every section below it up the page.
-  sectionBody: {
-    fontFamily: fonts.regular,
-    fontSize: 12,
-    lineHeight: 16,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
+    // Prose card x23 y285 w349, and Further Reading below it.
+    card: {
+      marginTop: 63,
+      marginHorizontal: 23,
+      paddingHorizontal: 24,
+      paddingVertical: 32,
+      gap: 30,
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.fieldBorder,
+    },
+    section: { gap: 16 },
+    sectionTitle: { fontFamily: fonts.bold, fontSize: 14, letterSpacing: 0.3, color: colors.text },
+    // The frame sets this paragraph in 10 lines on a 16px pitch, glyphs measuring
+    // 12 ascender-to-descender. At 11/15 it wrapped to 9 tighter lines, which
+    // pulled every section below it up the page.
+    sectionBody: {
+      fontFamily: fonts.regular,
+      fontSize: 12,
+      lineHeight: 16,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
 
-  sourcesHeader: { flexDirection: 'row', alignItems: 'center', gap: 11 },
-  sourcesIcon: {
-    width: 26,
-    height: 26,
-    borderRadius: 999,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sourcesTitle: { fontFamily: fonts.bold, fontSize: 14, letterSpacing: 0.3, color: colors.text },
-  sourcesNote: {
-    marginTop: -14,
-    fontFamily: fonts.regular,
-    fontSize: 11,
-    lineHeight: 15,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
+    sourcesHeader: { flexDirection: 'row', alignItems: 'center', gap: 11 },
+    sourcesIcon: {
+      width: 26,
+      height: 26,
+      borderRadius: 999,
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    sourcesTitle: { fontFamily: fonts.bold, fontSize: 14, letterSpacing: 0.3, color: colors.text },
+    sourcesNote: {
+      marginTop: -14,
+      fontFamily: fonts.regular,
+      fontSize: 11,
+      lineHeight: 15,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
 
-  sourceRow: {
-    marginTop: -14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 22,
-    paddingVertical: 12,
-    backgroundColor: colors.primarySoft,
-    borderRadius: 8,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.fieldBorder,
-  },
-  sourcePressed: { opacity: 0.7 },
-  sourceText: { flex: 1, gap: 4 },
-  sourceTitle: {
-    fontFamily: fonts.bold,
-    fontSize: 12,
-    lineHeight: 15,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-  authorRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  authorIcon: {
-    width: 23,
-    height: 23,
-    borderRadius: 999,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  authorName: {
-    fontFamily: fonts.semibold,
-    fontSize: 11,
-    letterSpacing: 0.3,
-    color: colors.primary,
-  },
-  sourceDetail: {
-    fontFamily: fonts.regular,
-    fontSize: 10,
-    lineHeight: 14,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-});
+    sourceRow: {
+      marginTop: -14,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      paddingHorizontal: 22,
+      paddingVertical: 12,
+      backgroundColor: colors.primarySoft,
+      borderRadius: 8,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.fieldBorder,
+    },
+    sourcePressed: { opacity: 0.7 },
+    sourceText: { flex: 1, gap: 4 },
+    sourceTitle: {
+      fontFamily: fonts.bold,
+      fontSize: 12,
+      lineHeight: 15,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
+    authorRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    authorIcon: {
+      width: 23,
+      height: 23,
+      borderRadius: 999,
+      backgroundColor: colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    authorName: {
+      fontFamily: fonts.semibold,
+      fontSize: 11,
+      letterSpacing: 0.3,
+      color: colors.primary,
+    },
+    sourceDetail: {
+      fontFamily: fonts.regular,
+      fontSize: 10,
+      lineHeight: 14,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
+  });

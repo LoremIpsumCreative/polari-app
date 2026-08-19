@@ -1,7 +1,9 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import IconChevronLeft from '@tabler/icons-react-native/IconChevronLeft';
-import { colors, fonts, radii } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../../src/lib/appearance';
+import { fonts, radii } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { PrivacyPolicyBody } from '../../../src/components/PrivacyPolicyBody';
@@ -15,6 +17,8 @@ import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 const CARD = { left: 27, top: 145, width: 339, radius: 12 };
 
 export default function PrivacyPolicyScreen() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const s = useDesignScale();
   const tabInset = useTabBarInset();
@@ -59,34 +63,35 @@ export default function PrivacyPolicyScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.canvas },
-  backChip: {
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 999,
-    zIndex: 1,
-  },
-  backChipText: { fontFamily: fonts.bold, color: colors.text },
-  pressed: { opacity: 0.8 },
-  title: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    fontFamily: fonts.display,
-    color: colors.text,
-  },
-  card: {
-    position: 'absolute',
-    backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.fieldBorder,
-    overflow: 'hidden',
-    borderCurve: 'continuous',
-    ...({ borderRadius: radii.md } as object),
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.canvas },
+    backChip: {
+      position: 'absolute',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: 999,
+      zIndex: 1,
+    },
+    backChipText: { fontFamily: fonts.bold, color: colors.text },
+    pressed: { opacity: 0.8 },
+    title: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      textAlign: 'center',
+      fontFamily: fonts.display,
+      color: colors.text,
+    },
+    card: {
+      position: 'absolute',
+      backgroundColor: colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.fieldBorder,
+      overflow: 'hidden',
+      borderCurve: 'continuous',
+      ...({ borderRadius: radii.md } as object),
+    },
+  });

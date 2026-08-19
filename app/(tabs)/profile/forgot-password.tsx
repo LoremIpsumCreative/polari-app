@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { supabase } from '../../../src/lib/supabase';
-import { colors, spacing } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useThemedStyles } from '../../../src/lib/appearance';
+import { spacing } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import {
@@ -20,6 +22,7 @@ import {
 // rather than anything the card grows into.
 
 export default function ForgotPasswordScreen() {
+  const styles = useThemedStyles(makeStyles);
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -84,12 +87,13 @@ export default function ForgotPasswordScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.canvas },
-  // paddingBottom comes from useTabBarInset at the call site: the floating tab
-  // bar's height varies with the device's safe-area inset.
-  content: {},
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.canvas },
+    // paddingBottom comes from useTabBarInset at the call site: the floating tab
+    // bar's height varies with the device's safe-area inset.
+    content: {},
 
-  // Card bottom y272 → CTA top y659.
-  cta: { marginTop: 386 },
-});
+    // Card bottom y272 → CTA top y659.
+    cta: { marginTop: 386 },
+  });

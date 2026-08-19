@@ -1,8 +1,9 @@
 import { Tabs } from 'expo-router';
-import { headerOptions } from '../../src/lib/theme';
+import { useHeaderOptions } from '../../src/lib/appearance';
 import { AnimatedTabBar } from '../../src/components/AnimatedTabBar';
 
 export default function TabsLayout() {
+  const headerOptions = useHeaderOptions();
   return (
     <Tabs
       initialRouteName="index"

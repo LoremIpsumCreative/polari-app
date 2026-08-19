@@ -81,10 +81,15 @@ export const colors = {
   // but is a border, not a label: the two need different darks, and one hex
   // serving two roles is how a palette quietly goes wrong.
   optionBorder: '#626F86',
-  // The badge circle on a disabled Account row. Same light value the quiz's
-  // `progressTrack` happens to carry, kept separate for the same reason as
-  // `optionBorder`: different role, different dark.
-  disabledFill: '#F1F2F4',
+  // The badge circle on a disabled Account row — Disabled/Fill.
+  //
+  // The frame binds this circle to the PRIMITIVE Neutral/100 (#F1F2F4), which
+  // is single-mode, so following the binding literally left a white disc
+  // glowing on the dark Account screen. Disabled/Fill exists in the Semantic
+  // set and is plainly what was meant, so this follows the token instead of the
+  // binding. Light moves #F1F2F4 → #F4F4F4, three units and invisible.
+  // Rebinding the circle to Disabled/Fill in Figma would close the gap.
+  disabledFill: '#F4F4F4',
 };
 
 // Each tab owns an accent colour, used for its icon + label when active.

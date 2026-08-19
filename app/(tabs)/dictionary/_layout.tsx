@@ -1,7 +1,8 @@
 import { Stack } from 'expo-router';
-import { headerOptions } from '../../../src/lib/theme';
+import { useHeaderOptions } from '../../../src/lib/appearance';
 
 export default function DictionaryLayout() {
+  const headerOptions = useHeaderOptions();
   return (
     <Stack screenOptions={headerOptions}>
       {/* The Figma frame draws its own centred "Polari Dictionary" title. */}
