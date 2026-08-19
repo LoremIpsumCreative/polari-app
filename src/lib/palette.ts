@@ -35,7 +35,6 @@ const darkOverrides: Partial<Palette> = {
   // Border/*
   fieldBorder: '#44546F', // Border/Field ← Neutral/700
   pillBorder: '#44546F', // Border/Field — the notched pill outline
-  cardBorder: '#2C3E5D', // Border/Subtle ← Neutral/800
   // Light is ink at 12%; dark inverts to paper at 12%.
   border: 'rgba(248, 249, 250, 0.12)',
 
@@ -82,6 +81,9 @@ export const tabAccentsFor = (scheme: Scheme): Record<string, string> =>
 // UNTOKENISED — deliberately unchanged in dark mode, each for a stated reason.
 // Add a Semantic token in Figma and these become one-line entries above.
 //
+//   cardBorder / pillBorder                the form card edge and the notched
+//                                          pill are bound to Neutral/600 too —
+//                                          see optionBorder below, same story
 //   optionBorder / disabledFill            the Account row hairline and the
 //                                          disabled badge are bound in Figma
 //                                          straight to primitives (Neutral/600,

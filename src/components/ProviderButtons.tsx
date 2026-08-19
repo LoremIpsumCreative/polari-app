@@ -5,8 +5,12 @@ import DiscordLogo from './brand/discord-logo.svg';
 import FacebookLogo from './brand/facebook-logo.svg';
 import GoogleLogo from './brand/google-logo.svg';
 import XLogo from './brand/x-logo.svg';
-import type { Palette } from '../lib/palette';
-import { useColors, useThemedStyles } from '../lib/appearance';
+import DiscordLogoDark from './brand/discord-logo_dark.svg';
+import FacebookLogoDark from './brand/facebook-logo_dark.svg';
+import GoogleLogoDark from './brand/google-logo_dark.svg';
+import XLogoDark from './brand/x-logo_dark.svg';
+import type { Palette, Scheme } from '../lib/palette';
+import { useAppearance, useThemedStyles } from '../lib/appearance';
 import { fonts, radii } from '../lib/theme';
 import {
   OAUTH_PROVIDERS,
@@ -22,11 +26,25 @@ import {
 // are never tinted — Google's G is multicolour, and every one of these brands
 // forbids recolouring its mark. Only the spinner that stands in for a mark
 // mid-flight takes a colour, and that is a Polari element, not a brand one.
-const BRAND_ICONS: Record<OAuthProvider, React.FC<SvgProps>> = {
-  google: GoogleLogo,
-  facebook: FacebookLogo,
-  twitter: XLogo,
-  discord: DiscordLogo,
+//
+// Each brand publishes a solid-white monochrome mark for dark surfaces, which
+// is what the `dark` files are. Note Google's dark variant is white, not the
+// multicolour G — that is the sanctioned treatment on a dark background, not a
+// recolour of the colour mark.
+//
+// To add another: drop `<brand>-logo_dark.svg` in ./brand and give it a `dark`
+// key. Nothing else needs to change.
+const BRAND_ICONS: Record<OAuthProvider, { light: React.FC<SvgProps>; dark?: React.FC<SvgProps> }> =
+  {
+    google: { light: GoogleLogo, dark: GoogleLogoDark },
+    facebook: { light: FacebookLogo, dark: FacebookLogoDark },
+    twitter: { light: XLogo, dark: XLogoDark },
+    discord: { light: DiscordLogo, dark: DiscordLogoDark },
+  };
+
+const markFor = (provider: OAuthProvider, scheme: Scheme): React.FC<SvgProps> => {
+  const entry = BRAND_ICONS[provider];
+  return scheme === 'dark' && entry.dark ? entry.dark : entry.light;
 };
 
 export function OrDivider({ label = 'OR' }: { label?: string }) {
@@ -46,7 +64,7 @@ export function OrDivider({ label = 'OR' }: { label?: string }) {
  * error sitting on the screen.
  */
 export function ProviderButtons({ onError }: { onError: (message: string | null) => void }) {
-  const colors = useColors();
+  const { colors, scheme } = useAppearance();
   const styles = useThemedStyles(makeStyles);
   // Which provider is mid-flight, so only that row shows a spinner while all
   // of them lock — a second tap during an open auth session goes nowhere good.
@@ -66,7 +84,7 @@ export function ProviderButtons({ onError }: { onError: (message: string | null)
   return (
     <View style={styles.stack}>
       {OAUTH_PROVIDERS.map((provider) => {
-        const Icon = BRAND_ICONS[provider];
+        const Icon = markFor(provider, scheme);
         const label = PROVIDER_LABELS[provider];
         const busy = pending === provider;
         return (
