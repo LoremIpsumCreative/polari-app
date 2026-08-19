@@ -6,7 +6,9 @@ import IconPhoto from '@tabler/icons-react-native/IconPhoto';
 import IconTrophy from '@tabler/icons-react-native/IconTrophy';
 import { useAuth } from '../../../src/lib/auth';
 import { HEART_RED, TROPHY_GOLD } from '../../../src/components/CollectionChrome';
-import { colors, fonts } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../../src/lib/appearance';
+import { fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
@@ -19,7 +21,13 @@ const gallerie = require('../../../assets/collections/hub-gallerie.png');
 
 // Icons Row Container, x62 y602 w271: three slots whose 55px circles sit at
 // the container's own offsets, labels 72 below the row's top.
-const SATELLITES: {
+// A function of the palette, not a module constant: the Gallery satellite is
+// tinted Accent/Account, which differs per scheme. HEART_RED and TROPHY_GOLD
+// are identity colours with no semantic token yet, so they stay literal — see
+// the UNTOKENISED note in lib/palette.ts.
+const satellites = (
+  colors: Palette,
+): {
   key: string;
   label: string;
   href: Href;
@@ -28,7 +36,7 @@ const SATELLITES: {
   x: number;
   w: number;
   iconX: number;
-}[] = [
+}[] => [
   {
     key: 'favourites',
     label: 'Favourites',
@@ -62,6 +70,9 @@ const SATELLITES: {
 ];
 
 export default function CollectionsHub() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
+  const SATELLITES = satellites(colors);
   const router = useRouter();
   const { session } = useAuth();
   const s = useDesignScale();
@@ -262,32 +273,33 @@ export default function CollectionsHub() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.canvas, alignItems: 'center' },
-  title: { position: 'absolute', fontFamily: fonts.display, color: colors.text },
-  gateCopy: {
-    position: 'absolute',
-    fontFamily: fonts.regular,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  signIn: {
-    position: 'absolute',
-    backgroundColor: colors.primary,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  signInText: { fontFamily: fonts.bold, color: colors.onPrimary, letterSpacing: 0.3 },
-  pressed: { opacity: 0.85 },
-  createLink: { position: 'absolute', fontFamily: fonts.regular, color: colors.text },
-  // The frame underlines it and carries no full stop.
-  createLinkAccent: { color: colors.primary, textDecorationLine: 'underline' },
-  sat: { position: 'absolute' },
-  satCircle: {
-    backgroundColor: colors.inset,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  satLabel: { fontFamily: fonts.semibold, color: colors.text, textAlign: 'center' },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.canvas, alignItems: 'center' },
+    title: { position: 'absolute', fontFamily: fonts.display, color: colors.text },
+    gateCopy: {
+      position: 'absolute',
+      fontFamily: fonts.regular,
+      color: colors.text,
+      textAlign: 'center',
+    },
+    signIn: {
+      position: 'absolute',
+      backgroundColor: colors.primary,
+      borderRadius: 999,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    signInText: { fontFamily: fonts.bold, color: colors.onPrimary, letterSpacing: 0.3 },
+    pressed: { opacity: 0.85 },
+    createLink: { position: 'absolute', fontFamily: fonts.regular, color: colors.text },
+    // The frame underlines it and carries no full stop.
+    createLinkAccent: { color: colors.primary, textDecorationLine: 'underline' },
+    sat: { position: 'absolute' },
+    satCircle: {
+      backgroundColor: colors.inset,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    satLabel: { fontFamily: fonts.semibold, color: colors.text, textAlign: 'center' },
+  });

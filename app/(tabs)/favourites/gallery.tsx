@@ -6,7 +6,9 @@ import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../../src/components/CharacterFullScreen';
 import { useWords } from '../../../src/lib/words';
 import { CollectionHeader, CollectionPanel } from '../../../src/components/CollectionChrome';
-import { colors, fonts } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useThemedStyles } from '../../../src/lib/appearance';
+import { fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import type { ImageSourcePropType } from 'react-native';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
@@ -24,6 +26,7 @@ const cardWidth = (s: number) => ((PANEL - GRID_INSET * 2 - GAP * 2) * s - 2) / 
 // The cast gallery: every finished character illustration on its own card,
 // with the word on a chip. Tap the art for full screen, the chip for the entry.
 export default function GalleryScreen() {
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { bySlug } = useWords();
   const { artFor, castSlugs } = useCharacterArt();
@@ -116,16 +119,17 @@ export default function GalleryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  card: { backgroundColor: colors.progressTrack, alignItems: 'center' },
-  chip: {
-    backgroundColor: colors.inset,
-    borderWidth: 1,
-    borderColor: colors.textMuted,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  chipPressed: { opacity: 0.6 },
-  chipText: { fontFamily: fonts.bold, color: colors.text },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.background },
+    card: { backgroundColor: colors.progressTrack, alignItems: 'center' },
+    chip: {
+      backgroundColor: colors.inset,
+      borderWidth: 1,
+      borderColor: colors.textMuted,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    chipPressed: { opacity: 0.6 },
+    chipText: { fontFamily: fonts.bold, color: colors.text },
+  });
