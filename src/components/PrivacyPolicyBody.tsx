@@ -1,7 +1,9 @@
 import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 import { PRIVACY_POLICY, PRIVACY_LAST_UPDATED, type PolicySpan } from '../content/privacyPolicy';
-import { colors, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useThemedStyles } from '../lib/appearance';
+import { fonts } from '../lib/theme';
 import { useDesignScale } from '../lib/designScale';
 
 // The policy itself, in the scrolling card both the onboarding gate and the
@@ -15,6 +17,7 @@ import { useDesignScale } from '../lib/designScale';
 const BOTTOM_SLACK = 24;
 
 function Spans({ spans, style }: { spans: PolicySpan[]; style: object }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <Text style={style}>
       {spans.map((span, i) => {
@@ -54,6 +57,7 @@ export function PrivacyPolicyBody({
   onReachedEnd?: () => void;
   contentPadding?: number;
 }) {
+  const styles = useThemedStyles(makeStyles);
   const s = useDesignScale();
 
   function handleScroll(e: NativeSyntheticEvent<NativeScrollEvent>) {
@@ -119,18 +123,19 @@ export function PrivacyPolicyBody({
   );
 }
 
-const styles = StyleSheet.create({
-  scroll: { flex: 1 },
-  updated: {
-    textAlign: 'right',
-    fontFamily: fonts.bold,
-    color: colors.text,
-  },
-  h2: { fontFamily: fonts.bold, color: colors.text },
-  h3: { fontFamily: fonts.bold, color: colors.text },
-  body: { fontFamily: fonts.regular, color: colors.text },
-  bold: { fontFamily: fonts.bold },
-  link: { fontFamily: fonts.semibold, color: colors.primary, textDecorationLine: 'underline' },
-  bulletRow: { flexDirection: 'row' },
-  bulletText: { flex: 1 },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    scroll: { flex: 1 },
+    updated: {
+      textAlign: 'right',
+      fontFamily: fonts.bold,
+      color: colors.text,
+    },
+    h2: { fontFamily: fonts.bold, color: colors.text },
+    h3: { fontFamily: fonts.bold, color: colors.text },
+    body: { fontFamily: fonts.regular, color: colors.text },
+    bold: { fontFamily: fonts.bold },
+    link: { fontFamily: fonts.semibold, color: colors.primary, textDecorationLine: 'underline' },
+    bulletRow: { flexDirection: 'row' },
+    bulletText: { flex: 1 },
+  });

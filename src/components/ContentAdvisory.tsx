@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/auth';
-import { colors, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useThemedStyles } from '../lib/appearance';
+import { fonts } from '../lib/theme';
 import { useDesignScale } from '../lib/designScale';
 import { ScreenBackground } from './ScreenBackground';
 
@@ -28,6 +30,7 @@ const AGE_STATEMENT = 'Polari is intended for audiences aged 15 and over.';
 const CONFIRM_LABEL = 'I confirm that I am aged 15 or over';
 
 export function ContentAdvisory({ onAcknowledge }: { onAcknowledge: () => void }) {
+  const styles = useThemedStyles(makeStyles);
   const s = useDesignScale();
   const { session } = useAuth();
   // null = still deciding. Rendering the gate before the answer lands would
@@ -132,40 +135,41 @@ export function ContentAdvisory({ onAcknowledge }: { onAcknowledge: () => void }
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: colors.canvas,
-  },
-  card: { position: 'absolute', backgroundColor: colors.surface, alignItems: 'center' },
-  title: {
-    fontFamily: fonts.display,
-    fontSize: 40,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  body: {
-    fontFamily: fonts.semibold,
-    color: colors.text,
-    textAlign: 'center',
-    letterSpacing: 0.3,
-  },
-  ageStatement: {
-    fontFamily: fonts.bold,
-    color: colors.text,
-    textAlign: 'center',
-    letterSpacing: 0.3,
-  },
-  button: {
-    position: 'absolute',
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonLabel: { fontFamily: fonts.bold, color: colors.onPrimary },
-  pressed: { opacity: 0.8 },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: colors.canvas,
+    },
+    card: { position: 'absolute', backgroundColor: colors.surface, alignItems: 'center' },
+    title: {
+      fontFamily: fonts.display,
+      fontSize: 40,
+      color: colors.text,
+      textAlign: 'center',
+    },
+    body: {
+      fontFamily: fonts.semibold,
+      color: colors.text,
+      textAlign: 'center',
+      letterSpacing: 0.3,
+    },
+    ageStatement: {
+      fontFamily: fonts.bold,
+      color: colors.text,
+      textAlign: 'center',
+      letterSpacing: 0.3,
+    },
+    button: {
+      position: 'absolute',
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    buttonLabel: { fontFamily: fonts.bold, color: colors.onPrimary },
+    pressed: { opacity: 0.8 },
+  });

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Image, Pressable, StyleSheet, View } from 'react-native';
-import { colors } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useThemedStyles } from '../lib/appearance';
 import { useDesignScale } from '../lib/designScale';
 import { LaunchAnimation, LAUNCH_ANIM_MS, LAUNCH_ANIM_SIZE } from './LaunchAnimation';
 import { ScreenBackground } from './ScreenBackground';
@@ -52,6 +53,7 @@ const BUTTON = { x: 111, y: 439.5, w: 175, h: 49 };
 const PAPER_FADE_MS = 700;
 
 export function LaunchScreen({ onOpen }: { onOpen: () => void }) {
+  const styles = useThemedStyles(makeStyles);
   const s = useDesignScale();
   const reduceMotion = useReducedMotion();
   const wallpapers = useWallpapers();
@@ -192,31 +194,32 @@ export function LaunchScreen({ onOpen }: { onOpen: () => void }) {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: colors.canvas,
-  },
-  paper: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: '100%',
-    height: '100%',
-  },
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: colors.canvas,
+    },
+    paper: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      width: '100%',
+      height: '100%',
+    },
 
-  // Explicit stacking. Sibling order alone is enough on web, but on iOS a
-  // late-mounted absolute sibling can end up painting over one declared before
-  // it — which put the wallpaper on top of the finished lockup. These make the
-  // order the code intends the order that renders.
-  paperLayer: { zIndex: 1 },
-  // Placed and sized at the call site from FRAME.
-  animation: { position: 'absolute', zIndex: 2 },
-  openHit: { position: 'absolute', zIndex: 3 },
-});
+    // Explicit stacking. Sibling order alone is enough on web, but on iOS a
+    // late-mounted absolute sibling can end up painting over one declared before
+    // it — which put the wallpaper on top of the finished lockup. These make the
+    // order the code intends the order that renders.
+    paperLayer: { zIndex: 1 },
+    // Placed and sized at the call site from FRAME.
+    animation: { position: 'absolute', zIndex: 2 },
+    openHit: { position: 'absolute', zIndex: 3 },
+  });
