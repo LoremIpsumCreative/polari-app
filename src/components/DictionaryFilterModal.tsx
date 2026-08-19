@@ -11,7 +11,9 @@ import IconMessages from '@tabler/icons-react-native/IconMessages';
 import IconPhoto from '@tabler/icons-react-native/IconPhoto';
 import IconTag from '@tabler/icons-react-native/IconTag';
 import IconWorld from '@tabler/icons-react-native/IconWorld';
-import { colors, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useColors, useThemedStyles } from '../lib/appearance';
+import { fonts } from '../lib/theme';
 import { HEART_RED } from './CollectionChrome';
 import {
   EMPTY_FILTERS,
@@ -32,7 +34,7 @@ export function FilterChip({
   selected,
   disabled,
   onPress,
-  selectedColor = colors.primary,
+  selectedColor,
   icon,
 }: {
   label: string;
@@ -42,6 +44,12 @@ export function FilterChip({
   selectedColor?: string;
   icon?: ReactNode;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
+  // Defaults to Brand/Primary, resolved per theme. A static default parameter
+  // would pin every chip to the light brand blue — the same trap FieldsetInput's
+  // notchColor had.
+  const tint = selectedColor ?? colors.primary;
   return (
     <Pressable
       onPress={onPress}
@@ -50,7 +58,7 @@ export function FilterChip({
       accessibilityState={{ selected: !!selected, disabled: !!disabled }}
       style={({ pressed }) => [
         styles.chip,
-        selected && { backgroundColor: selectedColor, borderColor: selectedColor },
+        selected && { backgroundColor: tint, borderColor: tint },
         disabled && styles.chipDisabled,
         pressed && !disabled && styles.pressed,
       ]}
@@ -86,6 +94,8 @@ function Section({
   disabled?: boolean;
   note?: string;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [open, setOpen] = useState(true);
   if (!options.length) return null;
   const Chevron = open ? IconChevronUp : IconChevronDown;
@@ -134,6 +144,8 @@ export function DictionaryFilterModal({
   onChange: (next: DictionaryFilters) => void;
   partOfSpeechOptions: string[];
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const active = countActiveFilters(filters);
   const set = (patch: Partial<DictionaryFilters>) => onChange({ ...filters, ...patch });
 
@@ -236,81 +248,82 @@ export function DictionaryFilterModal({
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: { flex: 1, backgroundColor: 'rgba(18, 18, 18, 0.5)' },
-  card: {
-    position: 'absolute',
-    left: 17,
-    right: 17,
-    top: 130,
-    maxHeight: '75%',
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    paddingHorizontal: 20,
-    paddingTop: 30,
-    paddingBottom: 20,
-  },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  title: { fontFamily: fonts.bold, fontSize: 16, letterSpacing: 0.3, color: colors.text },
-  clear: {
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: 6,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.fieldBorder,
-  },
-  clearText: { fontFamily: fonts.bold, fontSize: 10, letterSpacing: 0.3, color: colors.text },
-  clearTextDisabled: { color: colors.inactive },
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    backdrop: { flex: 1, backgroundColor: 'rgba(18, 18, 18, 0.5)' },
+    card: {
+      position: 'absolute',
+      left: 17,
+      right: 17,
+      top: 130,
+      maxHeight: '75%',
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      paddingHorizontal: 20,
+      paddingTop: 30,
+      paddingBottom: 20,
+    },
+    header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+    title: { fontFamily: fonts.bold, fontSize: 16, letterSpacing: 0.3, color: colors.text },
+    clear: {
+      paddingHorizontal: 14,
+      paddingVertical: 9,
+      borderRadius: 6,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.fieldBorder,
+    },
+    clearText: { fontFamily: fonts.bold, fontSize: 10, letterSpacing: 0.3, color: colors.text },
+    clearTextDisabled: { color: colors.inactive },
 
-  body: { paddingTop: 30, gap: 16 },
-  quickRow: { flexDirection: 'row', gap: 12 },
+    body: { paddingTop: 30, gap: 16 },
+    quickRow: { flexDirection: 'row', gap: 12 },
 
-  section: {
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.metaText,
-    paddingHorizontal: 14,
-    paddingVertical: 20,
-    gap: 16,
-  },
-  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 9 },
-  sectionLabel: {
-    flex: 1,
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    color: colors.textFaint,
-  },
-  sectionNote: {
-    marginTop: -8,
-    fontFamily: fonts.semibold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    color: colors.inactive,
-  },
-  sectionOptions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+    section: {
+      backgroundColor: colors.surface,
+      borderRadius: 8,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.metaText,
+      paddingHorizontal: 14,
+      paddingVertical: 20,
+      gap: 16,
+    },
+    sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 9 },
+    sectionLabel: {
+      flex: 1,
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+      color: colors.textFaint,
+    },
+    sectionNote: {
+      marginTop: -8,
+      fontFamily: fonts.semibold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+      color: colors.inactive,
+    },
+    sectionOptions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
 
-  chip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 6,
-    backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.metaText,
-  },
-  chipDisabled: { borderColor: colors.fieldBorder, backgroundColor: colors.inset },
-  chipText: {
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    lineHeight: 9,
-    letterSpacing: 0.3,
-    color: colors.textMuted,
-  },
-  chipTextSelected: { color: colors.onPrimary },
-  chipTextDisabled: { color: colors.inactive },
-  pressed: { opacity: 0.7 },
-});
+    chip: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      borderRadius: 6,
+      backgroundColor: colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.metaText,
+    },
+    chipDisabled: { borderColor: colors.fieldBorder, backgroundColor: colors.inset },
+    chipText: {
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      lineHeight: 9,
+      letterSpacing: 0.3,
+      color: colors.textMuted,
+    },
+    chipTextSelected: { color: colors.onPrimary },
+    chipTextDisabled: { color: colors.inactive },
+    pressed: { opacity: 0.7 },
+  });
