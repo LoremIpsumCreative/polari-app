@@ -1,6 +1,7 @@
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import IconRating15Plus from './icons/IconRating15Plus';
-import { colors } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useColors, useThemedStyles } from '../lib/appearance';
 
 // The 15+ mark a flagged entry carries on its definition card (Figma
 // Today/Definition - Flagged): a ~23px ring in the same grey as the full-screen
@@ -16,6 +17,8 @@ export const FLAGGED_BADGE_OFFSET = 41.5;
 const BOX = 30;
 
 export function FlaggedBadge({ style }: { style?: StyleProp<ViewStyle> }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View
       style={[styles.box, style]}
@@ -33,12 +36,13 @@ export function FlaggedBadge({ style }: { style?: StyleProp<ViewStyle> }) {
   );
 }
 
-const styles = StyleSheet.create({
-  box: {
-    position: 'absolute',
-    width: BOX,
-    height: BOX,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const makeStyles = (_colors: Palette) =>
+  StyleSheet.create({
+    box: {
+      position: 'absolute',
+      width: BOX,
+      height: BOX,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });

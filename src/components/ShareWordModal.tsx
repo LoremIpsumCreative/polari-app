@@ -3,7 +3,9 @@ import { Modal, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'r
 import type { Word } from '../types/database';
 import { ShareWordCard, CARD_WIDTH, CARD_HEIGHT } from './ShareWordCard';
 import { shareWordCard } from '../lib/share';
-import { colors, radii, spacing, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useThemedStyles } from '../lib/appearance';
+import { radii, spacing, fonts } from '../lib/theme';
 
 type Props = {
   word: Word;
@@ -12,6 +14,7 @@ type Props = {
 };
 
 export function ShareWordModal({ word, visible, onClose }: Props) {
+  const styles = useThemedStyles(makeStyles);
   const cardRef = useRef<View>(null);
   const [sharing, setSharing] = useState(false);
   const { width: winW, height: winH } = useWindowDimensions();
@@ -60,45 +63,46 @@ export function ShareWordModal({ word, visible, onClose }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: spacing.lg,
-  },
-  sheet: {
-    alignItems: 'center',
-    gap: spacing.md,
-  },
-  buttons: {
-    alignSelf: 'stretch',
-    gap: spacing.sm,
-  },
-  shareButton: {
-    backgroundColor: colors.primary,
-    borderRadius: radii.md,
-    paddingVertical: spacing.sm + 4,
-    alignItems: 'center',
-  },
-  shareText: {
-    color: '#fff',
-    fontSize: 16,
-    fontFamily: fonts.bold,
-  },
-  closeButton: {
-    borderRadius: radii.md,
-    backgroundColor: colors.surface,
-    paddingVertical: spacing.sm + 4,
-    alignItems: 'center',
-  },
-  closeText: {
-    color: colors.text,
-    fontSize: 15,
-    fontFamily: fonts.semibold,
-  },
-  pressed: {
-    opacity: 0.8,
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    backdrop: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.55)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: spacing.lg,
+    },
+    sheet: {
+      alignItems: 'center',
+      gap: spacing.md,
+    },
+    buttons: {
+      alignSelf: 'stretch',
+      gap: spacing.sm,
+    },
+    shareButton: {
+      backgroundColor: colors.primary,
+      borderRadius: radii.md,
+      paddingVertical: spacing.sm + 4,
+      alignItems: 'center',
+    },
+    shareText: {
+      color: '#fff',
+      fontSize: 16,
+      fontFamily: fonts.bold,
+    },
+    closeButton: {
+      borderRadius: radii.md,
+      backgroundColor: colors.surface,
+      paddingVertical: spacing.sm + 4,
+      alignItems: 'center',
+    },
+    closeText: {
+      color: colors.text,
+      fontSize: 15,
+      fontFamily: fonts.semibold,
+    },
+    pressed: {
+      opacity: 0.8,
+    },
+  });

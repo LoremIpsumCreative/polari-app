@@ -32,7 +32,9 @@ import { useAuth } from '../../src/lib/auth';
 import { useStreaks } from '../../src/lib/streaks';
 import { getUnlockedDate, setUnlockedToday, todayKey } from '../../src/lib/dailyUnlock';
 import { useReducedMotion } from '../../src/lib/reducedMotion';
-import { colors, fonts, spacing } from '../../src/lib/theme';
+import type { Palette } from '../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../src/lib/appearance';
+import { fonts, spacing } from '../../src/lib/theme';
 import { useDesignScale } from '../../src/lib/designScale';
 import { useAssetsReady } from '../../src/lib/useAssetsReady';
 
@@ -68,6 +70,8 @@ const BOUNCE = {
 };
 
 export default function TodayScreen() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const { session } = useAuth();
   const { recordEngagement, celebration, dismissCelebration } = useStreaks();
   const { words, loading, error, refetch } = useWords();
@@ -362,7 +366,7 @@ export default function TodayScreen() {
           {word.flagged ? (
             <FlaggedBadge style={{ top: spacing.xs + FLAGGED_BADGE_OFFSET, right: spacing.xs }} />
           ) : null}
-          <WordDetailCard word={word} compact />
+          <WordDetailCard word={word} compact summary />
 
           {/* Day selector sits in flow under the card (Figma 1114:1023, y920) */}
           <View style={styles.pagerPill}>
@@ -421,104 +425,105 @@ export default function TodayScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    // The Today canvas is one step lighter than the app background (Figma 1114:1023)
-    backgroundColor: colors.canvas,
-  },
-  presentScreen: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  presentShapes: { position: 'absolute', top: 0, left: 0 },
-  presentHeadline: {
-    position: 'absolute',
-    fontFamily: fonts.display,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  presentHighlight: {
-    color: colors.primary,
-  },
-  presentTap: {
-    position: 'absolute',
-    fontFamily: fonts.semibold,
-    color: colors.inactive,
-  },
-  container: {
-    flex: 1,
-  },
-  content: {
-    // Matches Figma 1114:1023: 14px side margins, character at y87, card at
-    // y350. The 87 also keeps content clear of the status bar on device.
-    paddingHorizontal: 14,
-    paddingTop: 87,
-    // paddingBottom comes from useTabBarInset at the call site — it has to
-    // clear the floating day-selector pill and the navbar, whose height varies
-    // with the device's safe-area inset.
-  },
-  hero: {
-    width: 190,
-    height: 253,
-    alignSelf: 'center',
-    // Card follows 10px below the character (Figma: art ends 340, card at 350)
-    marginBottom: 10,
-  },
-  milestoneBanner: {
-    position: 'absolute',
-    top: spacing.md,
-    alignSelf: 'center',
-    backgroundColor: colors.dark,
-    borderRadius: 16,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md - 4,
-    alignItems: 'center',
-    gap: 2,
-    maxWidth: '88%',
-  },
-  milestoneText: {
-    color: '#FAF3E7',
-    fontFamily: 'Digitale-Bold',
-    fontSize: 14,
-  },
-  milestoneSub: {
-    color: '#B7B0CE',
-    fontFamily: 'Digitale-Regular',
-    fontSize: 12,
-  },
-  pagerPill: {
-    // In flow, 10 below the card (Figma 1114:1023: card ends 910, pill at 920)
-    marginTop: 10,
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: 232,
-    height: 46,
-    backgroundColor: colors.surface,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: colors.fieldBorder,
-    paddingHorizontal: 16,
-  },
-  fullScreenButton: {
-    position: 'absolute',
-    top: spacing.xs,
-    right: spacing.xs,
-    padding: spacing.xs,
-  },
-  pagerButton: {
-    padding: spacing.xs,
-  },
-  pagerPressed: {
-    opacity: 0.6,
-  },
-  dateLabel: {
-    fontFamily: 'Digitale-Regular',
-    fontSize: 10,
-    textAlign: 'center',
-    color: colors.text,
-    letterSpacing: 0.3,
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+      // The Today canvas is one step lighter than the app background (Figma 1114:1023)
+      backgroundColor: colors.canvas,
+    },
+    presentScreen: {
+      flex: 1,
+      alignItems: 'center',
+    },
+    presentShapes: { position: 'absolute', top: 0, left: 0 },
+    presentHeadline: {
+      position: 'absolute',
+      fontFamily: fonts.display,
+      color: colors.text,
+      textAlign: 'center',
+    },
+    presentHighlight: {
+      color: colors.primary,
+    },
+    presentTap: {
+      position: 'absolute',
+      fontFamily: fonts.semibold,
+      color: colors.inactive,
+    },
+    container: {
+      flex: 1,
+    },
+    content: {
+      // Matches Figma 1114:1023: 14px side margins, character at y87, card at
+      // y350. The 87 also keeps content clear of the status bar on device.
+      paddingHorizontal: 14,
+      paddingTop: 87,
+      // paddingBottom comes from useTabBarInset at the call site — it has to
+      // clear the floating day-selector pill and the navbar, whose height varies
+      // with the device's safe-area inset.
+    },
+    hero: {
+      width: 190,
+      height: 253,
+      alignSelf: 'center',
+      // Card follows 10px below the character (Figma: art ends 340, card at 350)
+      marginBottom: 10,
+    },
+    milestoneBanner: {
+      position: 'absolute',
+      top: spacing.md,
+      alignSelf: 'center',
+      backgroundColor: colors.dark,
+      borderRadius: 16,
+      paddingHorizontal: spacing.lg,
+      paddingVertical: spacing.md - 4,
+      alignItems: 'center',
+      gap: 2,
+      maxWidth: '88%',
+    },
+    milestoneText: {
+      color: '#FAF3E7',
+      fontFamily: 'Digitale-Bold',
+      fontSize: 14,
+    },
+    milestoneSub: {
+      color: '#B7B0CE',
+      fontFamily: 'Digitale-Regular',
+      fontSize: 12,
+    },
+    pagerPill: {
+      // In flow, 10 below the card (Figma 1114:1023: card ends 910, pill at 920)
+      marginTop: 10,
+      alignSelf: 'center',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: 232,
+      height: 46,
+      backgroundColor: colors.surface,
+      borderRadius: 999,
+      borderWidth: 1,
+      borderColor: colors.fieldBorder,
+      paddingHorizontal: 16,
+    },
+    fullScreenButton: {
+      position: 'absolute',
+      top: spacing.xs,
+      right: spacing.xs,
+      padding: spacing.xs,
+    },
+    pagerButton: {
+      padding: spacing.xs,
+    },
+    pagerPressed: {
+      opacity: 0.6,
+    },
+    dateLabel: {
+      fontFamily: 'Digitale-Regular',
+      fontSize: 10,
+      textAlign: 'center',
+      color: colors.text,
+      letterSpacing: 0.3,
+    },
+  });

@@ -4,9 +4,13 @@ import IconHeart from '@tabler/icons-react-native/IconHeart';
 import IconHeartFilled from '@tabler/icons-react-native/IconHeartFilled';
 import { useAuth } from '../lib/auth';
 import { useFavourites } from '../lib/favourites';
-import { colors, radii } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useColors, useThemedStyles } from '../lib/appearance';
+import { radii } from '../lib/theme';
 
 export function FavouriteButton({ wordId }: { wordId: string }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { session } = useAuth();
   const { isFavourite, toggleFavourite } = useFavourites();
@@ -38,12 +42,13 @@ export function FavouriteButton({ wordId }: { wordId: string }) {
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    padding: 0,
-    borderRadius: radii.sm,
-  },
-  buttonPressed: {
-    opacity: 0.6,
-  },
-});
+const makeStyles = (_colors: Palette) =>
+  StyleSheet.create({
+    button: {
+      padding: 0,
+      borderRadius: radii.sm,
+    },
+    buttonPressed: {
+      opacity: 0.6,
+    },
+  });
