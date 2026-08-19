@@ -3,7 +3,9 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAchievements, type Achievement } from '../../../src/lib/achievements';
 import { CollectionHeader, CollectionPanel } from '../../../src/components/CollectionChrome';
-import { colors, fonts } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../../src/lib/appearance';
+import { fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
@@ -14,11 +16,12 @@ const PANEL = 363;
 const CARD_H = 105;
 const GRID_INSET = 19;
 const GAP = 12;
-const LOCKED_INK = '#B3B9C4';
 // −2 accounts for the panel's own borders plus sub-pixel rounding.
 const cardWidth = (s: number) => ((PANEL - GRID_INSET * 2 - GAP * 2) * s - 2) / 3 - 1;
 
 function AchievementCard({ a, s }: { a: Achievement; s: number }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const pct = a.target > 0 ? a.current / a.target : 0;
   return (
     <View style={[styles.card, { width: cardWidth(s), height: CARD_H * s, borderRadius: 12 * s }]}>
@@ -29,7 +32,7 @@ function AchievementCard({ a, s }: { a: Achievement; s: number }) {
           a.earned ? styles.cardIconEarned : styles.cardIconLocked,
         ]}
       >
-        <a.Icon size={17 * s} color={a.earned ? colors.primary : LOCKED_INK} />
+        <a.Icon size={17 * s} color={a.earned ? colors.primary : colors.inactive} />
       </View>
       <View style={[styles.bar, { width: 59 * s, height: 10 * s, marginTop: 9 * s }]}>
         <View
@@ -49,7 +52,7 @@ function AchievementCard({ a, s }: { a: Achievement; s: number }) {
       <Text
         style={[
           styles.cardName,
-          { fontSize: 10 * s, marginTop: 12 * s, color: a.earned ? colors.text : LOCKED_INK },
+          { fontSize: 10 * s, marginTop: 12 * s, color: a.earned ? colors.text : colors.inactive },
         ]}
         numberOfLines={1}
       >
@@ -60,6 +63,7 @@ function AchievementCard({ a, s }: { a: Achievement; s: number }) {
 }
 
 export default function AchievementsScreen() {
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { achievements, signedIn } = useAchievements();
   const s = useDesignScale();
@@ -118,38 +122,39 @@ export default function AchievementsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  card: { backgroundColor: colors.progressTrack, alignItems: 'center' },
-  cardIcon: { alignItems: 'center', justifyContent: 'center' },
-  cardIconEarned: { backgroundColor: colors.primarySoft },
-  cardIconLocked: {
-    backgroundColor: colors.inset,
-    borderWidth: 0.5,
-    borderColor: colors.fieldBorder,
-  },
-  bar: {
-    borderWidth: 0.5,
-    borderColor: colors.inactive,
-    borderRadius: 999,
-    justifyContent: 'center',
-    paddingHorizontal: 2,
-  },
-  barFill: { backgroundColor: colors.textMuted },
-  progressText: { fontFamily: fonts.extrabold, color: colors.text },
-  cardName: { fontFamily: fonts.semibold, paddingHorizontal: 4 },
-  gateRow: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.inset,
-    borderWidth: 0.5,
-    borderColor: colors.inactive,
-  },
-  gateText: { fontFamily: fonts.semibold, color: colors.inactive },
-  gateLink: {
-    marginTop: 24,
-    fontFamily: fonts.semibold,
-    color: colors.primary,
-    textAlign: 'center',
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.background },
+    card: { backgroundColor: colors.progressTrack, alignItems: 'center' },
+    cardIcon: { alignItems: 'center', justifyContent: 'center' },
+    cardIconEarned: { backgroundColor: colors.primarySoft },
+    cardIconLocked: {
+      backgroundColor: colors.inset,
+      borderWidth: 0.5,
+      borderColor: colors.fieldBorder,
+    },
+    bar: {
+      borderWidth: 0.5,
+      borderColor: colors.inactive,
+      borderRadius: 999,
+      justifyContent: 'center',
+      paddingHorizontal: 2,
+    },
+    barFill: { backgroundColor: colors.textMuted },
+    progressText: { fontFamily: fonts.extrabold, color: colors.text },
+    cardName: { fontFamily: fonts.semibold, paddingHorizontal: 4 },
+    gateRow: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.inset,
+      borderWidth: 0.5,
+      borderColor: colors.inactive,
+    },
+    gateText: { fontFamily: fonts.semibold, color: colors.inactive },
+    gateLink: {
+      marginTop: 24,
+      fontFamily: fonts.semibold,
+      color: colors.primary,
+      textAlign: 'center',
+    },
+  });

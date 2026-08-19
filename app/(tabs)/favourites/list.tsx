@@ -11,7 +11,9 @@ import {
   CollectionPanel,
   HEART_RED,
 } from '../../../src/components/CollectionChrome';
-import { colors, fonts } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../../src/lib/appearance';
+import { fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 
@@ -22,6 +24,8 @@ const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 // Favourites (Figma frames 1153:631 empty / 1153:649 populated): an A–Z
 // grouped list inside the white panel, with a tappable alphabet rail.
 export default function FavouritesListScreen() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { session } = useAuth();
   const { favouriteWordIds, toggleFavourite } = useFavourites();
@@ -169,36 +173,37 @@ export default function FavouritesListScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.inset,
-    borderWidth: 0.5,
-    borderColor: colors.fieldBorder,
-    paddingHorizontal: 14,
-  },
-  rowPressed: { backgroundColor: colors.primarySoft },
-  rowTerm: { flex: 1, fontFamily: fonts.semibold, color: colors.text },
-  emptyRow: { borderColor: colors.inactive },
-  emptyRowText: { fontFamily: fonts.semibold, color: colors.inactive },
-  emptyCaption: {
-    marginTop: 24,
-    fontFamily: fonts.semibold,
-    color: colors.textFaint,
-    textAlign: 'center',
-    paddingHorizontal: 20,
-  },
-  signInLink: { color: colors.primary },
-  letterHeader: { fontFamily: fonts.regular, color: colors.text },
-  panelRow: { flex: 1, flexDirection: 'row' },
-  rail: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-  },
-  railLetter: { fontFamily: fonts.bold, color: colors.text },
-  railLetterInactive: { color: colors.fieldBorder },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.background },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: colors.inset,
+      borderWidth: 0.5,
+      borderColor: colors.fieldBorder,
+      paddingHorizontal: 14,
+    },
+    rowPressed: { backgroundColor: colors.primarySoft },
+    rowTerm: { flex: 1, fontFamily: fonts.semibold, color: colors.text },
+    emptyRow: { borderColor: colors.inactive },
+    emptyRowText: { fontFamily: fonts.semibold, color: colors.inactive },
+    emptyCaption: {
+      marginTop: 24,
+      fontFamily: fonts.semibold,
+      color: colors.textFaint,
+      textAlign: 'center',
+      paddingHorizontal: 20,
+    },
+    signInLink: { color: colors.primary },
+    letterHeader: { fontFamily: fonts.regular, color: colors.text },
+    panelRow: { flex: 1, flexDirection: 'row' },
+    rail: {
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: 10,
+    },
+    railLetter: { fontFamily: fonts.bold, color: colors.text },
+    railLetterInactive: { color: colors.fieldBorder },
+  });
