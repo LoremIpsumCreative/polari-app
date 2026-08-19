@@ -12,7 +12,9 @@ import IconStack2 from '@tabler/icons-react-native/IconStack2';
 import IconWorldSearch from '@tabler/icons-react-native/IconWorldSearch';
 import type { IconProps } from '../lib/icons';
 import type { Word, UsageStatus } from '../types/database';
-import { colors, radii, spacing, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useColors, useThemedStyles } from '../lib/appearance';
+import { radii, spacing, fonts } from '../lib/theme';
 import { useWords } from '../lib/words';
 import { FavouriteButton } from './FavouriteButton';
 import { ShareWordModal } from './ShareWordModal';
@@ -21,10 +23,15 @@ import { SuggestEditModal } from './SuggestEditModal';
 type Props = {
   word: Word;
   style?: ViewStyle;
-  // The dictionary detail additionally shows the notes/variants row; the Today
-  // card matches the Figma frame exactly (definition, in use, origin, culture,
-  // modern usage, related).
+  // The dictionary detail additionally shows the notes/variants row.
   compact?: boolean;
+  /**
+   * The Today card, per the 2028-08-19 re-export: definition and in use only,
+   * closed by a Read Full Entry button. Origin, culture, modern usage and
+   * related are not gone from the product — they are the reason the button
+   * exists, and the dictionary entry still shows all of them.
+   */
+  summary?: boolean;
 };
 
 // Modern-usage segmented display, per Figma 1039:104: all three options shown,
@@ -54,10 +61,12 @@ function FieldRow({
   children: string;
   italic?: boolean;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.fieldWrap}>
       <View style={styles.fieldRow}>
-        <Icon size={14} color={'#B3B9C4'} />
+        <Icon size={14} color={colors.inactive} />
         <Text style={[styles.fieldText, italic && styles.fieldTextItalic]}>
           {stripEmphasis(children)}
         </Text>
@@ -69,7 +78,9 @@ function FieldRow({
   );
 }
 
-export function WordDetailCard({ word, style, compact = false }: Props) {
+export function WordDetailCard({ word, style, compact = false, summary = false }: Props) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [shareVisible, setShareVisible] = useState(false);
   const [suggestVisible, setSuggestVisible] = useState(false);
   const router = useRouter();
@@ -134,27 +145,27 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
             {word.example}
           </FieldRow>
         ) : null}
-        {word.origin ? (
+        {!summary && word.origin ? (
           <FieldRow label="origin" Icon={IconWorldSearch}>
             {word.origin}
           </FieldRow>
         ) : null}
-        {word.cultural_context ? (
+        {!summary && word.cultural_context ? (
           <FieldRow label="culture" Icon={IconStack2}>
             {word.cultural_context}
           </FieldRow>
         ) : null}
-        {!compact && word.notes_variants ? (
+        {!summary && !compact && word.notes_variants ? (
           <FieldRow label="notes" Icon={IconNotes}>
             {word.notes_variants}
           </FieldRow>
         ) : null}
       </View>
 
-      {usage ? (
+      {!summary && usage ? (
         <View style={styles.usageWrap}>
           <View style={styles.usageBox}>
-            <IconChartBar size={14} color={'#B3B9C4'} />
+            <IconChartBar size={14} color={colors.inactive} />
             {USAGE_OPTIONS.map((opt) => (
               <View
                 key={opt.value}
@@ -177,10 +188,10 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
         </View>
       ) : null}
 
-      {related.length ? (
+      {!summary && related.length ? (
         <View style={styles.relatedWrap}>
           <View style={styles.relatedRow}>
-            <IconLink size={14} color={'#B3B9C4'} />
+            <IconLink size={14} color={colors.inactive} />
             {related.map((r) => (
               <Pressable
                 key={r.slug}
@@ -198,208 +209,242 @@ export function WordDetailCard({ word, style, compact = false }: Props) {
           </View>
         </View>
       ) : null}
+
+      {summary ? (
+        <Pressable
+          onPress={() => router.push(`/dictionary/${word.slug}`)}
+          style={({ pressed }) => [styles.readFull, pressed && styles.readFullPressed]}
+          accessibilityRole="link"
+          accessibilityLabel={`Read the full entry for ${word.term}`}
+        >
+          <Text style={styles.readFullText}>Read Full Entry</Text>
+        </Pressable>
+      ) : null}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.inset,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.fieldBorder,
-    paddingHorizontal: 18,
-    paddingTop: 22,
-    paddingBottom: spacing.md,
-  },
-  badgeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm - 2,
-    marginBottom: 19,
-  },
-  badge: {
-    backgroundColor: colors.primarySoft,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    borderRadius: radii.pill,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-  },
-  badgeText: {
-    color: colors.primary,
-    fontSize: 10,
-    fontFamily: fonts.bold,
-    letterSpacing: 0.3,
-  },
-  posChip: {
-    backgroundColor: colors.inset,
-    borderWidth: 1,
-    borderColor: colors.chipGrey,
-    borderRadius: radii.pill,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-  },
-  posText: {
-    color: colors.chipGrey,
-    fontSize: 10,
-    fontFamily: fonts.bold,
-    letterSpacing: 0.3,
-  },
-  actions: {
-    marginLeft: 'auto',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  shareButton: {
-    // No padding: the mock's row height comes from the 18px icon itself.
-    padding: 0,
-    borderRadius: radii.sm,
-  },
-  shareButtonPressed: {
-    opacity: 0.6,
-  },
-  // Right-aligned in the gap the frames leave between the pronunciation and
-  // the first field row.
-  suggestButton: { alignSelf: 'flex-end', marginTop: 6, marginBottom: -6 },
-  term: {
-    color: colors.text,
-    fontSize: 60,
-    fontFamily: fonts.display,
-    lineHeight: 42,
-  },
-  pron: {
-    color: colors.metaText,
-    fontFamily: fonts.semibold,
-    fontSize: 12,
-    letterSpacing: 0.3,
-    lineHeight: 12,
-    marginTop: 12,
-    marginBottom: 0,
-  },
-  fields: {
-    marginTop: 20,
-    gap: 12,
-  },
-  fieldWrap: {
-    position: 'relative',
-  },
-  fieldRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    backgroundColor: colors.surface,
-    borderWidth: 0.5,
-    borderColor: colors.fieldBorder,
-    borderRadius: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    minHeight: 52,
-  },
-  fieldText: {
-    flex: 1,
-    color: colors.text,
-    fontFamily: fonts.regular,
-    fontSize: 12,
-    lineHeight: 15,
-    letterSpacing: 0.3,
-  },
-  fieldTextItalic: {
-    fontFamily: fonts.italic,
-  },
-  fieldLabelPatch: {
-    position: 'absolute',
-    top: -5,
-    left: 8,
-    backgroundColor: colors.surface,
-    paddingHorizontal: 4,
-    paddingVertical: 1,
-  },
-  fieldLabel: {
-    color: colors.label,
-    fontFamily: fonts.extrabold,
-    fontSize: 7,
-    letterSpacing: 0.4,
-    textTransform: 'uppercase',
-    lineHeight: 8,
-  },
-  // Boxed fieldset row per frame 1042-205: leading chart icon, options inside,
-  // label patch sitting on the border like the other rows.
-  usageWrap: {
-    position: 'relative',
-    marginTop: 16,
-  },
-  usageBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    backgroundColor: colors.surface,
-    borderWidth: 0.5,
-    borderColor: colors.fieldBorder,
-    borderRadius: 8,
-    padding: 14,
-  },
-  usageOption: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: radii.pill,
-    borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  usageOptionActive: {
-    backgroundColor: colors.primarySoft,
-    borderColor: colors.primary,
-  },
-  usageOptionText: {
-    color: colors.inactive,
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    lineHeight: 11,
-  },
-  usageOptionTextActive: {
-    color: colors.primary,
-  },
-  relatedWrap: {
-    position: 'relative',
-    marginTop: 22,
-  },
-  relatedRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: 14,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    minHeight: 52,
-    borderRadius: 8,
-    backgroundColor: colors.surface,
-    borderWidth: 0.5,
-    borderColor: colors.fieldBorder,
-  },
-  relatedLabelPatch: {
-    position: 'absolute',
-    top: -5,
-    left: 8,
-    backgroundColor: colors.surface,
-    paddingHorizontal: 2,
-  },
-  relatedChip: {
-    backgroundColor: colors.primarySoft,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    borderRadius: radii.pill,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  relatedChipPressed: {
-    opacity: 0.6,
-  },
-  relatedChipText: {
-    color: colors.primary,
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    // Read Full Entry — the outline pill that closes the Today card. Matches
+    // OutlinePillButton in form.tsx rather than importing it: that one is
+    // fixed-width for the account forms, and this one fills the card.
+    readFull: {
+      marginTop: 18,
+      alignSelf: 'stretch',
+      marginHorizontal: 12,
+      height: 44,
+      borderRadius: radii.pill,
+      borderWidth: 1.5,
+      borderColor: colors.primary,
+      backgroundColor: colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    readFullPressed: { opacity: 0.85 },
+    readFullText: {
+      fontFamily: fonts.bold,
+      fontSize: 14,
+      letterSpacing: 0.3,
+      color: colors.primary,
+    },
+    card: {
+      backgroundColor: colors.inset,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colors.fieldBorder,
+      paddingHorizontal: 18,
+      paddingTop: 22,
+      paddingBottom: spacing.md,
+    },
+    badgeRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm - 2,
+      marginBottom: 19,
+    },
+    badge: {
+      backgroundColor: colors.primarySoft,
+      borderWidth: 1,
+      borderColor: colors.primary,
+      borderRadius: radii.pill,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+    },
+    badgeText: {
+      color: colors.primary,
+      fontSize: 10,
+      fontFamily: fonts.bold,
+      letterSpacing: 0.3,
+    },
+    posChip: {
+      backgroundColor: colors.inset,
+      borderWidth: 1,
+      borderColor: colors.chipGrey,
+      borderRadius: radii.pill,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+    },
+    posText: {
+      color: colors.chipGrey,
+      fontSize: 10,
+      fontFamily: fonts.bold,
+      letterSpacing: 0.3,
+    },
+    actions: {
+      marginLeft: 'auto',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+    },
+    shareButton: {
+      // No padding: the mock's row height comes from the 18px icon itself.
+      padding: 0,
+      borderRadius: radii.sm,
+    },
+    shareButtonPressed: {
+      opacity: 0.6,
+    },
+    // Right-aligned in the gap the frames leave between the pronunciation and
+    // the first field row.
+    suggestButton: { alignSelf: 'flex-end', marginTop: 6, marginBottom: -6 },
+    term: {
+      color: colors.text,
+      fontSize: 60,
+      fontFamily: fonts.display,
+      lineHeight: 42,
+    },
+    pron: {
+      color: colors.metaText,
+      fontFamily: fonts.semibold,
+      fontSize: 12,
+      letterSpacing: 0.3,
+      lineHeight: 12,
+      marginTop: 12,
+      marginBottom: 0,
+    },
+    fields: {
+      marginTop: 20,
+      gap: 12,
+    },
+    fieldWrap: {
+      position: 'relative',
+    },
+    fieldRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 14,
+      backgroundColor: colors.surface,
+      borderWidth: 0.5,
+      borderColor: colors.fieldBorder,
+      borderRadius: 8,
+      paddingHorizontal: 14,
+      paddingVertical: 14,
+      minHeight: 52,
+    },
+    fieldText: {
+      flex: 1,
+      color: colors.text,
+      fontFamily: fonts.regular,
+      fontSize: 12,
+      lineHeight: 15,
+      letterSpacing: 0.3,
+    },
+    fieldTextItalic: {
+      fontFamily: fonts.italic,
+    },
+    fieldLabelPatch: {
+      position: 'absolute',
+      top: -5,
+      left: 8,
+      backgroundColor: colors.surface,
+      paddingHorizontal: 4,
+      paddingVertical: 1,
+    },
+    fieldLabel: {
+      color: colors.label,
+      fontFamily: fonts.extrabold,
+      fontSize: 7,
+      letterSpacing: 0.4,
+      textTransform: 'uppercase',
+      lineHeight: 8,
+    },
+    // Boxed fieldset row per frame 1042-205: leading chart icon, options inside,
+    // label patch sitting on the border like the other rows.
+    usageWrap: {
+      position: 'relative',
+      marginTop: 16,
+    },
+    usageBox: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 14,
+      backgroundColor: colors.surface,
+      borderWidth: 0.5,
+      borderColor: colors.fieldBorder,
+      borderRadius: 8,
+      padding: 14,
+    },
+    usageOption: {
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      borderRadius: radii.pill,
+      borderWidth: 1,
+      borderColor: 'transparent',
+    },
+    usageOptionActive: {
+      backgroundColor: colors.primarySoft,
+      borderColor: colors.primary,
+    },
+    usageOptionText: {
+      color: colors.inactive,
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+      lineHeight: 11,
+    },
+    usageOptionTextActive: {
+      color: colors.primary,
+    },
+    relatedWrap: {
+      position: 'relative',
+      marginTop: 22,
+    },
+    relatedRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      gap: 14,
+      paddingHorizontal: 14,
+      paddingVertical: 14,
+      minHeight: 52,
+      borderRadius: 8,
+      backgroundColor: colors.surface,
+      borderWidth: 0.5,
+      borderColor: colors.fieldBorder,
+    },
+    relatedLabelPatch: {
+      position: 'absolute',
+      top: -5,
+      left: 8,
+      backgroundColor: colors.surface,
+      paddingHorizontal: 2,
+    },
+    relatedChip: {
+      backgroundColor: colors.primarySoft,
+      borderWidth: 1,
+      borderColor: colors.primary,
+      borderRadius: radii.pill,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+    },
+    relatedChipPressed: {
+      opacity: 0.6,
+    },
+    relatedChipText: {
+      color: colors.primary,
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+    },
+  });

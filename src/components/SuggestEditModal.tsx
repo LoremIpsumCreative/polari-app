@@ -21,7 +21,9 @@ import type { IconProps } from '../lib/icons';
 import type { Word } from '../types/database';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/auth';
-import { colors, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useColors, useThemedStyles } from '../lib/appearance';
+import { fonts } from '../lib/theme';
 import { useDesignScale } from '../lib/designScale';
 
 // Today/Suggest Edit — a reader proposing a correction to one row of the card
@@ -65,6 +67,8 @@ export function SuggestEditModal({
   visible: boolean;
   onClose: () => void;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const s = useDesignScale();
   const { session } = useAuth();
   const [field, setField] = useState<string | null>(null);
@@ -315,81 +319,82 @@ export function SuggestEditModal({
   );
 }
 
-const styles = StyleSheet.create({
-  scrim: {
-    flex: 1,
-    backgroundColor: SCRIM,
-    // backdropFilter is web-only; native would need expo-blur, and the 50%
-    // scrim already does the work the blur only softens. Same trade the tab
-    // bar's blur pane and the global loading states make.
-    ...Platform.select({
-      web: { backdropFilter: `blur(${BLUR_RADIUS}px)` } as object,
-      default: {},
-    }),
-  },
-  card: { position: 'absolute', backgroundColor: colors.surface },
-  title: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    fontFamily: fonts.display,
-    color: colors.text,
-  },
-  control: {
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.fieldBorder,
-    borderRadius: 8,
-  },
-  controlLabel: { flex: 1, fontFamily: fonts.semibold, color: colors.text, letterSpacing: 0.3 },
-  menu: {
-    position: 'absolute',
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.fieldBorder,
-    zIndex: 2,
-  },
-  menuRow: { flexDirection: 'row', alignItems: 'center' },
-  menuRowPressed: { backgroundColor: colors.primarySoft },
-  input: {
-    flex: 1,
-    backgroundColor: colors.inset,
-    borderWidth: 1,
-    borderColor: colors.fieldBorder,
-    fontFamily: fonts.regular,
-    color: colors.text,
-    letterSpacing: 0.3,
-  },
-  labelPatch: { position: 'absolute', top: -5, backgroundColor: colors.surface },
-  label: { color: colors.label, fontFamily: fonts.extrabold, textTransform: 'uppercase' },
-  submit: {
-    position: 'absolute',
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  submitDisabled: { backgroundColor: '#A9C8F7' },
-  submitLabel: { fontFamily: fonts.bold, color: colors.onPrimary },
-  sentText: { fontFamily: fonts.display, color: colors.text },
-  closeButton: {
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surface,
-    borderColor: colors.primary,
-  },
-  closeLabel: { fontFamily: fonts.bold, color: colors.primary },
-  error: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    fontFamily: fonts.semibold,
-    color: colors.danger,
-  },
-  pressed: { opacity: 0.7 },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    scrim: {
+      flex: 1,
+      backgroundColor: SCRIM,
+      // backdropFilter is web-only; native would need expo-blur, and the 50%
+      // scrim already does the work the blur only softens. Same trade the tab
+      // bar's blur pane and the global loading states make.
+      ...Platform.select({
+        web: { backdropFilter: `blur(${BLUR_RADIUS}px)` } as object,
+        default: {},
+      }),
+    },
+    card: { position: 'absolute', backgroundColor: colors.surface },
+    title: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      textAlign: 'center',
+      fontFamily: fonts.display,
+      color: colors.text,
+    },
+    control: {
+      position: 'absolute',
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.fieldBorder,
+      borderRadius: 8,
+    },
+    controlLabel: { flex: 1, fontFamily: fonts.semibold, color: colors.text, letterSpacing: 0.3 },
+    menu: {
+      position: 'absolute',
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.fieldBorder,
+      zIndex: 2,
+    },
+    menuRow: { flexDirection: 'row', alignItems: 'center' },
+    menuRowPressed: { backgroundColor: colors.primarySoft },
+    input: {
+      flex: 1,
+      backgroundColor: colors.inset,
+      borderWidth: 1,
+      borderColor: colors.fieldBorder,
+      fontFamily: fonts.regular,
+      color: colors.text,
+      letterSpacing: 0.3,
+    },
+    labelPatch: { position: 'absolute', top: -5, backgroundColor: colors.surface },
+    label: { color: colors.label, fontFamily: fonts.extrabold, textTransform: 'uppercase' },
+    submit: {
+      position: 'absolute',
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    submitDisabled: { backgroundColor: '#A9C8F7' },
+    submitLabel: { fontFamily: fonts.bold, color: colors.onPrimary },
+    sentText: { fontFamily: fonts.display, color: colors.text },
+    closeButton: {
+      position: 'absolute',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.surface,
+      borderColor: colors.primary,
+    },
+    closeLabel: { fontFamily: fonts.bold, color: colors.primary },
+    error: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      textAlign: 'center',
+      fontFamily: fonts.semibold,
+      color: colors.danger,
+    },
+    pressed: { opacity: 0.7 },
+  });

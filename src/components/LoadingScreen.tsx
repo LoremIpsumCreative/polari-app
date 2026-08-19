@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing, Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useReducedMotion } from '../lib/reducedMotion';
 import { useDesignScale } from '../lib/designScale';
-import { colors, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useThemedStyles } from '../lib/appearance';
+import { fonts } from '../lib/theme';
 
 // The app's two global load states — Figma "Global/Loading" (3304:3234) and
 // "Global/Load Fail" (3335:3635).
@@ -109,6 +111,7 @@ const BOB = {
 
 /** The veil both states sit on. */
 function Scrim({ children }: { children: React.ReactNode }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.scrim} pointerEvents="box-none">
       {children}
@@ -124,6 +127,7 @@ function Scrim({ children }: { children: React.ReactNode }) {
  * is the clearest case for honouring the setting.
  */
 export function LoadingScreen() {
+  const styles = useThemedStyles(makeStyles);
   const s = useDesignScale();
   const reduceMotion = useReducedMotion();
   const cycle = useRef(new Animated.Value(0)).current;
@@ -262,6 +266,7 @@ export function LoadingScreen() {
  * way back. Nothing moves here: the state is already the end of a story.
  */
 export function LoadFailedScreen({ onRetry }: { onRetry: () => void }) {
+  const styles = useThemedStyles(makeStyles);
   const s = useDesignScale();
   const retry = useCallback(() => onRetry(), [onRetry]);
 
@@ -318,38 +323,39 @@ export function LoadFailedScreen({ onRetry }: { onRetry: () => void }) {
   );
 }
 
-const styles = StyleSheet.create({
-  scrim: {
-    ...FILL,
-    backgroundColor: SCRIM,
-    alignItems: 'center',
-    // backdropFilter is a web-only CSS property; native would need expo-blur,
-    // and the 50% scrim already does the work the blur only softens.
-    ...Platform.select({
-      web: { backdropFilter: `blur(${BLUR_RADIUS}px)` } as object,
-      default: {},
-    }),
-  },
-  fill: { ...FILL },
-  headline: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    fontFamily: fonts.display,
-    color: colors.onPrimary,
-  },
-  refresh: {
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surface,
-    borderColor: colors.primary,
-  },
-  refreshPressed: { opacity: 0.7 },
-  refreshLabel: {
-    fontFamily: fonts.bold,
-    color: colors.primary,
-    textAlign: 'center',
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    scrim: {
+      ...FILL,
+      backgroundColor: SCRIM,
+      alignItems: 'center',
+      // backdropFilter is a web-only CSS property; native would need expo-blur,
+      // and the 50% scrim already does the work the blur only softens.
+      ...Platform.select({
+        web: { backdropFilter: `blur(${BLUR_RADIUS}px)` } as object,
+        default: {},
+      }),
+    },
+    fill: { ...FILL },
+    headline: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      textAlign: 'center',
+      fontFamily: fonts.display,
+      color: colors.onPrimary,
+    },
+    refresh: {
+      position: 'absolute',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.surface,
+      borderColor: colors.primary,
+    },
+    refreshPressed: { opacity: 0.7 },
+    refreshLabel: {
+      fontFamily: fonts.bold,
+      color: colors.primary,
+      textAlign: 'center',
+    },
+  });

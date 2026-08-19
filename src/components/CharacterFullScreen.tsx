@@ -1,7 +1,9 @@
 import { Image, Modal, Pressable, StyleSheet, View } from 'react-native';
 import IconX from '@tabler/icons-react-native/IconX';
 import type { ImageSourcePropType } from 'react-native';
-import { colors, spacing } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useColors, useThemedStyles } from '../lib/appearance';
+import { spacing } from '../lib/theme';
 
 // Full-screen viewer for a word's character art. Tap anywhere (or the X)
 // to dismiss.
@@ -16,6 +18,8 @@ export function CharacterFullScreen({
   onClose: () => void;
   label: string;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
       <Pressable
@@ -32,21 +36,22 @@ export function CharacterFullScreen({
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: colors.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  art: {
-    width: '92%',
-    height: '80%',
-  },
-  closeButton: {
-    position: 'absolute',
-    top: spacing.xl + spacing.sm,
-    right: spacing.lg,
-    padding: spacing.xs,
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    backdrop: {
+      flex: 1,
+      backgroundColor: colors.background,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    art: {
+      width: '92%',
+      height: '80%',
+    },
+    closeButton: {
+      position: 'absolute',
+      top: spacing.xl + spacing.sm,
+      right: spacing.lg,
+      padding: spacing.xs,
+    },
+  });
