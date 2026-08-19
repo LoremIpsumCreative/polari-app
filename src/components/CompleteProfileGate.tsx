@@ -3,7 +3,9 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useAuth } from '../lib/auth';
 import { useDisplayName } from '../lib/displayName';
 import { DISPLAY_NAME_MAX } from '../lib/nameModeration';
-import { colors, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useThemedStyles } from '../lib/appearance';
+import { fonts } from '../lib/theme';
 import { useDesignScale } from '../lib/designScale';
 import { ScreenBackground } from './ScreenBackground';
 
@@ -19,6 +21,7 @@ const FIELD = { left: 16, top: 30, width: 307, height: 44 };
 const BUTTON = { width: 187, height: 50, top: 660 };
 
 export function CompleteProfileGate({ onDone }: { onDone: () => void }) {
+  const styles = useThemedStyles(makeStyles);
   const s = useDesignScale();
   const { session } = useAuth();
   const { displayName, ready, save } = useDisplayName();
@@ -134,61 +137,62 @@ export function CompleteProfileGate({ onDone }: { onDone: () => void }) {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: colors.canvas,
-    alignItems: 'center',
-  },
-  title: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    fontFamily: fonts.display,
-    color: colors.text,
-  },
-  card: {
-    position: 'absolute',
-    backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.fieldBorder,
-  },
-  fieldLabel: {
-    position: 'absolute',
-    zIndex: 1,
-    paddingHorizontal: 4,
-    backgroundColor: colors.surface,
-    fontFamily: fonts.bold,
-    letterSpacing: 0.3,
-    color: colors.label,
-  },
-  field: {
-    position: 'absolute',
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.pillBorder,
-    fontFamily: fonts.bold,
-    color: colors.text,
-  },
-  error: {
-    position: 'absolute',
-    left: 34,
-    right: 34,
-    textAlign: 'center',
-    fontFamily: fonts.semibold,
-    color: colors.incorrect,
-  },
-  button: {
-    position: 'absolute',
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonDisabled: { opacity: 0.4 },
-  buttonLabel: { fontFamily: fonts.bold, color: colors.onPrimary },
-  pressed: { opacity: 0.8 },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: colors.canvas,
+      alignItems: 'center',
+    },
+    title: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      textAlign: 'center',
+      fontFamily: fonts.display,
+      color: colors.text,
+    },
+    card: {
+      position: 'absolute',
+      backgroundColor: colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.fieldBorder,
+    },
+    fieldLabel: {
+      position: 'absolute',
+      zIndex: 1,
+      paddingHorizontal: 4,
+      backgroundColor: colors.surface,
+      fontFamily: fonts.bold,
+      letterSpacing: 0.3,
+      color: colors.label,
+    },
+    field: {
+      position: 'absolute',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.pillBorder,
+      fontFamily: fonts.bold,
+      color: colors.text,
+    },
+    error: {
+      position: 'absolute',
+      left: 34,
+      right: 34,
+      textAlign: 'center',
+      fontFamily: fonts.semibold,
+      color: colors.incorrect,
+    },
+    button: {
+      position: 'absolute',
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    buttonDisabled: { opacity: 0.4 },
+    buttonLabel: { fontFamily: fonts.bold, color: colors.onPrimary },
+    pressed: { opacity: 0.8 },
+  });

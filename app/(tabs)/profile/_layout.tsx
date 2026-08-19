@@ -1,7 +1,8 @@
 import { Stack } from 'expo-router';
-import { headerOptions } from '../../../src/lib/theme';
+import { useHeaderOptions } from '../../../src/lib/appearance';
 
 export default function ProfileLayout() {
+  const headerOptions = useHeaderOptions();
   return (
     <Stack screenOptions={headerOptions}>
       {/* Account/Main runs its welcome banner from y116 with no header. */}

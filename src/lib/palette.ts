@@ -32,6 +32,9 @@ const darkOverrides: Partial<Palette> = {
   chipGrey: '#B3B9C4', // part-of-speech chip rides Text/Muted
   onPrimary: '#FFFFFF', // Text/Persistent/White — same in both modes
 
+  // Disabled/*
+  disabledFill: '#343434', // Disabled/Fill
+
   // Border/*
   fieldBorder: '#44546F', // Border/Field ← Neutral/700
   pillBorder: '#44546F', // Border/Field — the notched pill outline
@@ -84,15 +87,15 @@ export const tabAccentsFor = (scheme: Scheme): Record<string, string> =>
 //   cardBorder / pillBorder                the form card edge and the notched
 //                                          pill are bound to Neutral/600 too —
 //                                          see optionBorder below, same story
-//   optionBorder / disabledFill            the Account row hairline and the
-//                                          disabled badge are bound in Figma
-//                                          straight to primitives (Neutral/600,
-//                                          Neutral/100), and primitives are
-//                                          single-mode — so they are the same
-//                                          in both schemes BY CONSTRUCTION, not
-//                                          by omission. Worth confirming that
-//                                          is deliberate rather than a missed
-//                                          semantic binding.
+//   optionBorder                           the Account row hairline is bound in
+//                                          Figma to the primitive Neutral/600,
+//                                          which is single-mode — the same in
+//                                          both schemes by construction. It
+//                                          reads correctly on both surfaces, so
+//                                          this one looks deliberate. (The
+//                                          disabled badge was bound the same
+//                                          way and was NOT deliberate — see
+//                                          disabledFill in theme.ts.)
 //   stage / stageDeep / spotlight / dark   the quiz intro stage is already a
 //                                          dark surface in both modes
 //   progressTrack / progressFill /         quiz progress rail — no Semantic

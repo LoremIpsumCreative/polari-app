@@ -3,7 +3,9 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
-import { colors, fonts, spacing } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useThemedStyles } from '../../../src/lib/appearance';
+import { fonts, spacing } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import {
@@ -24,6 +26,7 @@ import {
 // y332 and REENTER NEW PASSWORD y389 before the checklist. Confirm at y659.
 
 export default function ChangePasswordScreen() {
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { session } = useAuth();
   const [current, setCurrent] = useState('');
@@ -135,26 +138,27 @@ export default function ChangePasswordScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.canvas },
-  // paddingBottom comes from useTabBarInset at the call site: the floating tab
-  // bar's height varies with the device's safe-area inset.
-  content: {},
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.canvas },
+    // paddingBottom comes from useTabBarInset at the call site: the floating tab
+    // bar's height varies with the device's safe-area inset.
+    content: {},
 
-  gap: { height: 12 },
+    gap: { height: 12 },
 
-  // Link y264..274, then a 55 break before NEW PASSWORD at y332 — the frame
-  // treats the current-password row as its own group.
-  forgotWrap: { alignSelf: 'flex-end', marginTop: 11, marginBottom: 54 },
-  forgot: {
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    lineHeight: 13,
-    letterSpacing: 0.3,
-    color: colors.text,
-    textDecorationLine: 'underline',
-  },
+    // Link y264..274, then a 55 break before NEW PASSWORD at y332 — the frame
+    // treats the current-password row as its own group.
+    forgotWrap: { alignSelf: 'flex-end', marginTop: 11, marginBottom: 54 },
+    forgot: {
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      lineHeight: 13,
+      letterSpacing: 0.3,
+      color: colors.text,
+      textDecorationLine: 'underline',
+    },
 
-  // Card bottom y519 → CTA top y659.
-  cta: { marginTop: 139 },
-});
+    // Card bottom y519 → CTA top y659.
+    cta: { marginTop: 139 },
+  });

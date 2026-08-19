@@ -19,7 +19,9 @@ import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { useDisplayName } from '../../../src/lib/displayName';
 import { useAppearance, type AppearanceMode } from '../../../src/lib/appearance';
-import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../../src/lib/appearance';
+import { radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { AccountOption } from '../../../src/components/AccountOption';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
@@ -39,11 +41,12 @@ const APPEARANCE_MODES: { key: AppearanceMode; label: string; Icon: typeof IconS
 // The selector the Appearance row expands to reveal. Both the signed-in and
 // signed-out branches draw it, so it lives here rather than twice inline.
 //
-// The choice is stored and resolved immediately (System follows the OS), but
-// only the surfaces already migrated to useColors() repaint — today the root
-// letterbox and frame. Each screen joins as it is migrated; nothing here needs
-// to change when they do.
+// The choice is stored and resolved immediately, System following the OS. The
+// Account area repaints with it; the areas still on the static palette join as
+// they are migrated, and nothing here changes when they do.
 function AppearanceModes() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const { mode, setMode } = useAppearance();
   return (
     <View style={styles.modeRow} accessibilityRole="radiogroup">
@@ -92,6 +95,7 @@ function ProfileField({
   keyboardType?: 'default' | 'email-address';
   autoCapitalize?: 'none' | 'words';
 }) {
+  const styles = useThemedStyles(makeStyles);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(value);
   const [saving, setSaving] = useState(false);
@@ -162,6 +166,8 @@ function ProfileField({
 }
 
 export default function ProfileScreen() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { session, signOut } = useAuth();
   const { displayName, save: saveDisplayName } = useDisplayName();
@@ -475,282 +481,283 @@ export default function ProfileScreen() {
 // label, not the whole Account screen.
 const APP_VERSION = Constants.expoConfig?.version ?? '—';
 
-const styles = StyleSheet.create({
-  // Wrapper so the sparkle pattern stays fixed behind the scrolling content.
-  screenBg: { flex: 1 },
-  // Frame puts the ink at x307..366, y25..31 — right-aligned 27 in from the
-  // edge, above everything the screen scrolls.
-  version: {
-    position: 'absolute',
-    right: 27,
-    top: 22,
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    color: '#919BAB',
-    zIndex: 1,
-  },
-  container: {
-    flex: 1,
-    // Transparent on purpose. This ScrollView sits directly over
-    // <ScreenBackground />, so any opaque fill here hides the sparkle pattern
-    // entirely — which is what it used to do, in the wrong grey as well
-    // (#DCDFE4 `background` rather than the #E7E9EC `canvas` every other screen
-    // uses). The canvas colour belongs to ScreenBackground; this just scrolls.
-    backgroundColor: 'transparent',
-  },
-  // Account container x27 y187: three groups 60 apart, rows 8 apart.
-  content: {
-    paddingHorizontal: 27,
-    paddingTop: 116,
-    // paddingBottom comes from useTabBarInset at the call site: the floating
-    // tab bar's height varies with the device's safe-area inset.
-  },
-  // Signed-out gate: rows from y150, Sign In at y608, prompt at y673.
-  // The signed-out rows carry the same 8-within / 24-between rhythm as the
-  // signed-in groups; only the first one is pushed down to the frame's y150.
-  gateRows: { marginTop: 150, marginHorizontal: 27, gap: 8, marginBottom: 24 },
-  gateGroup: { marginHorizontal: 27, gap: 8, marginBottom: 24 },
-  gateSignIn: {
-    position: 'absolute',
-    left: 98,
-    top: 608,
-    width: 199,
-    height: 50,
-    borderRadius: 999,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  gateSignInText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    letterSpacing: 0.3,
-    color: colors.onPrimary,
-  },
-  gateCreate: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 673,
-    fontFamily: fonts.regular,
-    fontSize: 14,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  gateCreateAccent: { color: colors.primary },
-  banner: {
-    marginLeft: 10,
-    // Puts the first row's top on y150, where the frame draws it.
-    marginBottom: 10,
-    fontFamily: fonts.bold,
-    fontSize: 20,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-  bannerName: { color: colors.primary },
-  // Measured off Account/Main/Signed In.png: rows 50 tall sit 8 apart inside a
-  // block and 24 apart between blocks. It was a uniform 60.
-  group: { gap: 8, marginBottom: 24 },
-  signOutGroup: { gap: 8, marginBottom: 24, marginTop: 14 },
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    // Wrapper so the sparkle pattern stays fixed behind the scrolling content.
+    screenBg: { flex: 1 },
+    // Frame puts the ink at x307..366, y25..31 — right-aligned 27 in from the
+    // edge, above everything the screen scrolls.
+    version: {
+      position: 'absolute',
+      right: 27,
+      top: 22,
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+      color: '#919BAB',
+      zIndex: 1,
+    },
+    container: {
+      flex: 1,
+      // Transparent on purpose. This ScrollView sits directly over
+      // <ScreenBackground />, so any opaque fill here hides the sparkle pattern
+      // entirely — which is what it used to do, in the wrong grey as well
+      // (#DCDFE4 `background` rather than the #E7E9EC `canvas` every other screen
+      // uses). The canvas colour belongs to ScreenBackground; this just scrolls.
+      backgroundColor: 'transparent',
+    },
+    // Account container x27 y187: three groups 60 apart, rows 8 apart.
+    content: {
+      paddingHorizontal: 27,
+      paddingTop: 116,
+      // paddingBottom comes from useTabBarInset at the call site: the floating
+      // tab bar's height varies with the device's safe-area inset.
+    },
+    // Signed-out gate: rows from y150, Sign In at y608, prompt at y673.
+    // The signed-out rows carry the same 8-within / 24-between rhythm as the
+    // signed-in groups; only the first one is pushed down to the frame's y150.
+    gateRows: { marginTop: 150, marginHorizontal: 27, gap: 8, marginBottom: 24 },
+    gateGroup: { marginHorizontal: 27, gap: 8, marginBottom: 24 },
+    gateSignIn: {
+      position: 'absolute',
+      left: 98,
+      top: 608,
+      width: 199,
+      height: 50,
+      borderRadius: 999,
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    gateSignInText: {
+      fontFamily: fonts.bold,
+      fontSize: 14,
+      letterSpacing: 0.3,
+      color: colors.onPrimary,
+    },
+    gateCreate: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 673,
+      fontFamily: fonts.regular,
+      fontSize: 14,
+      color: colors.text,
+      textAlign: 'center',
+    },
+    gateCreateAccent: { color: colors.primary },
+    banner: {
+      marginLeft: 10,
+      // Puts the first row's top on y150, where the frame draws it.
+      marginBottom: 10,
+      fontFamily: fonts.bold,
+      fontSize: 20,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
+    bannerName: { color: colors.primary },
+    // Measured off Account/Main/Signed In.png: rows 50 tall sit 8 apart inside a
+    // block and 24 apart between blocks. It was a uniform 60.
+    group: { gap: 8, marginBottom: 24 },
+    signOutGroup: { gap: 8, marginBottom: 24, marginTop: 14 },
 
-  field: { gap: 6 },
-  fieldLabel: {
-    marginLeft: 10,
-    fontFamily: fonts.bold,
-    fontSize: 8,
-    letterSpacing: 0.3,
-    color: colors.textFaint,
-  },
-  fieldBox: {
-    borderRadius: 999,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.metaText,
-    paddingHorizontal: 16,
-    paddingVertical: 11,
-  },
-  fieldValue: { fontFamily: fonts.bold, fontSize: 12, letterSpacing: 0.3, color: colors.text },
-  // The label and the Verified/Unverified tag share a line, pushed apart.
-  fieldHeadRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  fieldStatus: { fontFamily: fonts.bold, fontSize: 9, letterSpacing: 0.3 },
-  statusOk: { color: colors.green },
-  statusWarn: { color: HEART_RED },
-  fieldError: { marginLeft: 10, fontFamily: fonts.semibold, fontSize: 9, color: HEART_RED },
-  // Change Password sits beside Resend Verification Email when an address is
-  // outstanding, so they are bordered pills on a wrapping row rather than the
-  // single underlined link this used to be.
-  profileButtons: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 },
-  profileButton: {
-    borderRadius: 8,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.metaText,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-  },
-  profileButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
+    field: { gap: 6 },
+    fieldLabel: {
+      marginLeft: 10,
+      fontFamily: fonts.bold,
+      fontSize: 8,
+      letterSpacing: 0.3,
+      color: colors.textFaint,
+    },
+    fieldBox: {
+      borderRadius: 999,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.metaText,
+      paddingHorizontal: 16,
+      paddingVertical: 11,
+    },
+    fieldValue: { fontFamily: fonts.bold, fontSize: 12, letterSpacing: 0.3, color: colors.text },
+    // The label and the Verified/Unverified tag share a line, pushed apart.
+    fieldHeadRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+    fieldStatus: { fontFamily: fonts.bold, fontSize: 9, letterSpacing: 0.3 },
+    statusOk: { color: colors.green },
+    statusWarn: { color: HEART_RED },
+    fieldError: { marginLeft: 10, fontFamily: fonts.semibold, fontSize: 9, color: HEART_RED },
+    // Change Password sits beside Resend Verification Email when an address is
+    // outstanding, so they are bordered pills on a wrapping row rather than the
+    // single underlined link this used to be.
+    profileButtons: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 },
+    profileButton: {
+      borderRadius: 8,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.metaText,
+      paddingHorizontal: 12,
+      paddingVertical: 9,
+    },
+    profileButtonText: {
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
 
-  modeRow: { flexDirection: 'row', gap: 8 },
-  mode: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  // Selected is the solid blue chip the frame draws on Light Mode; the other
-  // two are the bordered surface chips beside it.
-  modeActive: { backgroundColor: colors.primary },
-  modeIdle: {
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.fieldBorder,
-  },
-  modeText: { fontFamily: fonts.bold, fontSize: 10, letterSpacing: 0.3, color: colors.onPrimary },
-  modeTextIdle: { color: colors.text },
+    modeRow: { flexDirection: 'row', gap: 8 },
+    mode: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+      borderRadius: 8,
+    },
+    // Selected is the solid blue chip the frame draws on Light Mode; the other
+    // two are the bordered surface chips beside it.
+    modeActive: { backgroundColor: colors.primary },
+    modeIdle: {
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.fieldBorder,
+    },
+    modeText: { fontFamily: fonts.bold, fontSize: 10, letterSpacing: 0.3, color: colors.onPrimary },
+    modeTextIdle: { color: colors.text },
 
-  pressed: { opacity: 0.85 },
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(18, 18, 18, 0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  confirmCard: {
-    width: 304,
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    paddingHorizontal: 32,
-    paddingTop: 42,
-    paddingBottom: 32,
-    alignItems: 'center',
-  },
-  confirmTitle: {
-    fontFamily: fonts.display,
-    fontSize: 60,
-    lineHeight: 58,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  confirmBody: {
-    marginTop: 32,
-    fontFamily: fonts.regular,
-    fontSize: 16,
-    lineHeight: 18,
-    letterSpacing: 0.2,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  confirmWarning: {
-    marginTop: 32,
-    fontFamily: fonts.bold,
-    fontSize: 16,
-    lineHeight: 18,
-    letterSpacing: 0.2,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  confirmActions: { marginTop: 50, gap: 16 },
-  confirmButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    width: 240,
-    height: 50,
-    borderRadius: 999,
-    paddingHorizontal: 27,
-  },
-  keepButton: { backgroundColor: colors.primary },
-  deleteButton: { backgroundColor: HEART_RED, justifyContent: 'center', paddingHorizontal: 23 },
-  keepBadge: {
-    width: 26,
-    height: 26,
-    borderRadius: 999,
-    borderWidth: 1.5,
-    borderColor: colors.onPrimary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  deleteBadge: {
-    width: 26,
-    height: 26,
-    borderRadius: 999,
-    backgroundColor: '#FFECEB',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  confirmButtonText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    letterSpacing: 0.3,
-    color: colors.onPrimary,
-  },
+    pressed: { opacity: 0.85 },
+    backdrop: {
+      flex: 1,
+      backgroundColor: 'rgba(18, 18, 18, 0.5)',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    confirmCard: {
+      width: 304,
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      paddingHorizontal: 32,
+      paddingTop: 42,
+      paddingBottom: 32,
+      alignItems: 'center',
+    },
+    confirmTitle: {
+      fontFamily: fonts.display,
+      fontSize: 60,
+      lineHeight: 58,
+      color: colors.text,
+      textAlign: 'center',
+    },
+    confirmBody: {
+      marginTop: 32,
+      fontFamily: fonts.regular,
+      fontSize: 16,
+      lineHeight: 18,
+      letterSpacing: 0.2,
+      color: colors.text,
+      textAlign: 'center',
+    },
+    confirmWarning: {
+      marginTop: 32,
+      fontFamily: fonts.bold,
+      fontSize: 16,
+      lineHeight: 18,
+      letterSpacing: 0.2,
+      color: colors.text,
+      textAlign: 'center',
+    },
+    confirmActions: { marginTop: 50, gap: 16 },
+    confirmButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      width: 240,
+      height: 50,
+      borderRadius: 999,
+      paddingHorizontal: 27,
+    },
+    keepButton: { backgroundColor: colors.primary },
+    deleteButton: { backgroundColor: HEART_RED, justifyContent: 'center', paddingHorizontal: 23 },
+    keepBadge: {
+      width: 26,
+      height: 26,
+      borderRadius: 999,
+      borderWidth: 1.5,
+      borderColor: colors.onPrimary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    deleteBadge: {
+      width: 26,
+      height: 26,
+      borderRadius: 999,
+      backgroundColor: '#FFECEB',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    confirmButtonText: {
+      fontFamily: fonts.bold,
+      fontSize: 14,
+      letterSpacing: 0.3,
+      color: colors.onPrimary,
+    },
 
-  deleteAccount: {
-    marginTop: 24,
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    color: colors.danger,
-    textAlign: 'center',
-    textDecorationLine: 'underline',
-  },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    padding: spacing.xl,
-    backgroundColor: colors.background,
-  },
-  emptyTitle: {
-    fontSize: 18,
-    fontFamily: fonts.bold,
-    color: colors.text,
-  },
-  emptyBody: {
-    fontFamily: fonts.regular,
-    fontSize: 14,
-    color: colors.textMuted,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  primaryButton: {
-    marginTop: spacing.md,
-    backgroundColor: colors.primary,
-    borderRadius: radii.pill,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-  },
-  primaryButtonText: {
-    color: '#fff',
-    fontFamily: fonts.semibold,
-  },
-  link: {
-    marginTop: spacing.sm,
-    color: colors.textMuted,
-    fontFamily: fonts.regular,
-    fontSize: 14,
-  },
-  linkStrong: {
-    color: colors.primary,
-    fontFamily: fonts.semibold,
-  },
-  cancelDelete: {
-    color: colors.textMuted,
-    fontFamily: fonts.regular,
-    fontSize: 13,
-    textAlign: 'center',
-  },
-  deleteError: {
-    color: colors.danger,
-    fontFamily: fonts.regular,
-    fontSize: 13,
-    textAlign: 'center',
-  },
-});
+    deleteAccount: {
+      marginTop: 24,
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+      color: colors.danger,
+      textAlign: 'center',
+      textDecorationLine: 'underline',
+    },
+    center: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: spacing.sm,
+      padding: spacing.xl,
+      backgroundColor: colors.background,
+    },
+    emptyTitle: {
+      fontSize: 18,
+      fontFamily: fonts.bold,
+      color: colors.text,
+    },
+    emptyBody: {
+      fontFamily: fonts.regular,
+      fontSize: 14,
+      color: colors.textMuted,
+      textAlign: 'center',
+      lineHeight: 20,
+    },
+    primaryButton: {
+      marginTop: spacing.md,
+      backgroundColor: colors.primary,
+      borderRadius: radii.pill,
+      paddingHorizontal: spacing.lg,
+      paddingVertical: spacing.sm,
+    },
+    primaryButtonText: {
+      color: '#fff',
+      fontFamily: fonts.semibold,
+    },
+    link: {
+      marginTop: spacing.sm,
+      color: colors.textMuted,
+      fontFamily: fonts.regular,
+      fontSize: 14,
+    },
+    linkStrong: {
+      color: colors.primary,
+      fontFamily: fonts.semibold,
+    },
+    cancelDelete: {
+      color: colors.textMuted,
+      fontFamily: fonts.regular,
+      fontSize: 13,
+      textAlign: 'center',
+    },
+    deleteError: {
+      color: colors.danger,
+      fontFamily: fonts.regular,
+      fontSize: 13,
+      textAlign: 'center',
+    },
+  });

@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../../src/lib/supabase';
-import { colors, fonts, spacing } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useThemedStyles } from '../../../src/lib/appearance';
+import { fonts, spacing } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import { OrDivider, ProviderButtons } from '../../../src/components/ProviderButtons';
@@ -22,6 +24,7 @@ import {
 // FORGOT PASSWORD? link in the same position.
 
 export default function SignInScreen() {
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -110,38 +113,39 @@ export default function SignInScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.canvas },
-  // paddingBottom comes from useTabBarInset at the call site: the floating tab
-  // bar's height varies with the device's safe-area inset.
-  content: {},
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.canvas },
+    // paddingBottom comes from useTabBarInset at the call site: the floating tab
+    // bar's height varies with the device's safe-area inset.
+    content: {},
 
-  gap: { height: 12 },
+    gap: { height: 12 },
 
-  forgotWrap: { alignSelf: 'flex-end', marginTop: 8 },
-  forgot: {
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    color: colors.text,
-    textDecorationLine: 'underline',
-  },
+    forgotWrap: { alignSelf: 'flex-end', marginTop: 8 },
+    forgot: {
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+      color: colors.text,
+      textDecorationLine: 'underline',
+    },
 
-  // The 2028-08-19 Sign In frame fills what used to be dead space between the
-  // card and the CTA with the OR rule and the four provider rows: card closes
-  // ~y305, OR ~y343, providers y380..590, Sign In y620. So the old 308 gap —
-  // which existed to put the button on the y659 line its sibling forms use —
-  // is now the short hop from the last provider row to the button.
-  cta: { marginTop: 28 },
+    // The 2028-08-19 Sign In frame fills what used to be dead space between the
+    // card and the CTA with the OR rule and the four provider rows: card closes
+    // ~y305, OR ~y343, providers y380..590, Sign In y620. So the old 308 gap —
+    // which existed to put the button on the y659 line its sibling forms use —
+    // is now the short hop from the last provider row to the button.
+    cta: { marginTop: 28 },
 
-  // Mirrors the signed-out Account screen's own create-account line at y673.
-  createLine: {
-    marginTop: 14,
-    fontFamily: fonts.semibold,
-    fontSize: 12,
-    letterSpacing: 0.3,
-    color: colors.textMuted,
-    textAlign: 'center',
-  },
-  createAccent: { color: colors.primary },
-});
+    // Mirrors the signed-out Account screen's own create-account line at y673.
+    createLine: {
+      marginTop: 14,
+      fontFamily: fonts.semibold,
+      fontSize: 12,
+      letterSpacing: 0.3,
+      color: colors.textMuted,
+      textAlign: 'center',
+    },
+    createAccent: { color: colors.primary },
+  });

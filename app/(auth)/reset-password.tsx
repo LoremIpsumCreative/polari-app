@@ -3,7 +3,9 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../src/lib/supabase';
 import { useAuth } from '../../src/lib/auth';
-import { colors, fonts } from '../../src/lib/theme';
+import type { Palette } from '../../src/lib/palette';
+import { useThemedStyles } from '../../src/lib/appearance';
+import { fonts } from '../../src/lib/theme';
 import { ScreenBackground } from '../../src/components/ScreenBackground';
 import {
   FieldsetInput,
@@ -25,6 +27,7 @@ import {
 // header is the same kit as its siblings.
 
 export default function ResetPasswordScreen() {
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { session } = useAuth();
   const [password, setPassword] = useState('');
@@ -106,16 +109,17 @@ export default function ResetPasswordScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.canvas },
-  content: { paddingBottom: 40 },
-  gap: { height: 12 },
-  cta: { marginTop: 60 },
-  body: {
-    fontFamily: fonts.regular,
-    fontSize: 16,
-    lineHeight: 22,
-    color: colors.text,
-    textAlign: 'center',
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.canvas },
+    content: { paddingBottom: 40 },
+    gap: { height: 12 },
+    cta: { marginTop: 60 },
+    body: {
+      fontFamily: fonts.regular,
+      fontSize: 16,
+      lineHeight: 22,
+      color: colors.text,
+      textAlign: 'center',
+    },
+  });

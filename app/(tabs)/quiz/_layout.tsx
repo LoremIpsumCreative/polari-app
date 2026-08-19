@@ -1,7 +1,8 @@
 import { Stack } from 'expo-router';
-import { headerOptions } from '../../../src/lib/theme';
+import { useHeaderOptions } from '../../../src/lib/appearance';
 
 export default function QuizLayout() {
+  const headerOptions = useHeaderOptions();
   return (
     <Stack screenOptions={headerOptions}>
       <Stack.Screen name="index" options={{ title: 'Quiz', headerShown: false }} />
