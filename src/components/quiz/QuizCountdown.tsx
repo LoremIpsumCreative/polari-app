@@ -1,7 +1,9 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import IconChevronLeft from '@tabler/icons-react-native/IconChevronLeft';
-import { colors, fonts } from '../../lib/theme';
+import type { Palette } from '../../lib/palette';
+import { useColors, useThemedStyles } from '../../lib/appearance';
+import { fonts } from '../../lib/theme';
 import { ScreenBackground } from '../ScreenBackground';
 import { QuizStatHeader } from './QuizStatHeader';
 
@@ -12,7 +14,9 @@ import { QuizStatHeader } from './QuizStatHeader';
 //
 // Tops are cap lines solved back through the fonts' metrics (Digitale: asc
 // 0.97em, desc 0.27em, cap 0.71em; Mouse Memoirs: 0.9375 / 0.2125 / 0.71925).
-const CD = {
+// A function of the palette: two of the geometry entries carry fills, and a
+// module constant would freeze them at the light values.
+const cd = (colors: Palette) => ({
   backChip: { x: 17, y: 51.5, w: 80, h: 31 },
   titleTop: 107, // matches the question screen's Mode Text
   titleSize: 60,
@@ -30,7 +34,7 @@ const CD = {
   numberTop: 397.5, // cap line 405.5
   numberSize: 100,
   numberLine: 88,
-};
+});
 
 type Props = {
   /** Design-frame scale from useDesignScale. */
@@ -45,6 +49,9 @@ type Props = {
 };
 
 export function QuizCountdown({ scale: s, title, count, streak, highScore, onBack }: Props) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
+  const CD = cd(colors);
   return (
     <View style={styles.screen}>
       <ScreenBackground />
@@ -121,37 +128,38 @@ export function QuizCountdown({ scale: s, title, count, streak, highScore, onBac
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.canvas },
-  cdBackChip: {
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    backgroundColor: colors.inset,
-    borderRadius: 999,
-  },
-  cdBackText: { fontFamily: fonts.bold, color: colors.text },
-  cdTitle: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    fontFamily: fonts.display,
-    color: colors.text,
-  },
-  cdPill: {
-    position: 'absolute',
-    backgroundColor: colors.chipGrey,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cdPillText: { fontFamily: fonts.bold, color: colors.onPrimary },
-  cdNumber: {
-    position: 'absolute',
-    textAlign: 'center',
-    fontFamily: fonts.extrabold,
-    color: colors.chipGrey,
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.canvas },
+    cdBackChip: {
+      position: 'absolute',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 4,
+      backgroundColor: colors.inset,
+      borderRadius: 999,
+    },
+    cdBackText: { fontFamily: fonts.bold, color: colors.text },
+    cdTitle: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      textAlign: 'center',
+      fontFamily: fonts.display,
+      color: colors.text,
+    },
+    cdPill: {
+      position: 'absolute',
+      backgroundColor: colors.chipGrey,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    cdPillText: { fontFamily: fonts.bold, color: colors.onPrimary },
+    cdNumber: {
+      position: 'absolute',
+      textAlign: 'center',
+      fontFamily: fonts.extrabold,
+      color: colors.chipGrey,
+    },
+  });

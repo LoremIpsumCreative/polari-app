@@ -5,7 +5,9 @@ import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from 'react-native-svg
 import { useWords } from '../../../src/lib/words';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { QUIZ_MODES, type QuizModeId } from '../../../src/lib/quizModes';
-import { colors, fonts, DESIGN_WIDTH, DESIGN_HEIGHT } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../../src/lib/appearance';
+import { fonts, DESIGN_WIDTH, DESIGN_HEIGHT } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { useReducedMotion } from '../../../src/lib/reducedMotion';
 import { Blob, FLAME, ModeGlyph } from '../../../src/components/quizLandingArt';
@@ -118,7 +120,6 @@ const HERO_SHADOW = (s: number) =>
   });
 
 const GOLD_INK = '#F5CD47';
-const MODE_INK = colors.quizPurple;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Entrance choreography — Figma frame 1114:158, 5.17s one-shot.
@@ -169,6 +170,8 @@ function cue(
 }
 
 export default function QuizIntroScreen() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { words, loading } = useWords();
   const { bestFor } = useQuizStats();
@@ -592,7 +595,7 @@ export default function QuizIntroScreen() {
                   accessibilityRole="button"
                   accessibilityLabel={`Start ${m.label} quiz`}
                 >
-                  <ModeGlyph name={mode} s={s} color={MODE_INK} />
+                  <ModeGlyph name={mode} s={s} color={colors.quizPurple} />
                 </Pressable>
                 <Text style={[styles.modeLabel, { marginTop: 5 * s, fontSize: 10 * s }]}>
                   {m.label}
@@ -652,101 +655,102 @@ export default function QuizIntroScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  stage: {
-    flex: 1,
-    backgroundColor: colors.stage,
-    overflow: 'hidden',
-  },
-  // Figma 1141:351: x0 y503, 393x352 — so it overhangs the 852 frame by 3 and
-  // is clipped. Top-anchored at 503/852 rather than bottom-anchored, because
-  // the gradient's own stops are fractions of a 352-tall box; pinning it to the
-  // bottom made the box 349 and shifted them.
-  wash: { position: 'absolute', left: 0, right: 0, top: '59.04%', height: '41.31%' },
-  beams: { position: 'absolute', top: 0, alignSelf: 'center' },
-  headingPanel: { position: 'absolute' },
-  heading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    fontFamily: fonts.display,
-    color: colors.onPrimary,
-    textAlign: 'center',
-  },
-  headingAccent: { color: GOLD_INK },
-  signText: {
-    position: 'absolute',
-    fontFamily: fonts.semibold,
-    color: '#FFFBEC',
-  },
-  // Explicit height: RN-web lets alignSelf centring collapse an absolute
-  // child even with top/bottom set, which zero-heights the anchor box.
-  fanHost: { position: 'absolute', top: 0, height: '100%', alignSelf: 'center' },
-  modeSlot: { position: 'absolute', alignItems: 'center' },
-  modeSlotDimmed: { opacity: 0.35 },
-  scoreBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 3,
-    backgroundColor: '#223452',
-    borderWidth: 0.5,
-    borderColor: colors.textFaint,
-    borderRadius: 999,
-  },
-  scoreBadgeText: {
-    fontFamily: fonts.bold,
-    color: colors.incorrectSoft,
-  },
-  modeCircle: {
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modePressed: {
-    opacity: 0.85,
-  },
-  // Quiz/How to Play (1904:3346): card at x68 y234, 263 wide.
-  howToScrim: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(18, 18, 18, 0.55)',
-  },
-  howToCard: {
-    position: 'absolute',
-    backgroundColor: colors.surface,
-    paddingHorizontal: 32,
-    paddingTop: 42,
-    paddingBottom: 32,
-    alignItems: 'center',
-  },
-  howToClose: { position: 'absolute' },
-  howToTitle: { fontFamily: fonts.display, color: colors.text, textAlign: 'center' },
-  howToKicker: {
-    alignSelf: 'flex-start',
-    fontFamily: fonts.bold,
-    letterSpacing: 0.3,
-    color: colors.primary,
-  },
-  howToBody: {
-    alignSelf: 'flex-start',
-    fontFamily: fonts.regular,
-    letterSpacing: 0.2,
-    color: colors.text,
-  },
-  howToStart: {
-    borderRadius: 999,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  howToStartText: { fontFamily: fonts.bold, letterSpacing: 0.3, color: colors.onPrimary },
-  modeLabel: {
-    fontFamily: fonts.bold,
-    color: colors.incorrectSoft,
-    textAlign: 'center',
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    stage: {
+      flex: 1,
+      backgroundColor: colors.stage,
+      overflow: 'hidden',
+    },
+    // Figma 1141:351: x0 y503, 393x352 — so it overhangs the 852 frame by 3 and
+    // is clipped. Top-anchored at 503/852 rather than bottom-anchored, because
+    // the gradient's own stops are fractions of a 352-tall box; pinning it to the
+    // bottom made the box 349 and shifted them.
+    wash: { position: 'absolute', left: 0, right: 0, top: '59.04%', height: '41.31%' },
+    beams: { position: 'absolute', top: 0, alignSelf: 'center' },
+    headingPanel: { position: 'absolute' },
+    heading: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      fontFamily: fonts.display,
+      color: colors.onPrimary,
+      textAlign: 'center',
+    },
+    headingAccent: { color: GOLD_INK },
+    signText: {
+      position: 'absolute',
+      fontFamily: fonts.semibold,
+      color: '#FFFBEC',
+    },
+    // Explicit height: RN-web lets alignSelf centring collapse an absolute
+    // child even with top/bottom set, which zero-heights the anchor box.
+    fanHost: { position: 'absolute', top: 0, height: '100%', alignSelf: 'center' },
+    modeSlot: { position: 'absolute', alignItems: 'center' },
+    modeSlotDimmed: { opacity: 0.35 },
+    scoreBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 3,
+      backgroundColor: '#223452',
+      borderWidth: 0.5,
+      borderColor: colors.textFaint,
+      borderRadius: 999,
+    },
+    scoreBadgeText: {
+      fontFamily: fonts.bold,
+      color: colors.incorrectSoft,
+    },
+    modeCircle: {
+      backgroundColor: colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    modePressed: {
+      opacity: 0.85,
+    },
+    // Quiz/How to Play (1904:3346): card at x68 y234, 263 wide.
+    howToScrim: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(18, 18, 18, 0.55)',
+    },
+    howToCard: {
+      position: 'absolute',
+      backgroundColor: colors.surface,
+      paddingHorizontal: 32,
+      paddingTop: 42,
+      paddingBottom: 32,
+      alignItems: 'center',
+    },
+    howToClose: { position: 'absolute' },
+    howToTitle: { fontFamily: fonts.display, color: colors.text, textAlign: 'center' },
+    howToKicker: {
+      alignSelf: 'flex-start',
+      fontFamily: fonts.bold,
+      letterSpacing: 0.3,
+      color: colors.primary,
+    },
+    howToBody: {
+      alignSelf: 'flex-start',
+      fontFamily: fonts.regular,
+      letterSpacing: 0.2,
+      color: colors.text,
+    },
+    howToStart: {
+      borderRadius: 999,
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    howToStartText: { fontFamily: fonts.bold, letterSpacing: 0.3, color: colors.onPrimary },
+    modeLabel: {
+      fontFamily: fonts.bold,
+      color: colors.incorrectSoft,
+      textAlign: 'center',
+    },
+  });

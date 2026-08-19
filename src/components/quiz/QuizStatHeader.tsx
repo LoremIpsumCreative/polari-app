@@ -1,7 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 import IconFlame from '@tabler/icons-react-native/IconFlame';
 import IconTrophy from '@tabler/icons-react-native/IconTrophy';
-import { colors, fonts } from '../../lib/theme';
+import type { Palette } from '../../lib/palette';
+import { useColors, useThemedStyles } from '../../lib/appearance';
+import { fonts } from '../../lib/theme';
 
 // The STREAK / HIGH SCORE pair that sits under the mode title at y210.5, on both
 // the countdown and the question screen. The two screens had identical markup
@@ -23,6 +25,8 @@ type Props = {
 const pad = (n: number) => String(n).padStart(2, '0');
 
 export function QuizStatHeader({ scale: s, streak, highScore }: Props) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={[styles.headerStats, { top: 210.5 * s, gap: 57 * s }]}>
       <View style={styles.statGroup}>
@@ -41,16 +45,17 @@ export function QuizStatHeader({ scale: s, streak, highScore }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  headerStats: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  statGroup: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  statLabel: { fontFamily: fonts.semibold, color: colors.textFaint, letterSpacing: 0.3 },
-  statValue: { fontFamily: fonts.bold, color: colors.textFaint, letterSpacing: 0.3 },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    headerStats: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    statGroup: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    statLabel: { fontFamily: fonts.semibold, color: colors.textFaint, letterSpacing: 0.3 },
+    statValue: { fontFamily: fonts.bold, color: colors.textFaint, letterSpacing: 0.3 },
+  });

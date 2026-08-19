@@ -9,7 +9,9 @@ import { useQuizStats } from '../../../src/lib/quizScores';
 import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { nextQuestion, QUIZ_LENGTH, type QuizQuestion } from '../../../src/lib/quiz';
 import { QUIZ_MODES, isQuizModeId, type QuizModeId } from '../../../src/lib/quizModes';
-import { colors, fonts } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../../src/lib/appearance';
+import { fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { QuizCountdown } from '../../../src/components/quiz/QuizCountdown';
@@ -45,6 +47,8 @@ const PAIR_STYLES = [
 ] as const;
 
 export default function QuizPlayScreen() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const s = useDesignScale();
 
@@ -622,104 +626,114 @@ export default function QuizPlayScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  // The question frames use a lighter canvas than the app default.
-  screen: { flex: 1, backgroundColor: colors.canvas },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.background,
-  },
-  dimText: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 15 },
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    // The question frames use a lighter canvas than the app default.
+    screen: { flex: 1, backgroundColor: colors.canvas },
+    center: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.background,
+    },
+    dimText: { color: colors.textMuted, fontFamily: fonts.regular, fontSize: 15 },
 
-  // Countdown (light screen, per the current frames)
+    // Countdown (light screen, per the current frames)
 
-  // Header
-  backChip: {
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    borderRadius: 999,
-    backgroundColor: colors.inset,
-  },
-  modeTitle: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    fontFamily: fonts.display,
-    color: colors.text,
-    textAlign: 'center',
-  },
-  backText: { fontFamily: fonts.bold, color: colors.text, letterSpacing: 0.3 },
-  modeChip: {
-    position: 'absolute',
-    backgroundColor: 'rgba(110, 93, 198, 0.2)', // #6E5DC6 at 20%
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modeChipText: { fontFamily: fonts.display, color: colors.quizInk },
-  progressTrack: {
-    position: 'absolute',
-    backgroundColor: colors.progressTrack,
-    borderWidth: 1,
-    borderColor: colors.progressBorder,
-    justifyContent: 'center',
-    paddingHorizontal: 4,
-  },
-  progressFill: { backgroundColor: colors.progressFill },
-  statPill: {
-    position: 'absolute',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: colors.progressTrack,
-    paddingHorizontal: 14,
-  },
+    // Header
+    backChip: {
+      position: 'absolute',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 10,
+      borderRadius: 999,
+      backgroundColor: colors.inset,
+    },
+    modeTitle: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      fontFamily: fonts.display,
+      color: colors.text,
+      textAlign: 'center',
+    },
+    backText: { fontFamily: fonts.bold, color: colors.text, letterSpacing: 0.3 },
+    modeChip: {
+      position: 'absolute',
+      backgroundColor: 'rgba(110, 93, 198, 0.2)', // #6E5DC6 at 20%
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    modeChipText: { fontFamily: fonts.display, color: colors.quizInk },
+    progressTrack: {
+      position: 'absolute',
+      backgroundColor: colors.progressTrack,
+      borderWidth: 1,
+      borderColor: colors.progressBorder,
+      justifyContent: 'center',
+      paddingHorizontal: 4,
+    },
+    progressFill: { backgroundColor: colors.progressFill },
+    statPill: {
+      position: 'absolute',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      backgroundColor: colors.progressTrack,
+      paddingHorizontal: 14,
+    },
 
-  // Prompt
-  prompt: { position: 'absolute', fontFamily: fonts.semibold, color: colors.text, lineHeight: 30 },
-  promptTerm: { fontFamily: fonts.bold, color: colors.primary },
-  promptMatch: {
-    position: 'absolute',
-    alignSelf: 'center',
-    fontFamily: fonts.semibold,
-    color: colors.text,
-  },
+    // Prompt
+    prompt: {
+      position: 'absolute',
+      fontFamily: fonts.semibold,
+      color: colors.text,
+      lineHeight: 30,
+    },
+    promptTerm: { fontFamily: fonts.bold, color: colors.primary },
+    promptMatch: {
+      position: 'absolute',
+      alignSelf: 'center',
+      fontFamily: fonts.semibold,
+      color: colors.text,
+    },
 
-  // Answer tiles (2-column grid)
-  grid: { position: 'absolute', flexDirection: 'row', flexWrap: 'wrap' },
-  tile: {
-    backgroundColor: colors.inset,
-    borderWidth: 0.5,
-    borderColor: colors.fieldBorder,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tileCorrect: { backgroundColor: colors.correctSoft, borderColor: colors.correct, borderWidth: 1 },
-  tileWrong: {
-    backgroundColor: colors.incorrectSoft,
-    borderColor: colors.incorrect,
-    borderWidth: 1,
-  },
-  tileText: {
-    fontFamily: fonts.regular,
-    color: colors.text,
-    letterSpacing: 0.3,
-    textAlign: 'center',
-  },
-  tileTextCorrect: { color: colors.correct, fontFamily: fonts.bold },
-  tileTextWrong: { color: colors.incorrect, fontFamily: fonts.bold },
+    // Answer tiles (2-column grid)
+    grid: { position: 'absolute', flexDirection: 'row', flexWrap: 'wrap' },
+    tile: {
+      backgroundColor: colors.inset,
+      borderWidth: 0.5,
+      borderColor: colors.fieldBorder,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    tileCorrect: {
+      backgroundColor: colors.correctSoft,
+      borderColor: colors.correct,
+      borderWidth: 1,
+    },
+    tileWrong: {
+      backgroundColor: colors.incorrectSoft,
+      borderColor: colors.incorrect,
+      borderWidth: 1,
+    },
+    tileText: {
+      fontFamily: fonts.regular,
+      color: colors.text,
+      letterSpacing: 0.3,
+      textAlign: 'center',
+    },
+    tileTextCorrect: { color: colors.correct, fontFamily: fonts.bold },
+    tileTextWrong: { color: colors.incorrect, fontFamily: fonts.bold },
 
-  continueButton: {
-    position: 'absolute',
-    backgroundColor: colors.primary,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  continueDisabled: { opacity: 0.4 },
-  continueText: { fontFamily: fonts.bold, color: colors.onPrimary, letterSpacing: 0.3 },
-});
+    continueButton: {
+      position: 'absolute',
+      backgroundColor: colors.primary,
+      borderRadius: 999,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    continueDisabled: { opacity: 0.4 },
+    continueText: { fontFamily: fonts.bold, color: colors.onPrimary, letterSpacing: 0.3 },
+  });
