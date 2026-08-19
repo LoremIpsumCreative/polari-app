@@ -9,7 +9,6 @@ import { RemoteArtProvider } from '../src/lib/remoteArt';
 import { FavouritesProvider } from '../src/lib/favourites';
 import { StreaksProvider } from '../src/lib/streaks';
 import { ProgressProvider } from '../src/lib/progress';
-import { colors } from '../src/lib/theme';
 import { useDesignFrame } from '../src/lib/designScale';
 // Resolves to fontAssets.web.ts on web and fontAssets.ts on native.
 import { fontAssets } from '../src/lib/fontAssets';
@@ -43,10 +42,9 @@ installWebFonts();
 // could not be shorter than the design, so any viewport under 852 tall scrolled
 // — taking the tab bar with it, below the fold.
 
-// The letterbox and the frame it surrounds are the only surfaces the root
-// owns, so they are the first two to follow the reader's appearance choice.
-// Everything inside still reads the static light palette until each screen is
-// migrated to useColors() — see src/lib/palette.ts.
+// The letterbox and the frame it surrounds are the two surfaces the root owns,
+// and they follow the reader's appearance choice like everything else now that
+// the per-area migration is finished — see src/lib/palette.ts.
 function AppFrame({ children }: { children: ReactNode }) {
   const frame = useDesignFrame();
   const { colors: themed } = useAppearance();
@@ -132,13 +130,14 @@ const styles = StyleSheet.create({
     // Bottom-anchored, so the frame's foot — and the tab bar sitting on it —
     // meets the physical bottom of the screen.
     justifyContent: 'flex-end',
-    backgroundColor: colors.canvas,
+    // backgroundColor comes from AppFrame — the gutter follows the appearance
+    // choice, so a static value here would only ever be overridden.
   },
   phoneFrame: {
     // Sized from useDesignFrame at the call site. Deliberately NOT flex: the
     // box has to be exactly the design's aspect for the absolute coordinates
     // inside it to land where the frames put them.
     overflow: 'hidden',
-    backgroundColor: colors.canvas,
+    // As above: AppFrame supplies the themed background.
   },
 });

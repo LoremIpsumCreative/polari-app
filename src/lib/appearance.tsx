@@ -82,6 +82,17 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
     return () => sub.remove();
   }, []);
 
+  // Web only: tell the browser which scheme it is rendering so UA-painted
+  // chrome follows. Without it the native scrollbar tracks stay light — the
+  // policy panel's is a white stripe down a dark gate — and so do form
+  // controls and the overscroll gutter. Native has no equivalent.
+  const resolved: Scheme = mode === 'system' ? (systemScheme === 'dark' ? 'dark' : 'light') : mode;
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const root = globalThis.document?.documentElement;
+    if (root) root.style.colorScheme = resolved;
+  }, [resolved]);
+
   const setMode = useCallback((next: AppearanceMode) => {
     setModeState(next);
     // Fire-and-forget: the in-memory value is the source of truth for this
@@ -90,7 +101,7 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<AppearanceContextValue>(() => {
-    const scheme: Scheme = mode === 'system' ? (systemScheme === 'dark' ? 'dark' : 'light') : mode;
+    const scheme = resolved;
     return {
       mode,
       scheme,
@@ -99,7 +110,7 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
       ready,
       setMode,
     };
-  }, [mode, systemScheme, ready, setMode]);
+  }, [mode, resolved, ready, setMode]);
 
   return <AppearanceContext.Provider value={value}>{children}</AppearanceContext.Provider>;
 }

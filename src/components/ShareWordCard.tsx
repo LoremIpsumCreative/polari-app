@@ -16,6 +16,12 @@ import { useCharacterArt } from '../lib/remoteArt';
 // download CTA + QR footer.
 //
 // Built at the Figma stage's native 566x1007 so measurements transfer verbatim.
+//
+// DELIBERATELY NOT THEMED. This surface is snapshotted to an image and sent to
+// someone else, so it must not vary with the sharer's appearance setting — two
+// readers sharing the same word should produce the same card. It therefore
+// keeps the static `colors` import while every other surface has moved to
+// useColors(); that is a decision, not an oversight.
 export const CARD_WIDTH = 566;
 export const CARD_HEIGHT = 1007;
 

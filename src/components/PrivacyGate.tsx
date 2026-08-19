@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/auth';
-import { colors, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useThemedStyles } from '../lib/appearance';
+import { fonts } from '../lib/theme';
 import { useDesignScale } from '../lib/designScale';
 import { ScreenBackground } from './ScreenBackground';
 import { PrivacyPolicyBody } from './PrivacyPolicyBody';
@@ -18,6 +20,7 @@ const CARD = { left: 27, top: 145, width: 339, radius: 12 };
 const BUTTON = { width: 187, height: 50, bottom: 96 };
 
 export function PrivacyGate({ onAgree }: { onAgree: () => void }) {
+  const styles = useThemedStyles(makeStyles);
   const s = useDesignScale();
   const { session } = useAuth();
   // null = still deciding. Rendering before the answer lands would flash the
@@ -112,39 +115,40 @@ export function PrivacyGate({ onAgree }: { onAgree: () => void }) {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: colors.canvas,
-    alignItems: 'center',
-  },
-  title: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    fontFamily: fonts.display,
-    color: colors.text,
-  },
-  card: {
-    position: 'absolute',
-    backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.fieldBorder,
-    overflow: 'hidden',
-  },
-  button: {
-    position: 'absolute',
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  // Dimmed rather than greyed: it is the same button, not a different one.
-  buttonDisabled: { opacity: 0.4 },
-  buttonLabel: { fontFamily: fonts.bold, color: colors.onPrimary },
-  pressed: { opacity: 0.8 },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: colors.canvas,
+      alignItems: 'center',
+    },
+    title: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      textAlign: 'center',
+      fontFamily: fonts.display,
+      color: colors.text,
+    },
+    card: {
+      position: 'absolute',
+      backgroundColor: colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.fieldBorder,
+      overflow: 'hidden',
+    },
+    button: {
+      position: 'absolute',
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    // Dimmed rather than greyed: it is the same button, not a different one.
+    buttonDisabled: { opacity: 0.4 },
+    buttonLabel: { fontFamily: fonts.bold, color: colors.onPrimary },
+    pressed: { opacity: 0.8 },
+  });

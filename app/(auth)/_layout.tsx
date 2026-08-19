@@ -1,11 +1,11 @@
 import { Pressable } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import IconChevronLeft from '@tabler/icons-react-native/IconChevronLeft';
-import { useHeaderOptions } from '../../src/lib/appearance';
-import { colors } from '../../src/lib/theme';
+import { useColors, useHeaderOptions } from '../../src/lib/appearance';
 
 export default function AuthLayout() {
   const headerOptions = useHeaderOptions();
+  const colors = useColors();
   const router = useRouter();
 
   // Accounts are optional, so every auth screen needs an obvious way back
