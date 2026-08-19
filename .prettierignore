@@ -30,6 +30,10 @@ scripts/*-snapshot.json
 # commit no human made.
 art-changes.md
 dictionary-changes.md
+# The third of the set, and it was the one left out — check-suggestions.ts emits
+# a trailing blank line that Prettier strips, so main went red the moment the
+# scheduled workflow committed one. Same reasoning as its two siblings above.
+suggestion-changes.md
 
 # Local, per-machine editor state — untracked, so it must not gate CI either.
 .claude/settings.local.json
