@@ -7,7 +7,9 @@ import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { useQuizStats } from '../../../src/lib/quizScores';
 import { isQuizModeId } from '../../../src/lib/quizModes';
-import { colors, fonts } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../../src/lib/appearance';
+import { fonts } from '../../../src/lib/theme';
 import { useDesignScale } from '../../../src/lib/designScale';
 import { useAssetsReady } from '../../../src/lib/useAssetsReady';
 import { LoadingScreen } from '../../../src/components/LoadingScreen';
@@ -35,7 +37,6 @@ type Line = {
 
 // The speech bubbles are vectors rather than art: a rounded card with a tail
 // notched out of its left edge, pointing back at the quizmaster.
-const BUBBLE_FILL = colors.inset;
 const BUBBLE_STROKE = '#000000';
 const BUBBLE_STROKE_WIDTH = 3;
 
@@ -67,23 +68,38 @@ const BLOB = {
   d: 'M8.81752 34.0051C7.70336 24.7855 14.6463 16.5573 23.9218 16.1045L175.209 8.71947C184.623 8.25991 192.393 15.997 191.973 25.4132L189.291 85.5524C188.892 94.5066 181.216 101.386 172.271 100.806L28.9177 91.5069C21.2325 91.0083 14.9929 85.1057 14.069 77.46L8.81752 34.0051Z',
 };
 
-const ACCENT = colors.primary;
-const BODY_INK = colors.stageDeep;
-
 // Title boxes are the headings' RENDER bounds — they include the 10px outline
 // stroke, and sit centred on the heading group's own box.
-const VARIANTS: Record<
+const POSES = {
+  highScore: require('../../../assets/quiz/quizmaster-highscore.png'),
+  timesUp: require('../../../assets/quiz/quizmaster-timesup.png'),
+  results: require('../../../assets/quiz/quizmaster-results.png'),
+};
+
+type Variants = Record<
   Variant,
   { title: string; titleBox: Box; pose: number; poseBox: Box; bubbleBox: Box; lines: Line[] }
-> = {
+>;
+
+// A function of the palette: the copy lines carry their own colours, and a
+// module constant would freeze them at the light values.
+const variants = (colors: Palette): Variants => ({
   highScore: {
     title: TITLE_HIGH,
     titleBox: { x: 59, y: 101, w: 277, h: 102 },
-    pose: require('../../../assets/quiz/quizmaster-highscore.png'),
+    pose: POSES.highScore,
     poseBox: { x: 0, y: 360, w: 220, h: 409 },
     bubbleBox: { x: 141, y: 389, w: 180.6, h: 77 },
     lines: [
-      { text: 'Congratulations!', x: 173.6, y: 405, w: 135.3, fs: 16, lead: true, color: ACCENT },
+      {
+        text: 'Congratulations!',
+        x: 173.6,
+        y: 405,
+        w: 135.3,
+        fs: 16,
+        lead: true,
+        color: colors.primary,
+      },
       {
         text: 'You just set a new high score!',
         x: 178.9,
@@ -91,18 +107,26 @@ const VARIANTS: Record<
         w: 123.6,
         fs: 12,
         lead: false,
-        color: BODY_INK,
+        color: colors.stageDeep,
       },
     ],
   },
   timesUp: {
     title: TITLE_TIME,
     titleBox: { x: 53.9, y: 101.7, w: 285, h: 111 },
-    pose: require('../../../assets/quiz/quizmaster-timesup.png'),
+    pose: POSES.timesUp,
     poseBox: { x: 0, y: 377, w: 192, h: 380 },
     bubbleBox: { x: 154, y: 399, w: 179.2, h: 78 },
     lines: [
-      { text: '1 Minute is Up!', x: 185.9, y: 418.7, w: 129.2, fs: 16, lead: true, color: ACCENT },
+      {
+        text: '1 Minute is Up!',
+        x: 185.9,
+        y: 418.7,
+        w: 129.2,
+        fs: 16,
+        lead: true,
+        color: colors.primary,
+      },
       {
         text: 'Let’s see how you\nscored this time.',
         x: 186.1,
@@ -110,18 +134,26 @@ const VARIANTS: Record<
         w: 129.2,
         fs: 12,
         lead: false,
-        color: BODY_INK,
+        color: colors.stageDeep,
       },
     ],
   },
   results: {
     title: TITLE_NORM,
     titleBox: { x: 92.5, y: 104.8, w: 210, h: 95 },
-    pose: require('../../../assets/quiz/quizmaster-results.png'),
+    pose: POSES.results,
     poseBox: { x: 7, y: 375, w: 183, h: 382 },
     bubbleBox: { x: 144, y: 402, w: 180.6, h: 83.5 },
     lines: [
-      { text: 'Quiz Complete!', x: 184.2, y: 424.3, w: 120.4, fs: 16, lead: true, color: ACCENT },
+      {
+        text: 'Quiz Complete!',
+        x: 184.2,
+        y: 424.3,
+        w: 120.4,
+        fs: 16,
+        lead: true,
+        color: colors.primary,
+      },
       {
         text: 'The answers are in. Here’s how you went.',
         x: 184.4,
@@ -129,23 +161,20 @@ const VARIANTS: Record<
         w: 120.4,
         fs: 12,
         lead: false,
-        color: BODY_INK,
+        color: colors.stageDeep,
       },
     ],
   },
-};
+});
 
 // The stage and every quizmaster pose, preloaded together. The screen arrives
 // straight from a finished game, so there is no earlier moment to fetch a 1.6MB
 // stage in — without this the gold washes in behind an already-placed figure.
-const RESULTS_ASSETS = [
-  stageArt,
-  VARIANTS.highScore.pose,
-  VARIANTS.timesUp.pose,
-  VARIANTS.results.pose,
-] as const;
+const RESULTS_ASSETS = [stageArt, POSES.highScore, POSES.timesUp, POSES.results] as const;
 
 export default function QuizResultsScreen() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const s = useDesignScale();
 
@@ -202,7 +231,7 @@ export default function QuizResultsScreen() {
     : !isReview && modeId === 'timed'
       ? 'timesUp'
       : 'results';
-  const v = VARIANTS[variant];
+  const v = variants(colors)[variant];
   const bubble = BUBBLES[variant];
 
   // Both controls are placed outright, measured off Quiz/Results/10 Qs and
@@ -327,7 +356,7 @@ export default function QuizResultsScreen() {
       >
         <Path
           d={bubble.d}
-          fill={BUBBLE_FILL}
+          fill={colors.inset}
           stroke={BUBBLE_STROKE}
           strokeWidth={BUBBLE_STROKE_WIDTH}
         />
@@ -412,47 +441,48 @@ export default function QuizResultsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  // The golden stage art covers this; the fill only shows for the instant
-  // before it decodes.
-  screen: { flex: 1, backgroundColor: '#F5C542', overflow: 'hidden' },
-  overlay: { position: 'absolute', left: 0, right: 0 },
-  scoreBox: {
-    position: 'absolute',
-    alignItems: 'center',
-    // Sits under the SVG's gradient border, so it only ever reads as the
-    // shadow caster's silhouette.
-    backgroundColor: colors.quizPurpleDark,
-    shadowColor: '#000000',
-    shadowOpacity: 0.37,
-    elevation: 6,
-  },
-  score: { fontFamily: fonts.extrabold, color: colors.progressBorder, letterSpacing: 1 },
-  bubbleLine: { position: 'absolute', textAlign: 'center' },
-  reviewNote: {
-    position: 'absolute',
-    alignSelf: 'center',
-    fontFamily: fonts.semibold,
-    color: colors.text,
-  },
-  playAgain: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    fontFamily: fonts.display,
-    color: colors.onPrimary,
-    letterSpacing: 0.5,
-  },
-  finish: {
-    position: 'absolute',
-    // purple/800, the same stop the Play Again blob opens on — the pill was a
-    // near-black navy, which the frames never show.
-    backgroundColor: colors.quizPurpleDark,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  finishText: { fontFamily: fonts.bold, color: colors.onPrimary, letterSpacing: 0.3 },
-  pressed: { opacity: 0.85 },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    // The golden stage art covers this; the fill only shows for the instant
+    // before it decodes.
+    screen: { flex: 1, backgroundColor: '#F5C542', overflow: 'hidden' },
+    overlay: { position: 'absolute', left: 0, right: 0 },
+    scoreBox: {
+      position: 'absolute',
+      alignItems: 'center',
+      // Sits under the SVG's gradient border, so it only ever reads as the
+      // shadow caster's silhouette.
+      backgroundColor: colors.quizPurpleDark,
+      shadowColor: '#000000',
+      shadowOpacity: 0.37,
+      elevation: 6,
+    },
+    score: { fontFamily: fonts.extrabold, color: colors.progressBorder, letterSpacing: 1 },
+    bubbleLine: { position: 'absolute', textAlign: 'center' },
+    reviewNote: {
+      position: 'absolute',
+      alignSelf: 'center',
+      fontFamily: fonts.semibold,
+      color: colors.text,
+    },
+    playAgain: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      textAlign: 'center',
+      fontFamily: fonts.display,
+      color: colors.onPrimary,
+      letterSpacing: 0.5,
+    },
+    finish: {
+      position: 'absolute',
+      // purple/800, the same stop the Play Again blob opens on — the pill was a
+      // near-black navy, which the frames never show.
+      backgroundColor: colors.quizPurpleDark,
+      borderRadius: 999,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    finishText: { fontFamily: fonts.bold, color: colors.onPrimary, letterSpacing: 0.3 },
+    pressed: { opacity: 0.85 },
+  });
