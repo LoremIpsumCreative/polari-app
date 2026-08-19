@@ -5,6 +5,7 @@ import { supabase } from '../../../src/lib/supabase';
 import { colors, fonts, spacing } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
+import { OrDivider, ProviderButtons } from '../../../src/components/ProviderButtons';
 import {
   BackChip,
   FieldsetInput,
@@ -88,6 +89,9 @@ export default function SignInScreen() {
           </Pressable>
         </FormCard>
 
+        <OrDivider />
+        <ProviderButtons onError={setError} />
+
         <FormError message={error} />
 
         <PillButton title="Sign In" onPress={handleSignIn} loading={busy} style={styles.cta} />
@@ -123,12 +127,12 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
 
-  // Card closes at y351 (22 + 45 + 12 + 45 + the forgot link + 18) → CTA top
-  // y659, the same line Create Account, Forgot Password and Change Password
-  // put it on. The generated Sign In frame (2666:2894) instead places its
-  // button at y608 w199 — the signed-out gate's geometry, not this flow's —
-  // so the frame is the odd one out and wants correcting, not the code.
-  cta: { marginTop: 308 },
+  // The 2028-08-19 Sign In frame fills what used to be dead space between the
+  // card and the CTA with the OR rule and the four provider rows: card closes
+  // ~y305, OR ~y343, providers y380..590, Sign In y620. So the old 308 gap —
+  // which existed to put the button on the y659 line its sibling forms use —
+  // is now the short hop from the last provider row to the button.
+  cta: { marginTop: 28 },
 
   // Mirrors the signed-out Account screen's own create-account line at y673.
   createLine: {

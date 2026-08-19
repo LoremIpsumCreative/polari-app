@@ -32,7 +32,10 @@ export const colors = {
   green: '#1F845A', // green/700
   greenSoft: '#EEFFF8', // green/50
   label: '#758195', // neutral/500 — fieldset labels
-  inactive: '#8590A2', // neutral/400 — inactive segmented options
+  // Text/Inactive. Was #8590A2 (Neutral/400); the file binds every disabled
+  // element — the Profile row's stroke, its label, its glyph — to Text/Inactive,
+  // which resolves to Neutral/300.
+  inactive: '#B3B9C4', // neutral/300 — disabled rows, inactive segmented options
   teal: '#27958A',
   tealSoft: '#DDEFEB',
   blush: '#E98F7F',
@@ -48,7 +51,7 @@ export const colors = {
   textMuted: '#44546F', // neutral/700
   textFaint: '#758195', // neutral/500
   border: 'rgba(23, 43, 77, 0.12)',
-  danger: '#ED3241',
+  danger: '#E2483D', // Status/Danger ← Red/600 (was a hand-picked #ED3241)
   heart: '#ED3241',
   onPrimary: '#FFFFFF',
 
@@ -64,6 +67,20 @@ export const colors = {
   progressFill: '#5E4DB2', // progress bar fill
   progressBorder: '#352C63', // progress rail hairline
   metaText: '#626F86', // "Question 3 of 10" / pill labels
+
+  // Three surfaces that were hardcoded at their call sites until the dark
+  // palette needed them to differ. Light values are byte-identical to what
+  // those call sites used, so nothing moves in light mode.
+  pattern: '#DBDDE4', // Background/Pattern — the sparkle tile ink
+  navbar: '#FFFFFF', // Background/Navbar — the tab bar plate
+  // The Account option row hairline. Shares light's #626F86 with `metaText`
+  // but is a border, not a label: the two need different darks, and one hex
+  // serving two roles is how a palette quietly goes wrong.
+  optionBorder: '#626F86',
+  // The badge circle on a disabled Account row. Same light value the quiz's
+  // `progressTrack` happens to carry, kept separate for the same reason as
+  // `optionBorder`: different role, different dark.
+  disabledFill: '#F1F2F4',
 };
 
 // Each tab owns an accent colour, used for its icon + label when active.

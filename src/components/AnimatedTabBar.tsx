@@ -5,7 +5,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // and doesn't re-export its types from the package root.
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs/types';
 import Svg, { Path } from 'react-native-svg';
-import { colors, fonts, tabAccents, DESIGN_WIDTH } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useAppearance, useColors, useThemedStyles } from '../lib/appearance';
+import { fonts, DESIGN_WIDTH } from '../lib/theme';
 import { useDesignFrame, useDesignScale } from '../lib/designScale';
 import { NavIcon, navIconSize, isNavIconName, type NavIconName } from './navIcons';
 
@@ -117,6 +119,7 @@ const NotchedBar = memo(function NotchedBar({
   s: number;
 }) {
   const [centre, setCentre] = useState(initialCx);
+  const colors = useColors();
 
   useEffect(() => {
     const id = cx.addListener(({ value }) => setCentre(value));
@@ -125,7 +128,7 @@ const NotchedBar = memo(function NotchedBar({
 
   return (
     <Svg style={StyleSheet.absoluteFill} width={width} height={height} pointerEvents="none">
-      <Path d={barPath(width, height, centre, s)} fill={colors.surface} />
+      <Path d={barPath(width, height, centre, s)} fill={colors.navbar} />
     </Svg>
   );
 });
@@ -158,6 +161,8 @@ const TabItem = memo(function TabItem({
     }).start();
   }, [active, lift]);
 
+  const { colors, tabAccents } = useAppearance();
+  const styles = useThemedStyles(makeStyles);
   // Routes without a nested _layout are registered as "name/index"
   const base = routeName.replace(/\/index$/, '');
   const iconName = TAB_ICONS[base];
@@ -191,7 +196,7 @@ const TabItem = memo(function TabItem({
         ]}
       >
         {iconName && isNavIconName(iconName) ? (
-          <NavIcon name={iconName} scale={s} color={active ? accent : colors.metaText} />
+          <NavIcon name={iconName} scale={s} color={active ? accent : colors.textMuted} />
         ) : null}
       </Animated.View>
       <Text
@@ -203,7 +208,7 @@ const TabItem = memo(function TabItem({
             lineHeight: LABEL_SIZE * s,
             letterSpacing: 0.7 * s,
             fontFamily: active ? fonts.bold : fonts.semibold,
-            color: active ? accent : colors.metaText,
+            color: active ? accent : colors.textMuted,
           },
         ]}
         numberOfLines={1}
@@ -219,6 +224,7 @@ const TabItem = memo(function TabItem({
 // the bar no longer opens a satellite fan of its own.
 export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const styles = useThemedStyles(makeStyles);
   // The same scale the frame and every screen use, so the bar is exactly as
   // wide as the design box it sits in and its notch lines up with the bubble.
   const frame = useDesignFrame();
@@ -312,64 +318,65 @@ export function AnimatedTabBar({ state, descriptors, navigation }: BottomTabBarP
   );
 }
 
-const styles = StyleSheet.create({
-  bar: {
-    // Absolute so the bar claims no layout space: screens then run the full
-    // height of the device and it is the screen — not the navigator's backdrop
-    // — that shows through the scoop.
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    // The bar sits at the foot of the 852-tall column, not pinned to the
-    // viewport. Pinning it looked right on a tall window but floated it over
-    // the middle of the design on a short one, hiding whatever the frame puts
-    // near the bottom — the quiz mode fan, for instance. A short window
-    // scrolls to reach it instead.
-    // Transparent: the bar's own white comes from the notched path.
-    backgroundColor: 'transparent',
-    overflow: 'visible',
-  },
-  blurPane: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    backgroundColor: 'rgba(217, 217, 217, 0.01)',
-    // backdropFilter is a web-only CSS property; native would need expo-blur,
-    // and at 1% tint the pane is invisible there rather than wrong.
-    ...Platform.select({
-      web: { backdropFilter: `blur(${BLUR_RADIUS}px)` } as object,
-      default: {},
-    }),
-  },
-  safeAreaFill: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: colors.surface,
-  },
-  bubble: {
-    position: 'absolute',
-    left: 0,
-    backgroundColor: colors.surface,
-  },
-  tab: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-  },
-  iconSlot: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-  },
-  label: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    bar: {
+      // Absolute so the bar claims no layout space: screens then run the full
+      // height of the device and it is the screen — not the navigator's backdrop
+      // — that shows through the scoop.
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      // The bar sits at the foot of the 852-tall column, not pinned to the
+      // viewport. Pinning it looked right on a tall window but floated it over
+      // the middle of the design on a short one, hiding whatever the frame puts
+      // near the bottom — the quiz mode fan, for instance. A short window
+      // scrolls to reach it instead.
+      // Transparent: the bar's own white comes from the notched path.
+      backgroundColor: 'transparent',
+      overflow: 'visible',
+    },
+    blurPane: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      backgroundColor: 'rgba(217, 217, 217, 0.01)',
+      // backdropFilter is a web-only CSS property; native would need expo-blur,
+      // and at 1% tint the pane is invisible there rather than wrong.
+      ...Platform.select({
+        web: { backdropFilter: `blur(${BLUR_RADIUS}px)` } as object,
+        default: {},
+      }),
+    },
+    safeAreaFill: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: colors.navbar,
+    },
+    bubble: {
+      position: 'absolute',
+      left: 0,
+      backgroundColor: colors.navbar,
+    },
+    tab: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+    },
+    iconSlot: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+    },
+    label: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      textAlign: 'center',
+    },
+  });

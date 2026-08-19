@@ -21,7 +21,8 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.loremipsumcreative.polari"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -35,7 +36,8 @@
       "expo-font",
       "expo-video",
       "expo-status-bar",
-      "expo-asset"
+      "expo-asset",
+      "expo-web-browser"
     ]
   }
 }

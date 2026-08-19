@@ -18,6 +18,7 @@ import Constants from 'expo-constants';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
 import { useDisplayName } from '../../../src/lib/displayName';
+import { useAppearance, type AppearanceMode } from '../../../src/lib/appearance';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { AccountOption } from '../../../src/components/AccountOption';
@@ -28,13 +29,47 @@ import { HEART_RED } from '../../../src/components/CollectionChrome';
 // y116 over three groups of Button/Account Option rows — profile and
 // appearance, about and feedback, sign out — with Delete Account beneath.
 
-// The appearance modes the frame offers. Only Light exists in the app today,
-// so the other two render inert rather than pretending to switch themes.
-const APPEARANCE_MODES = [
-  { key: 'light', label: 'Light Mode', Icon: IconSun, available: true },
-  { key: 'dark', label: 'Dark Mode', Icon: IconMoon, available: false },
-  { key: 'system', label: 'System', Icon: IconDeviceMobile, available: false },
+// The appearance modes the frame offers, in its order.
+const APPEARANCE_MODES: { key: AppearanceMode; label: string; Icon: typeof IconSun }[] = [
+  { key: 'light', label: 'Light Mode', Icon: IconSun },
+  { key: 'dark', label: 'Dark Mode', Icon: IconMoon },
+  { key: 'system', label: 'System', Icon: IconDeviceMobile },
 ];
+
+// The selector the Appearance row expands to reveal. Both the signed-in and
+// signed-out branches draw it, so it lives here rather than twice inline.
+//
+// The choice is stored and resolved immediately (System follows the OS), but
+// only the surfaces already migrated to useColors() repaint — today the root
+// letterbox and frame. Each screen joins as it is migrated; nothing here needs
+// to change when they do.
+function AppearanceModes() {
+  const { mode, setMode } = useAppearance();
+  return (
+    <View style={styles.modeRow} accessibilityRole="radiogroup">
+      {APPEARANCE_MODES.map(({ key, label, Icon }) => {
+        const selected = mode === key;
+        return (
+          <Pressable
+            key={key}
+            onPress={() => setMode(key)}
+            accessibilityRole="radio"
+            accessibilityState={{ selected }}
+            accessibilityLabel={label}
+            style={({ pressed }) => [
+              styles.mode,
+              selected ? styles.modeActive : styles.modeIdle,
+              pressed && styles.pressed,
+            ]}
+          >
+            <Icon size={12} color={selected ? colors.onPrimary : colors.text} />
+            <Text style={[styles.modeText, !selected && styles.modeTextIdle]}>{label}</Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
 
 // A profile row the reader can edit in place: it reads as text until tapped,
 // then becomes the input it always looked like. Saving happens on submit or on
@@ -175,29 +210,35 @@ export default function ProfileScreen() {
             expanded={openSection === 'appearance'}
             onPress={() => setOpenSection((o) => (o === 'appearance' ? null : 'appearance'))}
           >
-            <View style={styles.modeRow}>
-              {APPEARANCE_MODES.map(({ key, label, Icon, available }) => (
-                <View
-                  key={key}
-                  style={[styles.mode, available ? styles.modeActive : styles.modeInert]}
-                >
-                  <Icon size={12} color={available ? colors.onPrimary : colors.inactive} />
-                  <Text style={[styles.modeText, !available && styles.modeTextInert]}>{label}</Text>
-                </View>
-              ))}
-            </View>
+            <AppearanceModes />
           </AccountOption>
+        </View>
+
+        <View style={styles.gateGroup}>
           <AccountOption
             label="About Polari"
             Icon={IconBinoculars}
             showChevron
             onPress={() => router.push('/profile/about')}
           />
+          {/* Same rows as the signed-in screen, in the same order and with the
+              same disabled states: none of them need an account, and the
+              Signed Out frame draws all seven. Only Profile is gated. */}
+          <AccountOption label="App Info" Icon={IconInfoCircle} disabled />
           <AccountOption
             label="Feedback"
             Icon={IconMail}
             onPress={() => router.push('/profile/feedback')}
           />
+        </View>
+
+        <View style={styles.gateGroup}>
+          <AccountOption
+            label="Privacy Policy"
+            Icon={IconShield}
+            onPress={() => router.push('/profile/privacy')}
+          />
+          <AccountOption label="Terms and Conditions" Icon={IconFileText} disabled />
         </View>
 
         <Pressable
@@ -328,17 +369,7 @@ export default function ProfileScreen() {
             expanded={openSection === 'appearance'}
             onPress={() => setOpenSection((o) => (o === 'appearance' ? null : 'appearance'))}
           >
-            <View style={styles.modeRow}>
-              {APPEARANCE_MODES.map(({ key, label, Icon, available }) => (
-                <View
-                  key={key}
-                  style={[styles.mode, available ? styles.modeActive : styles.modeInert]}
-                >
-                  <Icon size={12} color={available ? colors.onPrimary : colors.inactive} />
-                  <Text style={[styles.modeText, !available && styles.modeTextInert]}>{label}</Text>
-                </View>
-              ))}
-            </View>
+            <AppearanceModes />
           </AccountOption>
         </View>
 
@@ -476,7 +507,10 @@ const styles = StyleSheet.create({
     // tab bar's height varies with the device's safe-area inset.
   },
   // Signed-out gate: rows from y150, Sign In at y608, prompt at y673.
-  gateRows: { marginTop: 150, marginHorizontal: 27, gap: 8 },
+  // The signed-out rows carry the same 8-within / 24-between rhythm as the
+  // signed-in groups; only the first one is pushed down to the frame's y150.
+  gateRows: { marginTop: 150, marginHorizontal: 27, gap: 8, marginBottom: 24 },
+  gateGroup: { marginHorizontal: 27, gap: 8, marginBottom: 24 },
   gateSignIn: {
     position: 'absolute',
     left: 98,
@@ -569,10 +603,16 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
   },
+  // Selected is the solid blue chip the frame draws on Light Mode; the other
+  // two are the bordered surface chips beside it.
   modeActive: { backgroundColor: colors.primary },
-  modeInert: { backgroundColor: colors.inset },
+  modeIdle: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.fieldBorder,
+  },
   modeText: { fontFamily: fonts.bold, fontSize: 10, letterSpacing: 0.3, color: colors.onPrimary },
-  modeTextInert: { color: colors.inactive },
+  modeTextIdle: { color: colors.text },
 
   pressed: { opacity: 0.85 },
   backdrop: {
