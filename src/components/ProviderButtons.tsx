@@ -5,7 +5,10 @@ import DiscordLogo from './brand/discord-logo.svg';
 import FacebookLogo from './brand/facebook-logo.svg';
 import GoogleLogo from './brand/google-logo.svg';
 import XLogo from './brand/x-logo.svg';
-import XLogoDark from './brand/x-logo-dark.svg';
+import DiscordLogoDark from './brand/discord-logo_dark.svg';
+import FacebookLogoDark from './brand/facebook-logo_dark.svg';
+import GoogleLogoDark from './brand/google-logo_dark.svg';
+import XLogoDark from './brand/x-logo_dark.svg';
 import type { Palette, Scheme } from '../lib/palette';
 import { useAppearance, useThemedStyles } from '../lib/appearance';
 import { fonts, radii } from '../lib/theme';
@@ -24,20 +27,19 @@ import {
 // forbids recolouring its mark. Only the spinner that stands in for a mark
 // mid-flight takes a colour, and that is a Polari element, not a brand one.
 //
-// A mark only gets a dark entry when the brand actually publishes one. X is the
-// case in point: its mark is pure black and vanishes on Background/Surface
-// dark, and X ships a white variant for exactly this. Google, Facebook and
-// Discord read fine on both surfaces and use one file each — adding a `dark`
-// here for them would mean inventing an asset, which the guidelines forbid.
+// Each brand publishes a solid-white monochrome mark for dark surfaces, which
+// is what the `dark` files are. Note Google's dark variant is white, not the
+// multicolour G — that is the sanctioned treatment on a dark background, not a
+// recolour of the colour mark.
 //
-// To add another: drop `<brand>-logo-dark.svg` in ./brand and give it a `dark`
+// To add another: drop `<brand>-logo_dark.svg` in ./brand and give it a `dark`
 // key. Nothing else needs to change.
 const BRAND_ICONS: Record<OAuthProvider, { light: React.FC<SvgProps>; dark?: React.FC<SvgProps> }> =
   {
-    google: { light: GoogleLogo },
-    facebook: { light: FacebookLogo },
+    google: { light: GoogleLogo, dark: GoogleLogoDark },
+    facebook: { light: FacebookLogo, dark: FacebookLogoDark },
     twitter: { light: XLogo, dark: XLogoDark },
-    discord: { light: DiscordLogo },
+    discord: { light: DiscordLogo, dark: DiscordLogoDark },
   };
 
 const markFor = (provider: OAuthProvider, scheme: Scheme): React.FC<SvgProps> => {
