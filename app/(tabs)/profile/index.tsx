@@ -17,6 +17,7 @@ import IconUserCheck from '@tabler/icons-react-native/IconUserCheck';
 import Constants from 'expo-constants';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuth } from '../../../src/lib/auth';
+import { useDisplayName } from '../../../src/lib/displayName';
 import { colors, radii, spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { AccountOption } from '../../../src/components/AccountOption';
@@ -128,6 +129,7 @@ function ProfileField({
 export default function ProfileScreen() {
   const router = useRouter();
   const { session, signOut } = useAuth();
+  const { displayName, save: saveDisplayName } = useDisplayName();
   // The bar floats over the screen, so the scroll has to end above it by hand.
   const tabInset = useTabBarInset();
   const [openSection, setOpenSection] = useState<'profile' | 'appearance' | null>(null);
@@ -218,8 +220,9 @@ export default function ProfileScreen() {
     );
   }
 
-  const meta = (session.user.user_metadata ?? {}) as Record<string, string | undefined>;
-  const firstName = meta.first_name ?? session.user.email?.split('@')[0] ?? '';
+  // Falls back to the local part of the address only until a name is set —
+  // the onboarding gate asks for one, so this is the gap before it is answered.
+  const greeting = displayName ?? session.user.email?.split('@')[0] ?? '';
 
   // Supabase keeps a requested address in `new_email` and leaves `email` on the
   // confirmed one until the link is clicked. The frame shows the NEW address
@@ -227,14 +230,6 @@ export default function ProfileScreen() {
   // the tag carry the caveat, rather than hiding the change until it lands.
   const pendingEmail = (session.user as { new_email?: string }).new_email ?? null;
   const shownEmail = pendingEmail ?? session.user.email ?? '';
-
-  async function saveMeta(patch: Record<string, string>) {
-    const { error } = await supabase.auth.updateUser({ data: patch });
-    // refreshSession pulls the updated user back into context so the row
-    // re-renders with what the server actually stored, not what was typed.
-    if (!error) await supabase.auth.refreshSession();
-    return error ? 'Could not save. Please try again.' : null;
-  }
 
   async function saveEmail(next: string) {
     if (!/^\S+@\S+\.\S+$/.test(next)) return 'Enter a valid email address.';
@@ -270,7 +265,7 @@ export default function ProfileScreen() {
         contentContainerStyle={[styles.content, { paddingBottom: tabInset + spacing.md }]}
       >
         <Text style={styles.banner}>
-          Bonyo, <Text style={styles.bannerName}>{firstName}</Text>
+          Bonyo, <Text style={styles.bannerName}>{greeting}</Text>
         </Text>
 
         <View style={styles.group}>
@@ -282,16 +277,10 @@ export default function ProfileScreen() {
             onPress={() => setOpenSection((o) => (o === 'profile' ? null : 'profile'))}
           >
             <ProfileField
-              label="FIRST NAME"
-              value={meta.first_name ?? ''}
+              label="DISPLAY NAME"
+              value={displayName ?? ''}
               autoCapitalize="words"
-              onSave={(v) => saveMeta({ first_name: v })}
-            />
-            <ProfileField
-              label="LAST NAME"
-              value={meta.last_name ?? ''}
-              autoCapitalize="words"
-              onSave={(v) => saveMeta({ last_name: v })}
+              onSave={saveDisplayName}
             />
             <ProfileField
               label="EMAIL"
@@ -371,7 +360,12 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.group}>
-          <AccountOption label="Privacy Policy" Icon={IconShield} disabled />
+          <AccountOption
+            label="Privacy Policy"
+            Icon={IconShield}
+            onPress={() => router.push('/profile/privacy')}
+          />
+          {/* Terms has no screen behind it yet, so it stays disabled. */}
           <AccountOption label="Terms and Conditions" Icon={IconFileText} disabled />
         </View>
 

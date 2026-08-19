@@ -68,7 +68,8 @@
     "figma:check": "tsx scripts/check-figma.ts",
     "figma:diff": "node scripts/pixel-diff.mjs",
     "figma:audit": "node scripts/audit-screens.mjs",
-    "rls:audit": "tsx scripts/rls-audit.ts"
+    "rls:audit": "tsx scripts/rls-audit.ts",
+    "legal:build": "tsx scripts/build-privacy-policy.ts"
   },
   "private": true
 }

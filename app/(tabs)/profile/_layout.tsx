@@ -14,6 +14,9 @@ export default function ProfileLayout() {
         name="change-password"
         options={{ title: 'Change Password', headerShown: false }}
       />
+      {/* Privacy Policy draws its own chip and title too. The slug is "privacy"
+          rather than "privacy-policy", per the change request. */}
+      <Stack.Screen name="privacy" options={{ title: 'Privacy Policy', headerShown: false }} />
       {/* The account-entry frames (2444:2697, 2444:2758) show the tab bar and
           an "Account" back chip, so they belong to this stack rather than the
           (auth) group — which renders outside the tabs and has no bar. */}
