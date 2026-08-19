@@ -20,4 +20,13 @@ for (const ext of ['mov', 'webm']) {
   }
 }
 
+// SVGs compile to react-native-svg components rather than being copied as
+// image assets, so the provider brand marks (src/components/brand) can be
+// sized and laid out like any other icon. This moves `svg` from assetExts to
+// sourceExts — it has to leave assetExts or Metro keeps treating it as a file
+// to bundle and the transformer never sees it.
+config.transformer.babelTransformerPath = require.resolve('react-native-svg-transformer');
+config.resolver.assetExts = config.resolver.assetExts.filter((ext) => ext !== 'svg');
+config.resolver.sourceExts = [...config.resolver.sourceExts, 'svg'];
+
 module.exports = config;

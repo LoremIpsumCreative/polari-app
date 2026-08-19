@@ -3,7 +3,9 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import IconChevronLeft from '@tabler/icons-react-native/IconChevronLeft';
 import IconSearch from '@tabler/icons-react-native/IconSearch';
-import { colors, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useColors, useThemedStyles } from '../lib/appearance';
+import { fonts } from '../lib/theme';
 import { useTabBarInset } from './AnimatedTabBar';
 
 // Shared chrome for the Collections sub-screens, rebuilt against the current
@@ -25,6 +27,8 @@ export function CollectionHeader({
   onSearch?: (text: string) => void;
 }) {
   const router = useRouter();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <>
       <Pressable
@@ -69,6 +73,7 @@ export function CollectionPanel({
   width?: number; // design units; defaults to full width minus margins
 }) {
   const tabInset = useTabBarInset();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View
       style={[
@@ -87,67 +92,68 @@ export function CollectionPanel({
   );
 }
 
-const styles = StyleSheet.create({
-  // Back chip — "Collections button", x17 y52 w94 h31.
-  backChip: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 52,
-    marginLeft: 17,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: 999,
-    backgroundColor: colors.inset,
-  },
-  backText: { fontFamily: fonts.semibold, fontSize: 10, letterSpacing: 0.3, color: colors.text },
-  pressed: { opacity: 0.7 },
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    // Back chip — "Collections button", x17 y52 w94 h31.
+    backChip: {
+      alignSelf: 'flex-start',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      marginTop: 52,
+      marginLeft: 17,
+      paddingHorizontal: 14,
+      paddingVertical: 9,
+      borderRadius: 999,
+      backgroundColor: colors.inset,
+    },
+    backText: { fontFamily: fonts.semibold, fontSize: 10, letterSpacing: 0.3, color: colors.text },
+    pressed: { opacity: 0.7 },
 
-  // Page Title — centred at y90, the same treatment as the Dictionary title.
-  title: {
-    marginTop: 7,
-    fontFamily: fonts.display,
-    fontSize: 36,
-    // 40 rather than 44 so the search field still lands on the frame's y129.
-    lineHeight: 40,
-    color: colors.text,
-    textAlign: 'center',
-  },
+    // Page Title — centred at y90, the same treatment as the Dictionary title.
+    title: {
+      marginTop: 7,
+      fontFamily: fonts.display,
+      fontSize: 36,
+      // 40 rather than 44 so the search field still lands on the frame's y129.
+      lineHeight: 40,
+      color: colors.text,
+      textAlign: 'center',
+    },
 
-  // Input/Search — x18 y129 w360.
-  searchWrap: { marginHorizontal: 18, marginTop: 0, justifyContent: 'center' },
-  searchInput: {
-    paddingHorizontal: 16,
-    paddingVertical: 5,
-    paddingRight: 34,
-    backgroundColor: colors.surface,
-    borderRadius: 999,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.metaText,
-    fontFamily: fonts.regular,
-    fontSize: 13,
-    color: colors.text,
-  },
-  searchHint: {
-    position: 'absolute',
-    right: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  searchHintText: {
-    fontFamily: fonts.semibold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
+    // Input/Search — x18 y129 w360.
+    searchWrap: { marginHorizontal: 18, marginTop: 0, justifyContent: 'center' },
+    searchInput: {
+      paddingHorizontal: 16,
+      paddingVertical: 5,
+      paddingRight: 34,
+      backgroundColor: colors.surface,
+      borderRadius: 999,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.metaText,
+      fontFamily: fonts.regular,
+      fontSize: 13,
+      color: colors.text,
+    },
+    searchHint: {
+      position: 'absolute',
+      right: 14,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+    searchHintText: {
+      fontFamily: fonts.semibold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
 
-  panel: {
-    position: 'absolute',
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.fieldBorder,
-    overflow: 'hidden',
-  },
-});
+    panel: {
+      position: 'absolute',
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.fieldBorder,
+      overflow: 'hidden',
+    },
+  });

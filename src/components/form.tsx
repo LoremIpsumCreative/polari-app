@@ -10,7 +10,9 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import IconCaretLeftFilled from '@tabler/icons-react-native/IconCaretLeftFilled';
-import { colors, radii, spacing, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useColors, useThemedStyles } from '../lib/appearance';
+import { radii, spacing, fonts } from '../lib/theme';
 import { ScreenBackground } from './ScreenBackground';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -32,6 +34,8 @@ import { ScreenBackground } from './ScreenBackground';
  *  run with `headerShown: false` because the frames put the title below it. */
 export function BackChip({ label = 'Account', to = '/profile' }: { label?: string; to?: string }) {
   const router = useRouter();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <Pressable
       onPress={() => (router.canGoBack() ? router.back() : router.replace(to as never))}
@@ -46,11 +50,13 @@ export function BackChip({ label = 'Account', to = '/profile' }: { label?: strin
 }
 
 export function ScreenTitle({ children }: { children: ReactNode }) {
+  const styles = useThemedStyles(makeStyles);
   return <Text style={styles.screenTitle}>{children}</Text>;
 }
 
 /** The white form card at x27 w340. */
 export function FormCard({ children, style }: { children: ReactNode; style?: object }) {
+  const styles = useThemedStyles(makeStyles);
   return <View style={[styles.card, style]}>{children}</View>;
 }
 
@@ -63,9 +69,14 @@ export function FormCard({ children, style }: { children: ReactNode; style?: obj
  */
 export function FieldsetInput({
   label,
-  notchColor = colors.surface,
+  notchColor,
   ...inputProps
 }: TextInputProps & { label: string; notchColor?: string }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
+  // Defaults to the card the field sits on, resolved per theme. A static
+  // default would pin every notch to the light surface.
+  const notch = notchColor ?? colors.surface;
   return (
     <View style={styles.fieldset}>
       <TextInput
@@ -74,7 +85,7 @@ export function FieldsetInput({
         accessibilityLabel={label}
         {...inputProps}
       />
-      <Text style={[styles.fieldsetLabel, { backgroundColor: notchColor }]} numberOfLines={1}>
+      <Text style={[styles.fieldsetLabel, { backgroundColor: notch }]} numberOfLines={1}>
         {label}
       </Text>
     </View>
@@ -94,6 +105,7 @@ export const meetsPasswordRules = (pw: string) => PASSWORD_RULES.every((r) => r.
  *  frame has no met-state, but it is the obvious live behaviour and the
  *  Change Password screen already did it. */
 export function PasswordRules({ value }: { value: string }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.rules}>
       <Text style={styles.rulesTitle}>Your password must include:</Text>
@@ -124,6 +136,8 @@ export function PillButton({
   disabled?: boolean;
   style?: object;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <Pressable
       onPress={onPress}
@@ -154,6 +168,7 @@ export function OutlinePillButton({
   onPress: () => void;
   style?: object;
 }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <Pressable
       onPress={onPress}
@@ -166,11 +181,13 @@ export function OutlinePillButton({
 }
 
 export function FormError({ message }: { message: string | null }) {
+  const styles = useThemedStyles(makeStyles);
   if (!message) return null;
   return <Text style={styles.error}>{message}</Text>;
 }
 
 export function FormNotice({ message }: { message: string | null }) {
+  const styles = useThemedStyles(makeStyles);
   if (!message) return null;
   return <Text style={styles.notice}>{message}</Text>;
 }
@@ -187,6 +204,7 @@ export function PrimaryButton({
   loading?: boolean;
   disabled?: boolean;
 }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <Pressable
       style={({ pressed }) => [styles.button, (pressed || disabled || loading) && styles.pressed]}
@@ -204,191 +222,192 @@ export function PrimaryButton({
 
 export { ScreenBackground };
 
-const styles = StyleSheet.create({
-  pressed: { opacity: 0.7 },
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    pressed: { opacity: 0.7 },
 
-  // Chip y52..82 (h31) at x17, Neutral/50 on the canvas.
-  backChip: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 52,
-    marginLeft: 17,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: radii.pill,
-    backgroundColor: colors.inset,
-  },
-  // lineHeight is pinned, not left to `normal`. Resolved from font metrics it
-  // measures 12 before Digitale loads and 13 after, which moves the chip's
-  // bottom edge — and with it the title, card and CTA — by a pixel depending
-  // on when you look. 9 + 13 + 9 = the frame's 31-tall chip, always.
-  backChipText: {
-    fontFamily: fonts.semibold,
-    fontSize: 10,
-    lineHeight: 13,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
+    // Chip y52..82 (h31) at x17, Neutral/50 on the canvas.
+    backChip: {
+      alignSelf: 'flex-start',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      marginTop: 52,
+      marginLeft: 17,
+      paddingHorizontal: 14,
+      paddingVertical: 9,
+      borderRadius: radii.pill,
+      backgroundColor: colors.inset,
+    },
+    // lineHeight is pinned, not left to `normal`. Resolved from font metrics it
+    // measures 12 before Digitale loads and 13 after, which moves the chip's
+    // bottom edge — and with it the title, card and CTA — by a pixel depending
+    // on when you look. 9 + 13 + 9 = the frame's 31-tall chip, always.
+    backChipText: {
+      fontFamily: fonts.semibold,
+      fontSize: 10,
+      lineHeight: 13,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
 
-  // The frames put the cap line of every title on y89 exactly, and Mouse
-  // Memoirs at 36 already measures their widths to within 2px — no tracking
-  // needed. The 40px line box seats those caps 8 below its own top, so the box
-  // starts at 81 — a 2px negative margin against the chip's bottom edge of 83.
-  screenTitle: {
-    marginTop: -2,
-    fontFamily: fonts.display,
-    fontSize: 36,
-    lineHeight: 40,
-    color: colors.text,
-    textAlign: 'center',
-  },
+    // The frames put the cap line of every title on y89 exactly, and Mouse
+    // Memoirs at 36 already measures their widths to within 2px — no tracking
+    // needed. The 40px line box seats those caps 8 below its own top, so the box
+    // starts at 81 — a 2px negative margin against the chip's bottom edge of 83.
+    screenTitle: {
+      marginTop: -2,
+      fontFamily: fonts.display,
+      fontSize: 36,
+      lineHeight: 40,
+      color: colors.text,
+      textAlign: 'center',
+    },
 
-  // Card box x26..367 — 342 wide, which is a half-pixel margin either side, so
-  // it centres rather than carrying a whole-number horizontal margin.
-  card: {
-    // 65 off the title's line box (which ends at 121) puts the card edge on
-    // y186. The box sits 8 higher than the caps it draws, hence 65 not 57.
-    marginTop: 65,
-    alignSelf: 'center',
-    width: 342,
-    paddingHorizontal: 14,
-    paddingTop: 22,
-    paddingBottom: 18,
-    backgroundColor: colors.surface,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: colors.cardBorder,
-  },
+    // Card box x26..367 — 342 wide, which is a half-pixel margin either side, so
+    // it centres rather than carrying a whole-number horizontal margin.
+    card: {
+      // 65 off the title's line box (which ends at 121) puts the card edge on
+      // y186. The box sits 8 higher than the caps it draws, hence 65 not 57.
+      marginTop: 65,
+      alignSelf: 'center',
+      width: 342,
+      paddingHorizontal: 14,
+      paddingTop: 22,
+      paddingBottom: 18,
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: colors.cardBorder,
+    },
 
-  // Pill outer edge to outer edge y209..253 = 45, outline broken by the label.
-  fieldset: { position: 'relative' },
-  fieldsetInput: {
-    height: 45,
-    borderRadius: radii.pill,
-    borderWidth: 1,
-    borderColor: colors.pillBorder,
-    // 20 = the label's own inset, so entered text lines up under its label.
-    paddingHorizontal: 20,
-    fontFamily: fonts.bold,
-    fontSize: 12,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-  // Straddles the top stroke, painting the card colour across the span it
-  // covers so the outline reads as notched. 10px: the caps measure 7px tall
-  // in the exports (y207..213), which is a 10px Digitale cap — the 8 this
-  // was built with rendered the labels a fifth too small.
-  fieldsetLabel: {
-    position: 'absolute',
-    top: -5,
-    left: 16,
-    paddingHorizontal: 4,
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    lineHeight: 13,
-    letterSpacing: 0.3,
-    color: colors.textFaint,
-  },
+    // Pill outer edge to outer edge y209..253 = 45, outline broken by the label.
+    fieldset: { position: 'relative' },
+    fieldsetInput: {
+      height: 45,
+      borderRadius: radii.pill,
+      borderWidth: 1,
+      borderColor: colors.pillBorder,
+      // 20 = the label's own inset, so entered text lines up under its label.
+      paddingHorizontal: 20,
+      fontFamily: fonts.bold,
+      fontSize: 12,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
+    // Straddles the top stroke, painting the card colour across the span it
+    // covers so the outline reads as notched. 10px: the caps measure 7px tall
+    // in the exports (y207..213), which is a 10px Digitale cap — the 8 this
+    // was built with rendered the labels a fifth too small.
+    fieldsetLabel: {
+      position: 'absolute',
+      top: -5,
+      left: 16,
+      paddingHorizontal: 4,
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      lineHeight: 13,
+      letterSpacing: 0.3,
+      color: colors.textFaint,
+    },
 
-  // The checklist is indented 18 past the field edge and set solid — 13px
-  // pitch with no gap between rows, which is what the frames measure.
-  // The -5 bottom trims the leading React Native hangs under the last line but
-  // Figma's text block does not, so a card that ends in the checklist closes on
-  // y583 like the frame instead of five short of it.
-  rules: { marginTop: 6, marginLeft: 18, marginBottom: -4 },
-  rulesTitle: {
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    lineHeight: 13,
-    letterSpacing: 0.3,
-    color: colors.textFaint,
-  },
-  ruleRow: { flexDirection: 'row', marginLeft: 7 },
-  // A fixed cell rather than a space after the bullet: the frames leave 9px
-  // between the dot and the text, which no single space at 10px can give.
-  ruleBullet: {
-    width: 11,
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    lineHeight: 13,
-    color: colors.textFaint,
-  },
-  rule: {
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    lineHeight: 13,
-    letterSpacing: 0.3,
-    color: colors.textFaint,
-  },
-  ruleMet: { color: colors.correct },
+    // The checklist is indented 18 past the field edge and set solid — 13px
+    // pitch with no gap between rows, which is what the frames measure.
+    // The -5 bottom trims the leading React Native hangs under the last line but
+    // Figma's text block does not, so a card that ends in the checklist closes on
+    // y583 like the frame instead of five short of it.
+    rules: { marginTop: 6, marginLeft: 18, marginBottom: -4 },
+    rulesTitle: {
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      lineHeight: 13,
+      letterSpacing: 0.3,
+      color: colors.textFaint,
+    },
+    ruleRow: { flexDirection: 'row', marginLeft: 7 },
+    // A fixed cell rather than a space after the bullet: the frames leave 9px
+    // between the dot and the text, which no single space at 10px can give.
+    ruleBullet: {
+      width: 11,
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      lineHeight: 13,
+      color: colors.textFaint,
+    },
+    rule: {
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      lineHeight: 13,
+      letterSpacing: 0.3,
+      color: colors.textFaint,
+    },
+    ruleMet: { color: colors.correct },
 
-  // CTA x76 y659 w243 h50. The frames vary 236–243 across labels (the Figma
-  // button hugs its text); 243 is the value the Change Password frame records
-  // and the widest, so every screen uses it and the labels centre inside.
-  pill: {
-    alignSelf: 'center',
-    width: 243,
-    height: 50,
-    borderRadius: radii.pill,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pillText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    letterSpacing: 0.3,
-    color: colors.onPrimary,
-  },
+    // CTA x76 y659 w243 h50. The frames vary 236–243 across labels (the Figma
+    // button hugs its text); 243 is the value the Change Password frame records
+    // and the widest, so every screen uses it and the labels centre inside.
+    pill: {
+      alignSelf: 'center',
+      width: 243,
+      height: 50,
+      borderRadius: radii.pill,
+      backgroundColor: colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    pillText: {
+      fontFamily: fonts.bold,
+      fontSize: 14,
+      letterSpacing: 0.3,
+      color: colors.onPrimary,
+    },
 
-  // Open Email x89 w216 h50, 2px blue edge on white.
-  outlinePill: {
-    alignSelf: 'center',
-    width: 216,
-    height: 50,
-    borderRadius: radii.pill,
-    borderWidth: 2,
-    borderColor: colors.primary,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  outlinePillText: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    letterSpacing: 0.3,
-    color: colors.primary,
-  },
+    // Open Email x89 w216 h50, 2px blue edge on white.
+    outlinePill: {
+      alignSelf: 'center',
+      width: 216,
+      height: 50,
+      borderRadius: radii.pill,
+      borderWidth: 2,
+      borderColor: colors.primary,
+      backgroundColor: colors.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    outlinePillText: {
+      fontFamily: fonts.bold,
+      fontSize: 14,
+      letterSpacing: 0.3,
+      color: colors.primary,
+    },
 
-  error: {
-    marginTop: 18,
-    marginHorizontal: 27,
-    fontFamily: fonts.semibold,
-    fontSize: 12,
-    color: colors.danger,
-    textAlign: 'center',
-  },
-  notice: {
-    marginTop: 18,
-    marginHorizontal: 27,
-    fontFamily: fonts.semibold,
-    fontSize: 12,
-    color: colors.correct,
-    textAlign: 'center',
-  },
+    error: {
+      marginTop: 18,
+      marginHorizontal: 27,
+      fontFamily: fonts.semibold,
+      fontSize: 12,
+      color: colors.danger,
+      textAlign: 'center',
+    },
+    notice: {
+      marginTop: 18,
+      marginHorizontal: 27,
+      fontFamily: fonts.semibold,
+      fontSize: 12,
+      color: colors.correct,
+      textAlign: 'center',
+    },
 
-  button: {
-    backgroundColor: colors.primary,
-    borderRadius: radii.pill,
-    paddingVertical: spacing.sm + 4,
-    alignItems: 'center',
-    marginTop: spacing.sm,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontFamily: fonts.semibold,
-  },
-});
+    button: {
+      backgroundColor: colors.primary,
+      borderRadius: radii.pill,
+      paddingVertical: spacing.sm + 4,
+      alignItems: 'center',
+      marginTop: spacing.sm,
+    },
+    buttonText: {
+      color: '#fff',
+      fontSize: 16,
+      fontFamily: fonts.semibold,
+    },
+  });

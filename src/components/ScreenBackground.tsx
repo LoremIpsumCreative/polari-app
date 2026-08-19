@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import Svg, { Defs, Path, Pattern, Rect } from 'react-native-svg';
-import { colors } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useColors, useThemedStyles } from '../lib/appearance';
 import { SPARKLE_TILE_PATH } from './sparkleTilePath';
 
 // The sparkle texture behind every screen — the design system's "Background
@@ -8,10 +9,11 @@ import { SPARKLE_TILE_PATH } from './sparkleTilePath';
 // everything and never takes touches.
 const TILE_W = 269;
 const TILE_H = 170.887;
-const SPARKLE_INK = '#DBDDE4';
 const SPARKLE_OPACITY = 0.7;
 
 export function ScreenBackground() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.canvas]}>
       <Svg width="100%" height="100%">
@@ -24,7 +26,7 @@ export function ScreenBackground() {
           >
             <Path
               d={SPARKLE_TILE_PATH}
-              fill={SPARKLE_INK}
+              fill={colors.pattern}
               fillOpacity={SPARKLE_OPACITY}
               fillRule="evenodd"
               clipRule="evenodd"
@@ -37,14 +39,15 @@ export function ScreenBackground() {
   );
 }
 
-const styles = StyleSheet.create({
-  canvas: {
-    backgroundColor: colors.canvas,
-    // A negative index paints the pattern above the parent's own background
-    // fill but below every child. Without it the absolutely positioned layer
-    // paints over in-flow content that isn't itself positioned — RN-web gives
-    // View and Text `position: relative`, but a TextInput's bare <input> gets
-    // nothing, so search fields vanished behind the canvas.
-    zIndex: -1,
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    canvas: {
+      backgroundColor: colors.canvas,
+      // A negative index paints the pattern above the parent's own background
+      // fill but below every child. Without it the absolutely positioned layer
+      // paints over in-flow content that isn't itself positioned — RN-web gives
+      // View and Text `position: relative`, but a TextInput's bare <input> gets
+      // nothing, so search fields vanished behind the canvas.
+      zIndex: -1,
+    },
+  });

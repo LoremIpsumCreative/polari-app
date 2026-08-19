@@ -3,7 +3,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import IconChevronDown from '@tabler/icons-react-native/IconChevronDown';
 import IconChevronUp from '@tabler/icons-react-native/IconChevronUp';
 import type { IconProps } from '../lib/icons';
-import { colors, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useColors, useThemedStyles } from '../lib/appearance';
+import { fonts } from '../lib/theme';
 
 // Button/Account Option (Figma 2154:3240 and siblings) — the row every Account
 // section is built from: a 26px circle badge, a 10px Bold label, and a
@@ -29,6 +31,8 @@ export function AccountOption({
   showChevron?: boolean;
   children?: ReactNode;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   // Only the expandable rows carry a chevron — the frame leaves About Polari,
   // Feedback and Sign Out bare.
   const Chevron = expanded ? IconChevronUp : IconChevronDown;
@@ -44,7 +48,7 @@ export function AccountOption({
         accessibilityState={expandable ? { expanded: !!expanded } : undefined}
       >
         <View style={[styles.badge, disabled && styles.badgeDisabled]}>
-          <Icon size={14} color={disabled ? colors.inactive : colors.textFaint} />
+          <Icon size={14} color={disabled ? colors.inactive : colors.textMuted} />
         </View>
         <Text style={[styles.label, disabled && styles.labelDisabled]}>{label}</Text>
         {chevron ? <Chevron size={12} color={disabled ? colors.inactive : colors.text} /> : null}
@@ -54,33 +58,36 @@ export function AccountOption({
   );
 }
 
-const styles = StyleSheet.create({
-  option: {
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.metaText,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-  },
-  header: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  optionDisabled: { backgroundColor: colors.inset, borderColor: colors.inactive },
-  badgeDisabled: { backgroundColor: colors.progressTrack },
-  labelDisabled: { color: colors.inactive },
-  badge: {
-    width: 26,
-    height: 26,
-    borderRadius: 999,
-    backgroundColor: colors.inset,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  label: {
-    flex: 1,
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    color: colors.textFaint,
-  },
-  body: { marginTop: 16, gap: 12 },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    option: {
+      backgroundColor: colors.surface,
+      borderRadius: 8,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.optionBorder,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+    },
+    header: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    optionDisabled: { backgroundColor: colors.inset, borderColor: colors.inactive },
+    badgeDisabled: { backgroundColor: colors.disabledFill },
+    labelDisabled: { color: colors.inactive },
+    badge: {
+      width: 26,
+      height: 26,
+      borderRadius: 999,
+      backgroundColor: colors.inset,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    label: {
+      flex: 1,
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+      // Text/Label, per the binding on "<Row> Text" in the frame. Same value
+      // as Text/Faint in both modes today, but the right token to follow.
+      color: colors.label,
+    },
+    body: { marginTop: 16, gap: 12 },
+  });

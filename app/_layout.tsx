@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
@@ -19,6 +19,7 @@ import { ContentAdvisory } from '../src/components/ContentAdvisory';
 import { PrivacyGate } from '../src/components/PrivacyGate';
 import { CompleteProfileGate } from '../src/components/CompleteProfileGate';
 import { DisplayNameProvider } from '../src/lib/displayName';
+import { AppearanceProvider, useAppearance } from '../src/lib/appearance';
 import { Analytics } from '../src/components/Analytics';
 
 // Digitale's weight axis has to be pinned per face, which only CSS can express,
@@ -42,9 +43,29 @@ installWebFonts();
 // could not be shorter than the design, so any viewport under 852 tall scrolled
 // — taking the tab bar with it, below the fold.
 
+// The letterbox and the frame it surrounds are the only surfaces the root
+// owns, so they are the first two to follow the reader's appearance choice.
+// Everything inside still reads the static light palette until each screen is
+// migrated to useColors() — see src/lib/palette.ts.
+function AppFrame({ children }: { children: ReactNode }) {
+  const frame = useDesignFrame();
+  const { colors: themed } = useAppearance();
+  return (
+    <View style={[styles.gutter, { backgroundColor: themed.canvas }]}>
+      <View
+        style={[
+          styles.phoneFrame,
+          { width: frame.width, height: frame.height, backgroundColor: themed.canvas },
+        ]}
+      >
+        {children}
+      </View>
+    </View>
+  );
+}
+
 export default function RootLayout() {
   const [fontsLoaded] = useFonts(fontAssets);
-  const frame = useDesignFrame();
   // Component state is exactly the right lifetime here: it resets on a cold
   // start, which is when the launch sequence is meant to play, and survives
   // navigation within a session, which is when it must not.
@@ -82,29 +103,25 @@ export default function RootLayout() {
   );
 
   return (
-    <AuthProvider>
-      <WordsProvider>
-        <RemoteArtProvider>
-          <CollectionsProvider>
-            <FavouritesProvider>
-              <DisplayNameProvider>
-                <StreaksProvider>
-                  <ProgressProvider>
-                    <View style={styles.gutter}>
-                      <View
-                        style={[styles.phoneFrame, { width: frame.width, height: frame.height }]}
-                      >
-                        {app}
-                      </View>
-                    </View>
-                  </ProgressProvider>
-                </StreaksProvider>
-              </DisplayNameProvider>
-            </FavouritesProvider>
-          </CollectionsProvider>
-        </RemoteArtProvider>
-      </WordsProvider>
-    </AuthProvider>
+    <AppearanceProvider>
+      <AuthProvider>
+        <WordsProvider>
+          <RemoteArtProvider>
+            <CollectionsProvider>
+              <FavouritesProvider>
+                <DisplayNameProvider>
+                  <StreaksProvider>
+                    <ProgressProvider>
+                      <AppFrame>{app}</AppFrame>
+                    </ProgressProvider>
+                  </StreaksProvider>
+                </DisplayNameProvider>
+              </FavouritesProvider>
+            </CollectionsProvider>
+          </RemoteArtProvider>
+        </WordsProvider>
+      </AuthProvider>
+    </AppearanceProvider>
   );
 }
 
