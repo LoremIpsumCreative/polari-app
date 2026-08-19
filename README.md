@@ -13,6 +13,9 @@
 ╚════════════════════════════════════════════════════════════════════════╝
 ```
 
+![GitHub Release](https://img.shields.io/github/v/release/loremipsumcreative/polari-app?style=flat&logo=github&logoSize=auto&label=pre-release&color=%231D7AFC)
+
+
 > A character-led **Polari dictionary and learning app** preserving the
 > historical queer cant through a daily word, cultural context, collections,
 > quizzes, spaced repetition, streaks, achievements, and shareable cards.

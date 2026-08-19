@@ -13,6 +13,11 @@
 -- PATCH their own profiles row directly through PostgREST, so a validator that
 -- only runs in the app is a suggestion, not a rule.
 
+-- unaccent() strips diacritics. Postgres regex cannot express the combining-mark
+-- class the TypeScript normaliser uses, so this extension is what keeps the two
+-- implementations agreeing on what "café" normalises to.
+create extension if not exists unaccent with schema extensions;
+
 -- ── Rules ────────────────────────────────────────────────────────────────────
 
 create type moderation_match_type as enum (
@@ -78,20 +83,27 @@ alter table moderation_aliases enable row level security;
 create or replace function normalise_display_name(input text)
 returns table (normalised text, compact text)
 language plpgsql
-immutable
+-- stable, not immutable: unaccent() reads a dictionary, so it is itself only
+-- stable. Declaring this immutable would be a promise the function cannot keep
+-- and would let the planner cache results it should not.
+stable
+set search_path = public, extensions
 as $$
 declare
   v text;
 begin
   v := lower(normalize(coalesce(input, ''), NFKC));
-  -- Strip combining marks (accents) without touching the base letters.
-  v := regexp_replace(normalize(v, NFD), '\p{M}', '', 'g');
+  -- Accents off. The TypeScript decomposes and drops combining marks, which
+  -- Postgres cannot express — its regex engine is POSIX and has no \p{M} class,
+  -- so that pattern is a hard error rather than a no-op. unaccent() is the
+  -- equivalent here, and is why the extension is required above.
+  v := extensions.unaccent(v);
   -- Invisible characters.
   v := regexp_replace(v, '[​-‍⁠﻿­]', '', 'g');
 
   -- Confusables, then leetspeak. Kept in the same order as the TypeScript.
   v := translate(v, 'аеорсхіѕԁαεορτυ', 'aeopcxisdaeoptu');
-  v := translate(v, '0123456789@$€£¢¥', 'oizeasgtbga s elcy');
+  v := translate(v, '0123456789@$€£¢¥', 'oizeasgtbgaselcy');
 
   normalised := btrim(regexp_replace(regexp_replace(v, '[._~*^|+\-,''"`•·]+', ' ', 'g'), '\s+', ' ', 'g'));
 

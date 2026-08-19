@@ -11,6 +11,11 @@ src/types/database.ts
 # Generated from docs/legal/privacy-policy.md by scripts/build-privacy-policy.ts.
 src/content/privacyPolicy.ts
 
+# The same generator's second output: the crawler-readable policy page served at
+# /privacy.html. Prettier would reflow the emitted markup and lose the race with
+# the next legal:build.
+public/privacy.html
+
 # One inlined SVG export on a single 150k-character line. Reformatting it would
 # not make it readable, and the file is regenerated, not edited.
 src/components/launchAnimationSvg.ts
