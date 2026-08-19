@@ -21,11 +21,15 @@ export const colors = {
   relatedSoft: '#F4FCFF', // teal/50
   chipGrey: '#44546F', // neutral/700 — part-of-speech chip
   fieldBorder: '#C8CCD4', // neutral/250 — fieldset row + pill hairlines
-  // The account forms draw two distinct hairlines, both read off the 393x852
-  // exports as exact 1px runs rather than antialiased blends: the form card's
-  // edge and, one step lighter, the notched pill fields inside it.
-  cardBorder: '#A4ACB9', // neutral/300 — Create Account / Change Password card edge
-  pillBorder: '#B0B7C2', // neutral/350 — notched pill field outline
+  // Both were previously measured off the 393x852 exports (#A4ACB9 / #B0B7C2)
+  // on the assumption they were flat 1px runs. They are not: the file binds
+  // both to Neutral/600 and strokes them at 0.5px OUTSIDE, so what the export
+  // shows is that one colour antialiased against white. Half-coverage of
+  // #626F86 on white is #B0B7C2 — exactly the old `pillBorder` — which is the
+  // arithmetic confirming the measurement was of the render, not the source.
+  // Bound to a primitive, so single-mode: the same in both schemes.
+  cardBorder: '#626F86', // Neutral/600 — form card edge, at hairline weight
+  pillBorder: '#626F86', // Neutral/600 — notched pill field outline
   // Curated-bundle card edges: the blue one reuses `primary`, these two are
   // the teal/700 and green/700 stops the Button/Bundles variants use.
   tealEdge: '#227D9B', // teal/700

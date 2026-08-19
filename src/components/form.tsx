@@ -277,7 +277,7 @@ const makeStyles = (colors: Palette) =>
       paddingBottom: 18,
       backgroundColor: colors.surface,
       borderRadius: 14,
-      borderWidth: 1,
+      borderWidth: StyleSheet.hairlineWidth,
       borderColor: colors.cardBorder,
     },
 
@@ -286,7 +286,7 @@ const makeStyles = (colors: Palette) =>
     fieldsetInput: {
       height: 45,
       borderRadius: radii.pill,
-      borderWidth: 1,
+      borderWidth: StyleSheet.hairlineWidth,
       borderColor: colors.pillBorder,
       // 20 = the label's own inset, so entered text lines up under its label.
       paddingHorizontal: 20,
