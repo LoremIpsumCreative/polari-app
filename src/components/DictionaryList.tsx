@@ -3,7 +3,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { FlashList, type FlashListRef } from '@shopify/flash-list';
 import IconChevronRight from '@tabler/icons-react-native/IconChevronRight';
 import IconFlagFilled from '@tabler/icons-react-native/IconFlagFilled';
-import { colors, fonts } from '../lib/theme';
+import type { Palette } from '../lib/palette';
+import { useColors, useThemedStyles } from '../lib/appearance';
+import { fonts } from '../lib/theme';
 import type { Word } from '../types/database';
 import { useTabBarInset } from './AnimatedTabBar';
 
@@ -15,6 +17,8 @@ import { useTabBarInset } from './AnimatedTabBar';
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 export function DefinitionRow({ word, onPress }: { word: Word; onPress: () => void }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <Pressable
       onPress={onPress}
@@ -59,6 +63,7 @@ export function DictionaryListPanel({
   empty?: ReactNode;
   style?: object;
 }) {
+  const styles = useThemedStyles(makeStyles);
   const listRef = useRef<FlashListRef<Word>>(null);
   // The tab bar floats over the screen, so the list and the rail keep clear of
   // it themselves — the frame bakes this in as the rail's fixed tail.
@@ -117,69 +122,70 @@ export function DictionaryListPanel({
   );
 }
 
-const styles = StyleSheet.create({
-  panel: {
-    flex: 1,
-    flexDirection: 'row',
-    marginHorizontal: 17,
-    paddingLeft: 20,
-    paddingRight: 12,
-    paddingTop: 20,
-    gap: 9,
-    backgroundColor: colors.inset,
-    borderWidth: 1,
-    borderBottomWidth: 0,
-    borderColor: colors.fieldBorder,
-    borderTopLeftRadius: 14,
-    borderTopRightRadius: 14,
-  },
-  panelList: { flex: 1 },
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    panel: {
+      flex: 1,
+      flexDirection: 'row',
+      marginHorizontal: 17,
+      paddingLeft: 20,
+      paddingRight: 12,
+      paddingTop: 20,
+      gap: 9,
+      backgroundColor: colors.inset,
+      borderWidth: 1,
+      borderBottomWidth: 0,
+      borderColor: colors.fieldBorder,
+      borderTopLeftRadius: 14,
+      borderTopRightRadius: 14,
+    },
+    panelList: { flex: 1 },
 
-  // Height is pinned rather than intrinsic: Figma trims text boxes to cap
-  // height, which RN cannot do, so the leading would push rows past 49.5.
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    height: 49.5,
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.fieldBorder,
-    paddingHorizontal: 12,
-    marginBottom: 6,
-  },
-  rowPressed: { backgroundColor: colors.primarySoft },
-  rowFlag: { marginRight: 2 },
-  rowText: { flex: 1, gap: 3 },
-  rowTerm: {
-    fontFamily: fonts.bold,
-    fontSize: 14,
-    lineHeight: 15,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-  rowDefinition: {
-    fontFamily: fonts.semibold,
-    fontSize: 10,
-    lineHeight: 11,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
+    // Height is pinned rather than intrinsic: Figma trims text boxes to cap
+    // height, which RN cannot do, so the leading would push rows past 49.5.
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+      height: 49.5,
+      backgroundColor: colors.surface,
+      borderRadius: 8,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.fieldBorder,
+      paddingHorizontal: 12,
+      marginBottom: 6,
+    },
+    rowPressed: { backgroundColor: colors.primarySoft },
+    rowFlag: { marginRight: 2 },
+    rowText: { flex: 1, gap: 3 },
+    rowTerm: {
+      fontFamily: fonts.bold,
+      fontSize: 14,
+      lineHeight: 15,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
+    rowDefinition: {
+      fontFamily: fonts.semibold,
+      fontSize: 10,
+      lineHeight: 11,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
 
-  pagination: {
-    width: 19,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 6,
-  },
-  paginationLetter: {
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    lineHeight: 11,
-    letterSpacing: 0.3,
-    textAlign: 'center',
-    color: colors.text,
-  },
-  paginationLetterOff: { color: colors.inactive },
-});
+    pagination: {
+      width: 19,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 6,
+    },
+    paginationLetter: {
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      lineHeight: 11,
+      letterSpacing: 0.3,
+      textAlign: 'center',
+      color: colors.text,
+    },
+    paginationLetterOff: { color: colors.inactive },
+  });
