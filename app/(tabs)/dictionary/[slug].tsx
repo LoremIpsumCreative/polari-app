@@ -7,11 +7,15 @@ import { useCharacterArt } from '../../../src/lib/remoteArt';
 import { CharacterFullScreen } from '../../../src/components/CharacterFullScreen';
 import { WordDetailCard } from '../../../src/components/WordDetailCard';
 import { FlaggedBadge, FLAGGED_BADGE_OFFSET } from '../../../src/components/FlaggedBadge';
-import { colors, spacing, fonts } from '../../../src/lib/theme';
+import type { Palette } from '../../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../../src/lib/appearance';
+import { spacing, fonts } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 
 export default function WordDetailScreen() {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const { bySlug, loading } = useWords();
   const { artFor } = useCharacterArt();
@@ -73,47 +77,48 @@ export default function WordDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.canvas,
-  },
-  container: {
-    flex: 1,
-  },
-  // Frame 1885:2061: art 190x253 at y87, fullscreen icon at x343 y86, the
-  // definition card inset 15 from each edge starting at y350.
-  content: {
-    // paddingBottom is applied inline from useTabBarInset — the floating tab
-    // bar's height varies with the device's safe-area inset, so it cannot be a
-    // static value here.
-  },
-  hero: {
-    alignSelf: 'center',
-    width: 190,
-    height: 253,
-    marginTop: 87,
-  },
-  fullScreenButton: {
-    position: 'absolute',
-    top: 86,
-    right: 31,
-    padding: spacing.xs,
-  },
-  card: {
-    marginHorizontal: 15,
-    marginTop: 10,
-  },
-  pressed: {
-    opacity: 0.6,
-  },
-  center: {
-    padding: spacing.xl,
-    alignItems: 'center',
-  },
-  missingText: {
-    fontFamily: fonts.regular,
-    fontSize: 15,
-    color: colors.textMuted,
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: colors.canvas,
+    },
+    container: {
+      flex: 1,
+    },
+    // Frame 1885:2061: art 190x253 at y87, fullscreen icon at x343 y86, the
+    // definition card inset 15 from each edge starting at y350.
+    content: {
+      // paddingBottom is applied inline from useTabBarInset — the floating tab
+      // bar's height varies with the device's safe-area inset, so it cannot be a
+      // static value here.
+    },
+    hero: {
+      alignSelf: 'center',
+      width: 190,
+      height: 253,
+      marginTop: 87,
+    },
+    fullScreenButton: {
+      position: 'absolute',
+      top: 86,
+      right: 31,
+      padding: spacing.xs,
+    },
+    card: {
+      marginHorizontal: 15,
+      marginTop: 10,
+    },
+    pressed: {
+      opacity: 0.6,
+    },
+    center: {
+      padding: spacing.xl,
+      alignItems: 'center',
+    },
+    missingText: {
+      fontFamily: fonts.regular,
+      fontSize: 15,
+      color: colors.textMuted,
+    },
+  });

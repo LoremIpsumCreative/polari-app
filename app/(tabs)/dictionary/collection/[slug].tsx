@@ -4,7 +4,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 import { useWords } from '../../../../src/lib/words';
 import { useCollections } from '../../../../src/lib/collections';
-import { colors, radii, fonts } from '../../../../src/lib/theme';
+import type { Palette } from '../../../../src/lib/palette';
+import { useColors, useThemedStyles } from '../../../../src/lib/appearance';
+import { radii, fonts } from '../../../../src/lib/theme';
 import type { Word } from '../../../../src/types/database';
 import { ScreenBackground } from '../../../../src/components/ScreenBackground';
 import { DictionaryListPanel } from '../../../../src/components/DictionaryList';
@@ -15,6 +17,7 @@ import { DictionaryListPanel } from '../../../../src/components/DictionaryList';
 // The chip's 5px caret, drawn rather than taken from the icon set so it keeps
 // the frame's solid triangle.
 function BackCaret() {
+  const colors = useColors();
   return (
     <Svg width={5} height={5} viewBox="0 0 5 5">
       <Path d="M4.5 0 L4.5 5 L0 2.5 Z" fill={colors.text} />
@@ -23,6 +26,7 @@ function BackCaret() {
 }
 
 export default function CollectionScreen() {
+  const styles = useThemedStyles(makeStyles);
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const router = useRouter();
   const { bySlug: wordById } = useWords();
@@ -82,68 +86,69 @@ export default function CollectionScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.canvas },
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    screen: { flex: 1, backgroundColor: colors.canvas },
 
-  backChip: {
-    alignSelf: 'flex-start',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginTop: 52,
-    marginLeft: 17,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: radii.pill,
-    backgroundColor: colors.inset,
-  },
-  backChipText: {
-    fontFamily: fonts.semibold,
-    fontSize: 10,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-  pressed: { opacity: 0.7 },
+    backChip: {
+      alignSelf: 'flex-start',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      marginTop: 52,
+      marginLeft: 17,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      borderRadius: radii.pill,
+      backgroundColor: colors.inset,
+    },
+    backChipText: {
+      fontFamily: fonts.semibold,
+      fontSize: 10,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
+    pressed: { opacity: 0.7 },
 
-  badge: {
-    alignSelf: 'flex-start',
-    marginTop: 33,
-    marginLeft: 17,
-    paddingHorizontal: 8,
-    paddingVertical: 5,
-    borderRadius: radii.pill,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    backgroundColor: colors.primarySoft,
-  },
-  badgeText: {
-    fontFamily: fonts.bold,
-    fontSize: 10,
-    lineHeight: 9,
-    letterSpacing: 0.3,
-    color: colors.primary,
-  },
+    badge: {
+      alignSelf: 'flex-start',
+      marginTop: 33,
+      marginLeft: 17,
+      paddingHorizontal: 8,
+      paddingVertical: 5,
+      borderRadius: radii.pill,
+      borderWidth: 1,
+      borderColor: colors.primary,
+      backgroundColor: colors.primarySoft,
+    },
+    badgeText: {
+      fontFamily: fonts.bold,
+      fontSize: 10,
+      lineHeight: 9,
+      letterSpacing: 0.3,
+      color: colors.primary,
+    },
 
-  title: {
-    marginTop: 12,
-    marginHorizontal: 17,
-    fontFamily: fonts.bold,
-    fontSize: 20,
-    lineHeight: 22,
-    letterSpacing: 0.3,
-    color: colors.text,
-  },
-  description: {
-    marginTop: 8,
-    marginHorizontal: 17,
-    fontFamily: fonts.semibold,
-    fontSize: 10,
-    lineHeight: 12,
-    letterSpacing: 0.3,
-    color: colors.textFaint,
-  },
-  panel: { marginTop: 8 },
+    title: {
+      marginTop: 12,
+      marginHorizontal: 17,
+      fontFamily: fonts.bold,
+      fontSize: 20,
+      lineHeight: 22,
+      letterSpacing: 0.3,
+      color: colors.text,
+    },
+    description: {
+      marginTop: 8,
+      marginHorizontal: 17,
+      fontFamily: fonts.semibold,
+      fontSize: 10,
+      lineHeight: 12,
+      letterSpacing: 0.3,
+      color: colors.textFaint,
+    },
+    panel: { marginTop: 8 },
 
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32 },
-  missingText: { fontFamily: fonts.regular, fontSize: 15, color: colors.textMuted },
-});
+    center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32 },
+    missingText: { fontFamily: fonts.regular, fontSize: 15, color: colors.textMuted },
+  });
