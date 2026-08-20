@@ -96,7 +96,11 @@ export const PASSWORD_RULES: { label: string; ok: (pw: string) => boolean }[] = 
   { label: 'At least 8 characters', ok: (pw) => pw.length >= 8 },
   { label: 'At least 1 lowercase letter', ok: (pw) => /[a-z]/.test(pw) },
   { label: 'At least 1 uppercase letter', ok: (pw) => /[A-Z]/.test(pw) },
-  { label: 'At least 1 number or symbol', ok: (pw) => /[^A-Za-z]/.test(pw) },
+  { label: 'At least 1 number', ok: (pw) => /[0-9]/.test(pw) },
+  // The 2028-08-19 Create Account frame splits what used to be a single
+  // "number or symbol" rule in two, so a symbol is now required rather than an
+  // alternative. Anything that is not a letter, a digit or whitespace counts.
+  { label: 'At least 1 symbol', ok: (pw) => /[^A-Za-z0-9\s]/.test(pw) },
 ];
 
 export const meetsPasswordRules = (pw: string) => PASSWORD_RULES.every((r) => r.ok(pw));

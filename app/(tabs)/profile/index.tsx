@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import IconBinoculars from '@tabler/icons-react-native/IconBinoculars';
+import IconCircleCheck from '@tabler/icons-react-native/IconCircleCheck';
 import IconColorSwatch from '@tabler/icons-react-native/IconColorSwatch';
 import IconDeviceMobile from '@tabler/icons-react-native/IconDeviceMobile';
 import IconFileText from '@tabler/icons-react-native/IconFileText';
@@ -30,6 +31,10 @@ import { HEART_RED } from '../../../src/components/CollectionChrome';
 // Account/Main (Figma 2154:3235, expanded 2132:3432): a welcome banner at
 // y116 over three groups of Button/Account Option rows — profile and
 // appearance, about and feedback, sign out — with Delete Account beneath.
+
+// Supabase's default resend rate limit. The confirmed state holds for this
+// long, then the button comes back.
+const RESEND_COOLDOWN_MS = 60_000;
 
 // The appearance modes the frame offers, in its order.
 const APPEARANCE_MODES: { key: AppearanceMode; label: string; Icon: typeof IconSun }[] = [
@@ -182,6 +187,16 @@ export default function ProfileScreen() {
   // 'sent' is a confirmation the reader can see; it resets when a new address
   // is requested, so the button never claims to have sent the current one.
   const [resendState, setResendState] = useState<'idle' | 'sending' | 'sent'>('idle');
+
+  // Supabase rate-limits resends to one a minute by default, so the confirmed
+  // state holds for exactly that long and then offers the action again. Leaving
+  // it on 'sent' forever — which is what it did — stranded anyone whose mail
+  // never arrived, with no way back to the button.
+  useEffect(() => {
+    if (resendState !== 'sent') return;
+    const id = setTimeout(() => setResendState('idle'), RESEND_COOLDOWN_MS);
+    return () => clearTimeout(id);
+  }, [resendState]);
 
   async function handleDeleteAccount() {
     if (!confirmingDelete) {
@@ -352,15 +367,29 @@ export default function ProfileScreen() {
                   nothing to resend once the address is confirmed. */}
               {pendingEmail ? (
                 <Pressable
-                  style={({ pressed }) => [styles.profileButton, pressed && styles.pressed]}
+                  style={({ pressed }) => [
+                    styles.profileButton,
+                    styles.profileButtonRow,
+                    pressed && styles.pressed,
+                  ]}
                   onPress={resendVerification}
+                  disabled={resendState !== 'idle'}
                   accessibilityRole="button"
+                  accessibilityState={{ disabled: resendState !== 'idle' }}
                 >
-                  <Text style={styles.profileButtonText}>
+                  {resendState === 'sent' ? (
+                    <IconCircleCheck size={13} color={colors.green} />
+                  ) : null}
+                  <Text
+                    style={[
+                      styles.profileButtonText,
+                      resendState === 'sent' && styles.profileButtonTextSent,
+                    ]}
+                  >
                     {resendState === 'sending'
                       ? 'Sending…'
                       : resendState === 'sent'
-                        ? 'Email Sent'
+                        ? 'Verification Email Sent'
                         : 'Resend Verification Email'}
                   </Text>
                 </Pressable>
@@ -594,6 +623,8 @@ const makeStyles = (colors: Palette) =>
       paddingHorizontal: 12,
       paddingVertical: 9,
     },
+    profileButtonRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+    profileButtonTextSent: { color: colors.green },
     profileButtonText: {
       fontFamily: fonts.bold,
       fontSize: 10,
