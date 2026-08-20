@@ -34,6 +34,7 @@ const darkOverrides: Partial<Palette> = {
 
   // Disabled/*
   disabledFill: '#343434', // Disabled/Fill
+  dangerSoft: '#852620', // Feedback/Incorrect Fill
 
   // Border/*
   fieldBorder: '#44546F', // Border/Field ← Neutral/700
