@@ -1,46 +1,50 @@
 import { useWindowDimensions } from 'react-native';
 import { DESIGN_HEIGHT, DESIGN_WIDTH, PHONE_MAX_WIDTH } from './theme';
 
-// Every screen is a Figma frame reproduced in the mockups' 393x852 space with
-// absolutely positioned children, so the whole app is one fixed-aspect drawing.
-// A fixed-aspect drawing has exactly one honest way to meet an arbitrary
-// device: scale it uniformly until it fits, and let the leftover show as
-// canvas. That is what this returns, and it is the ONLY scale in the app —
-// screens, the tab bar and the launch sequence all read it, so nothing can
-// drift out of register with anything else.
+// Screens are Figma frames reproduced in the mockups' 393-wide space with
+// absolutely positioned children, so there is still exactly one scale in the
+// app and everything reads it. What changed is that the scale is now driven by
+// WIDTH ALONE.
 //
-// The height term used to be `Math.max(height, DESIGN_HEIGHT) / DESIGN_HEIGHT`,
-// which is >= 1 by construction and so never actually constrained anything. A
-// viewport shorter than 852 — every iPhone running this in Safari with its
-// chrome showing, and most of them running it from the home screen — laid the
-// design out at full size inside a column pinned to a 852 minimum and scrolled
-// the overflow. The tab bar sits at the foot of that column, so it fell below
-// the fold: the reported "navbar isn't sticking to the bottom".
+// It used to be min(width, height) — a uniform fit for a fixed-aspect drawing,
+// which letterboxed. On any viewport proportionally wider than 393:852, and
+// that is most phone browsers once the status bar is gone, the height term won
+// and the app sat in a narrow column with dead canvas down both sides.
 //
-// The width term keeps the PHONE_MAX_WIDTH cap so a desktop browser window gets
-// a phone-sized column rather than a stretched one. On a real handset the height
-// term is what binds anyway — a phone's web viewport loses the status bar and is
-// therefore proportionally wider than the 393:852 frame — so the cap costs
-// nothing on device.
-export function designScale(width: number, height: number) {
-  return Math.min(Math.min(width, PHONE_MAX_WIDTH) / DESIGN_WIDTH, height / DESIGN_HEIGHT);
+// Driving off width means the app fills the viewport horizontally and the frame
+// takes the viewport's own height, so the tab bar — absolute, bottom: 0 — lands
+// on the real bottom edge rather than the foot of a scaled drawing. Vertical
+// overflow is each screen's own business, which is what the ScrollViews were
+// always for.
+//
+// PHONE_MAX_WIDTH still caps it so a desktop window gets a phone-sized column
+// rather than a stretched one.
+export function designScale(width: number) {
+  return Math.min(width, PHONE_MAX_WIDTH) / DESIGN_WIDTH;
 }
 
 export function useDesignScale() {
-  const { width, height } = useWindowDimensions();
-  return designScale(width, height);
+  const { width } = useWindowDimensions();
+  return designScale(width);
 }
 
 /**
- * The design's 393x852 frame at its on-device size. The root layout draws the
- * app into exactly this box: centred horizontally, and flush with the BOTTOM of
- * the viewport so the tab bar — which the frames put at y751-852 — always lands
- * on the physical bottom edge. Any vertical slack (a viewport proportionally
- * taller than the frame) falls at the top, into the status-bar strip the frames
- * leave empty anyway.
+ * The app's box: the design's 393 width at its on-device size, centred
+ * horizontally, and the viewport's OWN height rather than a scaled 852. The tab
+ * bar sits at bottom: 0 of this box, so it meets the physical bottom edge on
+ * any screen without the app having to be a fixed-aspect drawing.
+ *
+ * `designHeight` is what 852 scales to. Screens that anchor something to the
+ * foot of the frame want `height`; screens reproducing a measurement taken from
+ * the 852-tall mockup want `designHeight`.
  */
 export function useDesignFrame() {
   const { width, height } = useWindowDimensions();
-  const scale = designScale(width, height);
-  return { scale, width: DESIGN_WIDTH * scale, height: DESIGN_HEIGHT * scale };
+  const scale = designScale(width);
+  return {
+    scale,
+    width: DESIGN_WIDTH * scale,
+    height,
+    designHeight: DESIGN_HEIGHT * scale,
+  };
 }

@@ -26,8 +26,8 @@ const BAR_TOP = 754;
 // the bar on any screen height.
 // Button/Quiz Type placements from the frame (1114:158): 65x96 slots whose
 // tops sit at y644, with the timed mode raised to y619. They are anchored to
-// the foot of the 852 design rather than its top, so the fan keeps its
-// relationship with the nav on a window taller than 852 — top-anchoring left
+// the foot of the FRAME rather than its top, so the fan keeps its
+// relationship with the nav on any viewport height — top-anchoring left
 // it stranded mid-screen. The x values drop the frame's own 3px offset.
 const DESIGN_H = 852;
 const FAN_LAYOUT = [
