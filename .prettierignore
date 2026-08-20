@@ -41,3 +41,8 @@ suggestion-changes.md
 # The published legal text, as reviewed and signed off outside the repo. The app
 # quotes it verbatim, so Prettier must not rewrite its wrapping or punctuation.
 docs/legal/
+
+# Google's site-verification token. It carries an .html extension but is not
+# markup — one line of text Google fetches and compares byte for byte. Prettier
+# parses it as HTML and rewrites it, which fails verification.
+public/google*.html
