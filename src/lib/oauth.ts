@@ -3,8 +3,9 @@ import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import { supabase } from './supabase';
 
-// Social sign-in. The providers enabled in the Supabase dashboard, in the
-// order the Sign In frame lists them.
+// Every provider the app knows how to drive, in the order the Sign In frame
+// lists them. This is the catalogue, NOT what the reader sees — see
+// ENABLED_OAUTH_PROVIDERS below.
 export const OAUTH_PROVIDERS = ['google', 'facebook', 'twitter', 'discord'] as const;
 export type OAuthProvider = (typeof OAUTH_PROVIDERS)[number];
 
@@ -15,6 +16,42 @@ export const PROVIDER_LABELS: Record<OAuthProvider, string> = {
   twitter: 'X',
   discord: 'Discord',
 };
+
+const isProvider = (v: string): v is OAuthProvider =>
+  (OAUTH_PROVIDERS as readonly string[]).includes(v);
+
+/**
+ * Which providers actually appear.
+ *
+ * Only Google is shipped. Facebook, X and Discord are built and working but
+ * stay off outside development, so the default is deliberately the SAFE one:
+ * forgetting to configure anything yields Google alone rather than exposing
+ * three providers by accident. `__DEV__` is false in every `expo export` and
+ * release build, which is what makes that hold in production without relying on
+ * a dashboard setting being present.
+ *
+ * To widen it — a preview deployment that needs to exercise the others, say —
+ * set EXPO_PUBLIC_OAUTH_PROVIDERS on that environment:
+ *
+ *   EXPO_PUBLIC_OAUTH_PROVIDERS=google,facebook,twitter,discord
+ *
+ * Unknown names are dropped rather than throwing: a typo in a dashboard field
+ * should cost one button, not the whole sign-in screen. Order always follows
+ * the frame, not the variable.
+ */
+function resolveEnabled(): readonly OAuthProvider[] {
+  const raw: string | undefined = process.env.EXPO_PUBLIC_OAUTH_PROVIDERS;
+  if (raw) {
+    const wanted = raw
+      .split(',')
+      .map((p: string) => p.trim().toLowerCase())
+      .filter(isProvider);
+    return OAUTH_PROVIDERS.filter((p: OAuthProvider) => wanted.includes(p));
+  }
+  return __DEV__ ? OAUTH_PROVIDERS : (['google'] as const);
+}
+
+export const ENABLED_OAUTH_PROVIDERS = resolveEnabled();
 
 export type OAuthResult = { ok: true } | { ok: false; message: string | null };
 
