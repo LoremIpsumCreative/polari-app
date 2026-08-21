@@ -8,6 +8,7 @@ import { fonts, spacing } from '../../../src/lib/theme';
 import { ScreenBackground } from '../../../src/components/ScreenBackground';
 import { useTabBarInset } from '../../../src/components/AnimatedTabBar';
 import { OrDivider, ProviderButtons } from '../../../src/components/ProviderButtons';
+import { ENABLED_OAUTH_PROVIDERS } from '../../../src/lib/oauth';
 import {
   BackChip,
   FieldsetInput,
@@ -92,8 +93,13 @@ export default function SignInScreen() {
           </Pressable>
         </FormCard>
 
-        <OrDivider />
-        <ProviderButtons onError={setError} />
+        {/* The rule only earns its place if something follows it. */}
+        {ENABLED_OAUTH_PROVIDERS.length > 0 ? (
+          <>
+            <OrDivider />
+            <ProviderButtons onError={setError} />
+          </>
+        ) : null}
 
         <FormError message={error} />
 

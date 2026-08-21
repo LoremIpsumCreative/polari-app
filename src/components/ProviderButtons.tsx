@@ -13,7 +13,7 @@ import type { Palette, Scheme } from '../lib/palette';
 import { useAppearance, useThemedStyles } from '../lib/appearance';
 import { fonts, radii } from '../lib/theme';
 import {
-  OAUTH_PROVIDERS,
+  ENABLED_OAUTH_PROVIDERS,
   PROVIDER_LABELS,
   signInWithProvider,
   type OAuthProvider,
@@ -62,6 +62,9 @@ export function OrDivider({ label = 'OR' }: { label?: string }) {
  * `onError` receives a message to show, or null when the reader simply backed
  * out of the provider sheet — a cancel is not a failure and must not leave an
  * error sitting on the screen.
+ *
+ * Renders nothing when no providers are enabled, so a build with the social
+ * block switched off entirely leaves no empty gap behind.
  */
 export function ProviderButtons({ onError }: { onError: (message: string | null) => void }) {
   const { colors, scheme } = useAppearance();
@@ -81,9 +84,11 @@ export function ProviderButtons({ onError }: { onError: (message: string | null)
     // picks up the new session and the Account screen re-renders itself.
   }
 
+  if (ENABLED_OAUTH_PROVIDERS.length === 0) return null;
+
   return (
     <View style={styles.stack}>
-      {OAUTH_PROVIDERS.map((provider) => {
+      {ENABLED_OAUTH_PROVIDERS.map((provider) => {
         const Icon = markFor(provider, scheme);
         const label = PROVIDER_LABELS[provider];
         const busy = pending === provider;
