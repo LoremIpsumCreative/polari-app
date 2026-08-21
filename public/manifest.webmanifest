@@ -1,0 +1,25 @@
+{
+  "name": "Polari",
+  "short_name": "Polari",
+  "description": "A character-led Polari dictionary and learning app preserving the historical queer cant.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#E7E9EC",
+  "theme_color": "#0C66E4",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

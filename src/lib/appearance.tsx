@@ -55,11 +55,11 @@ type AppearanceContextValue = {
 const AppearanceContext = createContext<AppearanceContextValue | null>(null);
 
 export function AppearanceProvider({ children }: { children: ReactNode }) {
-  // Follows the OS until the reader chooses otherwise. Note this resolves
-  // ahead of the screens: while the per-screen repaint is in flight, a reader
-  // whose device is in dark mode gets the dark root under still-light screens.
-  // That is the accepted cost of not having to remember to flip it later.
-  const [mode, setModeState] = useState<AppearanceMode>('system');
+  // Light until the reader chooses otherwise. Not 'system': following the OS
+  // means anyone whose device is in dark mode is opted into dark without ever
+  // asking for it, and the Appearance selector on the Account screen is where
+  // that choice belongs. Dark is a preference here, not a default.
+  const [mode, setModeState] = useState<AppearanceMode>('light');
   const [ready, setReady] = useState(false);
   const [systemScheme, setSystemScheme] = useState(() => Appearance.getColorScheme());
 
