@@ -90,6 +90,10 @@ export const colors = {
   // binding. Light moves #F1F2F4 → #F4F4F4, three units and invisible.
   // Rebinding the circle to Disabled/Fill in Figma would close the gap.
   disabledFill: '#F4F4F4',
+  // Feedback/Incorrect Fill — the red-tinted badge behind a destructive icon.
+  // The Account screen carried this hex inline; it is a token, and it has a
+  // dark counterpart, so inline it could never have adapted.
+  dangerSoft: '#FFECEB',
 };
 
 // Each tab owns an accent colour, used for its icon + label when active.

@@ -208,6 +208,7 @@ export function PrimaryButton({
   loading?: boolean;
   disabled?: boolean;
 }) {
+  const colors = useColors();
   const styles = useThemedStyles(makeStyles);
   return (
     <Pressable
@@ -216,7 +217,7 @@ export function PrimaryButton({
       disabled={disabled || loading}
     >
       {loading ? (
-        <ActivityIndicator color="#fff" />
+        <ActivityIndicator color={colors.onPrimary} />
       ) : (
         <Text style={styles.buttonText}>{title}</Text>
       )}

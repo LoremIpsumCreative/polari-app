@@ -379,7 +379,10 @@ export default function TodayScreen() {
               accessibilityState={{ disabled: dayOffset >= maxOffset }}
               hitSlop={12}
             >
-              <IconChevronLeft size={20} color={dayOffset >= maxOffset ? '#D9D9D9' : colors.text} />
+              <IconChevronLeft
+                size={20}
+                color={dayOffset >= maxOffset ? colors.inactive : colors.text}
+              />
             </Pressable>
             <Text style={styles.dateLabel}>{dateLabel}</Text>
             <Pressable

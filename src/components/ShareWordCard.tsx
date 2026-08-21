@@ -3,7 +3,6 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import IconBook2 from '@tabler/icons-react-native/IconBook2';
 import IconQuote from '@tabler/icons-react-native/IconQuote';
-import IconWorldSearch from '@tabler/icons-react-native/IconWorldSearch';
 import type { Word } from '../types/database';
 import { colors, fonts } from '../lib/theme';
 import { useCharacterArt } from '../lib/remoteArt';
@@ -12,10 +11,16 @@ import { useCharacterArt } from '../lib/remoteArt';
 // revised Figma "Share Card" (node 1114:1089): a dark stage, the blue baroque
 // frame with a date pill in its top arch, and on the grey field the lede, the
 // term in Mouse Memoirs, a POS·pronunciation row, the illustration, three
-// labelled fieldset rows (definition / in use / origin) in a white box, and a
+// labelled fieldset rows (definition / in use) in a white box, and a
 // download CTA + QR footer.
 //
 // Built at the Figma stage's native 566x1007 so measurements transfer verbatim.
+//
+// The 2028-08-19 export replaced the two per-area share mockups with one
+// Global/Share Overlay serving Today and Dictionary alike, and dropped the
+// origin row so the card carries the same two fields the Today word card now
+// shows. The lede stays "The Polari word of the day is:" because the frame
+// still reads that way on the shared global card.
 //
 // DELIBERATELY NOT THEMED. This surface is snapshotted to an image and sent to
 // someone else, so it must not vary with the sharer's appearance setting — two
@@ -149,11 +154,6 @@ export const ShareWordCard = forwardRef<View, Props>(function ShareWordCard(
           {word.example ? (
             <FieldRow label="in use" Icon={IconQuote} italic minHeight={49}>
               {word.example}
-            </FieldRow>
-          ) : null}
-          {word.origin ? (
-            <FieldRow label="origin" Icon={IconWorldSearch} minHeight={60}>
-              {word.origin}
             </FieldRow>
           ) : null}
         </View>
