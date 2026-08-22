@@ -3,7 +3,11 @@
 _Bucket state vs `scripts/art-snapshot.json`. Art is live the moment it is
 uploaded — this file is the review log, refreshed by `npm run art:check`._
 
-**No art changes since the last acknowledged snapshot. ✅**
+**Summary:** 0 added · 1 updated · 0 removed
+
+## ✏️ Updated
+
+- crimper_polari.png
 
 ## ⚠️ No matching word
 
