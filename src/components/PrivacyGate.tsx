@@ -22,7 +22,7 @@ const BUTTON = { width: 187, height: 50, bottom: 96 };
 export function PrivacyGate({ onAgree }: { onAgree: () => void }) {
   const styles = useThemedStyles(makeStyles);
   const s = useDesignScale();
-  const { session } = useAuth();
+  const { session, ready } = useAuth();
   // null = still deciding. Rendering before the answer lands would flash the
   // gate at people who agreed to it long ago.
   const [needed, setNeeded] = useState<boolean | null>(null);
@@ -30,6 +30,11 @@ export function PrivacyGate({ onAgree }: { onAgree: () => void }) {
 
   useEffect(() => {
     let live = true;
+    // Nothing is decidable until the persisted session has been restored.
+    // Deciding while it is still null treats a signed-in reader as signed out:
+    // the gate shows, and the tap that dismisses it writes nothing, so it comes
+    // back on the next launch and never settles.
+    if (!ready) return;
     if (!session) {
       // Signed out: every cold start, and nothing to look up. The same shape as
       // the content advisory, for the same reason — there is no account to
@@ -49,7 +54,7 @@ export function PrivacyGate({ onAgree }: { onAgree: () => void }) {
     return () => {
       live = false;
     };
-  }, [session]);
+  }, [session, ready]);
 
   function agree() {
     if (session) {

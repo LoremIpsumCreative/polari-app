@@ -26,27 +26,19 @@ import { Analytics } from '../src/components/Analytics';
 // in the document before anything renders.
 installWebFonts();
 
-// Every screen places its children absolutely in the mockups' 393-wide space,
-// so the root's whole job is to work out where that box lands on this device
-// and draw the navigator into exactly it — see useDesignFrame. Everything
-// inside then shares one scale and stays in register.
+// The root's whole job is to work out where the design's box lands on this
+// device and draw the navigator into exactly it — see useDesignFrame.
+// Everything inside then shares one scale and stays in register.
 //
-// The box is as wide as the viewport (capped at a phone's width) and at least
-// as tall as the scaled 852 design. Two cases follow from that:
+// The box is the design uniformly scaled to fit the window, so it always has
+// the design's own aspect and always fits whole: nothing clips, and the frame
+// itself never scrolls. It is centred horizontally and anchored to the BOTTOM,
+// which puts the tab bar on the physical bottom edge and drops any vertical
+// slack into the status-bar strip the frames leave empty at the top.
 //
-//   Fits — every phone in portrait. The frame takes the viewport's height
-//   exactly and is anchored to the BOTTOM, so the tab bar meets the glass and
-//   nothing scrolls. Slack falls at the top, where the frames draw nothing but
-//   the status bar.
-//
-//   Too short — a small window, or a phone in landscape. The frame keeps the
-//   design's height so screens are not cut off at the foot, anchors to the TOP,
-//   and the gutter scrolls. Anchoring to the bottom here would push the
-//   overflow off the top of a flex container, where scrolling cannot reach it,
-//   and the title of every screen would simply vanish.
-//
-// The gutter is painted in the canvas colour so any letterbox reads as part of
-// the app rather than as a cropped page.
+// The gutter is painted in the canvas colour so the letterbox — visible only on
+// window shapes no handset has — reads as part of the app rather than as a
+// cropped page.
 
 // The letterbox and the frame it surrounds are the two surfaces the root owns,
 // and they follow the reader's appearance choice like everything else now that
@@ -55,13 +47,7 @@ function AppFrame({ children }: { children: ReactNode }) {
   const frame = useDesignFrame();
   const { colors: themed } = useAppearance();
   return (
-    <View
-      style={[
-        styles.gutter,
-        frame.overflows && styles.gutterScrolls,
-        { backgroundColor: themed.canvas },
-      ]}
-    >
+    <View style={[styles.gutter, { backgroundColor: themed.canvas }]}>
       <View
         style={[
           styles.phoneFrame,
@@ -145,11 +131,6 @@ const styles = StyleSheet.create({
     // backgroundColor comes from AppFrame — the gutter follows the appearance
     // choice, so a static value here would only ever be overridden.
   },
-  // Only when the viewport is shorter than the design. Bottom-anchoring would
-  // push the overflow off the TOP, where a flex container cannot scroll to it —
-  // the screen's title and search row simply vanish. Anchoring to the top
-  // instead puts the overflow at the foot, which scrolling can reach.
-  gutterScrolls: { justifyContent: 'flex-start', overflow: 'scroll' },
   phoneFrame: {
     // Sized from useDesignFrame at the call site. Deliberately NOT flex: the
     // box has to be exactly the design's aspect for the absolute coordinates

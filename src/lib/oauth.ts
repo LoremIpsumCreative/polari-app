@@ -23,12 +23,15 @@ const isProvider = (v: string): v is OAuthProvider =>
 /**
  * Which providers actually appear.
  *
- * Only Google is shipped. Facebook, X and Discord are built and working but
- * stay off outside development, so the default is deliberately the SAFE one:
- * forgetting to configure anything yields Google alone rather than exposing
- * three providers by accident. `__DEV__` is false in every `expo export` and
- * release build, which is what makes that hold in production without relying on
- * a dashboard setting being present.
+ * Google and Discord are shipped. Facebook and X are built and working but
+ * stay off outside development, so the default stays the SAFE one: forgetting
+ * to configure anything yields the shipped pair rather than exposing every
+ * provider by accident. `__DEV__` is false in every `expo export` and release
+ * build, which is what makes that hold in production without relying on a
+ * dashboard setting being present.
+ *
+ * A provider named here must also be enabled in the Supabase project's auth
+ * settings — one that is not fails at the tap with "Unsupported provider".
  *
  * To widen it — a preview deployment that needs to exercise the others, say —
  * set EXPO_PUBLIC_OAUTH_PROVIDERS on that environment:
@@ -48,7 +51,7 @@ function resolveEnabled(): readonly OAuthProvider[] {
       .filter(isProvider);
     return OAUTH_PROVIDERS.filter((p: OAuthProvider) => wanted.includes(p));
   }
-  return __DEV__ ? OAUTH_PROVIDERS : (['google'] as const);
+  return __DEV__ ? OAUTH_PROVIDERS : (['google', 'discord'] as const);
 }
 
 export const ENABLED_OAUTH_PROVIDERS = resolveEnabled();

@@ -32,13 +32,18 @@ const CONFIRM_LABEL = 'I confirm that I am aged 15 or over';
 export function ContentAdvisory({ onAcknowledge }: { onAcknowledge: () => void }) {
   const styles = useThemedStyles(makeStyles);
   const s = useDesignScale();
-  const { session } = useAuth();
+  const { session, ready } = useAuth();
   // null = still deciding. Rendering the gate before the answer lands would
   // flash it at people who settled it long ago.
   const [needed, setNeeded] = useState<boolean | null>(null);
 
   useEffect(() => {
     let live = true;
+    // Nothing is decidable until the persisted session has been restored.
+    // Deciding while it is still null treats a signed-in reader as signed out:
+    // the gate shows, and the tap that dismisses it writes nothing, so it comes
+    // back on the next launch and never settles.
+    if (!ready) return;
     // Signed out: every cold start, and nothing to look up.
     if (!session) {
       setNeeded(true);
@@ -58,17 +63,19 @@ export function ContentAdvisory({ onAcknowledge }: { onAcknowledge: () => void }
     return () => {
       live = false;
     };
-  }, [session]);
+  }, [session, ready]);
 
   function acknowledge() {
     if (session) {
       // Not awaited: the reader has read it either way, and holding the app
       // shut behind a round trip would be the wrong thing to do if the network
       // is slow. A failed write costs one extra showing.
+      // Upsert rather than update: an update against a missing profile row
+      // matches nothing and reports no error, which would silently reshow the
+      // advisory forever. The insert policy exists for exactly this.
       supabase
         .from('profiles')
-        .update({ content_advisory_ack_at: new Date().toISOString() })
-        .eq('id', session.user.id);
+        .upsert({ id: session.user.id, content_advisory_ack_at: new Date().toISOString() });
     }
     onAcknowledge();
   }
