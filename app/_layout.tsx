@@ -82,6 +82,9 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="(auth)" />
+        {/* The OAuth providers redirect here; it forwards on once the session
+            has been restored. */}
+        <Stack.Screen name="auth-callback" />
       </Stack>
       {launched ? null : <LaunchScreen onOpen={() => setLaunched(true)} />}
       {launched && !advised ? <ContentAdvisory onAcknowledge={() => setAdvised(true)} /> : null}
