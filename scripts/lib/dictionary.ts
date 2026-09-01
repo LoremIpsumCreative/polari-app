@@ -94,8 +94,14 @@ export type WordContent = {
 /** slug -> content, the canonical shape used everywhere. */
 export type WordMap = Record<string, WordContent>;
 
+// Diacritics are folded to their base letter first. Without that, the a-z
+// filter below drops an accented letter outright rather than folding it:
+// "Blazé queen" slugged to `blaz-queen`, losing the "e", so the entry no
+// longer matched its artwork in the bucket (blaze-queen.png).
 export function slugify(term: string): string {
   return term
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9]+/g, '-')

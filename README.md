@@ -147,7 +147,7 @@ Character art is served from the public Supabase Storage bucket
 
 ```text
 abdabs.png
-blaz-queen.png
+blaze-queen.png
 charpering-omee.png
 vada-varda.png
 ```
