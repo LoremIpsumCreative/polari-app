@@ -5,6 +5,24 @@ Versions follow [Semantic Versioning](https://semver.org). The project is
 pre-launch: `1.0.0` is reserved for the first App Store release, so every
 version below is `0.x` and the public API is not yet stable.
 
+## [v0.19.1](https://github.com/LoremIpsumCreative/polari-app/releases/tag/v0.19.1) — 2026-08-26
+
+Security patch. No app-visible change.
+
+- **image-size** removed from the tree. Two high-severity advisories
+  ([GHSA-w3rx-r6r6-pgpr](https://github.com/advisories/GHSA-w3rx-r6r6-pgpr),
+  [GHSA-5p2g-fcmc-qvqq](https://github.com/advisories/GHSA-5p2g-fcmc-qvqq)) cover
+  every published version, so there was nothing to upgrade to — but Metro 0.84.5
+  drops the dependency outright. Pinned there, inside the `^0.84.3` that
+  `@react-native/community-cli-plugin` already asked for, which also collapses
+  the duplicate 0.84.4 copy.
+- **uuid** raised to 11.1.1 for the bounds-check advisory
+  ([GHSA-w5hq-g745-h8pq](https://github.com/advisories/GHSA-w5hq-g745-h8pq)),
+  reached through `xcode` under `@expo/config-plugins`. `xcode` only ever calls
+  `v4()` with no buffer, so it was never exposed; the override clears it anyway.
+- `npm audit` goes from 15 findings to none. Both packages are build-time only
+  and neither shipped in the bundle.
+
 ## [v0.19.0](https://github.com/LoremIpsumCreative/polari-app/releases/tag/v0.19.0) — 2026-08-12
 
 The 2026-08-12 change request.

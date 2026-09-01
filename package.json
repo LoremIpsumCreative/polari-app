@@ -1,6 +1,6 @@
 {
   "name": "polari-app",
-  "version": "0.19.0",
+  "version": "0.19.1",
   "main": "expo-router/entry",
   "engines": {
     "node": ">=22.13.0"
@@ -73,5 +73,9 @@
     "rls:audit": "tsx scripts/rls-audit.ts",
     "legal:build": "tsx scripts/build-privacy-policy.ts"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "metro": "0.84.5",
+    "uuid": "^11.1.1"
+  }
 }
