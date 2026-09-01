@@ -5,6 +5,44 @@ Versions follow [Semantic Versioning](https://semver.org). The project is
 pre-launch: `1.0.0` is reserved for the first App Store release, so every
 version below is `0.x` and the public API is not yet stable.
 
+## [v0.20.0](https://github.com/LoremIpsumCreative/polari-app/releases/tag/v0.20.0) — 2026-09-02
+
+Storage egress, and the two entries whose art never rendered.
+
+- **Character art and wallpapers stop listing their buckets.** Both providers
+  called `storage.list()` in an effect, so every page load listed both buckets
+  before it could draw anything — 157 listings of `characters` on 19 Aug alone,
+  which is what took the project through its cached-egress quota. The listing
+  only ever answered _which files exist_; the URLs come from `getPublicUrl()`,
+  which is string concatenation. Names now come from a generated
+  `src/lib/artManifest.ts`, refreshed by the art check that already watches the
+  buckets daily, so nothing in the app touches the network to discover art.
+- **Image URLs are stable again.** Both providers appended `?v=<updated_at>` as
+  a cache buster. That key tracks metadata rather than bytes, so applying the
+  bucket-wide `cache-control` policy on 1 Sep bumped `updated_at` on all 61
+  objects at once and invalidated every cached image everywhere. The query
+  string is gone; a given file's URL no longer changes between renders or
+  sessions.
+- **The Gallery loads a row at a time.** It mounted an `<Image>` for all 38
+  cards the moment the screen did — 37 requests for the dozen in front of the
+  reader. The grid is fixed-pitch, so the visible rows are arithmetic rather
+  than a measurement, and art now arrives with one row of overscan. Card
+  geometry is unchanged. Measured on the main screens: launch goes from 2
+  listings to none, the Gallery from 37 images to 18 on arrival.
+- **Blazé queen** finds its artwork. `slugify` stripped the accented letter
+  instead of folding it, so the entry slugged to `blaz-queen` and never matched
+  `blaze-queen_polari.png` in the bucket — the one entry in the set whose art
+  simply never rendered. Normalising to NFD before the `a-z` filter folds the
+  accent to its base letter.
+- **Antique HP** picks up its art too. `antique-hq_polari.png` is a filename
+  typo — HP is homie-palone — and the object is now mapped onto the entry
+  rather than renamed in the bucket.
+
+Two consequences worth knowing: new art goes live on the next deploy rather
+than the next app launch, and replacement art must ship under a new object
+name, since overwriting in place cannot reach a client holding a year-long
+cache entry.
+
 ## [v0.19.1](https://github.com/LoremIpsumCreative/polari-app/releases/tag/v0.19.1) — 2026-08-26
 
 Security patch. No app-visible change.
