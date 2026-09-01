@@ -9,7 +9,9 @@ const CHARACTER_ART: Record<string, ImageSourcePropType> = {
   auntie: require('../../assets/characters/auntie.png'),
   barkey: require('../../assets/characters/barkey.png'),
   beak: require('../../assets/characters/beak.png'),
-  'blaz-queen': require('../../assets/characters/blaz-queen.png'),
+  // Slug follows the dictionary ('Blazé queen' -> blaze-queen); the bundled
+  // file keeps its original name.
+  'blaze-queen': require('../../assets/characters/blaz-queen.png'),
   glossy: require('../../assets/characters/glossy.png'),
   queen: require('../../assets/characters/queen.png'),
   trade: require('../../assets/characters/trade.png'),
