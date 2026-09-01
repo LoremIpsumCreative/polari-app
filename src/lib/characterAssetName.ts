@@ -18,6 +18,10 @@ const SLUG_ALIASES: Record<string, string> = {
   // "dilly_polari.png" illustrates the entry "Dilly, the" (slug `dilly-the`).
   // There is no bare `dilly` word, so without this the art never renders.
   dilly: 'dilly-the',
+  // "antique-hq_polari.png" is a typo: the entry is "Antique HP", HP being
+  // homie-palone. The artwork itself is fine, only its filename is wrong, so
+  // it is mapped here rather than renamed in the bucket.
+  'antique-hq': 'antique-hp',
 };
 
 /** Word slug for a bucket object name, with or without the suffix. */
