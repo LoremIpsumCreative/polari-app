@@ -82,17 +82,22 @@ jobs:
 
       # Art is live the moment it is uploaded, so the snapshot advances in the
       # same commit — this is a log, not a queue awaiting approval.
+      #
+      # This also regenerates src/lib/artManifest.ts, which is what the app
+      # builds its image URLs from. The app no longer lists the buckets itself,
+      # so this job is the only thing that notices new art: the commit below is
+      # what puts it in front of readers, via the deploy it triggers.
       - name: Check the bucket and acknowledge any changes
         run: npm run art:ack
 
       - name: Commit the art log when something changed
         run: |
-          if git diff --quiet -- art-changes.md scripts/art-snapshot.json; then
+          if git diff --quiet -- art-changes.md scripts/art-snapshot.json src/lib/artManifest.ts; then
             echo "No art changes."
           else
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add art-changes.md scripts/art-snapshot.json
+            git add art-changes.md scripts/art-snapshot.json src/lib/artManifest.ts
             git commit -m "Character art changes detected in the bucket"
             git pull --rebase origin main
             git push origin HEAD:main
